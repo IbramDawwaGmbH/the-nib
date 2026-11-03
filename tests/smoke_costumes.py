@@ -48,6 +48,10 @@ check("every costume has a category", sum(len(v) for v in categories.values()) =
 check("no costume is stranded under 'Other'", "Other" not in categories,
       str(categories.get("Other")))
 check("names are unique", len(set(COSTUMES)) == len(COSTUMES))
+check("each costume knows its own category, which is how his opinion falls back",
+      bare.costume_category("cap") == "Hats"
+      and all(bare.costume_category(n) == c for c, names in categories.items() for n in names))
+check("...and an unknown one has none", bare.costume_category("nope") == "")
 
 print("\n--- nothing hangs below his soles while he is standing on them ---")
 # The frame's lowest opaque row must stay on the baseline, because rest_top(), foot_print() and
@@ -192,6 +196,22 @@ for costume in COSTUMES:
 # off, and a wide brim legitimately reaches the sides.
 print(f"  note: {len(clipped)} costume(s) touch a frame edge" +
       (f" - {', '.join(f'{k}({"/".join(v)})' for k, v in clipped.items())}" if clipped else ""))
+
+print("\n--- the wardrobe's thumbnails ---")
+from PySide6.QtGui import QRegion  # noqa: E402
+
+_thumbs = {n: bare.costume_thumbnail(n) for n in COSTUMES}
+_cell = int(_json.loads((SRC / "assets" / "costumes.json").read_text(encoding="utf-8"))["cell"])
+check("every costume has one", all(t is not None and not t.isNull() for t in _thumbs.values()),
+      str([n for n, t in _thumbs.items() if t is None or t.isNull()]))
+check("...no bigger than its cell",
+      all(t.width() <= _cell and t.height() <= _cell for t in _thumbs.values() if t is not None))
+check("...trimmed exactly to its opaque pixels",
+      all(QRegion(t.mask()).boundingRect() == t.rect() for t in _thumbs.values() if t is not None),
+      str([n for n, t in _thumbs.items()
+           if t is not None and QRegion(t.mask()).boundingRect() != t.rect()]))
+check("an unknown costume has none", bare.costume_thumbnail("nope") is None)
+check("...and a second ask is the cached one", bare.costume_thumbnail("cap") is _thumbs["cap"])
 
 print("\n--- he is still himself underneath ---")
 dressed = SpriteSheet(SHEET, FRAMES, 1, costume=COSTUMES[0])

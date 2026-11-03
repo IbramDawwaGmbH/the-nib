@@ -37,10 +37,10 @@ from __future__ import annotations
 
 import math
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from PySide6.QtCore import QEasingCurve, QPoint, QPointF, QRect, QRectF, Qt, QTimer, QVariantAnimation, Signal
-from PySide6.QtGui import QColor, QFont, QFontMetrics, QPainter, QPainterPath, QPen
+from PySide6.QtGui import QColor, QFont, QFontMetrics, QPainter, QPainterPath, QPen, QPixmap
 from PySide6.QtWidgets import QWidget
 
 from bubble import ACCENT, _theme
@@ -79,6 +79,9 @@ MAX_SLIDE = 3.0
 
 HOT_COLOR = "#E0483A"     # the same red as the tray's device dot and the focus timer's last minute
 MUTED_COLOR = "#F5BF4F"   # the same amber as the live-but-muted tray dot
+#: The share of a button a costume thumbnail may fill. It is scaled by a whole number only, so most
+#: pieces land well under it; the widest (wings, cape, earmuffs) stay at 1x and clip at the rim.
+THUMB_FILL = 0.72
 
 
 @dataclass(frozen=True)
@@ -92,6 +95,9 @@ class WheelItem:
     #: Which part of the ring it belongs to - "Tools", "Him", "App" - shown in the idle label, so
     #: scrolling tells you where on the ring you have got to rather than just changing icons.
     group: str = ""
+    #: Drawn instead of the icon when set - a costume's thumbnail in the wardrobe. Not compared:
+    #: two items are the same tool whatever picture they carry.
+    pixmap: QPixmap | None = field(default=None, compare=False)
 
 
 @dataclass(frozen=True)
@@ -440,8 +446,22 @@ def _icon_guard(p: QPainter) -> None:
     p.drawLine(QPointF(12, 12), QPointF(12, 15.5))
 
 
+def _icon_wardrobe(p: QPainter) -> None:
+    # A coat hanger: the hook, then the shoulders - "the whole rail", where the top hat is one hat.
+    hook = QPainterPath(QPointF(10, 7))
+    hook.cubicTo(10, 4, 14, 4, 14, 7)
+    hook.cubicTo(14, 9, 12, 9, 12, 11)
+    p.drawPath(hook)
+    body = QPainterPath(QPointF(12, 11))
+    body.lineTo(3.5, 17)
+    body.lineTo(20.5, 17)
+    body.closeSubpath()
+    p.drawPath(body)
+
+
 ICONS = {
     "guard": _icon_guard,
+    "wardrobe": _icon_wardrobe,
     "sparkle": _icon_sparkle,
     "costume": _icon_costume,
     "hide": _icon_hide,
@@ -466,10 +486,15 @@ ICONS = {
 
 
 class ToolWheel(QWidget):
-    """The wheel itself. ``chosen`` carries the picked item's key, emitted after it has closed."""
+    """The wheel itself. ``chosen`` carries the picked item's key, emitted after it has closed.
+
+    ``closed`` carries whether a tool was picked; ``aimed`` the screen point (x, y) of the tool
+    being aimed at, or None.
+    """
 
     chosen = Signal(str)
-    closed = Signal()
+    closed = Signal(bool)
+    aimed = Signal(object)
 
     def __init__(self, ui_scale: float = 1.0) -> None:
         super().__init__(None)
@@ -685,6 +710,18 @@ class ToolWheel(QWidget):
         """The item ``local`` (widget coordinates) is aiming at. Public so the tests can drive it."""
         return pick(self._layout, self._centre, local, self._dead_zone)
 
+    def _set_hover(self, hover: int | None) -> None:
+        """Highlight slot ``hover`` (or nothing), and say where that tool is, so he can look."""
+        if hover == self._hover:
+            return
+        self._hover = hover
+        self.update()
+        point = None
+        if hover is not None:
+            p = self.mapToGlobal(self._layout.point(self._centre, hover).toPoint())
+            point = (p.x(), p.y())
+        self.aimed.emit(point)
+
     def _choose(self, index: int) -> None:
         if self._picked or not (0 <= index < len(self._items)):
             return
@@ -697,14 +734,11 @@ class ToolWheel(QWidget):
 
     def hideEvent(self, event) -> None:  # noqa: N802
         self._anim.stop()
-        self.closed.emit()
+        self.closed.emit(self._picked)
         super().hideEvent(event)
 
     def mouseMoveEvent(self, event) -> None:  # noqa: N802
-        hover = self.aim_at(event.position())
-        if hover != self._hover:
-            self._hover = hover
-            self.update()
+        self._set_hover(self.aim_at(event.position()))
 
     def mousePressEvent(self, event) -> None:  # noqa: N802
         if not self.rect().contains(event.position().toPoint()):
@@ -743,11 +777,9 @@ class ToolWheel(QWidget):
         elif key in (Qt.Key_Return, Qt.Key_Enter, Qt.Key_Space) and self._hover is not None:
             self._choose(self._hover)
         elif key in (Qt.Key_Left, Qt.Key_Up) and count:
-            self._hover = 0 if self._hover is None else (self._hover - 1) % count
-            self.update()
+            self._set_hover(0 if self._hover is None else (self._hover - 1) % count)
         elif key in (Qt.Key_Right, Qt.Key_Down, Qt.Key_Tab) and count:
-            self._hover = 0 if self._hover is None else (self._hover + 1) % count
-            self.update()
+            self._set_hover(0 if self._hover is None else (self._hover + 1) % count)
         elif key in (Qt.Key_PageDown, Qt.Key_BracketRight):
             self.step(1)
         elif key in (Qt.Key_PageUp, Qt.Key_BracketLeft):
@@ -830,6 +862,12 @@ class ToolWheel(QWidget):
         p.setBrush(QColor(ACCENT) if hovered else QColor(t["bg"]))
         p.drawEllipse(rect)
 
+        thumbnail = item.pixmap is not None and not item.pixmap.isNull()
+        if thumbnail:
+            # Under the ring rather than over it: a wide piece reaches the rim, and the ring is how
+            # the wardrobe says which one he is wearing.
+            self._paint_thumbnail(p, item.pixmap, centre, size, rect)
+
         ring = {"active": ACCENT, "hot": HOT_COLOR, "muted": MUTED_COLOR}.get(item.state)
         if ring:
             inset = 2.5 * self._s
@@ -837,7 +875,7 @@ class ToolWheel(QWidget):
             p.setBrush(Qt.NoBrush)
             p.drawEllipse(rect.adjusted(inset, inset, -inset, -inset))
 
-        draw = ICONS.get(item.icon)
+        draw = None if thumbnail else ICONS.get(item.icon)
         if draw is not None:
             p.save()
             icon = size * 0.52
@@ -848,6 +886,23 @@ class ToolWheel(QWidget):
             p.setBrush(Qt.NoBrush)
             draw(p)
             p.restore()
+
+    @staticmethod
+    def _paint_thumbnail(p: QPainter, pixmap: QPixmap, centre: QPointF, size: float,
+                         button: QRectF) -> None:
+        """A costume's own pixels, at a whole-number scale and on whole pixels (CONTRIBUTING rule 6),
+        clipped to the button so the widest pieces lose only their corners at the rim."""
+        w, h = pixmap.width(), pixmap.height()
+        k = max(1, int(size * THUMB_FILL // max(w, h)))
+        tw, th = w * k, h * k
+        target = QRect(round(centre.x() - tw / 2), round(centre.y() - th / 2), tw, th)
+        p.save()
+        clip = QPainterPath()
+        clip.addEllipse(button)
+        p.setClipPath(clip)
+        p.setRenderHint(QPainter.SmoothPixmapTransform, False)
+        p.drawPixmap(target, pixmap)
+        p.restore()
 
     def _paint_chevrons(self, p: QPainter, fade: float, radius: float) -> None:
         """A small arrowhead beyond each end of the arc: there is more of the ring that way."""

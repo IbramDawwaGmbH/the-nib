@@ -180,6 +180,9 @@ DEFAULTS: dict[str, Any] = {
     "personality": "balanced",
     "sprite_scale": 0,  # 0 = auto from monitor DPI
     "costume": "",      # "" = bare-headed; see assets/costumes.json for the names
+    #: The costumes you put on him last, newest first, so the wardrobe opens on them. Checked
+    #: against the sheet where they are used, the same as ``costume`` itself.
+    "costume_recents": [],
     "skin": "default",  # body colour remap; see SKINS in animator.py
     #: A soft ellipse under his feet that widens on impact. Without it he reads as hovering a
     #: pixel above the bar rather than standing on it.
@@ -274,6 +277,8 @@ _MAX_STORED_PROMPT = 14000
 #: Hard ceiling on the stored history regardless of ``prompt_history_max``, so a hand-edited file
 #: cannot turn the settings file into a transcript.
 _MAX_HISTORY = 200
+#: How many costumes the wardrobe remembers - one arc of the wheel.
+_MAX_COSTUME_RECENTS = 8
 
 
 def _fresh_defaults() -> dict[str, Any]:
@@ -340,6 +345,13 @@ def _coerce(key: str, value: Any) -> Any:
             if len(cleaned) >= _MAX_HISTORY:
                 break
         return cleaned
+    if key == "costume_recents":
+        # Explicit for the same reason as prompt_history. Names are not checked against the sheet
+        # here (config is dependency-free); the wardrobe drops any it does not know.
+        if not isinstance(value, (list, tuple)):
+            return []
+        names = [entry.strip() for entry in value if isinstance(entry, str) and entry.strip()]
+        return list(dict.fromkeys(names))[:_MAX_COSTUME_RECENTS]
     if key == "persona_apps":
         # exe name -> animation state. Both sides forced to strings; an unknown state name is
         # ignored at the point of use, where the sprite sheet can actually be consulted.
@@ -535,6 +547,15 @@ class Config:
 
     def clear_prompt_history(self) -> None:
         self["prompt_history"] = []
+
+    def remember_costume(self, name: str) -> None:
+        """Push ``name`` onto the front of the wardrobe's recents, the same way as a prompt.
+        Taking a costume off ("") is not a costume, so it is not recorded."""
+        name = str(name).strip()
+        if not name:
+            return
+        kept = [entry for entry in self["costume_recents"] if entry != name]
+        self["costume_recents"] = [name, *kept][:_MAX_COSTUME_RECENTS]
 
     def save_if_dirty(self) -> bool:
         return self.save() if self.dirty else True

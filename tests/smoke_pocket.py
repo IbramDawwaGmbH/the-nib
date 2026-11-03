@@ -120,6 +120,25 @@ for _ in range(50):
         break
 check("...but wanders normally once nothing is held", entered_walk2)
 
+print("\n--- pinning an empty clipboard: he has a look round for it ---")
+_cfg, b = fresh("empty")
+b._neglect_stage = 1
+b.pocket_empty()
+check("he looks around", b._antic == B.POCKET_EMPTY_ANIM, b._antic)
+check("...and nothing goes up", not b.pocket_full)
+check("...and it counts as you noticing him", b._neglect_stage == 0, b._neglect_stage)
+
+_cfg, b = fresh("empty_sign_up")
+b.pocket_grab("already up")
+b.pocket_empty()
+check("with the sign already up he keeps holding it", b._antic == B.POCKET_HOLD_ANIM, b._antic)
+
+_cfg, b = fresh("empty_paused")
+b.paused = True
+b.pocket_empty()
+check("paused, no look round - it would freeze on its first frame", b.state is State.IDLE,
+      b.state)
+
 print("\n--- the pocket never touches costumes ---")
 _cfg, b = fresh("nocostume")
 b.pocket_grab("snippet")
@@ -134,6 +153,8 @@ src_pocket = inspect.getsource(M.NibApp._on_pocket_hotkey)
 check("reads the real clipboard", "QApplication.clipboard()" in src_pocket)
 check("goes through behavior.pocket_grab", "self.behavior.pocket_grab" in src_pocket)
 check("puts the text up on the billboard", "self.billboard.show_text" in src_pocket)
+check("an empty clipboard gets his look round", "pocket_empty()" in src_pocket)
+check("...and a toast saying why nothing went up", "toast.show_message" in src_pocket)
 
 src_bubble = inspect.getsource(M.NibApp._open_bubble_at)
 check("an explicit prefill is never overridden by the pocket",

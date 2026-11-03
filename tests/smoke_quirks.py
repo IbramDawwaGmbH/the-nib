@@ -1,4 +1,5 @@
-"""The seven little things: costume opinions, the poke flinch, the spin, and the involuntary lot."""
+"""The seven little things: costume opinions, the poke flinch, the spin, and the involuntary lot -
+plus how any antic ends."""
 
 import os
 import sys
@@ -52,8 +53,12 @@ def fresh(tag, **overrides):
 print("\n--- 1. he has an opinion about his hat ---")
 sheet = SpriteSheet(SRC / "assets" / "nib_sheet.png", SRC / "assets" / "frames.json", 2)
 _cfg, b = fresh("cost")
+# The beret used to get the one default; it is a hat, so now it gets the hats' scratch. Each of the
+# others is the first unnamed costume of its category.
 for costume, expected in (("cone", "startle"), ("crown", "wink"), ("catears", "heart_eyes"),
-                          ("beret", B.COSTUME_OPINION_DEFAULT), ("", B.COSTUME_OPINION_DEFAULT)):
+                          ("beret", "scratch"), ("horns", "sparkle"), ("shades", "look_around"),
+                          ("bowtie", "wink"), ("apron", "pushups"), ("jetpack", "stretch"),
+                          ("", B.COSTUME_OPINION_DEFAULT)):
     b._enter(State.IDLE)
     b.costume_chosen(costume)
     check(f"{costume or '(none)':10s} -> {expected}", b._antic == expected,
@@ -65,15 +70,161 @@ check("every opinion names an animation that exists",
 check("...and every costume it names exists too",
       set(B.COSTUME_OPINIONS) <= set(sheet.available_costumes()),
       str(sorted(set(B.COSTUME_OPINIONS) - set(sheet.available_costumes()))))
+check("every category has an opinion of its own",
+      set(sheet.costume_categories()) <= set(B.COSTUME_CATEGORY_OPINIONS),
+      str(sorted(set(sheet.costume_categories()) - set(B.COSTUME_CATEGORY_OPINIONS))))
+check("...each one an animation that exists",
+      all(sheet.has_state(a) for a in B.COSTUME_CATEGORY_OPINIONS.values()))
+check("...and none of either table is the hop, which is the quick-change itself",
+      "hop" not in B.COSTUME_CATEGORY_OPINIONS.values() and "hop" not in B.COSTUME_OPINIONS.values())
+from collections import Counter  # noqa: E402
+
+spread = Counter(b._costume_opinion(n) for n in sheet.available_costumes())
+print(f"  opinions: {dict(spread.most_common())}")
+check("no one reaction covers more than 10 costumes (32 shared look_around before)",
+      spread.most_common(1)[0][1] <= 10, str(spread.most_common(1)))
 
 _cfg, b = fresh("cost_off", costume_reactions=False)
-b.costume_chosen("cone")
-check("costume_reactions=false switches it off", b.state is not State.ANTIC, b.state.value)
+check("costume_reactions=false switches it off",
+      not b.costume_chosen("cone") and b.state is not State.ANTIC, b.state.value)
 
 _cfg, b = fresh("cost_asleep")
 b._enter(State.SLEEP)
-b.costume_chosen("cone")
-check("...and he does not wake up to admire it", b.state is State.SLEEP, b.state.value)
+check("...and he does not wake up to admire it",
+      not b.costume_chosen("cone") and b.state is State.SLEEP, b.state.value)
+_cfg, b = fresh("cost_true")
+check("costume_chosen says when he did react", b.costume_chosen("cone") and b.state is State.ANTIC)
+_cfg, b = fresh("cost_paused")
+b.paused = True
+check("...and paused, he keeps it to himself - it would freeze on its first frame",
+      not b.costume_chosen("cone") and b.state is State.IDLE, b.state.value)
+
+_cfg, b = fresh("skin")
+check("(the colour reaction has its art)", b._sheet.has_state(B.SKIN_REACTION_ANIM))
+b.skin_chosen()
+check("a new colour gets a sparkle", b._antic == B.SKIN_REACTION_ANIM, str(b._antic))
+_cfg, b = fresh("skin_off", costume_reactions=False)
+b.skin_chosen()
+check("...costume_reactions=false switches that off too", b.state is not State.ANTIC,
+      b.state.value)
+_cfg, b = fresh("skin_asleep")
+b._enter(State.SLEEP)
+b.skin_chosen()
+check("...and it does not wake him", b.state is State.SLEEP, b.state.value)
+_cfg, b = fresh("skin_paused")
+b.paused = True
+b.skin_chosen()
+check("...nor sparkle while paused", b.state is State.IDLE, b.state.value)
+
+print("\n--- 1b. the quick-change ---")
+
+
+def hop_until(b, until, bound_ms=3000.0, step=20.0):
+    """Tick until ``until(b)`` (checked after each tick); returns the ms it took, or None."""
+    spent = 0.0
+    while spent < bound_ms:
+        b.update(step, None)
+        spent += step
+        if until(b):
+            return spent
+    return None
+
+
+lifts = [sheet.foot_print(B.QUICK_CHANGE_ANIM, i)[2]
+         for i in range(sheet.frame_count(B.QUICK_CHANGE_ANIM))]
+check("the swap frame is the top of the hop",
+      lifts[B.QUICK_CHANGE_SWAP_FRAME] == max(lifts) > 0, str(lifts))
+
+_cfg, b = fresh("qc", quirks_enabled=False)
+check("a quick-change starts", b.quick_change("cone"))
+check("...as the hop, from the crouch", b.state is State.ANTIC and b._antic == "hop"
+      and b.animator.frame_index == 0, f"{b.state.value}/{b._antic}/{b.animator.frame_index}")
+check("...and nothing is due to be shown yet", not b.take_costume_swap())
+swapped_at = []
+
+
+def _swap_seen(x):
+    if x.take_costume_swap():
+        swapped_at.append(x.animator.frame_index)
+    return x._antic != "hop"
+
+
+took = hop_until(b, _swap_seen)
+check("the costume is shown exactly once, on the apex frame",
+      swapped_at == [B.QUICK_CHANGE_SWAP_FRAME], str(swapped_at))
+check("...and not again afterwards", not b.take_costume_swap())
+check("then he lands and gives his opinion of it", b._antic == "startle", str(b._antic))
+check("...well before the safety net", took is not None and took < B.QUICK_CHANGE_MAX_MS,
+      f"{took}ms")
+
+_cfg, b = fresh("qc_slow", quirks_enabled=False)
+b._mood_pace = lambda: 0.54
+b.quick_change("cone")
+swapped_at = []
+took = hop_until(b, _swap_seen)
+check("at the slowest pace it still swaps at the apex",
+      swapped_at == [B.QUICK_CHANGE_SWAP_FRAME], str(swapped_at))
+check("...and lands before the safety net", took is not None and took < B.QUICK_CHANGE_MAX_MS,
+      f"{took}ms")
+
+
+def _perched(x):
+    x.drag_start()
+    for _ in range(3):
+        x.drag_to(1200, 300)
+        x.update(50.0, None)
+    x.drag_end(perch_rect=(1100, 300, 1600, 700))
+
+
+for label, setup, overrides in (
+    ("asleep", lambda x: x._enter(State.SLEEP), {}),
+    ("in your hand", lambda x: x.drag_start(), {}),
+    ("hidden", lambda x: x.set_hidden(True), {}),
+    ("paused", lambda x: setattr(x, "paused", True), {}),
+    ("with reactions off", lambda x: None, {"costume_reactions": False}),
+    ("on a window", _perched, {}),
+):
+    _cfg, b = fresh(f"qc_no_{label.replace(' ', '_')}", quirks_enabled=False, **overrides)
+    setup(b)
+    before = b.state
+    check(f"{label}: no hop - it just goes on", not b.quick_change("cone") and b.state is before,
+          f"{before.value} -> {b.state.value}")
+
+for label, interrupt in (("grabbed", lambda x: x.drag_start()),
+                         ("hidden", lambda x: x.set_hidden(True))):
+    _cfg, b = fresh(f"qc_cut_{label}", quirks_enabled=False)
+    b.quick_change("cone")
+    b.update(20.0, None)
+    interrupt(b)
+    check(f"{label} mid-hop: the costume shows at once",
+          b.take_costume_swap() and b._quick_change is None, str(b._quick_change))
+
+_cfg, b = fresh("qc_twice", quirks_enabled=False)
+b.quick_change("cone")
+for _ in range(4):
+    b.update(20.0, None)
+b.quick_change("crown")
+check("a second pick mid-hop leaves nothing stale to show", not b.take_costume_swap())
+check("...and hops again from the crouch", b.animator.frame_index == 0 and b._antic == "hop",
+      f"{b._antic}/{b.animator.frame_index}")
+hop_until(b, lambda x: x._antic != "hop")
+check("...into the newer one's opinion", b._antic == "wink", str(b._antic))
+
+_cfg, b = fresh("qc_greet", quirks_enabled=False)
+b._begin_antic("hop", 1500.0)
+b.animator.hold("hop", 3)
+b.quick_change("cone")
+check("a greeting hop already in the air restarts from the crouch",
+      b.animator.frame_index == 0 and not b.take_costume_swap(), str(b.animator.frame_index))
+
+# The wardrobe's "Take it off" hops into nothing: "" is a costume to change into, not "no hop".
+_cfg, b = fresh("qc_off", quirks_enabled=False)
+check("taking it off is a quick-change too", b.quick_change(""))
+swapped_at = []
+hop_until(b, _swap_seen)
+check("...shown at the apex like any other", swapped_at == [B.QUICK_CHANGE_SWAP_FRAME],
+      str(swapped_at))
+check("...then the bare-headed look about", b._antic == B.COSTUME_OPINION_DEFAULT, str(b._antic))
 
 print("\n--- 2. one poke gets a flinch ---")
 _cfg, b = fresh("poke", annoyance_threshold=4)
@@ -221,6 +372,106 @@ _cfg, b = fresh("demand_hidden")
 b.set_hidden(True)
 check("...and while hidden", b.do_something() == "", b.state.value)
 
+print("\n--- 8. antics end on a clean frame ---")
+
+
+def watch_endings(b):
+    """Record (state, frame on screen, finished) every time _antic_settled lets an antic go."""
+    seen = []
+    inner = b._antic_settled
+
+    def wrapped(dt_ms, shown):
+        done = inner(dt_ms, shown)
+        if done:
+            seen.append((b.animator.state, shown, b.animator.finished))
+        return done
+
+    b._antic_settled = wrapped
+    return seen
+
+
+def run_out(b, step=50.0, limit=20000.0):
+    """Tick until he leaves ANTIC; returns how long it took."""
+    spent = 0.0
+    while b.state is State.ANTIC and spent < limit:
+        b.update(step, None)
+        spent += step
+    return spent
+
+
+_cfg, b = fresh("clean_hop")
+seen = watch_endings(b)
+b._begin_antic("hop", 1500.0)
+b.update(1.0, None)                 # let _sync_animation put the hop on screen
+b.animator.hold("hop", 2)           # the top of the jump
+b._antic_ms = 0.0
+b.update(50.0, None)
+check("a hop whose time runs out mid-air does not end that tick", b.state is State.ANTIC,
+      b.state.value)
+spent = run_out(b)
+check("...it lands within one more cycle", b.state is State.IDLE and spent <= 700, f"{spent:.0f}ms")
+check("...and the frame it ends on has his feet down",
+      bool(seen) and b._sheet.foot_print(*seen[-1][:2])[2] == 0, str(seen[-1:]))
+
+_random.seed(1806)
+airborne, worst = 0, -1e9
+for _ in range(200):
+    _cfg, b = fresh("clean_hops")
+    seen = watch_endings(b)
+    asked = _random.uniform(1300, 2100)
+    b._begin_antic("hop", asked)
+    spent = run_out(b)
+    if not seen or b._sheet.foot_print(*seen[-1][:2])[2] > 0:
+        airborne += 1
+    worst = max(worst, spent - asked - b._sheet.total_duration("hop") / b._mood_pace())
+check("200 hops of random length: none ends in mid-air", airborne == 0, f"{airborne} airborne")
+check("...and none overruns by more than a cycle", worst <= 50.0, f"worst {worst:+.0f}ms")
+
+_cfg, b = fresh("clean_look")
+b._begin_antic("look_around", 1000.0)
+b.update(1.0, None)
+b._antic_ms = 0.0
+b.update(50.0, None)
+check("a grounded loop ends on its timer with no wait", b.state is State.IDLE, b.state.value)
+
+_cfg, b = fresh("clean_night", personality="chill")
+seen = watch_endings(b)
+b.set_world(W.WorldState(hour=1.0, weekday=2, date_key="2026-07-31", week_key="2026-W31",
+                         part_of_day=W.PART_NIGHT, season=W.SEASON_SPRING,
+                         cpu_percent=8.0, cpu_busy=False))
+check("(night on chill really is slow)", b._mood_pace() < 0.7, f"pace {b._mood_pace():.2f}")
+b._begin_antic(B.TASK_FINISHED_ANIM, B.TASK_FINISHED_MS)
+last_frame, finished = -1, False
+while b.state is State.ANTIC:
+    last_frame, finished = b.animator.frame_index, b.animator.finished
+    b.update(50.0, None)
+check("at night the knocking-off dance reaches its settle frame",
+      last_frame == b._sheet.frame_count(B.TASK_FINISHED_ANIM) - 1, f"frame {last_frame}")
+check("...and plays it through before he moves on", bool(seen) and seen[-1][2], str(seen[-1:]))
+
+_cfg, b = fresh("clean_hold")
+b._begin_antic(B.AWAY_ANTIC, 1e9)
+b.update(1.0, None)
+b._antic_ms = 0.0
+b.update(50.0, None)
+check("a hold ended by zeroing its clock ends on the next tick", b.state is State.IDLE,
+      b.state.value)
+
+_cfg, b = fresh("clean_eyes")
+b.look_at(1200, 1000)
+spent = run_out(b)
+check("eye tracking ends on its own timer, never an overrun",
+      b.state is State.IDLE and spent <= 700 and b._antic_overrun_ms is None, f"{spent:.0f}ms")
+
+_cfg, b = fresh("clean_tick")
+b._begin_antic("hop", 1500.0)
+b.update(1.0, None)
+b.animator.hold("hop", 2)
+b._antic_ms = 0.0
+b.update(10.0, None)
+check("waiting to land does not spin the app at the tick floor",
+      b.state is State.ANTIC and b.next_tick_ms(16, 250) > 16, f"{b.next_tick_ms(16, 250):.0f}ms")
+
 print("\n--- main wires the last two up ---")
 import inspect  # noqa: E402
 
@@ -233,6 +484,27 @@ check("choosing a costume asks his opinion",
 _src = inspect.getsource(M.NibApp._on_costume_chosen)
 check("...after the sprites are rebuilt, so he is wearing it",
       _src.index("_rebuild_appearance") < _src.index("self.behavior.costume_chosen"))
+check("the quick-change writes the config first and defers only the visible swap",
+      _src.index('self.config["costume"] = costume') < _src.index("self.behavior.quick_change(")
+      < _src.index("_rebuild_appearance"))
+check("...remembers it for the wardrobe", "self.config.remember_costume(costume)" in _src)
+check("...and starts the safety net", "self._costume_timer.start()" in _src)
+_tick = inspect.getsource(M.NibApp._tick)
+check("the swap is drained before the persona sync and the paint, so the apex shows it",
+      _tick.index("take_costume_swap()") < _tick.index("self._sync_persona_costume()")
+      < _tick.index("self._apply_frame()"))
+_sync = inspect.getsource(M.NibApp._sync_persona_costume)
+check("the persona sync waits while a quick-change is in the air (else the beanie came off early)",
+      _sync.index("if self._costume_pending:") < _sync.index("wanted ="))
+check("any rebuild settles a pending quick-change",
+      "self._costume_pending = False" in inspect.getsource(M.NibApp._rebuild_appearance)
+      and "self._costume_pending = False" in inspect.getsource(M.NibApp._rescale_for))
+_apply = inspect.getsource(M.NibApp._apply_pending_costume)
+check("...and the pending flag is cleared before rebuilding, so a failed one cannot wedge it",
+      _apply.index("self._costume_pending = False") < _apply.index("self._rebuild_appearance()"))
+check("the safety net comes after the apex at the slowest pace, and before the hop's own cap",
+      481 < M.QUICK_CHANGE_TIMEOUT_MS < B.QUICK_CHANGE_MAX_MS,
+      f"{M.QUICK_CHANGE_TIMEOUT_MS} vs {B.QUICK_CHANGE_MAX_MS}")
 send = inspect.getsource(M.NibApp._send)
 # The launch call itself, whatever its arguments - the point is that it is NOT behind the
 # QTimer that sequences his animation.

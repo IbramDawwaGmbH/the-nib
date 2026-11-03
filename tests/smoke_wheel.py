@@ -314,16 +314,36 @@ check("fractional slots sit exactly on the integer ones",
 check("...and halfway between neighbours, halfway between their angles",
       abs(mid.angle_at(2.5) - (mid.angles[2] + mid.angles[3]) / 2) < 1e-9)
 
-for name in ("sparkle", "costume", "hide", "wander", "pause", "resume", "ghost", "mode",
-             "settings", "tips", "home"):
+for name in ("sparkle", "costume", "wardrobe", "hide", "wander", "pause", "resume", "ghost",
+             "mode", "settings", "tips", "home"):
     check(f"new icon '{name}' is drawn in code", name in W.ICONS)
-painted = [WheelItem(n, n, n, group="Him") for n in ("sparkle", "costume", "hide", "wander", "pause",
-                                                     "resume", "ghost", "mode", "settings", "tips",
-                                                     "home")]
+painted = [WheelItem(n, n, n, group="Him") for n in ("sparkle", "costume", "wardrobe", "hide",
+                                                     "wander", "pause", "resume", "ghost", "mode",
+                                                     "settings", "tips", "home")]
 wheel, _ = fresh_wheel(items=painted)
 wheel._progress = 1.0
 check("all of them paint without raising", not wheel.grab().isNull())
 wheel.close()
+
+print("\n--- costume thumbnails in place of icons ---")
+from animator import SpriteSheet as _Sheet  # noqa: E402
+from PySide6.QtGui import QPixmap  # noqa: E402
+
+_dressing = _Sheet(SRC / "assets" / "nib_sheet.png", SRC / "assets" / "frames.json", 2)
+_names = _dressing.available_costumes()[:12]
+thumbs = [WheelItem(f"wear:{n}", n, "costume", "active" if i == 3 else "", group="Hats",
+                    pixmap=_dressing.costume_thumbnail(n)) for i, n in enumerate(_names)]
+thumbs.append(WheelItem("plain", "Plain", "costume", pixmap=None))
+wheel, _ = fresh_wheel(items=thumbs)
+wheel._progress = 1.0
+wheel._hover = 3
+check("a ring of thumbnails paints without raising", not wheel.grab().isNull())
+wheel.close()
+p1, p2 = QPixmap(4, 4), QPixmap(8, 8)
+check("the picture is not part of what makes two items the same tool",
+      WheelItem("a", "A", "x", pixmap=p1) == WheelItem("a", "A", "x", pixmap=p2))
+check("...and an item carrying one is still hashable",
+      hash(WheelItem("a", "A", "x", pixmap=p1)) == hash(WheelItem("a", "A", "x")))
 
 print("\n--- review fixes: a notch mid-slide carries on rather than snapping back ---")
 
@@ -452,6 +472,50 @@ for x in (96, 3744):
               big.adjusted(int(arrow), int(arrow), -int(arrow), -int(arrow)).contains(tip), tip)
     wh.close()
 
+print("\n--- it says whether you picked or cancelled, and what you are aiming at ---")
+settle()  # let the last section's popups finish closing, or this one can open already dismissed
+wheel, _ = fresh_wheel()
+closes = []
+wheel.closed.connect(closes.append)
+check("set up: the wheel is open", wheel.isVisible())
+wheel._choose(0)
+settle()
+check("a pick closes with True", closes == [True], closes)
+
+wheel, _ = fresh_wheel()
+closes = []
+wheel.closed.connect(closes.append)
+wheel.keyPressEvent(QKeyEvent(QEvent.KeyPress, Qt.Key_Escape, Qt.NoModifier))
+check("Esc closes with False", closes == [False], closes)
+
+wheel, _ = fresh_wheel()
+closes = []
+wheel.closed.connect(closes.append)
+wheel._opened_at -= 1.0  # held, then let go back over him
+mouse(wheel, QEvent.MouseButtonRelease, wheel._centre + QPointF(3, -2), Qt.RightButton, Qt.NoButton,
+      global_pos=QPoint(963, 1038))
+check("letting go back over him closes with False", closes == [False], closes)
+
+wheel, _ = fresh_wheel(items=RING)
+aims = []
+wheel.aimed.connect(aims.append)
+mouse(wheel, QEvent.MouseMove, toward(wheel, 2), Qt.NoButton, Qt.NoButton)
+expected = wheel.mapToGlobal(toward(wheel, 2).toPoint())
+check("aiming at a tool says where that tool is, on screen",
+      aims == [(expected.x(), expected.y())], (aims, expected))
+mouse(wheel, QEvent.MouseMove, toward(wheel, 2, 1.3), Qt.NoButton, Qt.NoButton)
+check("...and moving about on the same tool says nothing new", len(aims) == 1, aims)
+mouse(wheel, QEvent.MouseMove, wheel._centre, Qt.NoButton, Qt.NoButton)
+check("back over him is None", len(aims) == 2 and aims[-1] is None, aims)
+wheel.keyPressEvent(QKeyEvent(QEvent.KeyPress, Qt.Key_Right, Qt.NoModifier))
+first = wheel.mapToGlobal(wheel.layout_plan.point(wheel._centre, 0).toPoint())
+check("the arrow keys aim too", len(aims) == 3 and aims[-1] == (first.x(), first.y()), aims)
+check("set up: this ring scrolls", wheel.scrollable)
+wheel.step(1)
+check("turning the ring keeps the slot, so the direction - and his eyes - stay put", len(aims) == 3,
+      aims)
+wheel.close()
+
 print("\n--- how main.py wires it ---")
 import main as M  # noqa: E402
 
@@ -481,8 +545,8 @@ check("...and when the mic indicator is on at all", 'self.config["mic_indicator_
 check("focus is labelled with what it will do now", '"Stop focus" if focusing else "Start focus"'
       in src_items)
 
-for key in ("do_something", "costume", "hide", "wander", "pause", "ghost", "mode", "settings",
-            "tips", "reset"):
+for key in ("do_something", "costume", "wardrobe", "hide", "wander", "pause", "ghost", "mode",
+            "settings", "tips", "reset"):
     check(f"the ring offers '{key}'", f'"{key}"' in src_items)
     check(f"...and picking '{key}' does something", f'key == "{key}"' in src_chosen)
 check("the tools come before everything else, so they are all on the arc at open",
@@ -500,6 +564,56 @@ check("the mode switch only appears with more than one mode",
       "if len(provider.modes) > 1:" in src_items)
 check("Quit is not on the ring - one stray flick should never close the app",
       '"quit"' not in src_items)
+check("the wardrobe sits next to Surprise costume",
+      src_items.index('"costume"') < src_items.index('"wardrobe"') < src_items.index('"hide"'))
+
+print("\n--- the wardrobe: the wheel again, with his costumes on it ---")
+_ring = M._wardrobe_ring(_dressing, "crown", ["cap", "nope", "cap", "crown"])
+_keys = [i.key for i in _ring]
+_owned = _dressing.available_costumes()
+check("your recents first, unknown ones dropped, repeats folded, then Take it off",
+      _keys[:3] == ["wear:cap", "wear:crown", "wear:"], _keys[:4])
+check("every key is a wear: key", all(k.startswith(M.WARDROBE_PREFIX) for k in _keys))
+check("every costume once, plus Take it off", len(_ring) == len(_owned) + 1
+      and len(set(_keys)) == len(_keys), len(_ring))
+check("the one he is wearing has the ring",
+      [i.key for i in _ring if i.state == "active"] == ["wear:crown"])
+check("every costume carries its thumbnail",
+      all(i.pixmap is not None and not i.pixmap.isNull() for i in _ring if i.key != "wear:"))
+check("the groups read Recent, then Wardrobe, then the categories in the sheet's order",
+      list(dict.fromkeys(i.group for i in _ring))
+      == ["Recent", "Wardrobe", *_dressing.costume_categories()],
+      list(dict.fromkeys(i.group for i in _ring)))
+check("labels are the tray's wording", next(i for i in _ring if i.key == "wear:tophat").label
+      == "Tophat")
+_bare = M._wardrobe_ring(_dressing, "", [])
+check("bare-headed: no Take it off, and the ring starts on the first category",
+      "wear:" not in [i.key for i in _bare] and len(_bare) == len(_owned)
+      and _bare[0].group == next(iter(_dressing.costume_categories())))
+_many = M._wardrobe_ring(_dressing, "", list(_owned))
+check("no more than WARDROBE_RECENTS recents",
+      sum(i.group == "Recent" for i in _many) == M.WARDROBE_RECENTS)
+wheel, _ = fresh_wheel(items=_ring)
+wheel._progress = 1.0
+check("the whole wardrobe paints without raising", not wheel.grab().isNull())
+wheel.close()
+
+check("a wear: pick goes through the same path as the tray",
+      src_chosen.index("key.startswith(WARDROBE_PREFIX)")
+      < src_chosen.index("self._on_costume_chosen(key[len(WARDROBE_PREFIX):])")
+      < src_chosen.index('elif key == "ask"'))
+check("...and refreshes the tray's check mark",
+      "self._refresh_tray()" in src_chosen.split("key.startswith(WARDROBE_PREFIX)", 1)[1]
+      .split("elif", 1)[0])
+check("Wardrobe... opens the wardrobe", "self._open_wardrobe()" in
+      src_chosen.split('key == "wardrobe"', 1)[1].split("elif", 1)[0])
+src_wardrobe = inspect.getsource(M.NibApp._open_wardrobe)
+check("...which holds him again - the first wheel closing let him go",
+      "self.behavior.wheel_opened()" in src_wardrobe)
+check("...re-centres the drift check on where he is now", "self._wheel_centre =" in src_wardrobe)
+check("...and opens in click mode, the first press being long gone",
+      "press_global=None" in src_wardrobe)
+check("...with your recents", 'self.config["costume_recents"]' in src_wardrobe)
 
 print("\n--- review fixes: he holds still under the wheel, and it never ends up over nothing ---")
 src_open = inspect.getsource(M.NibApp._open_tool_wheel)
@@ -509,6 +623,15 @@ check("...after the items are built, so their labels describe him before he was 
 src_make = inspect.getsource(M.NibApp._make_tool_wheel)
 check("closing the wheel lets him go - and is wired again whenever the wheel is rebuilt",
       "self.tool_wheel.closed.connect(self.behavior.wheel_closed)" in src_make)
+check("his eyes are wired to the tool you are aiming at",
+      "self.tool_wheel.aimed.connect(self._on_wheel_aimed)" in src_make)
+src_aimed = inspect.getsource(M.NibApp._on_wheel_aimed)
+check("...and painted at once, not a tick later",
+      "wheel_aimed(" in src_aimed and "_apply_frame(" in src_aimed)
+check("every pick goes past Behavior.tool_picked for its beat", "self.behavior.tool_picked(key)"
+      in src_chosen)
+check("...after the whole chain of handlers, so a tool that gave him a job keeps it",
+      src_chosen.index("self.behavior.tool_picked(key)") > src_chosen.rindex("elif key =="))
 check("the topmost timer leaves the wheel above him",
       "not self.tool_wheel.isVisible()" in inspect.getsource(M.NibApp._reassert_topmost))
 check("every movement tick checks he is still under the wheel",
@@ -539,8 +662,10 @@ b.wheel_closed()
 check("closing it lets him go back to what he was doing", b.state == Bh.State.IDLE, b.state)
 pokes = len(b._pokes)
 b.wheel_opened()
-b.wheel_closed()
+b.wheel_closed(False)
 check("putting the wheel away without choosing is not a poke", len(b._pokes) == pokes)
+check("...but it does get a head scratch, so a cancel looks different from a pick",
+      b.state == Bh.State.ANTIC and b._antic == Bh.WHEEL_CANCEL_ANIM, (b.state, b._antic))
 
 print("\n--- review fixes: right-clicking him on a window does not knock him off it ---")
 cfg_path = _scratch() / "wheel_perch.json"
@@ -582,6 +707,173 @@ wheel.step(1)
 check("stepping as the previous slide ends still slides", wheel._slide != 0 and wheel._departing,
       (wheel._slide, len(wheel._departing)))
 wheel.close()
+
+print("\n--- one blink clock, shared by every state that stands about ---")
+for tick in ("_tick_idle", "_tick_perch"):
+    check(f"{tick} blinks through the shared clock",
+          "_tick_blink(" in inspect.getsource(getattr(Bh.Behavior, tick)))
+
+def wheel_nib(name):
+    path = _scratch() / f"{name}.json"
+    path.unlink(missing_ok=True)
+    nib = Bh.Behavior(Config(path), sheet)
+    nib.set_strip(1000, 0, 4000)
+    nib.place_at(600)
+    for _ in range(5):
+        nib.update(50.0, None)
+    return nib
+
+
+BLINKS = {Bh.BLINK_SINGLE, "blink", "blink_double", "blink_slow"}
+
+print("\n--- he watches the tool you are aiming at ---")
+b = wheel_nib("wheel_eyes")
+b.wheel_opened()
+x0 = b.x
+b.wheel_aimed((b.x + b.sprite_w // 2, b.top - 200))
+check("aiming straight up turns his eyes up at once",
+      b.animator.state == Bh.EYE_TRACK_STATE and b.animator.frame_index == 1,
+      (b.animator.state, b.animator.frame_index))
+for _ in range(20):
+    b.update(50.0, None)
+check("...and the tick holds them there rather than resetting them",
+      b.animator.state == Bh.EYE_TRACK_STATE and b.animator.frame_index == 1,
+      (b.animator.state, b.animator.frame_index))
+check("...still held for the wheel, and still in the same spot",
+      b.state == Bh.State.ASK and b.x == x0, (b.state, x0, b.x))
+b.wheel_aimed((b.x + b.sprite_w + 400, b.top + b.sprite_h + 400))
+check("aiming down and to the right looks down and to the right", b.animator.frame_index == 8,
+      b.animator.frame_index)
+b.wheel_aimed(None)
+b.update(50.0, None)
+check("off every tool, he looks ahead again", b.animator.state == "idle", b.animator.state)
+b.wheel_aimed((b.x + b.sprite_w // 2, b.top - 200))
+b.wheel_closed(True)
+check("closing the wheel forgets where he was looking", b._wheel_look is None)
+check("...and a pick leaves him standing about, not scratching", b.state == Bh.State.IDLE, b.state)
+
+cfg_path = _scratch() / "wheel_perch_eyes.json"
+cfg_path.unlink(missing_ok=True)
+b = Bh.Behavior(Config(cfg_path), sheet)
+b.set_strip(1000, 0, 4000)
+b.place_at(440)
+b.drag_start()
+for _ in range(3):
+    b.drag_to(440, 300)
+    b.update(50.0, None)
+b.drag_end(perch_rect=(400, 300, 900, 700))
+b.wheel_opened()
+b.wheel_aimed((b.x + b.sprite_w // 2, b.top - 200))
+b.update(50.0, None)
+check("perched, the wheel does not hold him, so he does not watch it",
+      b.perched and b.animator.state != Bh.EYE_TRACK_STATE, (b.perched, b.animator.state))
+
+print("\n--- asleep, the wheel still opens, and he grumbles about it ---")
+b = wheel_nib("wheel_sleep")
+b._enter(Bh.State.SLEEP)
+check("right-clicking him asleep does not hold him", b.wheel_opened() is False)
+check("...he stays asleep", b.state == Bh.State.SLEEP, b.state)
+check("...but grumbles, the same as a click would", b._grumble_ms == Bh.GRUMBLE_MS, b._grumble_ms)
+b.update(50.0, None)
+check("...and looks it", b.animator.state == "angry", b.animator.state)
+b.wheel_closed(False)
+check("cancelling that wheel does not wake him with a scratch", b.state == Bh.State.SLEEP, b.state)
+
+print("\n--- he blinks while the bubble or the wheel holds him ---")
+for how in ("bubble", "wheel"):
+    b = wheel_nib(f"ask_blink_{how}")
+    b.click() if how == "bubble" else b.wheel_opened()
+    check(f"{how}: entering ASK winds a fresh blink clock",
+          Bh.BLINK_MIN_MS <= b._blink_timer_ms <= Bh.BLINK_MAX_MS, b._blink_timer_ms)
+    check(f"{how}: ...and the app's tick waits no longer than the next blink",
+          b.next_tick_ms(16, 250) <= b._blink_timer_ms)
+    b._blink_timer_ms = 1
+    b.update(50.0, None)
+    check(f"{how}: when it runs out, he blinks", b._blinking and b.animator.state in BLINKS,
+          (b._blinking, b.animator.state))
+    for _ in range(100):
+        if not b._blinking:
+            break
+        b.update(50.0, None)
+    check(f"{how}: ...and the blink ends, still held, eyes open again",
+          not b._blinking and b.state == Bh.State.ASK and b.animator.state == "idle",
+          (b._blinking, b.state, b.animator.state))
+check("ASK ticks through the shared blink clock",
+      "_tick_blink(" in inspect.getsource(Bh.Behavior._tick_ask))
+
+b = wheel_nib("ask_blink_aim")
+b.wheel_opened()
+b._blink_timer_ms = 1
+b.update(50.0, None)
+check("set up: a blink is under way", b._blinking)
+b.wheel_aimed((b.x + b.sprite_w // 2, b.top - 200))
+check("aiming mid-blink takes the frame over",
+      not b._blinking and b.animator.state == Bh.EYE_TRACK_STATE)
+b.wheel_aimed(None)
+started = 0
+for _ in range(200):  # ten seconds, longer than BLINK_MAX_MS
+    was = b._blinking
+    b.update(50.0, None)
+    started += b._blinking and not was
+check("...and he goes on blinking afterwards rather than getting stuck", started >= 1, started)
+
+b = wheel_nib("wheel_paused_cancel")
+b.wheel_opened()
+b.paused = True
+b.wheel_closed(False)
+check("cancelling while paused skips the scratch - it would freeze mid-pose",
+      b.state == Bh.State.IDLE, b.state)
+
+print("\n--- every pick gets a reaction ---")
+import re  # noqa: E402
+
+for name in [anim for anim, _ms in Bh.TOOL_BEATS.values()] + [Bh.WHEEL_CANCEL_ANIM]:
+    check(f"the sheet has '{name}'", sheet.has_state(name))
+# Tools whose handlers already give him something to do, or take him away: no beat on top.
+EXEMPT = {"ask", "again", "read", "focus", "pocket", "do_something", "costume", "wardrobe",
+          "more", "hide", "guard"}
+ring = re.findall(r'WheelItem\("(\w+)"', inspect.getsource(M.NibApp._wheel_items))
+check("set up: the ring's keys were found", len(ring) >= 18, ring)
+for key in ring:
+    check(f"'{key}' either has a beat or is exempt on purpose - not both, not neither",
+          (key in Bh.TOOL_BEATS) != (key in EXEMPT))
+for key, (anim, _ms) in Bh.TOOL_BEATS.items():
+    b = wheel_nib(f"beat_{key}")
+    check(f"picking '{key}' gets a beat", b.tool_picked(key) and b.state == Bh.State.ANTIC
+          and b._antic == anim, (b.state, b._antic))
+for key in sorted(EXEMPT):
+    b = wheel_nib(f"beat_exempt_{key}")
+    check(f"picking '{key}' adds nothing of its own", not b.tool_picked(key)
+          and b.state == Bh.State.IDLE, b.state)
+
+b = wheel_nib("beat_pause")
+b.paused = True
+check("pausing gets no beat - it would freeze halfway through",
+      not b.tool_picked("pause") and b.state == Bh.State.IDLE, b.state)
+b.paused = False
+check("...resuming gets a stretch", b.tool_picked("pause") and b._antic == "stretch", b._antic)
+
+b = wheel_nib("beat_mic")
+b.tool_picked("mic")
+check("the mic beat is not the muted-mic tell",
+      b._antic != Bh.MUTED_ANIM and b.persona_costume == "", (b._antic, b.persona_costume))
+
+b = wheel_nib("beat_sleep")
+b._enter(Bh.State.SLEEP)
+check("asleep, no pick wakes him with a beat",
+      not any(b.tool_picked(k) for k in ring) and b.state == Bh.State.SLEEP, b.state)
+cfg_path = _scratch() / "beat_perch.json"
+cfg_path.unlink(missing_ok=True)
+b = Bh.Behavior(Config(cfg_path), sheet)
+b.set_strip(1000, 0, 4000)
+b.place_at(440)
+b.drag_start()
+for _ in range(3):
+    b.drag_to(440, 300)
+    b.update(50.0, None)
+b.drag_end(perch_rect=(400, 300, 900, 700))
+check("perched, no pick knocks him off the window with a beat",
+      not any(b.tool_picked(k) for k in ring) and b.perched and b.state == Bh.State.PERCH, b.state)
 
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "the tool wheel behaves")

@@ -120,6 +120,10 @@ ANTICS: tuple[tuple[str, float, float, float, str], ...] = (
 FIDGET_CATEGORY = "fidget"
 #: Multiplier applied to "eyes" antics while the pointer is close - he plays to an audience.
 EYES_ANTIC_AUDIENCE_BOOST = 2.5
+#: An antic asked for longer than this is a hold - the away-sit, the sign, the focus pose, the
+#: give-up sit - ended by something else rather than by its own clock, so it never waits for a
+#: clean frame. Detected rather than replacing the 1e9 literals, which tests pin (smoke_focus).
+ANTIC_HOLD_MS = 1e8
 
 # --- personality presets -----------------------------------------------------------------
 #
@@ -240,6 +244,22 @@ MUTED_MS = 2000.0
 AWAY_ANTIC = "sit_dangle"
 GREET_ANTIC = "hop"
 GREET_MS = 1500.0
+#: How big the greeting is depends on how long you were gone: a quick wave for a coffee, the hop for
+#: a meeting, and after a night away the full wake-up - a stretch, a yawn, and then the hop.
+GREET_WAVE_ANTIC = "wave"
+GREET_WAVE_MS = 1400.0
+GREET_HOP_AFTER_S = 600.0          # 10 min: under this, a wave
+GREET_OVERNIGHT_AFTER_S = 14400.0  # 4 h: overnight, or near enough
+GREET_OVERNIGHT: tuple[tuple[str, float], ...] = (
+    ("stretch", 1600.0), ("yawn", 2000.0), (GREET_ANTIC, GREET_MS),
+)
+
+#: Coming back from being hidden - a snooze ending, or a fullscreen app closing - gets a wave. Not
+#: noticed(), and no mood: he was put away, nobody came back to him.
+BACK_ANTIC = "wave"
+BACK_MS = 1200.0
+BACK_MIN_HIDDEN_MS = 20000.0   # a flicker of fullscreen is not an absence
+BACK_COOLDOWN_MS = 60000.0     # alt-tabbing in and out of a game gets one, not one each time
 
 # --- being ignored ---------------------------------------------------------------------
 #
@@ -427,8 +447,9 @@ CPU_ANIM = "hot"
 #: fixed sequence (wind-up, punch, a twinkling held sparkle, settle), so playing it for anything
 #: shorter would cut it off mid-gesture and anything much longer would just repeat the smug ending.
 TASK_FINISHED_ANIM = "task_finished"
-#: 2240ms of animation (200+160+380+380+220+900) plus a 60ms buffer, so it always plays through to
-#: the smug settle rather than being cut off by a race with the antic clock.
+#: 2240ms of animation (200+160+380+380+220+900) plus a 60ms buffer. The buffer is no longer what
+#: guarantees the smug settle: the animation runs on the mood-paced clock and this on real time, so
+#: at night it used to be cut off two frames short. _antic_settled lets a one-shot finish at any pace.
 TASK_FINISHED_MS = 2300.0
 
 # --- dressing himself --------------------------------------------------------------------
@@ -598,8 +619,9 @@ POKE_FLINCH_MS = 420.0
 SPIN_MS = 620.0
 SPIN_COOLDOWN_MS = 900.0
 
-#: What he thinks of the costume you just put on him. Keyed on the costume, falling back by
-#: category, and it costs no new art at all - every one of these animations already exists.
+#: What he thinks of the costume you just put on him. Keyed on the costume, falling back to
+#: COSTUME_CATEGORY_OPINIONS, then to COSTUME_OPINION_DEFAULT, and it costs no new art at all -
+#: every one of these animations already exists.
 #: He owns fifty-odd costumes and, until this, had no opinion about any of them.
 COSTUME_OPINIONS: dict[str, str] = {
     # ...that is ridiculous and you know it
@@ -613,10 +635,63 @@ COSTUME_OPINIONS: dict[str, str] = {
     "heartglasses": "heart_eyes", "halo": "heart_eyes", "scarf": "heart_eyes",
     "beanie": "heart_eyes", "wings": "heart_eyes",
 }
-#: Anything not named above: he has a look at himself.
+#: The fallback the comment above always promised: anything not named gets its category's
+#: reaction rather than the one default. 32 of 53 costumes used to share look_around; with this,
+#: no reaction is shared by more than 10. "hop" is deliberately absent - it is the quick-change.
+COSTUME_CATEGORY_OPINIONS: dict[str, str] = {
+    "Hats": "scratch",        # ...itches under the brim
+    "Head": "sparkle",
+    "Eyes": "look_around",    # trying them out
+    "Neck": "wink",           # dapper
+    "Body": "pushups",        # work gear: sleeves up
+    "Behind": "stretch",      # shrugging the straps on
+}
+#: Anything in neither table - or nothing at all: he has a look at himself.
 COSTUME_OPINION_DEFAULT = "look_around"
 #: And taking one off gets the same look, not a celebration.
 COSTUME_OPINION_MS = (900.0, 1500.0)
+#: The quick-change: he crouches, hops, and the outfit swaps at the very top of the hop - where the
+#: eye is on the jump, not the hat - then lands and gives his opinion. The greeting hop; no new art.
+QUICK_CHANGE_ANIM = "hop"
+#: hop = crouch, rising, apex, falling, landing; foot_print lifts 0/8/24/10/0px at scale 2.
+QUICK_CHANGE_SWAP_FRAME = 2
+#: One 700ms cycle is ~1300ms at the slowest mood pace (~0.54). Twice that, so this only cuts in
+#: when something froze the animation.
+QUICK_CHANGE_MAX_MS = 2600.0
+#: A new colour gets a sparkle, for the same COSTUME_OPINION_MS: he has no favourite colour, he is
+#: just pleased somebody bothered.
+SKIN_REACTION_ANIM = "sparkle"
+
+#: Pinning with nothing on the clipboard: he has a look round for it. The toast says what happened.
+POCKET_EMPTY_ANIM = "look_around"
+POCKET_EMPTY_MS = (1200.0, 1800.0)
+
+#: The app did not open. A double-take instead of "on it" - he is as surprised as you are.
+LAUNCH_FAILED_ANIM = "startle"
+LAUNCH_FAILED_MS = STARTLE_MS
+
+#: Putting the wheel away without choosing: a head scratch, the nearest thing he has to a shrug.
+#: Not a poke - browsing the wheel is not brushing him off (see wheel_closed). One cycle.
+WHEEL_CANCEL_ANIM = "scratch"
+WHEEL_CANCEL_MS = 600.0
+
+#: A beat for each wheel tool whose handler gives him nothing to do, in whole cycles. The rest are
+#: left out on purpose: ask, again, read, focus, pocket, do_something and costume already set his
+#: state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus);
+#: hide and guard take him off screen; more opens a menu whose own items have handlers. Mic is
+#: foot_tap and never wave: wave in earmuffs is the muted-mic tell, and this is not that. Settings
+#: is typing rather than a scratch, because the scratch is what a cancel looks like.
+TOOL_BEATS: dict[str, tuple[str, float]] = {
+    "measure": ("look_around", 1880.0),
+    "mic": ("foot_tap", 1240.0),
+    "wander": ("hop", 700.0),
+    "pause": ("stretch", 1520.0),   # only ever reached on resume - see tool_picked
+    "ghost": ("wink", 980.0),
+    "mode": ("sparkle", 1360.0),
+    "settings": ("typing", 1140.0),
+    "tips": ("wave", 1120.0),
+    "reset": ("look_around", 1880.0),
+}
 
 #: Target update interval while he is actually moving. The gait is tick-rate independent (each
 #: animation frame advances him exactly one stride regardless), so this trades only motion
@@ -667,6 +742,8 @@ class Behavior:
         self._pending_sleep = False
         #: Whether the tool wheel is what put him in State.ASK - see wheel_opened.
         self._wheel_hold = False
+        #: Where the wheel tool being aimed at is, in screen px: his eyes follow it (wheel_aimed).
+        self._wheel_look: tuple[int, int] | None = None
         #: An antic to play once the current walk arrives - that is how he crosses the strip to
         #: get *under* something before reacting to it.
         self._pending_action: str | None = None
@@ -700,11 +777,23 @@ class Behavior:
         self._morning_cooldown_ms = 0.0
         self._seasonal_cooldown_ms = 0.0
         self._persona_costume = ""
+        #: The costume a quick-change is hopping into, while the hop is in the air - see quick_change.
+        self._quick_change: str | None = None
+        self._quick_change_swapped = False
+        #: Raised for exactly one drain (take_costume_swap) when the new costume should become visible.
+        self._costume_swap_due = False
         #: The snippet billboard: a list of lines, never written to config or disk. Restarting
         #: the app - or just quitting - empties it, the same way a real one would.
         self._pocket: list[str] = []
         self._antic: str | None = None
         self._antic_ms = 0.0
+        #: Set on the tick an antic's clock runs out: how much longer it may take to reach a clean
+        #: frame (one cycle, in real ms at the current pace). None while the clock is still running.
+        self._antic_overrun_ms: float | None = None
+        self._antic_overrun_from = 0
+        self._antic_hold = False
+        #: Antics still to play, in order, after this one - see _begin_sequence.
+        self._antic_queue: list[tuple[str, float]] = []
         self._last_antic: str | None = None
         self._working_ms = 0.0
         self._sleep_ms = 0.0
@@ -752,6 +841,11 @@ class Behavior:
         self._trip_armed = False
         self._hiccups_left = 0
         self._spin_cooldown_ms = 0.0
+        #: When he was last hidden, and when he last waved on the way back, both on the behaviour
+        #: clock. Timestamps rather than a countdown because the cooldown loop does not run while
+        #: hidden, and hidden is exactly where this one has to keep counting. See BACK_ANTIC.
+        self._hidden_since_ms = 0.0
+        self._back_at_ms = -1e9
         #: A point he has been asked to look at, overriding the cursor for one eye-track antic.
         self._forced_look: tuple[int, int] | None = None
 
@@ -1056,25 +1150,87 @@ class Behavior:
         log.info("on demand: %s", name)
         return name
 
-    def costume_chosen(self, costume: str) -> None:
-        """You just put something on him. He has an opinion about it.
+    def costume_chosen(self, costume: str) -> bool:
+        """You just put something on him. He has an opinion about it; returns whether he showed it.
 
         Costs no new art: every reaction here is an animation he already had. What it buys is that
         the wardrobe stops being a wardrobe - fifty-three costumes he was previously completely
-        indifferent to now get a reaction each.
+        indifferent to now get a reaction each. Paused, he keeps it to himself: update() would
+        freeze the reaction on its first frame until you resumed him.
         """
-        if not bool(self._config.get("costume_reactions", True)):
-            return
+        if not bool(self._config.get("costume_reactions", True)) or self.paused:
+            return False
         if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
-            return
-        animation = COSTUME_OPINIONS.get(costume, COSTUME_OPINION_DEFAULT)
-        if not self._sheet.has_state(animation):
-            animation = COSTUME_OPINION_DEFAULT
-        if not self._sheet.has_state(animation):
-            return
+            return False
+        animation = self._costume_opinion(costume)
+        if animation is None:
+            return False
         self.noticed()
         log.debug("opinion on %r: %s", costume or "nothing", animation)
         self._begin_antic(animation, random.uniform(*COSTUME_OPINION_MS))
+        return True
+
+    def quick_change(self, costume: str) -> bool:
+        """Crouch, hop, and change at the top of it. Returns whether he is doing it.
+
+        False means "put it on now": he is asleep, held, hidden, cross, paused, mid-flight or on a
+        window (an antic from PERCH has no way back onto it - see _tick_quirks), or reactions are
+        off. The caller has already written the config; only the visible change waits for the apex,
+        and take_costume_swap says when that is.
+        """
+        if not bool(self._config.get("costume_reactions", True)) or self.paused:
+            return False
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY,
+                           State.PERCH) or self._pending_sleep:
+            return False
+        if self._falling or self._rolling or not self._sheet.has_state(QUICK_CHANGE_ANIM):
+            return False
+        self.noticed()
+        # A hop this one replaces has nothing left to show: the config already holds the newer
+        # costume, so it must not flush as it is replaced.
+        self._quick_change = None
+        self._begin_antic(QUICK_CHANGE_ANIM, QUICK_CHANGE_MAX_MS)
+        # Always from the crouch. ANTIC -> ANTIC does not restart the animation, so a greeting hop
+        # already in the air would otherwise reach its apex - and swap - at once.
+        self.animator.set_state(QUICK_CHANGE_ANIM, restart=True)
+        self._quick_change = costume
+        self._quick_change_swapped = False
+        log.debug("quick-change into %r", costume or "nothing")
+        return True
+
+    def take_costume_swap(self) -> bool:
+        """True exactly once when the quick-change wants the new costume shown. Drained like
+        take_sounds."""
+        due, self._costume_swap_due = self._costume_swap_due, False
+        return due
+
+    def _flush_quick_change(self) -> None:
+        """Knocked out of a quick-change mid-hop: the costume is already yours, so show it now."""
+        if self._quick_change is None:
+            return
+        if not self._quick_change_swapped:
+            self._costume_swap_due = True
+        self._quick_change = None
+
+    def _costume_opinion(self, costume: str) -> str | None:
+        """The named reaction, else the category's, else the default - the first this sheet has."""
+        category = self._sheet.costume_category(costume) if costume else ""
+        for animation in (COSTUME_OPINIONS.get(costume), COSTUME_CATEGORY_OPINIONS.get(category),
+                          COSTUME_OPINION_DEFAULT):
+            if animation and self._sheet.has_state(animation):
+                return animation
+        return None
+
+    def skin_chosen(self) -> None:
+        """You just changed his colour. A sparkle - same switch and same gates as a costume."""
+        if not bool(self._config.get("costume_reactions", True)) or self.paused:
+            return
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return
+        if not self._sheet.has_state(SKIN_REACTION_ANIM):
+            return
+        self.noticed()
+        self._begin_antic(SKIN_REACTION_ANIM, random.uniform(*COSTUME_OPINION_MS))
 
     def look_at(self, x: int, y: int) -> None:
         """Glance at a point on screen - where you just dropped something, for instance."""
@@ -1185,11 +1341,17 @@ class Behavior:
         It is drawn centred on where he is, so he cannot wander off out of the middle of it - the
         same reason the ask bubble holds him in ``State.ASK``, which is reused here rather than
         inventing a state that would look identical. Unlike a click it is not refused while he is
-        asleep or cross, because nothing about it needs him to perform: he simply is not held, and
-        the caller closes the wheel if he moves out from under it.
+        asleep or cross, because nothing about it needs him to perform: he is not held, and
+        grumbles if asleep, and the caller closes the wheel if he moves out from under it.
         """
         self.noticed()
         self._wheel_hold = False
+        self._wheel_look = None
+        if self._state in (State.SLEEP, State.WAKE):
+            # Same as a click: a grumble, and he is not getting up for you - the wheel still opens.
+            # The click time also keeps _tick_sleep's near-the-end hover wake off him meanwhile.
+            self._last_click_ms = self._clock_ms
+            self._grumble_ms = GRUMBLE_MS
         # PERCH too: standing on a window he is already still, and leaving that state would stop
         # him following the window - while he stayed flagged as standing on it. Grabbing him is the
         # only way off a perch, and right-clicking him must not become a second one.
@@ -1202,18 +1364,65 @@ class Behavior:
         self._wheel_hold = True
         return True
 
-    def wheel_closed(self) -> None:
+    def wheel_aimed(self, point: tuple[int, int] | None) -> None:
+        """The wheel's pointer moved onto a tool (its centre, screen px) or off all of them (None).
+
+        Only while the wheel holds him: asleep or perched he is not watching it. The frame is held
+        here as well as on the tick, so his eyes move the moment yours do rather than a tick later.
+        """
+        if not self._wheel_hold or self._state != State.ASK or point is None:
+            self._wheel_look = None
+            self._sync_animation()
+            return
+        self._wheel_look = (int(point[0]), int(point[1]))
+        # A blink in flight would never see its end once the eye frame is held over it, and he
+        # would stop blinking for the rest of the hold.
+        self._blinking = False
+        if self._sheet.has_state(EYE_TRACK_STATE):
+            self.animator.hold(EYE_TRACK_STATE, self._track_frame_index(self._wheel_look))
+
+    def wheel_closed(self, picked: bool = True) -> None:
         """The wheel went away. Let him go - unless a tool it picked has already given him a job.
 
         Deliberately not a poke, unlike dismissing the bubble: putting the wheel away without
-        choosing is browsing, not brushing him off. Called before the chosen tool runs, so a tool
-        that sets his state (Ask, Focus) still gets the last word.
+        choosing is browsing, not brushing him off. It does get a head scratch, though, so a cancel
+        looks different from a pick. Called before the chosen tool runs, so a tool that sets his
+        state (Ask, Focus) still gets the last word.
+
+        The app's own closes - he drifted out from under it, the guard went up, a DPI rebuild -
+        arrive as cancels too. Drifting means he already left ASK, and the guard hides him straight
+        afterwards, so only the rare rebuild ever scratches, which is harmless. Paused, he gets no
+        scratch: update() would freeze it mid-pose until you resumed him.
         """
         # Only a hold the wheel took itself: whatever state he was left in otherwise is not the
         # wheel's to end.
-        if self._wheel_hold and self._state == State.ASK:
-            self._enter(State.IDLE)
+        held = self._wheel_hold and self._state == State.ASK
         self._wheel_hold = False
+        self._wheel_look = None
+        if not held:
+            return
+        if (not picked and not self.paused and not (self._falling or self._rolling)
+                and self._sheet.has_state(WHEEL_CANCEL_ANIM)):
+            self._begin_antic(WHEEL_CANCEL_ANIM, WHEEL_CANCEL_MS)
+        else:
+            self._enter(State.IDLE)
+
+    def tool_picked(self, key: str) -> bool:
+        """A wheel tool just ran. Gives the silent ones a beat (TOOL_BEATS); returns whether he did.
+
+        Runs after the tool's own handler, from the IDLE wheel_closed left him in. Anything else -
+        a handler that already gave him a job, asleep, perched, paused - is left exactly as it is.
+        Paused is checked after the handler on purpose: pausing leaves him IDLE but frozen, so the
+        beat lands only on resume. No noticed() here: the wheel opening already counted.
+        """
+        beat = TOOL_BEATS.get(key)
+        if beat is None or self.paused or self._state != State.IDLE:
+            return False
+        if self._falling or self._rolling or not self._sheet.has_state(beat[0]):
+            return False
+        log.debug("wheel beat: %s -> %s", key, beat[0])
+        self._begin_antic(*beat)
+        return True
 
     def bubble_dismissed(self) -> None:
         """The bubble closed without sending - that is a poke."""
@@ -1245,6 +1454,25 @@ class Behavior:
         self._post_prompt = self._prompt_reaction(text)
         self._working_ms = random.uniform(WORKING_MIN_MS, WORKING_MAX_MS)
         self._enter(State.WORKING)
+
+    def launch_failed(self) -> None:
+        """You asked, and the app did not open. A double-take, never "on it".
+
+        Not a poke, and none of what a send does either: no mood nudge, no "send" sound, no
+        working beat and no reaction to the prompt - nothing went anywhere to react to. The pokes
+        stay too, since it is a *successful* send that takes the edge off.
+        """
+        self.noticed()
+        self._post_prompt = None
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
+            return
+        if self._pending_sleep:
+            return
+        # Paused, no double-take - it would freeze on its first frame - but ASK still has to end.
+        if not self.paused and self._sheet.has_state(LAUNCH_FAILED_ANIM):
+            self._begin_antic(LAUNCH_FAILED_ANIM, LAUNCH_FAILED_MS)
+        elif self._state == State.ASK:
+            self._enter(State.IDLE)  # the bubble submitted from ASK, and nothing else would end it
 
     def _prompt_reaction(self, text: str) -> tuple[str, float, str] | None:
         """Pick an animation from the shape of what you just asked, or None for no comment.
@@ -1587,9 +1815,15 @@ class Behavior:
         self._begin_walk(min(max(target, self.x_min), self.x_max))
         return self._state == State.WALK
 
-    def set_hidden(self, hidden: bool) -> None:
+    def set_hidden(self, hidden: bool, *, greet: bool = False) -> None:
+        """Hide him, or bring him back. ``greet`` is for a return worth a wave (BACK_ANTIC).
+
+        Only the snooze and the fullscreen return pass it. The guard does not: it has its own way
+        back in.
+        """
         if hidden and self._state != State.HIDDEN:
             self._prev_state = self._state
+            self._hidden_since_ms = self._clock_ms
             self._enter(State.HIDDEN)
         elif not hidden and self._state == State.HIDDEN:
             # Only resume states that still make sense after an arbitrary gap. A fullscreen game
@@ -1602,6 +1836,21 @@ class Behavior:
             # same way as one that closes in plain sight.
             resumable = self._prev_state in (State.IDLE, State.WALK, State.PERCH)
             self._enter(self._prev_state if resumable else State.IDLE)
+            # Only from plain idle: a wave would pull him off a perch or lose a walk's target. And
+            # not over a hold he is about to resume - the away-sit, the sign, the focus pose. Not
+            # paused either: update() would hold the wave on its first frame until you resumed him.
+            if (
+                greet
+                and not self.paused
+                and self._state == State.IDLE
+                and not (self._away or self.pocket_full or self._focus_active)
+                and self._clock_ms - self._hidden_since_ms >= BACK_MIN_HIDDEN_MS
+                and self._clock_ms - self._back_at_ms >= BACK_COOLDOWN_MS
+                and self._sheet.has_state(BACK_ANTIC)
+            ):
+                log.debug("back from hiding - waving")
+                self._back_at_ms = self._clock_ms
+                self._begin_antic(BACK_ANTIC, BACK_MS)
 
     # --- state helpers ------------------------------------------------------------
 
@@ -1625,6 +1874,8 @@ class Behavior:
             self._pending_action = None
         if state != State.ANTIC:
             self._persona_costume = ""  # the hat belongs to the antic, not to him
+            self._antic_queue = []      # and the rest of a sequence belongs to the sequence
+            self._flush_quick_change()  # grabbed, hidden, petted or clicked mid-hop
 
         if state == State.IDLE:
             self._idle_timer_ms = self._next_wander_delay()
@@ -1638,7 +1889,7 @@ class Behavior:
             self._peek_cooldown_ms = PEEK_COOLDOWN_MS
         elif state == State.PET:
             self._pet_drain_ms = 0.0
-        elif state == State.PERCH:
+        elif state in (State.PERCH, State.ASK):
             self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
         if state in (State.SLEEP, State.WAKE, State.PET):
             self._sound(state.value)
@@ -1666,7 +1917,13 @@ class Behavior:
             State.WALK: f"walk_{self._facing}",
             State.INJURED: INJURY_ANIM,
             State.HOVER_WAVE: "wave",
-            State.ASK: "idle",
+            # The wheel's tool being aimed at: one frame of the eye grid, held by _tick_ask - the
+            # PEEK pattern, because anything that left ASK to look would end the wheel's hold.
+            State.ASK: (
+                EYE_TRACK_STATE
+                if self._wheel_look is not None and self._sheet.has_state(EYE_TRACK_STATE)
+                else self._blink_state if self._blinking else "idle"
+            ),
             State.WORKING: "working",
             State.ANGRY: "angry",
             State.SLEEP: "sleep",
@@ -1748,6 +2005,7 @@ class Behavior:
     # --- antics -------------------------------------------------------------------
 
     def _begin_antic(self, name: str, duration_ms: float, costume: str = "") -> None:
+        self._flush_quick_change()  # any other antic cutting in mid-hop shows the costume now
         self._antic = name
         self._antic_ms = duration_ms
         self._last_antic = name
@@ -1757,7 +2015,23 @@ class Behavior:
         self._persona_costume = costume
         log.debug("antic: %s for %.0fms%s", name, duration_ms,
                   f" wearing {costume}" if costume else "")
+        self._antic_overrun_ms = None
+        self._antic_hold = duration_ms >= ANTIC_HOLD_MS
+        self._antic_queue = []  # anything starting an antic directly drops a pending sequence
         self._enter(State.ANTIC)
+
+    def _begin_sequence(self, steps: list[tuple[str, float]]) -> None:
+        """Play antics back to back, each ending cleanly before the next starts.
+
+        Steps this sheet has no art for are skipped rather than failing the lot. Anything that
+        takes him out of ANTIC on the way - a click, a drag, a pet, a hide - drops the rest.
+        """
+        steps = [step for step in steps if self._sheet.has_state(step[0])]
+        if not steps:
+            self._enter(State.IDLE)
+            return
+        self._begin_antic(*steps[0])
+        self._antic_queue = list(steps[1:])  # after the call, which clears it
 
     def _pick_antic(self, cursor: tuple[int, int] | None) -> tuple[str, float] | None:
         """Weighted random antic, never the same one twice in a row.
@@ -1795,10 +2069,45 @@ class Behavior:
         name, low, high = random.choices(pool, weights=weights, k=1)[0]
         return name, random.uniform(low, high)
 
+    def _antic_settled(self, dt_ms: float, shown: int) -> bool:
+        """The antic's clock has run out: may it end on this tick, or is he mid-gesture?
+
+        A loop waits until the frame on screen - ``shown``, the index as this tick began, since the
+        one this tick advanced to has not been painted yet - has his feet down, or until it has
+        wrapped back round to its first frame. Judging by the advanced frame instead would cut the
+        hop from its last airborne frame straight to idle and skip the landing. A one-shot plays
+        to its last frame. Either way at most one more cycle, in real time at the
+        current pace - a local cap, not a rescale of the durations themselves. Only ``hop`` ever
+        leaves the ground today, and it used to end mid-air about half the time. The one-shot case
+        is the night bug: ``task_finished`` runs on the mood-paced clock, so at 0.6 pace a
+        real-time timer cut it off before the settle frame. Eye tracking and the indefinite holds
+        are exempt - the frame there is chosen, not played, and a hold is ended on purpose.
+        """
+        if self._antic == EYE_TRACK_STATE or self._antic_hold:
+            return True
+        state = self.animator.state  # what is actually on screen, not what was asked for
+        if self._antic_overrun_ms is None:
+            cycle_ms = self._sheet.total_duration(state)
+            self._antic_overrun_ms = cycle_ms / max(0.1, self._mood_pace())
+            self._antic_overrun_from = shown
+        else:
+            self._antic_overrun_ms -= dt_ms
+        if self._antic_overrun_ms <= 0:
+            return True
+        if not self._sheet.loops(state):
+            return self.animator.finished
+        if shown < self._antic_overrun_from:
+            return True  # wrapped back round to the first frame
+        return self._sheet.foot_print(state, shown)[2] == 0
+
     # --- reactions to you ---------------------------------------------------------
 
-    def set_away(self, away: bool) -> None:
-        """Tell him whether you are at the machine. He settles to wait, and greets you back."""
+    def set_away(self, away: bool, gone_s: float | None = None) -> None:
+        """Tell him whether you are at the machine. He settles to wait, and greets you back.
+
+        ``gone_s`` is how long you were away, measured by the app on the wall clock; it sizes the
+        greeting (see GREET_OVERNIGHT). None gets the plain hop.
+        """
         if away == self._away:
             return
         self._away = away
@@ -1815,10 +2124,18 @@ class Behavior:
         else:
             log.debug("user back - greeting")
             self.mood.nudge("greeted")
-            if self._sheet.has_state(GREET_ANTIC):
-                self._begin_antic(GREET_ANTIC, GREET_MS)
-            else:
-                self._enter(State.IDLE)
+            self._begin_sequence(self._greeting_for(gone_s))
+
+    def _greeting_for(self, gone_s: float | None) -> list[tuple[str, float]]:
+        if gone_s is None or GREET_HOP_AFTER_S <= gone_s < GREET_OVERNIGHT_AFTER_S:
+            return [(GREET_ANTIC, GREET_MS)]
+        if gone_s < GREET_HOP_AFTER_S:
+            return [(GREET_WAVE_ANTIC, GREET_WAVE_MS)]
+        # The overnight greeting already has the stretch in it, so it counts as today's first
+        # sight of you - otherwise the "first sight today" stretch follows straight after it.
+        if self._world is not None and self._world.hour >= NEW_DAY_HOUR:
+            self._latch("last_seen_date", self._world.date_key)
+        return list(GREET_OVERNIGHT)
 
     @property
     def away(self) -> bool:
@@ -2078,6 +2395,19 @@ class Behavior:
         if self._antic == POCKET_HOLD_ANIM:
             self._antic_ms = 0.0  # the tick already in flight ends the antic and returns to idle
         return text
+
+    def pocket_empty(self) -> None:
+        """You tried to pin the clipboard and there was no text on it. He has a look round.
+
+        Not while the sign is already up: the toast says it on its own, and the braced hold is not
+        worth breaking for. Nor while paused: the look round would freeze on its first frame.
+        """
+        self.noticed()
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
+            return
+        if self.paused or self.pocket_full or not self._sheet.has_state(POCKET_EMPTY_ANIM):
+            return
+        self._begin_antic(POCKET_EMPTY_ANIM, random.uniform(*POCKET_EMPTY_MS))
 
     def _moment(
         self, name: str, low: float, high: float, costume: str = ""
@@ -2681,7 +3011,7 @@ class Behavior:
             State.INJURED: self._tick_injured,
             State.ANTIC: self._tick_antic,
             State.HOVER_WAVE: self._tick_wave,
-            State.ASK: self._tick_simple,
+            State.ASK: self._tick_ask,
             State.WORKING: self._tick_working,
             State.ANGRY: self._tick_angry,
             State.SLEEP: self._tick_sleep,
@@ -2720,7 +3050,12 @@ class Behavior:
             if not self._blinking:
                 candidates.append(self._blink_timer_ms)
         elif self._state == State.ANTIC:
-            candidates.append(self._antic_ms)
+            if self._antic_overrun_ms is not None:
+                candidates.append(max(0.0, self._antic_overrun_ms))
+            else:
+                candidates.append(max(0.0, self._antic_ms))
+        elif self._state == State.ASK and not self._blinking and self._wheel_look is None:
+            candidates.append(self._blink_timer_ms)
         elif self._state == State.SLEEP:
             candidates.append(self._sleep_ms)
         elif self._state == State.INJURED:
@@ -2928,8 +3263,14 @@ class Behavior:
         self._enter(State.HOVER_WAVE)
         return True
 
-    def _tick_simple(self, dt_ms: float, cursor) -> None:
+    def _tick_ask(self, dt_ms: float, cursor) -> None:
+        """Held for the bubble or the wheel: blinks as he would standing about, and while a wheel
+        tool is aimed at, his eyes stay on it instead."""
+        if self._wheel_look is not None and self._sheet.has_state(EYE_TRACK_STATE):
+            self.animator.hold(EYE_TRACK_STATE, self._track_frame_index(self._wheel_look))
+            return
         self._advance(dt_ms)
+        self._tick_blink(dt_ms)
 
     def _tick_drag(self, dt_ms: float, cursor) -> None:
         """Squirm while held: he is trying to kick free and get back down."""
@@ -2945,23 +3286,28 @@ class Behavior:
         self._sample_drag(dt_ms)
         self._advance(dt_ms)
 
-    def _tick_idle(self, dt_ms: float, cursor) -> None:
-        if self._maybe_wave(cursor):
-            return
-        self._advance(dt_ms)
-
+    def _tick_blink(self, dt_ms: float) -> bool:
+        """The blink clock IDLE, PERCH and ASK share. True while a blink owns the frame - playing,
+        just started, or just finished this tick - so the caller skips the rest of its tick."""
         if self._blinking:
             if self.animator.finished:
                 self._blinking = False
                 self.animator.set_state("idle", restart=False)
-            return
-
+            return True
         self._blink_timer_ms -= dt_ms
         if self._blink_timer_ms <= 0:
             self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
             self._blinking = True
             self._blink_state = self._pick_blink()
             self.animator.set_state(self._blink_state, restart=True)
+            return True
+        return False
+
+    def _tick_idle(self, dt_ms: float, cursor) -> None:
+        if self._maybe_wave(cursor):
+            return
+        self._advance(dt_ms)
+        if self._tick_blink(dt_ms):
             return
 
         if self._falling or self._rolling:
@@ -2973,23 +3319,18 @@ class Behavior:
     def _tick_perch(self, dt_ms: float, cursor) -> None:
         """Standing on a window. update_perch (driven from main.py's own poll of the window's
         rectangle) is the only thing that repositions or releases him - all that happens on this
-        tick is the ordinary blink clock, so he still reads as alive rather than a sprite pasted
-        onto someone else's title bar. No wander clock here at all: leaving is never a timeout.
+        tick is the ordinary blink clock (_tick_blink), so he still reads as alive rather than a
+        sprite pasted onto someone else's title bar. No wander clock here at all: leaving is never
+        a timeout.
         """
         self._advance(dt_ms)
-        if self._blinking:
-            if self.animator.finished:
-                self._blinking = False
-                self.animator.set_state("idle", restart=False)
-            return
-        self._blink_timer_ms -= dt_ms
-        if self._blink_timer_ms <= 0:
-            self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
-            self._blinking = True
-            self._blink_state = self._pick_blink()
-            self.animator.set_state(self._blink_state, restart=True)
+        self._tick_blink(dt_ms)
 
     def _tick_antic(self, dt_ms: float, cursor) -> None:
+        if self._quick_change is not None:
+            self._tick_quick_change(dt_ms)
+            return
+        shown = self.animator.frame_index  # what is on screen until this tick paints
         if self._antic == EYE_TRACK_STATE:
             if self._forced_look is not None:
                 # He was asked to look at something specific - where you dropped a file, say - so
@@ -3007,10 +3348,38 @@ class Behavior:
             self._advance(dt_ms)
 
         self._antic_ms -= dt_ms
-        if self._antic_ms <= 0:
+        if self._antic_ms > 0 or not self._antic_settled(dt_ms, shown):
+            return
+        self._antic = None
+        self._forced_look = None
+        self._antic_overrun_ms = None
+        if self._antic_queue:
+            (name, ms), rest = self._antic_queue[0], self._antic_queue[1:]
+            self._begin_antic(name, ms)
+            self._antic_queue = rest
+            return
+        self._enter(State.IDLE)
+
+    def _tick_quick_change(self, dt_ms: float) -> None:
+        """Frame-driven, not timed: ANTIC is mood-paced, so a wall-clock end would land mid-air.
+
+        The swap is raised on the tick the hop reaches its apex, so main.py rebuilds before that
+        frame is painted. The hop ends when it wraps back round past the apex - the landing has
+        played by then - and his opinion follows. QUICK_CHANGE_MAX_MS is only the safety net.
+        """
+        self._advance(dt_ms)
+        self._antic_ms -= dt_ms
+        index = self.animator.frame_index
+        if not self._quick_change_swapped and (index >= QUICK_CHANGE_SWAP_FRAME
+                                               or self._antic_ms <= 0):
+            self._quick_change_swapped = True
+            self._costume_swap_due = True
+        if self._quick_change_swapped and (index < QUICK_CHANGE_SWAP_FRAME or self._antic_ms <= 0):
+            costume, self._quick_change = self._quick_change, None
             self._antic = None
-            self._forced_look = None
-            self._enter(State.IDLE)
+            # costume_chosen -> _begin_antic -> _flush_quick_change is a no-op: already None.
+            if not self.costume_chosen(costume):
+                self._enter(State.IDLE)
 
     def _tick_walk(self, dt_ms: float, cursor) -> None:
         if not self._pending_sleep and self._maybe_wave(cursor):

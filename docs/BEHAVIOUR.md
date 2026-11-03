@@ -24,7 +24,7 @@ Between walks he picks a random antic, weighted, never the same one twice in a r
 | **Football** | Knees a ball back up as it drops, eyes tracking its height |
 | **Dance** | Side-to-side bop with music notes |
 | **Workout** | Deep knee dips, eyes screwed shut on the hard one |
-| **Hop** | A squash-and-stretch jump that genuinely leaves the ground |
+| **Hop** | A squash-and-stretch jump that genuinely leaves the ground, and always lands before he moves on |
 | **Sit & dangle** | Sits low with his legs swinging forward off the edge |
 
 The four "eyes" antics are weighted **2.5× higher while your cursor is nearby**, so the
@@ -33,6 +33,12 @@ pre-empts the roll entirely when it is off cooldown.
 
 The cursor-tracking is not a canned animation: nine eye directions are baked into the sheet as a
 3×3 grid, and the app picks the frame matching where your pointer actually is.
+
+When an antic's time is up he finishes cleanly rather than freezing mid-gesture. A looping one
+stops once the frame on screen has his feet down — only the hop ever leaves the ground — at most
+one more cycle later. A one-shot (a sneeze, a startle, the task-finished celebration) plays to its
+last frame, even at night when everything ambient runs slower. The durations themselves are not
+stretched.
 
 He **waves** when your cursor comes within `hover_wave_distance_px`.
 
@@ -51,8 +57,9 @@ under a second:
 A fidget you *notice* is not a fidget, which is what makes them hard to tune — short antics get
 picked as often as long ones and finish three times sooner, so a modest-looking weight can quietly
 become most of what you ever see. Measured over two simulated hours with a user glancing at him
-every couple of minutes: **13% of the time he spends on antics, one roughly every 56 seconds**
-(every 34s on `hyper`, every 83s on `chill`). Set `fidgets_enabled` to `false` to drop them.
+every couple of minutes, median of three runs: **13% of the time he spends on antics, one roughly
+every 58 seconds** (49–68s across the runs; every 33s on `hyper`, 30–41s; every 92s on `chill`,
+86–94s). Set `fidgets_enabled` to `false` to drop them.
 
 > That measurement took two attempts. The first one reported `sit_dangle` at 79% of his time and
 > `look_around` at 140 an hour, which looked like a catastrophic tuning error and was in fact the
@@ -75,8 +82,8 @@ The rates are **scheduled, not rolled.** A per-decision chance would make the re
 on how often he happens to reach a decision point — which changes with the personality preset, the
 antic chance and how much walking he's doing. Drawing the next occurrence from a target interval
 means "twice an hour" is twice an hour whatever else is going on. Measured over six simulated hours
-on four different presets: **1.8–2.0 sneezes and 2.7–3.0 trips an hour**, with no drift between
-`chill` and `hyper`.
+on four different presets, three runs each: **1.7–2.2 sneezes and 2.5–3.5 trips an hour**, with no
+drift between `chill` and `hyper`.
 
 The trip **arms** rather than fires: a stumble only means anything mid-stride, so when it comes due
 it waits for the next walk. It never happens while he's storming off — a tantrum undercut by a
@@ -93,12 +100,20 @@ way to browse what he can do. It never consumes the next naturally scheduled one
 
 ### He has an opinion about his hat
 
-Put something on him from the tray and he reacts to it. The traffic cone gets a double-take, the
-crown gets a smug wink, the cat ears get heart eyes; anything else and he just has a look at
-himself. It costs **no new art at all** — every reaction is an animation he already had.
+Put something on him from the tray, the wheel or the [wardrobe](USING-HIM.md#the-wardrobe) and he
+hops into it: a crouch, the hop, the outfit swaps at the very top, and he lands and reacts to it.
+From Settings it goes on at once, since he's behind the window, and he reacts all the same.
+
+Some costumes have a reaction of their own: the traffic cone gets a double-take, the crown a smug
+wink, the cat ears heart eyes. Everything else goes by its category — a hat gets a scratch under
+the brim, a head piece a sparkle, eyewear a look about, neckwear a wink, work gear press-ups, and
+anything on his back a stretch to shrug the straps on. Taking it off gets a look at himself.
+Thirty-two of the fifty-three used to get that same look; now no one reaction covers more than ten.
+Change his colour and he sparkles. It costs **no new art at all** — the hop is his greeting hop,
+and every reaction is an animation he already had.
 
 Until this, he owned fifty-three costumes and was completely indifferent to every one of them.
-`costume_reactions` switches it off.
+`costume_reactions` switches all of it off: no hop and no opinion, the costume just appears.
 
 ### Small things
 
@@ -154,6 +169,10 @@ He doesn't have one blink, he has three — and **which one he uses is a mood, n
 That weighting is the entire point. A sleepy blink at eleven in the morning says nothing; the same
 blink at midnight says everything. Measured over 3,000 samples: at 02:00 slow blinks outnumber
 ordinary ones, and by midday they're down to 4%.
+
+He blinks standing about, standing on a window, and while the ask bubble or the tool wheel holds
+him — the same clock and the same time-of-day mix in all three. Aiming at a tool on the wheel
+pauses it, because his eyes are busy following you.
 
 The **double** blink costs no new art at all — it's frames 3 and 0, which already existed, played
 back at different timings.
@@ -466,8 +485,14 @@ Set `play_with_windows` to `false` to switch both off.
 - **He reacts to the app you switch to** — hearts, sparkles or a wink when Claude comes to the
   front; a glance around for anything else, on a cooldown so he does not react to every alt-tab.
 - **He waits while you are away.** After `away_after_s` with no keyboard or mouse he sits down and
-  dangles his legs, then hops up to greet you when you come back. This is deliberately *sitting*,
-  not sleeping — only being pestered puts him to sleep.
+  dangles his legs, then greets you when you come back — sized by how long you were gone: a quick
+  wave under 10 minutes, the hop up to four hours, and after a night away a stretch, a yawn and
+  then the hop. (Gone *at least* `away_after_s` to count, so with the default 150 the wave covers
+  2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — only being pestered puts him
+  to sleep.
+- **He watches the wheel.** His eyes follow the tool you're aiming at, the tools that give him
+  nothing to do get a short beat when picked, and putting the wheel away without choosing gets a
+  head scratch. See [the tool wheel](USING-HIM.md#the-tool-wheel).
 - **He notices being ignored.** See below — that's the other case: you're right here, and none of
   what you're doing involves him.
 
@@ -578,9 +603,11 @@ drop you straight into the last stage.
 Set `attention_enabled` to `false`, or `attention_after_s` to `0`, to switch it off.
 - **He hides for fullscreen.** A genuine fullscreen window (game, video, slideshow) on his monitor
   fades him out; he fades back when it exits. That is the **only** automatic hide. There is no
-  screen-share detection, by design.
+  screen-share detection, by design. A fullscreen app that lasted more than about 20 seconds gets
+  a wave on the way back, at most once a minute — alt-tabbing in and out of a game is one return,
+  not a dozen.
 - **Hide for 10 minutes** from his right-click menu sends him away without pausing him. He comes
-  back on his own, and the snooze outlasts a fullscreen app.
+  back on his own with a wave, and the snooze outlasts a fullscreen app.
 
 ### Focus sessions
 
@@ -633,8 +660,8 @@ Two measures drive it:
 
 When either trips: he plays the angry animation for ~2.5s ignoring clicks, turns away from your
 cursor, stomps off a short distance, and sleeps for `sleep_cooldown_s` (default 60s). While asleep,
-clicking only earns a grumble. A gentle hover near the end of the nap wakes him early. Waking
-resets everything.
+clicking or right-clicking only earns a grumble (the tool wheel still opens). A gentle hover near
+the end of the nap wakes him early. Waking resets everything.
 
 Reacting **consumes** the accumulated annoyance, so he sulks once per accumulation rather than
 re-triggering on every further poke.

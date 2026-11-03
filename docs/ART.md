@@ -11,7 +11,13 @@ The sprite pipeline, the art contract, and how to add a costume.
 ![A lineup of Nib in seventeen costumes and his five colours](../assets/media/images/features/19-costumes.png)
 
 Pick from the tray: **Costume**, grouped into submenus, and **Colour** (default, ocean, forest,
-grape, charcoal). Both persist.
+grape, charcoal) — or a costume from **Wardrobe…** on the
+[tool wheel](USING-HIM.md#the-wardrobe). Both persist.
+
+Put a costume on and he does a **quick-change**: a crouch, a hop, the outfit swaps at the very top
+of it, and he lands and gives his opinion. The choice is saved the moment you make it and only the
+visible change waits for the hop, so it always applies — asleep, in your hand or hidden, it just
+goes straight on.
 
 They cost nothing at runtime. Costumes are **not** baked per-frame — that would mean 170 frames per
 hat. Instead every frame records **four anchor points**, and the costume is composited at the
@@ -57,16 +63,21 @@ about him or about what's happening. It'd be the only arbitrary thing in the app
 So a costume goes on when something *means* it, through the same path the reading glasses have
 always used. Two kinds, and the difference is how long they last:
 
-| | What | How long |
-| --- | --- | --- |
-| **Winter** | Beanie | All season |
-| **Spring** | Flower crown | All season |
-| **Summer** | Sunglasses | All season |
-| **Autumn** | A leaf on his head | All season |
-| **Machine pinned** | Hard hat, while he fans himself | The length of that one reaction |
-| **Knocking-off time** | Party hat, for the dance | The length of that one reaction |
-| **A code editor** | Reading glasses | The length of that one reaction |
-| **Focus session** | Headphones | For as long as the session runs |
+| | What | How long | Over yours? |
+| --- | --- | --- | --- |
+| **Winter** | Beanie | All season | No |
+| **Spring** | Flower crown | All season | No |
+| **Summer** | Sunglasses | All season | No |
+| **Autumn** | A leaf on his head | All season | No |
+| **Machine pinned** | Hard hat, while he fans himself | The length of that one reaction | No |
+| **Knocking-off time** | Party hat, for the dance | The length of that one reaction | No |
+| **A code editor** | Reading glasses | The length of that one reaction | No |
+| **Focus session** | Headphones | For as long as the session runs | **Yes** |
+| **Muted mic** | Earmuffs, for the wave | The length of that one reaction | **Yes** |
+| **Focus session done** | Party hat, for the celebration | The length of that one reaction | **Yes** |
+
+The party hat when the machine finishes a heavy job is a moment like the hard hat, so it respects
+yours.
 
 The moment costumes are keyed on the **moment**, not on the animation — so knocking off on a
 Friday earns the party hat, and dancing *because* it's Friday afternoon, which is the identical
@@ -77,13 +88,19 @@ rather than surprising — "it's December so he's got a beanie on" is something 
 A moment costume takes precedence while it lasts, so a code editor swaps the beanie for glasses and
 swaps back afterwards.
 
-**Yours always wins.** If you have picked a costume from the tray, none of this ever fires — not a
-persona, not a moment, not the season. That rule predates all of them and every automatic costume
-routes through the same check, because a hat that keeps vanishing reads as a bug. Set
-`auto_costumes` to `false` to switch the whole thing off.
+**Yours wins, with three named exceptions.** If you have picked a costume, none of the above
+fires — not a persona, not a moment, not the season. That rule predates all of them and every
+automatic costume routes through the same check, because a hat that keeps vanishing reads as a
+bug. The three exceptions are the ones marked **Yes**: headphones for a focus session, earmuffs for
+the muted-mic wave, and the party hat when a focus session completes. Each one *is* the message —
+"do not disturb", "you're muted", "done" — and lasts only as long as it does, then yours is back.
+Two switches cover the rest: `auto_costumes` set to `false` takes off the seasonal ones, and
+`persona_costumes` set to `false` takes off every row marked No — the season, the moments and the
+reading glasses. Neither touches the three exceptions.
 
-**Surprise me** at the top of the Costume submenu puts a random one on — never the one he's
-already wearing — and it counts as a choice, so it sticks and it outranks everything above.
+**Surprise me** at the top of the Costume submenu, and **Surprise costume** on the wheel, put a
+random one on — never the one he's already wearing — and it counts as a choice, so it sticks, it
+outranks everything above except those three, and it lands in the wardrobe's recents.
 
 ### Adding your own
 

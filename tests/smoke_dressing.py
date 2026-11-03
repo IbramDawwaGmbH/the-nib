@@ -139,6 +139,13 @@ check("Surprise me is connected", "surprise_requested" in inspect.getsource(M.Ni
 surprise = inspect.getsource(M.NibApp._on_surprise_costume)
 check("...never repeats what he already wears", 'c != self.config["costume"]' in surprise)
 check("...and goes through the same path as choosing one", "_on_costume_chosen" in surprise)
+settings_src = inspect.getsource(M.NibApp._on_settings_changed)
+check("a costume picked in Settings gets his opinion too",
+      "costume_chosen" in settings_src and "skin_chosen" in settings_src)
+check("...after the rebuild, like the tray",
+      settings_src.index("_rebuild_appearance") < settings_src.index("costume_chosen"))
+check("a colour from the tray gets the sparkle",
+      "skin_chosen" in inspect.getsource(M.NibApp._on_skin_chosen))
 
 print("\n--- and the sheet actually has every costume this promises ---")
 promised = set(B.SEASON_COSTUMES.values()) | {"hardhat", "party", "glasses"}

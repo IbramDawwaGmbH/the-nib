@@ -79,6 +79,10 @@ Two ways to use it:
 - **Click, then click.** A quick right-click leaves the wheel open; click a tool to pick it.
   Clicking anywhere else, **Esc**, or right-clicking again puts it away.
 
+**He watches you choose.** While the wheel is open his eyes follow whichever tool you're aiming at,
+by mouse or arrow keys, and he still blinks in between. Putting it away without choosing — **Esc**,
+a click elsewhere, letting go back over him — gets a head scratch, and it's still not a poke.
+
 The keyboard works too: **1**–**8** pick a tool by position, and the arrow keys plus **Enter** walk
 round it.
 
@@ -100,7 +104,7 @@ The ring, in order:
 | Group | Tools |
 | --- | --- |
 | **Tools** | Ask · Send again · Measure · Read text from an image · Focus · Pin the clipboard · Mute microphone · More… |
-| **Him** | Do something · Surprise costume · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
+| **Him** | Do something · Surprise costume · Wardrobe… · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
 | **App** | Switch Chat/Cowork · Settings · Show tips · Send him home |
 
 It always opens at the start, with every tool from the first group on the arc. That's deliberate:
@@ -118,6 +122,29 @@ Tools that can't do anything are left off rather than greyed out: **Send again**
 you've sent something, and the mic only when you have one. A wheel is aimed by direction, and a
 direction that does nothing is worse than a shorter arc.
 
+**Nearly every pick gets a reaction.** The tools that give him nothing to do get a short beat of
+their own:
+
+| Tool | His beat |
+| --- | --- |
+| Wander on/off | a hop |
+| Ghost mode | a wink |
+| Measure · Send him home | a look around |
+| Mute/Unmute microphone | a foot tap |
+| Switch Chat/Cowork | a sparkle |
+| Settings | a bit of typing |
+| Show tips | a wave |
+| Resume | a stretch |
+
+Pausing gets nothing, because it freezes him on the spot, and neither does **Stop focus**: a session
+you end early earns nothing, by design. Ask, Send again, Read, starting a focus session, Pin the
+clipboard, Do something and Surprise costume already have reactions of their own — though a Read
+whose file picker you cancel leaves him as he was; Hide and Guard
+take him off screen, and More… and Wardrobe… open something else. Right-click him while he's asleep and the wheel still
+opens — nothing on it needs him awake — but he grumbles the way a click would, and won't react to
+picks until he's up. Standing on a window he isn't held by the wheel, so he doesn't watch it or
+react to picks there either.
+
 **He lives on the taskbar, so the wheel opens toward the middle of the screen** — straight up with
 him mid-taskbar, tilted inward at either end, downward on a top taskbar — and in a corner it widens
 into a broader arc rather than pushing tools off the edge or crowding them together.
@@ -126,6 +153,22 @@ into a broader arc rather than pushing tools off the edge or crowding them toget
 only live there, like the Chat/Cowork picker and **Hide for 10 minutes** — so nothing is out of
 reach. **Shift+right-click** goes straight to that menu, and `tool_wheel_enabled` set to `false`
 makes it the right-click again, exactly as before.
+
+### The wardrobe
+
+**Wardrobe…** in the wheel's Him group opens the wheel again, with his costumes on it instead of
+tools — each one as its own picture, cropped from the costume sheet. The ones you put on him last
+come first, then **Take it off** while he's wearing something, then the rest by category: hats,
+head pieces, eyewear, neckwear, body, and things on his back. The one he's wearing has a ring
+round it.
+
+It works like the wheel: scroll, flick or click, **1**–**8** for the ones showing, **Esc** or a
+click elsewhere to put it away. With nothing pointed at, the label says roughly where on the ring
+you are. He holds still and watches while it's open.
+
+Pick one and he does a [quick-change](ART.md#costumes-and-colours): he crouches, hops, the outfit
+swaps at the top of the hop, and he lands and gives his opinion. Your choice is saved straight
+away, so it sticks even if something interrupts him.
 
 ### The calculator
 
@@ -254,6 +297,8 @@ This is a different thing from the **Paste clipboard** chip above, which pastes 
 that's already open; the billboard is for collecting things *before* you're ready to ask about
 them. `""` for `pocket_hotkey` turns it off.
 
+If the clipboard has no text, a toast says so and he has a look round for it. Nothing goes up.
+
 **↑ walks back through what you've asked before**, the way a shell does — the last
 `prompt_history_max` prompts, 20 by default, newest first. ↓ comes forward again, and stepping
 past the newest puts back whatever you had half-typed before you started browsing, so it is safe
@@ -353,7 +398,9 @@ last one ended). An ordinary quit, or ending the perch yourself, always cleans u
 
 ### He reacts to what you asked
 
-Once the "on it" animation finishes, he has a brief opinion about the *shape* of what you sent:
+If the app doesn't open there's no "on it": he does a double-take and the toast offers the
+download page. When the launch goes through, and once the "on it" animation finishes, he has a
+brief opinion about the *shape* of what you sent:
 
 | What you asked | What he does |
 | --- | --- |
@@ -515,7 +562,7 @@ Three different answers, because they solve three different problems:
 | --- | --- | --- |
 | **Come here** | He walks over to your pointer | You can't find him — he roams every screen |
 | **Ghost mode** | Faded to 35% and completely click-through | He is in the way, today |
-| **Hide for 10 minutes** | Fades out, comes back on his own | You need the space briefly |
+| **Hide for 10 minutes** | Fades out, comes back on his own and waves | You need the space briefly |
 | **Pause** | Freezes him where he stands | You want him still |
 
 **Ghost mode is the important one.** On the day a mascot is in the way, the alternatives are
@@ -592,7 +639,8 @@ copy of it.
 - **Wander** — turn strolling on/off; he still does in-place antics and reacts to you
 - **Pause / Resume** — freeze him where he stands
 - **Ghost mode** — faded and click-through; see [above](#getting-him-out-of-the-way)
-- **Costume** (with **Surprise me** at the top) / **Colour** / **Personality** — as above
+- **Costume** (with **Surprise me** at the top; he hops into whatever you pick) / **Colour** /
+  **Personality** — as above
 - **Settings…** — the whole settings file, as a form
 - **Show tips** — replay the first-run tour
 - **Launch on Windows startup** — adds/removes an `HKCU\...\Run` entry

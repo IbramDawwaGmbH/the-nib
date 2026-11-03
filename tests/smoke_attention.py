@@ -197,12 +197,145 @@ ignore_for(b, 30.0)
 check("attention_after_s is honoured", early == 0 and b._neglect_stage == 1,
       f"{early} at 55s -> {b._neglect_stage} at 85s")
 
+print("\n--- coming back: the greeting is sized by how long you were gone ---")
+for label, gone_s, expected in (
+    ("no length given (the old hop)", None, B.GREET_ANTIC),
+    ("five minutes", 300.0, B.GREET_WAVE_ANTIC),
+    ("an hour", 3600.0, B.GREET_ANTIC),
+):
+    _cfg, b = fresh(f"greet_{int(gone_s or 0)}")
+    b.set_away(True)
+    b.set_away(False, gone_s=gone_s)
+    check(f"{label}: {expected}", b.state is State.ANTIC and b._antic == expected, str(b._antic))
+
+cfg, b = fresh("greet_night")
+cfg["last_seen_date"] = "2026-07-30"     # today's first sight of you is still to come
+b.set_away(True)
+b.set_away(False, gone_s=8 * 3600.0)
+check("a night away: a stretch first", b._antic == B.GREET_OVERNIGHT[0][0], str(b._antic))
+check("...then a yawn and the hop, queued",
+      [name for name, _ms in b._antic_queue] == [s[0] for s in B.GREET_OVERNIGHT[1:]],
+      str(b._antic_queue))
+played = [b._antic]
+for _ in range(400):
+    b.update(50.0, None)
+    if b.state is not State.ANTIC:
+        break
+    if b._antic != played[-1]:
+        played.append(b._antic)
+check("...played in that order, then back to idle",
+      played == [s[0] for s in B.GREET_OVERNIGHT] and b.state is not State.ANTIC,
+      f"{played} then {b.state.value}")
+check("...and it counts as today's first sight, so no second stretch",
+      cfg["last_seen_date"] == "2026-07-31" and (b._pick_moment() or ("",))[0] != "stretch",
+      cfg["last_seen_date"])
+
+_cfg, b = fresh("greet_grabbed")
+b.set_away(True)
+b.set_away(False, gone_s=8 * 3600.0)
+b.drag_start()
+check("grabbing him mid-greeting drops the rest of it", b._antic_queue == [], str(b._antic_queue))
+
+_cfg, b = fresh("away_no_glance")
+b.set_away(True)
+glanced = False
+for _ in range(int(STEP_S * 4 * 10)):
+    b.update(100.0, None)
+    glanced = glanced or b._antic == B.NEGLECT_GLANCE_ANTIC
+check("the away-sit still never glances up - that is the ignored sit", not glanced
+      and b._antic == B.AWAY_ANTIC, str(b._antic))
+
+print("\n--- back from a snooze or a fullscreen app: a wave ---")
+
+
+def hidden_for(b, seconds, *, greet=True):
+    b.set_hidden(True)
+    for _ in range(int(seconds * 4)):
+        b.update(250.0, None)   # the app's idle tick while he is hidden
+    b.set_hidden(False, greet=greet)
+
+
+_cfg, b = fresh("back")
+b._neglect_stage = 1
+hidden_for(b, 30.0)
+check("half a minute hidden, then back: he waves", b._antic == B.BACK_ANTIC, str(b._antic))
+check("...without counting as you noticing him", b._neglect_stage == 1, str(b._neglect_stage))
+for _ in range(40):
+    b.update(50.0, None)
+hidden_for(b, 30.0)
+check("...but a second return inside the minute does not", b._antic != B.BACK_ANTIC,
+      f"{b.state.value} {b._antic}")
+
+_cfg, b = fresh("back_quiet")
+hidden_for(b, 30.0, greet=False)
+check("a return that does not ask for it (the guard) gets nothing", b.state is State.IDLE,
+      b.state.value)
+
+_cfg, b = fresh("back_flicker")
+hidden_for(b, 5.0)
+check("a five-second flicker of fullscreen gets nothing", b.state is State.IDLE, b.state.value)
+
+_cfg, b = fresh("back_perch")
+b._enter(State.PERCH)
+hidden_for(b, 30.0)
+check("back onto a perch: no wave to pull him off it", b.state is State.PERCH, b.state.value)
+
+_cfg, b = fresh("back_away")
+b.set_away(True)
+hidden_for(b, 30.0)
+check("back while you are still away: no wave", b._antic != B.BACK_ANTIC, str(b._antic))
+
+_cfg, b = fresh("back_paused")
+b.paused = True
+hidden_for(b, 30.0)
+check("back while paused: no wave - it would freeze on its first frame", b.state is State.IDLE,
+      f"{b.state.value} {b._antic}")
+
+print("\n--- a launch that failed gets a double-take, not \"on it\" ---")
+_cfg, b = fresh("launch_failed")
+b._register_poke()
+pokes = len(b._pokes)
+b._neglect_stage = 1
+b._enter(State.ASK)          # where a bubble submit leaves him
+b._post_prompt = ("wink", 900.0, "")
+b.take_sounds()
+b.launch_failed()
+check("he does a double-take", b._antic == B.LAUNCH_FAILED_ANIM, str(b._antic))
+seen_working = False
+for _ in range(60):
+    b.update(50.0, None)
+    seen_working = seen_working or b.state is State.WORKING
+check("...and never plays the working animation", not seen_working)
+check("...or a reaction to a prompt that went nowhere", b._post_prompt is None)
+check("...with no send sound", "send" not in b.take_sounds())
+check("...and it is not a poke, nor does it take the edge off", len(b._pokes) == pokes,
+      f"{pokes} -> {len(b._pokes)}")
+check("...but it does count as you noticing him", b._neglect_stage == 0, str(b._neglect_stage))
+
+_cfg, b = fresh("launch_failed_paused")
+b._enter(State.ASK)
+b.paused = True
+b.launch_failed()
+check("paused, no double-take, but the bubble's ASK still ends", b.state is State.IDLE,
+      f"{b.state.value} {b._antic}")
+
 print("\n--- the reset list is complete in main.py too ---")
 import main as M  # noqa: E402
 for fn in ("_on_hotkey", "_on_context_menu", "_on_double_clicked",
            "_on_files_dropped", "_on_text_dropped"):
     src = inspect.getsource(getattr(M.NibApp, fn))
     check(f"main.{fn} calls noticed()", "noticed()" in src)
+
+check("main measures how long you were away and tells him",
+      "gone_s" in inspect.getsource(M.NibApp._update_presence))
+for fn in ("_wake_from_snooze", "_update_fullscreen"):
+    check(f"main.{fn} asks for the back wave",
+          "greet=True" in inspect.getsource(getattr(M.NibApp, fn)))
+check("...and the guard's return does not",
+      "greet=True" not in inspect.getsource(M.NibApp._set_guarding))
+_send = inspect.getsource(M.NibApp._send)
+check("main._send only plays \"on it\" when the launch went through",
+      "if ok" in _send and "launch_failed" in _send and _send.index("if ok") < _send.index("react()"))
 
 print("\n" + "=" * 60)
 print("FAILURES: " + ", ".join(fails) if fails else "attention arc OK")

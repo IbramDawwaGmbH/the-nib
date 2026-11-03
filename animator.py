@@ -151,6 +151,8 @@ class SpriteSheet:
         #: costume index -> its lowest opaque row, so the floor check below is one scan
         #: per costume rather than one per frame.
         self._costume_lows: dict[int, int] = {}
+        #: costume name -> its trimmed cell, for the wardrobe. See ``costume_thumbnail``.
+        self._thumbnails: dict[str, QPixmap] = {}
         self._load_costumes()
         if self.costume and self.costume not in self._costume_items:
             log.warning("unknown costume %r; going bare-headed", self.costume)
@@ -212,6 +214,29 @@ class SpriteSheet:
         for name, item in self._costume_items.items():
             grouped.setdefault(str(item.get("category") or "Other"), []).append(name)
         return grouped
+
+    def costume_category(self, name: str) -> str:
+        """The category costumes.json files ``name`` under - "Other" if it has none, "" if unknown."""
+        item = self._costume_items.get(name)
+        return str(item.get("category") or "Other") if item else ""
+
+    def costume_thumbnail(self, name: str) -> QPixmap | None:
+        """The costume's own cell of costumes.png, trimmed to its opaque pixels, unscaled - for the
+        wardrobe. Cropped rather than rendered onto him: 53 sheet builds at ~7ms would hold the
+        wheel up for a third of a second, and the crops measure ~1ms for all of them."""
+        cached = self._thumbnails.get(name)
+        if cached is not None:
+            return cached
+        item = self._costume_items.get(name)
+        if item is None or self._costume_sheet is None:
+            return None
+        cell = self._costume_cell
+        piece = QPixmap.fromImage(self._costume_sheet.copy(int(item["index"]) * cell, 0, cell, cell))
+        box = QRegion(piece.mask()).boundingRect()
+        if box.isEmpty():
+            return None
+        self._thumbnails[name] = piece.copy(box)
+        return self._thumbnails[name]
 
     def anchors(self, frame_index: int) -> dict[str, list[int]]:
         return self._anchors.get(frame_index, {})

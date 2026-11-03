@@ -116,6 +116,31 @@ cfg3.clear_prompt_history()
 cfg3.save()
 check("...and clearing really clears it", Config(cfg2.path)["prompt_history"] == [])
 
+print("\n--- the wardrobe's recents ---")
+cfg = fresh_config("recents")
+for name in ("cap", "crown", "beret"):
+    cfg.remember_costume(name)
+check("newest first", cfg["costume_recents"] == ["beret", "crown", "cap"], str(cfg["costume_recents"]))
+cfg.remember_costume("cap")
+check("a repeat moves to the front", cfg["costume_recents"] == ["cap", "beret", "crown"],
+      str(cfg["costume_recents"]))
+cfg.dirty = False
+cfg.remember_costume("")
+check("taking it off is not a costume", cfg["costume_recents"] == ["cap", "beret", "crown"])
+check("...and changes nothing", not cfg.dirty)
+cfg.remember_costume("wig")
+check("remembering one marks the file dirty", cfg.dirty)
+for i in range(20):
+    cfg.remember_costume(f"c{i}")
+check("capped", len(cfg["costume_recents"]) == cfg_module._MAX_COSTUME_RECENTS,
+      str(cfg["costume_recents"]))
+cfg["costume_recents"] = "cap"
+check("a bare string is not a list of costumes", cfg["costume_recents"] == [])
+cfg["costume_recents"] = [1, "cap", "cap", " ", " crown "]
+check("...junk dropped, repeats folded, names stripped", cfg["costume_recents"] == ["cap", "crown"],
+      str(cfg["costume_recents"]))
+check("written by the wardrobe, not shown in Settings", "costume_recents" in S.HIDDEN)
+
 print("\n--- prompt history: walking back through it ---")
 bubble = AskBubble(1.0)
 edit = bubble._input
@@ -379,6 +404,23 @@ src_ctx = inspect.getsource(M.NibApp._on_context_menu)
 check("it goes through Tray.popup_for_mascot rather than building its own QMenu",
       "self.tray.popup_for_mascot" in src_ctx and "QMenu(" not in src_ctx)
 nib.config["tool_wheel_enabled"] = True
+
+print("\n--- a right-click is noticed once, whichever way it goes ---")
+noticed = []
+real_noticed = nib.behavior.noticed
+nib.behavior.noticed = lambda: (noticed.append(1), real_noticed())[-1]
+nib._on_context_menu(QPoint(200, 200))
+check("opening the wheel counts as one notice, not two", len(noticed) == 1, len(noticed))
+nib.tool_wheel.close()
+app.processEvents()
+nib.config["tool_wheel_enabled"] = False
+noticed.clear()
+nib._on_context_menu(QPoint(200, 200))
+check("...and so does opening the menu", len(noticed) == 1, len(noticed))
+nib.tray._menu.hide()
+app.processEvents()
+nib.config["tool_wheel_enabled"] = True
+nib.behavior.noticed = real_noticed
 
 nib._on_quit()
 print("\n" + "=" * 62)

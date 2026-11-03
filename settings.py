@@ -64,13 +64,14 @@ CHOICES: dict[str, tuple[str, ...]] = {
 
 #: Never shown. Latches he writes himself, remembered positions, and the two mood counters - all
 #: of them meaningless to set by hand, and three of them actively confusing (clearing a latch
-#: replays a once-a-day moment). ``prompt_history`` is here because it is a list, and it gets a
-#: proper Clear button below instead of a text box full of your own prompts; ``persona_apps``
-#: because it is a free-form exe-name -> animation map with no sensible generic control, and an
-#: empty "Other" tab claiming to hold it is worse than the README telling you to edit the file.
+#: replays a once-a-day moment). ``prompt_history`` and ``costume_recents`` are here because they
+#: are lists: the history gets a proper Clear button below instead of a text box full of your own
+#: prompts, and the recents are the wardrobe's to write. ``persona_apps`` because it is a free-form
+#: exe-name -> animation map with no sensible generic control, and an empty "Other" tab claiming
+#: to hold it is worse than the README telling you to edit the file.
 HIDDEN = frozenset({
     "config_version", "last_x", "last_monitor", "last_prompt", "prompt_history",
-    "persona_apps", "last_seen_date", "last_clock_off_date", "last_week_over_week",
+    "costume_recents", "persona_apps", "last_seen_date", "last_clock_off_date", "last_week_over_week",
     "mood_spirits", "mood_saved_at", "paused", "launch_on_startup",
     # A scrypt hash, not something anyone can type - the first guard sets it, clearing it in
     # config.json resets it. A text box holding it would only invite pasting a PIN in plain text.

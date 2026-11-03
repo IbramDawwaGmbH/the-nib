@@ -49,7 +49,7 @@ is normalised — so a hand-edited file cannot break him.
 | `antic_chance` | `0.5` | Chance of an antic rather than a walk after each beat |
 | `fidgets_enabled` | `true` | The very short beats — a scratch, a foot tap, a glance at a watch he does not own |
 | `quirks_enabled` | `true` | Involuntary things: a sneeze, a stumble, hiccups after a hard landing |
-| `costume_reactions` | `true` | He has an opinion about the costume you just put on him |
+| `costume_reactions` | `true` | He hops into a costume you pick and has an opinion about it, or about a new colour; `false` and it just appears |
 | `scroll_to_spin` | `true` | Scroll the wheel over him and he spins |
 | `eye_track_distance_px` | `420` | How close your pointer must be before he starts following it |
 | `hover_wave_distance_px` | `120` | How close your pointer must be for a wave |
@@ -157,6 +157,7 @@ lid or lock settings.
 | `paused` | `false` | Remembered pause state |
 | `intro_seen` | `false` | Set once the first-run tour has run. Clear it to see the tips again |
 | `prompt_history` | `[]` | Your recent prompts, newest first. Local only — see [Privacy](PRIVACY.md#privacy) |
+| `costume_recents` | `[]` | The costumes you put on him last, newest first — the head of the [wardrobe](USING-HIM.md#the-wardrobe). Written, not for you to set |
 | `mood_spirits` | `0.0` | `-1.0`–`+1.0`, how the day has gone. Written, not for you to set |
 | `mood_saved_at` | `0.0` | Unix seconds at the last write, so the mood keeps fading while he is closed |
 | `last_seen_date` | `""` | Latch for the morning stretch. Written, not for you to set |

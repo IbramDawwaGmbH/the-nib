@@ -102,6 +102,15 @@ MUTED_NAG_COOLDOWN_S = 60.0
 #: otherwise leave the wheel ringed round an empty patch of taskbar.
 WHEEL_DRIFT_PX = 8
 
+#: The quick-change's safety net: the costume goes on when this fires even if the hop never reached
+#: its apex (paused, a stalled tick). The apex is ~480ms in at the slowest pace; this is ~3x that.
+QUICK_CHANGE_TIMEOUT_MS = 1500
+#: Wardrobe keys are "wear:<costume>"; a bare "wear:" takes it off. A prefix rather than a key per
+#: costume, so _on_tool_chosen routes all fifty-three in one line.
+WARDROBE_PREFIX = "wear:"
+#: How many of the costumes you wore last open the wardrobe, ahead of the rest by category.
+WARDROBE_RECENTS = 5
+
 #: The one-off tour, shown on a first run. Each is (message, sub-line, how long to hold it).
 #: These are the four things that are genuinely undiscoverable - the hotkey opens the bubble at
 #: your pointer without going near him, and nothing on screen suggests you can drop a file on him.
@@ -162,6 +171,27 @@ class _OcrBridge(QObject):
     finished = Signal(str, str)
 
 
+def _wardrobe_ring(sheet: SpriteSheet, wearing: str, recents: list[str]) -> list[WheelItem]:
+    """Every costume as a thumbnail: the ones you wore last first, then "Take it off" while he is
+    wearing something, then the rest by category - the category is the group, so the idle label
+    reads "Hats · scroll for more" as you scroll through. The one he is wearing has the ring."""
+    owned = sheet.available_costumes()
+    recent = [c for c in dict.fromkeys(recents) if c in owned][:WARDROBE_RECENTS]
+
+    def item(name: str, group: str) -> WheelItem:
+        # The tray's own wording for a costume, so both menus call it the same thing.
+        return WheelItem(WARDROBE_PREFIX + name, name.replace("_", " ").title(), "costume",
+                         "active" if name == wearing else "", group=group,
+                         pixmap=sheet.costume_thumbnail(name))
+
+    ring = [item(n, "Recent") for n in recent]
+    if wearing:
+        ring.append(WheelItem(WARDROBE_PREFIX, "Take it off", "costume", group="Wardrobe"))
+    for category, names in sheet.costume_categories().items():
+        ring += [item(n, category) for n in names if n not in recent]
+    return ring
+
+
 class NibApp:
     """Owns the mascot, the widgets, and the timers that drive them."""
 
@@ -195,6 +225,13 @@ class NibApp:
         self.behavior.set_world(self.world.state)
         #: Headwear a persona has put on him, separate from the costume he actually owns.
         self._persona_costume = ""
+        #: A costume already written to the config but not yet visible - he is hopping into it.
+        #: See _on_costume_chosen; the timer is the safety net if the hop never reaches its apex.
+        self._costume_pending = False
+        self._costume_timer = QTimer(self.app)
+        self._costume_timer.setSingleShot(True)
+        self._costume_timer.setInterval(QUICK_CHANGE_TIMEOUT_MS)
+        self._costume_timer.timeout.connect(self._apply_pending_costume)
         log.info(
             "world: %d logical cores, busy threshold %.0f%% (aggregate - one pegged core is ~%.0f%%)",
             cpu_count(), float(config["cpu_busy_percent"]), 100.0 / max(1, cpu_count()),
@@ -222,6 +259,10 @@ class NibApp:
         self._last_frame_key: tuple | None = None
         self._last_tick = time.monotonic()
         self._snoozed = False
+        #: Wall-clock moment of your last input before an away, so the greeting can be sized by how
+        #: long you were gone. time.time() because the behaviour clock caps each tick at 250ms, and
+        #: so loses a night the machine slept through.
+        self._away_since: float | None = None
         self._last_foreground = ""
         self._hotkey_hwnd = 0
         self._come_hotkey_hwnd = 0
@@ -303,6 +344,9 @@ class NibApp:
         except Exception:
             log.exception("could not rebuild sprites; keeping the current look")
             return
+        # Any rebuild shows the config's costume, so a quick-change still in the air is settled.
+        self._costume_pending = False
+        self._costume_timer.stop()
         # The user just chose. Both trackers have to be cleared: zeroing only ours left behaviour
         # still asking for the persona's hat, and the next tick put it straight back on over the
         # one they picked.
@@ -575,7 +619,15 @@ class NibApp:
 
         away_after = float(self.config["away_after_s"])
         if away_after > 0 and not self._snoozed:
-            self.behavior.set_away(win.get_idle_seconds() >= away_after)
+            idle = win.get_idle_seconds()
+            away = idle >= away_after
+            gone_s = None
+            if away and self._away_since is None:
+                self._away_since = time.time() - idle
+            elif not away and self._away_since is not None:
+                gone_s = max(0.0, time.time() - self._away_since)
+                self._away_since = None
+            self.behavior.set_away(away, gone_s=gone_s)
 
         if bool(self.config["react_to_apps"]):
             process = win.get_foreground_process()
@@ -624,7 +676,7 @@ class NibApp:
             log.info("fullscreen ended - returning")
             self._hidden_by_fullscreen = False
             if not self._snoozed and not self._guarding:  # a snooze or guard outlasts it
-                self.behavior.set_hidden(False)
+                self.behavior.set_hidden(False, greet=True)
                 self.window.fade_to(1.0)
             self._update_tick_rate()
 
@@ -643,7 +695,10 @@ class NibApp:
             return
         try:
             # Through _load_sheet, so walking onto a monitor with another DPI does not strip off
-            # his costume and colour along with the old scale.
+            # his costume and colour along with the old scale. It reads the config, so a costume
+            # he was hopping into goes on now rather than at the apex.
+            self._costume_pending = False
+            self._costume_timer.stop()
             sheet = self._load_sheet(scale, self._persona_costume)
         except Exception:
             log.exception("could not rebuild sprites at scale %s; keeping %s", scale, self.sheet.scale)
@@ -808,6 +863,9 @@ class NibApp:
 
         cursor = win.get_cursor_pos()
         self.behavior.update(dt_ms, cursor)
+        if self.behavior.take_costume_swap():
+            # Before _apply_frame, so the apex paints already dressed.
+            self._apply_pending_costume()
         self._check_wheel_drift()
 
         # Crossing between screens has to be noticed promptly: waiting for the 700ms geometry
@@ -879,7 +937,13 @@ class NibApp:
         glasses for as long as he is typing, a hard hat for as long as he is fanning himself - and
         it wins while it is set. Underneath it sits the seasonal one, which is ambient and has no
         expiry, so when a moment ends he goes back to his beanie rather than to bare-headed.
+
+        Not while a quick-change is in the air: the config already holds your new costume, which
+        takes the beanie off auto_costume - rebuilding for that would show the new one before the
+        hop. The beanie stays on through the crouch and comes off at the apex.
         """
+        if self._costume_pending:
+            return
         wanted = self.behavior.persona_costume or self.behavior.auto_costume
         if wanted == self._persona_costume:
             return
@@ -992,12 +1056,13 @@ class NibApp:
         # the dirty flag and the entry would be lost at the next save.
         self.config.remember_prompt(text)
         ok, reason = launch(mode, text, provider)
-        # Either way he tried, so this is never counted as a poke. The text goes with it so he can
-        # react to the shape of it - it is matched against a keyword table and discarded.
+        # Not a poke either way. Only a launch that went through gets "on it"; the text goes with
+        # it so he can react to its shape - matched against a keyword table and discarded.
+        react = (lambda t=text: self.behavior.prompt_sent(t)) if ok else self.behavior.launch_failed
         if after_ms > 0:
-            QTimer.singleShot(after_ms, lambda t=text: self.behavior.prompt_sent(t))
+            QTimer.singleShot(after_ms, react)
         else:
-            self.behavior.prompt_sent(text)
+            react()
         if ok:
             return
 
@@ -1066,6 +1131,16 @@ class NibApp:
                 self.behavior.pocket_text, QRect(x, y, w, self.behavior.sprite_h),
                 self._screen_rect(),
             )
+        else:
+            self.behavior.pocket_empty()
+            # Not over the fog, and not for a mascot nobody can currently see.
+            if not (self._guarding or self._hidden_by_fullscreen or self._snoozed):
+                x, y, w, _h = self.behavior.rect
+                self.toast.show_message(
+                    "Nothing to pin - the clipboard has no text.",
+                    QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
+                    sub="Copy some text, then pin it again.",
+                )
 
     def _on_double_clicked(self) -> None:
         """Double-click fires your quick prompt, or repeats the last one."""
@@ -1090,11 +1165,11 @@ class NibApp:
         overflow tray. See ``Tray.popup_for_mascot``. The wheel's More... tool opens that same
         menu, so turning the wheel on never puts anything out of reach.
         """
-        self.behavior.noticed()
         shift = bool(QApplication.keyboardModifiers() & Qt.ShiftModifier)
         if bool(self.config["tool_wheel_enabled"]) and not shift:
-            self._open_tool_wheel(position)
+            self._open_tool_wheel(position)  # Behavior.wheel_opened notices him itself
             return
+        self.behavior.noticed()
         self.tray.popup_for_mascot(position, self._mascot_menu_extras())
 
     def _mascot_menu_extras(self) -> list[QAction]:
@@ -1138,6 +1213,7 @@ class NibApp:
         self.tool_wheel = ToolWheel(self.ui_scale)
         self.tool_wheel.chosen.connect(self._on_tool_chosen)
         self.tool_wheel.closed.connect(self.behavior.wheel_closed)
+        self.tool_wheel.aimed.connect(self._on_wheel_aimed)
         self._wheel_position = QPoint()
         self._wheel_centre = QPoint()
 
@@ -1173,6 +1249,7 @@ class NibApp:
 
         items.append(WheelItem("do_something", "Do something", "sparkle", group=him))
         items.append(WheelItem("costume", "Surprise costume", "costume", group=him))
+        items.append(WheelItem("wardrobe", "Wardrobe…", "wardrobe", group=him))
         items.append(WheelItem("hide", "Hide for 10 minutes", "hide", group=him))
         # Next to Hide: the same "go away for a while" thought, for the whole screen rather than
         # just him. Not with the tools - a ninth tool there would push More... off the opening arc.
@@ -1214,6 +1291,25 @@ class NibApp:
             sprite_radius=max(w, h) / 2.0, press_global=QPoint(position),
         )
 
+    def _open_wardrobe(self) -> None:
+        """The wheel again, with his costumes on it - see _wardrobe_ring.
+
+        Picked from the wheel, so that wheel has already closed and let him go: hold him again,
+        and re-centre, or the drift check would measure against where he stood last time. Click
+        mode - the press that opened the first wheel is long gone.
+        """
+        items = _wardrobe_ring(self.sheet, str(self.config["costume"]),
+                               list(self.config["costume_recents"]))
+        self.behavior.wheel_opened()
+        x, y, w, _h = self.behavior.rect
+        h = self.behavior.sprite_h
+        centre = QPoint(x + w // 2, y + h // 2)
+        self._wheel_centre = QPoint(centre)
+        self.tool_wheel.open(
+            items, centre, self._screen_rect(),
+            sprite_radius=max(w, h) / 2.0, press_global=None,
+        )
+
     def _check_wheel_drift(self) -> None:
         """Put the wheel away if he has moved out from under it - see WHEEL_DRIFT_PX."""
         if not self.tool_wheel.isVisible():
@@ -1225,9 +1321,17 @@ class NibApp:
             log.debug("he moved %dpx from under the tool wheel - closing it", drift)
             self.tool_wheel.close()
 
+    def _on_wheel_aimed(self, point) -> None:
+        """His eyes on the tool you are aiming at - painted now, not on the next (<=250ms) tick."""
+        self.behavior.wheel_aimed(point)
+        self._apply_frame()
+
     def _on_tool_chosen(self, key: str) -> None:
         """Every tool is a handler that already existed for the tray or a hotkey - none is new."""
-        if key == "ask":
+        if key.startswith(WARDROBE_PREFIX):
+            self._on_costume_chosen(key[len(WARDROBE_PREFIX):])
+            self._refresh_tray()
+        elif key == "ask":
             self._on_click()
         elif key == "again":
             last = str(self.config["last_prompt"]).strip()
@@ -1250,6 +1354,8 @@ class NibApp:
         elif key == "costume":
             self._on_surprise_costume()
             self._refresh_tray()
+        elif key == "wardrobe":
+            self._open_wardrobe()
         elif key == "hide":
             self._snooze(600)
         elif key == "guard":
@@ -1274,6 +1380,9 @@ class NibApp:
             self.show_intro()
         elif key == "reset":
             self._on_reset_position()
+        # Last, after the handler: a tool that gave him a job keeps it (see Behavior.tool_picked).
+        if self.behavior.tool_picked(key):
+            self._apply_frame()
 
     def _cycle_mode(self) -> None:
         """Move default_mode on to the provider's next mode - the wheel's Chat/Cowork switch."""
@@ -1310,7 +1419,7 @@ class NibApp:
         self._snoozed = False
         log.info("snooze over")
         if not self._hidden_by_fullscreen and not self._guarding:
-            self.behavior.set_hidden(False)
+            self.behavior.set_hidden(False, greet=True)
             self.window.fade_to(1.0)
         self._update_tick_rate()
 
@@ -1511,6 +1620,15 @@ class NibApp:
         """
         if keys & {"costume", "skin"}:
             self._rebuild_appearance()
+            # After the rebuild, so he reacts while actually wearing it - same order as the tray.
+            # Both at once gets the costume's: only one antic can play.
+            if "costume" in keys:
+                # A choice like any other, so it heads the wardrobe too. No hop: the window
+                # already rebuilt him, and he is behind it.
+                self.config.remember_costume(str(self.config["costume"]))
+                self.behavior.costume_chosen(str(self.config["costume"]))
+            else:
+                self.behavior.skin_chosen()
         if keys & {"ghost_mode", "ghost_opacity"}:
             self._apply_ghost_mode()
         if "cpu_busy_percent" in keys or "southern_seasons" in keys:
@@ -1556,11 +1674,31 @@ class NibApp:
     # --- tray -----------------------------------------------------------------------
 
     def _on_costume_chosen(self, costume: str) -> None:
+        """The tray, the wheel's Surprise and the wardrobe all land here. He does a quick-change:
+        the choice is saved now, and only the visible swap waits for the top of his hop."""
+        previous = str(self.config["costume"])
         self.config["costume"] = costume
+        self.config.remember_costume(costume)
         log.info("costume -> %r", costume or "none")
+        # Shown at the apex (the take_costume_swap drain in _tick), or by the timer if the hop
+        # stalls. Anything that knocks him out of it shows it at once. Re-picking the one he
+        # already wears skips the hop, and so does any state quick_change refuses.
+        if costume != previous and self.behavior.quick_change(costume):
+            self._costume_pending = True
+            self._costume_timer.start()
+            return
         self._rebuild_appearance()
         # After the rebuild, so the reaction plays while he is actually wearing the thing.
         self.behavior.costume_chosen(costume)
+
+    def _apply_pending_costume(self) -> None:
+        """Show the costume a quick-change is hopping into - at its apex, or when the timer fires."""
+        if not self._costume_pending:
+            return
+        # Cleared first, so a rebuild that fails cannot leave the persona sync blocked for good.
+        self._costume_pending = False
+        self._costume_timer.stop()
+        self._rebuild_appearance()
 
     def _on_do_something(self) -> None:
         """Tray: play one of his rarer animations now.
@@ -1597,6 +1735,7 @@ class NibApp:
         self.config["skin"] = skin
         log.info("skin -> %r", skin)
         self._rebuild_appearance()
+        self.behavior.skin_chosen()
 
     def _on_wander_toggled(self, enabled: bool) -> None:
         self.config["wander_enabled"] = enabled
