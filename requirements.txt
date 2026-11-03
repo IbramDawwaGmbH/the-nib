@@ -1,0 +1,34 @@
+# Runtime
+PySide6>=6.6
+
+# Windows' own on-device OCR engine (Windows.Media.Ocr), for reading text out of an image
+# dropped on him. Per-namespace packages rather than the single "winsdk" package: winsdk's last
+# release predates current Python wheels and won't build from source without a C++ toolchain,
+# while these (its maintained successor, pywinrt) ship prebuilt wheels and a much smaller total
+# footprint. winrt-runtime is the shared native core the rest import.
+winrt-runtime>=3.2
+winrt-Windows.Foundation>=3.2
+winrt-Windows.Globalization>=3.2
+winrt-Windows.Graphics.Imaging>=3.2
+winrt-Windows.Media.Ocr>=3.2
+winrt-Windows.Storage>=3.2
+winrt-Windows.Storage.Streams>=3.2
+
+# Windows Hello for the Away Guard (guard_auth.py): UserConsentVerifier's availability check and
+# its plain, unparented prompt. The window-parented prompt it prefers goes through a classic-COM
+# interop that pywinrt doesn't project, so that half is plain ctypes and needs nothing extra.
+# Same version line as the namespaces above - mixing 3.x and 4.x winrt packages against one
+# winrt-runtime is not supported.
+winrt-Windows.Security.Credentials.UI>=3.2
+
+# A real runtime dependency now, not just a dev tool: ocr.py's Tesseract fallback grayscales and
+# upscales a dropped image before handing it to vendor/tesseract/, since Tesseract (unlike
+# Windows.Media.Ocr) measurably misreads small UI-scale text without that step. Also still what
+# tools/gen_sprites.py and tools/gen_demo_gif.py use to (re)generate assets/ - one dependency,
+# both uses.
+Pillow>=10.0
+
+# Dev tool only - nothing in the app imports it, so PyInstaller never bundles it. Rebuilds
+# vendor/tesseract/ from a fresh Tesseract-OCR install (tools/vendor_tesseract.py) by walking
+# tesseract.exe's real PE import table. The vendored binaries it produces are what ships, not this.
+pefile>=2023.2.7

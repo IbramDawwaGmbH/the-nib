@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="920" height="300"
+     role="img" aria-labelledby="calc-flow-title calc-flow-desc">
+  <title id="calc-flow-title">The inline calculator, start to finish</title>
+  <desc id="calc-flow-desc">
+    Typing "12 * 7" into the ask bubble shows a live "= 84" preview before Enter is pressed.
+    Pressing Enter closes the bubble and shows the answer on a toast next to Nib, with a
+    "click to copy" hint - nothing is sent to Claude, ChatGPT or Gemini.
+  </desc>
+  <style>
+    /* Two complete colour sets, toggled by display rather than by CSS custom properties - custom
+       properties inside SVG fills are unevenly supported outside a full browser, plain "display"
+       plus a media query is the widely-compatible way to make a static SVG theme-aware. */
+    .dark  { display: none; }
+    .light { display: inline; }
+    @media (prefers-color-scheme: dark) {
+      .dark  { display: inline; }
+      .light { display: none; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, Consolas, "Liberation Mono", Menlo, monospace; }
+    .expr { font-size: 22px; }
+    .answer { font-size: 22px; font-weight: 700; }
+    .toast-answer { font-size: 26px; font-weight: 700; }
+    .hint { font-size: 14px; }
+    .cap { font-size: 15px; }
+    .step { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; }
+  </style>
+
+  <!-- ============================= light theme ============================= -->
+  <g class="light" fill="#2c1206">
+    <rect x="1" y="1" width="918" height="298" rx="18" fill="#f8f4f1" stroke="#e4dad3"/>
+
+    <g transform="translate(60,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#ffffff" stroke="#e4dad3"/>
+      <path d="M 130 120 L 150 120 L 140 134 Z" fill="#ffffff" stroke="#e4dad3"/>
+      <rect x="18" y="18" width="264" height="38" rx="9" fill="none" stroke="#e4dad3"/>
+      <text x="32" y="43" class="mono expr" fill="#2c1206">12 * 7</text>
+      <text x="18" y="90" class="mono answer" fill="#d9552e">= 84</text>
+      <text x="264" y="90" text-anchor="end" class="hint" fill="#8a7f78">Enter to calculate</text>
+    </g>
+    <text x="210" y="212" text-anchor="middle" class="step" fill="#8a7f78">1 &#183; TYPE IT</text>
+    <text x="210" y="234" text-anchor="middle" class="cap" fill="#8a7f78">The answer appears live, before you</text>
+    <text x="210" y="252" text-anchor="middle" class="cap" fill="#8a7f78">even press Enter - nothing sent yet</text>
+
+    <g transform="translate(392,110)">
+      <line x1="0" y1="0" x2="96" y2="0" stroke="#8a7f78" stroke-width="2"/>
+      <path d="M 96 0 L 84 -7 L 84 7 Z" fill="#8a7f78"/>
+      <text x="48" y="-14" text-anchor="middle" class="hint" fill="#8a7f78">Enter &#8629;</text>
+    </g>
+
+    <g transform="translate(560,52)">
+      <rect x="0" y="0" width="230" height="88" rx="14" fill="#ffffff" stroke="#e4dad3"/>
+      <text x="20" y="42" class="mono toast-answer" fill="#d9552e">= 84</text>
+      <text x="20" y="66" class="hint" fill="#8a7f78">Click to copy</text>
+    </g>
+    <text x="675" y="212" text-anchor="middle" class="step" fill="#8a7f78">2 &#183; GET THE ANSWER</text>
+    <text x="675" y="234" text-anchor="middle" class="cap" fill="#8a7f78">A toast next to him. No AI call,</text>
+    <text x="675" y="252" text-anchor="middle" class="cap" fill="#8a7f78">no network, ever - see Privacy</text>
+  </g>
+
+  <!-- ============================= dark theme ============================= -->
+  <g class="dark" fill="#f2ede9">
+    <rect x="1" y="1" width="918" height="298" rx="18" fill="#211f1d" stroke="#4a443f"/>
+
+    <g transform="translate(60,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#2a2725" stroke="#4a443f"/>
+      <path d="M 130 120 L 150 120 L 140 134 Z" fill="#2a2725" stroke="#4a443f"/>
+      <rect x="18" y="18" width="264" height="38" rx="9" fill="none" stroke="#4a443f"/>
+      <text x="32" y="43" class="mono expr" fill="#f2ede9">12 * 7</text>
+      <text x="18" y="90" class="mono answer" fill="#ef7a4f">= 84</text>
+      <text x="264" y="90" text-anchor="end" class="hint" fill="#a9a09a">Enter to calculate</text>
+    </g>
+    <text x="210" y="212" text-anchor="middle" class="step" fill="#a9a09a">1 &#183; TYPE IT</text>
+    <text x="210" y="234" text-anchor="middle" class="cap" fill="#a9a09a">The answer appears live, before you</text>
+    <text x="210" y="252" text-anchor="middle" class="cap" fill="#a9a09a">even press Enter - nothing sent yet</text>
+
+    <g transform="translate(392,110)">
+      <line x1="0" y1="0" x2="96" y2="0" stroke="#a9a09a" stroke-width="2"/>
+      <path d="M 96 0 L 84 -7 L 84 7 Z" fill="#a9a09a"/>
+      <text x="48" y="-14" text-anchor="middle" class="hint" fill="#a9a09a">Enter &#8629;</text>
+    </g>
+
+    <g transform="translate(560,52)">
+      <rect x="0" y="0" width="230" height="88" rx="14" fill="#2a2725" stroke="#4a443f"/>
+      <text x="20" y="42" class="mono toast-answer" fill="#ef7a4f">= 84</text>
+      <text x="20" y="66" class="hint" fill="#a9a09a">Click to copy</text>
+    </g>
+    <text x="675" y="212" text-anchor="middle" class="step" fill="#a9a09a">2 &#183; GET THE ANSWER</text>
+    <text x="675" y="234" text-anchor="middle" class="cap" fill="#a9a09a">A toast next to him. No AI call,</text>
+    <text x="675" y="252" text-anchor="middle" class="cap" fill="#a9a09a">no network, ever - see Privacy</text>
+  </g>
+</svg>

@@ -1,0 +1,62 @@
+{
+  "_comment": "Away Guard lines. One list per category; each list is a shuffle bag, so nothing repeats until every line in it has been shown. {minutes} becomes the minutes guarded so far. Add your own in a guard_phrases.json next to Nib's config.json - it is merged with this list, never replaces it.",
+  "idle": [
+    "Agents at work. Please do not feed the agents.",
+    "Nothing to see here. Just very important fog.",
+    "The humans are away. The bots are working. I'm supervising.",
+    "This screen is closed for a private meeting of the robots.",
+    "Shh… the code is compiling its feelings.",
+    "Security level: one small orange guy. Do not underestimate.",
+    "Fun fact: staring at fog does not unfog it.",
+    "Guarded for {minutes} min. Snacks were not provided.",
+    "Back in 5 minutes. (The bots said that 3 hours ago.)",
+    "You look like someone who doesn't know the password."
+  ],
+  "pointer_near": [
+    "Hands where I can see them.",
+    "That's a lot of wiggling for someone who isn't the owner.",
+    "Nope.",
+    "I can see that cursor, you know."
+  ],
+  "poked": [
+    "Poking me won't unlock anything. I checked."
+  ],
+  "clicked": [
+    "The PIN goes down there. Not on me."
+  ],
+  "typing": [
+    "I'm not looking. I'm not looking.",
+    "La la la, can't see your PIN."
+  ],
+  "wrong_1": [
+    "Close! (It wasn't close.)",
+    "Hmm. That's not it."
+  ],
+  "wrong_2": [
+    "Strike two. I'm writing this down.",
+    "The eyes are getting serious."
+  ],
+  "blackout": [
+    "Lights out. The owner will hear about this.",
+    "Nice try. Everything's logged.",
+    "I see you."
+  ],
+  "unlock": [
+    "Welcome back, boss!",
+    "Ah, it's you. Carry on."
+  ],
+  "peek_return": [
+    "Back already?",
+    "Peek's over. Back to guarding.",
+    "Two minutes? That flew by."
+  ],
+  "sleeping": [
+    "Zzz… (still guarding) …zzz"
+  ],
+  "coffee": [
+    "Guarding is thirsty work."
+  ],
+  "counting": [
+    "Guarded for {minutes} min. Not that I'm counting."
+  ]
+}

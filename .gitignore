@@ -1,0 +1,34 @@
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# --- Build output -----------------------------------------------------------
+build/
+dist/
+
+# --- Generated at runtime, never committed ----------------------------------
+# Settings live in %APPDATA%\NibMascot, not here - but a stray copy in the working tree
+# would contain your own prompt history, so it is ignored explicitly.
+config.json
+nib.log
+
+# --- Generated assets -------------------------------------------------------
+# nib_sheet.png, frames.json, costumes.* and preview.png ARE committed: the app has to run
+# without Pillow, so the rendered sheet ships. Sounds are NOT - they are optional, off by
+# default, and `python tools/gen_sounds.py` regenerates them byte-identically.
+assets/sounds/
+
+# --- Editors and OS ---------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini
+
+# --- Local-only notes ---------------------------------------------------------
+# Standalone copies of planning artifacts, kept for offline/cross-account viewing on this
+# machine only - not part of the shipped project, never committed.
+local/

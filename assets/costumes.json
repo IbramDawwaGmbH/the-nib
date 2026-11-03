@@ -1,0 +1,536 @@
+{
+  "cell": 40,
+  "sheet": "costumes.png",
+  "items": {
+    "santa": {
+      "index": 0,
+      "kind": "head",
+      "anchor": [
+        8,
+        11
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "party": {
+      "index": 1,
+      "kind": "head",
+      "anchor": [
+        6,
+        12
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "cap": {
+      "index": 2,
+      "kind": "head",
+      "anchor": [
+        8,
+        6
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "headphones": {
+      "index": 3,
+      "kind": "head",
+      "anchor": [
+        19,
+        2
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "crown": {
+      "index": 4,
+      "kind": "head",
+      "anchor": [
+        6,
+        6
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "shades": {
+      "index": 5,
+      "kind": "eyes",
+      "anchor": [
+        11,
+        2
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "glasses": {
+      "index": 6,
+      "kind": "eyes",
+      "anchor": [
+        11,
+        2
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "pirate": {
+      "index": 7,
+      "kind": "eyes",
+      "anchor": [
+        11,
+        5
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "beanie": {
+      "index": 8,
+      "kind": "head",
+      "anchor": [
+        12,
+        11
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "tophat": {
+      "index": 9,
+      "kind": "head",
+      "anchor": [
+        11,
+        11
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "toque": {
+      "index": 10,
+      "kind": "head",
+      "anchor": [
+        11,
+        11
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "hardhat": {
+      "index": 11,
+      "kind": "head",
+      "anchor": [
+        14,
+        9
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "wizard": {
+      "index": 12,
+      "kind": "head",
+      "anchor": [
+        13,
+        13
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "witch": {
+      "index": 13,
+      "kind": "head",
+      "anchor": [
+        12,
+        13
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "cowboy": {
+      "index": 14,
+      "kind": "head",
+      "anchor": [
+        15,
+        8
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "tricorn": {
+      "index": 15,
+      "kind": "head",
+      "anchor": [
+        15,
+        7
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "viking": {
+      "index": 16,
+      "kind": "head",
+      "anchor": [
+        17,
+        8
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "mortarboard": {
+      "index": 17,
+      "kind": "head",
+      "anchor": [
+        15,
+        4
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "beret": {
+      "index": 18,
+      "kind": "head",
+      "anchor": [
+        12,
+        6
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "fez": {
+      "index": 19,
+      "kind": "head",
+      "anchor": [
+        8,
+        6
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "newsboy": {
+      "index": 20,
+      "kind": "head",
+      "anchor": [
+        11,
+        6
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "sombrero": {
+      "index": 21,
+      "kind": "head",
+      "anchor": [
+        17,
+        9
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "propeller": {
+      "index": 22,
+      "kind": "head",
+      "anchor": [
+        9,
+        9
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "cone": {
+      "index": 23,
+      "kind": "head",
+      "anchor": [
+        11,
+        13
+      ],
+      "layer": "over",
+      "category": "Hats"
+    },
+    "halo": {
+      "index": 24,
+      "kind": "head",
+      "anchor": [
+        9,
+        9
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "horns": {
+      "index": 25,
+      "kind": "head",
+      "anchor": [
+        12,
+        6
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "catears": {
+      "index": 26,
+      "kind": "head",
+      "anchor": [
+        12,
+        8
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "bunnyears": {
+      "index": 27,
+      "kind": "head",
+      "anchor": [
+        8,
+        13
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "antennae": {
+      "index": 28,
+      "kind": "head",
+      "anchor": [
+        9,
+        9
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "flowercrown": {
+      "index": 29,
+      "kind": "head",
+      "anchor": [
+        12,
+        4
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "snowcap": {
+      "index": 30,
+      "kind": "head",
+      "anchor": [
+        11,
+        4
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "leaf": {
+      "index": 31,
+      "kind": "head",
+      "anchor": [
+        11,
+        6
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "bandana": {
+      "index": 32,
+      "kind": "head",
+      "anchor": [
+        14,
+        2
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "earmuffs": {
+      "index": 33,
+      "kind": "head",
+      "anchor": [
+        19,
+        2
+      ],
+      "layer": "over",
+      "category": "Head"
+    },
+    "monocle": {
+      "index": 34,
+      "kind": "eyes",
+      "anchor": [
+        13,
+        3
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "glasses3d": {
+      "index": 35,
+      "kind": "eyes",
+      "anchor": [
+        12,
+        2
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "roundspecs": {
+      "index": 36,
+      "kind": "eyes",
+      "anchor": [
+        13,
+        2
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "skigoggles": {
+      "index": 37,
+      "kind": "eyes",
+      "anchor": [
+        14,
+        2
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "aviator": {
+      "index": 38,
+      "kind": "eyes",
+      "anchor": [
+        14,
+        3
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "heartglasses": {
+      "index": 39,
+      "kind": "eyes",
+      "anchor": [
+        11,
+        3
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "starglasses": {
+      "index": 40,
+      "kind": "eyes",
+      "anchor": [
+        13,
+        3
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "tapedglasses": {
+      "index": 41,
+      "kind": "eyes",
+      "anchor": [
+        11,
+        4
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "vrheadset": {
+      "index": 42,
+      "kind": "eyes",
+      "anchor": [
+        14,
+        3
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "scarf": {
+      "index": 43,
+      "kind": "neck",
+      "anchor": [
+        17,
+        3
+      ],
+      "layer": "over",
+      "category": "Neck"
+    },
+    "bowtie": {
+      "index": 44,
+      "kind": "neck",
+      "anchor": [
+        7,
+        3
+      ],
+      "layer": "over",
+      "category": "Neck"
+    },
+    "necktie": {
+      "index": 45,
+      "kind": "neck",
+      "anchor": [
+        4,
+        3
+      ],
+      "layer": "over",
+      "category": "Neck"
+    },
+    "apron": {
+      "index": 46,
+      "kind": "body",
+      "anchor": [
+        14,
+        8
+      ],
+      "layer": "over",
+      "category": "Body"
+    },
+    "toolbelt": {
+      "index": 47,
+      "kind": "body",
+      "anchor": [
+        13,
+        2
+      ],
+      "layer": "over",
+      "category": "Body"
+    },
+    "groucho": {
+      "index": 48,
+      "kind": "eyes",
+      "anchor": [
+        12,
+        7
+      ],
+      "layer": "over",
+      "category": "Eyes"
+    },
+    "cape": {
+      "index": 49,
+      "kind": "neck",
+      "anchor": [
+        20,
+        2
+      ],
+      "layer": "behind",
+      "category": "Behind"
+    },
+    "wings": {
+      "index": 50,
+      "kind": "neck",
+      "anchor": [
+        20,
+        13
+      ],
+      "layer": "behind",
+      "category": "Behind"
+    },
+    "backpack": {
+      "index": 51,
+      "kind": "body",
+      "anchor": [
+        22,
+        11
+      ],
+      "layer": "behind",
+      "category": "Behind"
+    },
+    "jetpack": {
+      "index": 52,
+      "kind": "body",
+      "anchor": [
+        22,
+        9
+      ],
+      "layer": "behind",
+      "category": "Behind"
+    }
+  }
+}

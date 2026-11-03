@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" width="920" height="300"
+     role="img" aria-labelledby="ruler-flow-title ruler-flow-desc">
+  <title id="ruler-flow-title">The pixel ruler, drag to release</title>
+  <desc id="ruler-flow-desc">
+    Dragging anywhere on screen draws a line with a live pixel/inch/centimetre readout.
+    Releasing the mouse locks the reading in place; clicking it copies the reading to the
+    clipboard and closes the overlay.
+  </desc>
+  <style>
+    .dark  { display: none; }
+    .light { display: inline; }
+    @media (prefers-color-scheme: dark) {
+      .dark  { display: inline; }
+      .light { display: none; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }
+    .mono { font-family: ui-monospace, Consolas, "Liberation Mono", Menlo, monospace; }
+    .reading { font-size: 15px; font-weight: 700; }
+    .pillhint { font-size: 12px; }
+    .hint { font-size: 14px; }
+    .cap { font-size: 15px; }
+    .step { font-size: 13px; font-weight: 700; letter-spacing: 0.06em; }
+  </style>
+
+  <!-- ============================= light theme ============================= -->
+  <g class="light" fill="#2c1206">
+    <rect x="1" y="1" width="918" height="298" rx="18" fill="#f8f4f1" stroke="#e4dad3"/>
+
+    <g transform="translate(60,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#ffffff" stroke="#e4dad3"/>
+      <line x1="36" y1="88" x2="220" y2="40" stroke="#d9552e" stroke-width="2.5"/>
+      <circle cx="36" cy="88" r="4.5" fill="#d9552e"/>
+      <circle cx="220" cy="40" r="4.5" fill="#d9552e"/>
+      <g transform="translate(150,18)">
+        <rect x="0" y="0" width="122" height="34" rx="6" fill="#141414"/>
+        <text x="10" y="15" class="mono reading" fill="#f2ede9">247px &#183; 2.57&#8243;</text>
+        <text x="10" y="28" class="pillhint" fill="#c9c4c0">release to lock</text>
+      </g>
+    </g>
+    <text x="210" y="212" text-anchor="middle" class="step" fill="#8a7f78">1 &#183; DRAG ANYWHERE ON SCREEN</text>
+    <text x="210" y="234" text-anchor="middle" class="cap" fill="#8a7f78">A live readout in px, inches and cm -</text>
+    <text x="210" y="252" text-anchor="middle" class="cap" fill="#8a7f78">right-click any time to cancel</text>
+
+    <g transform="translate(392,110)">
+      <line x1="0" y1="0" x2="96" y2="0" stroke="#8a7f78" stroke-width="2"/>
+      <path d="M 96 0 L 84 -7 L 84 7 Z" fill="#8a7f78"/>
+      <text x="48" y="-14" text-anchor="middle" class="hint" fill="#8a7f78">release</text>
+    </g>
+
+    <g transform="translate(560,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#ffffff" stroke="#e4dad3"/>
+      <line x1="36" y1="88" x2="220" y2="40" stroke="#d9552e" stroke-width="2.5"/>
+      <circle cx="36" cy="88" r="4.5" fill="#d9552e"/>
+      <circle cx="220" cy="40" r="4.5" fill="#d9552e"/>
+      <g transform="translate(150,18)">
+        <rect x="0" y="0" width="122" height="34" rx="6" fill="#141414"/>
+        <text x="10" y="15" class="mono reading" fill="#f2ede9">247px &#183; 2.57&#8243;</text>
+        <text x="10" y="28" class="pillhint" fill="#c9c4c0">click to copy</text>
+      </g>
+    </g>
+    <text x="675" y="212" text-anchor="middle" class="step" fill="#8a7f78">2 &#183; CLICK THE READING TO COPY IT</text>
+    <text x="675" y="234" text-anchor="middle" class="cap" fill="#8a7f78">No Escape or Enter needed - the whole</text>
+    <text x="675" y="252" text-anchor="middle" class="cap" fill="#8a7f78">thing is mouse-only, on purpose</text>
+  </g>
+
+  <!-- ============================= dark theme ============================= -->
+  <g class="dark" fill="#f2ede9">
+    <rect x="1" y="1" width="918" height="298" rx="18" fill="#211f1d" stroke="#4a443f"/>
+
+    <g transform="translate(60,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#2a2725" stroke="#4a443f"/>
+      <line x1="36" y1="88" x2="220" y2="40" stroke="#d9552e" stroke-width="2.5"/>
+      <circle cx="36" cy="88" r="4.5" fill="#d9552e"/>
+      <circle cx="220" cy="40" r="4.5" fill="#d9552e"/>
+      <g transform="translate(150,18)">
+        <rect x="0" y="0" width="122" height="34" rx="6" fill="#141414"/>
+        <text x="10" y="15" class="mono reading" fill="#f2ede9">247px &#183; 2.57&#8243;</text>
+        <text x="10" y="28" class="pillhint" fill="#c9c4c0">release to lock</text>
+      </g>
+    </g>
+    <text x="210" y="212" text-anchor="middle" class="step" fill="#a9a09a">1 &#183; DRAG ANYWHERE ON SCREEN</text>
+    <text x="210" y="234" text-anchor="middle" class="cap" fill="#a9a09a">A live readout in px, inches and cm -</text>
+    <text x="210" y="252" text-anchor="middle" class="cap" fill="#a9a09a">right-click any time to cancel</text>
+
+    <g transform="translate(392,110)">
+      <line x1="0" y1="0" x2="96" y2="0" stroke="#a9a09a" stroke-width="2"/>
+      <path d="M 96 0 L 84 -7 L 84 7 Z" fill="#a9a09a"/>
+      <text x="48" y="-14" text-anchor="middle" class="hint" fill="#a9a09a">release</text>
+    </g>
+
+    <g transform="translate(560,60)">
+      <rect x="0" y="0" width="300" height="120" rx="14" fill="#2a2725" stroke="#4a443f"/>
+      <line x1="36" y1="88" x2="220" y2="40" stroke="#d9552e" stroke-width="2.5"/>
+      <circle cx="36" cy="88" r="4.5" fill="#d9552e"/>
+      <circle cx="220" cy="40" r="4.5" fill="#d9552e"/>
+      <g transform="translate(150,18)">
+        <rect x="0" y="0" width="122" height="34" rx="6" fill="#141414"/>
+        <text x="10" y="15" class="mono reading" fill="#f2ede9">247px &#183; 2.57&#8243;</text>
+        <text x="10" y="28" class="pillhint" fill="#c9c4c0">click to copy</text>
+      </g>
+    </g>
+    <text x="675" y="212" text-anchor="middle" class="step" fill="#a9a09a">2 &#183; CLICK THE READING TO COPY IT</text>
+    <text x="675" y="234" text-anchor="middle" class="cap" fill="#a9a09a">No Escape or Enter needed - the whole</text>
+    <text x="675" y="252" text-anchor="middle" class="cap" fill="#a9a09a">thing is mouse-only, on purpose</text>
+  </g>
+</svg>

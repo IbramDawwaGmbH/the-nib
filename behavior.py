@@ -1,0 +1,3078 @@
+"""The mascot's state machine: wandering, gait, cursor reactions, annoyance, and sleep.
+
+Deliberately free of Qt so the behaviour can be reasoned about (and tested) on its own. It reads
+geometry from the sprite sheet and owns the ``Animator``, because the walk maths and the animation
+clock have to stay in lockstep.
+
+**Why the feet do not slide.** The sheet promises that one walk frame of leg travel covers
+``walk_step_px`` logical pixels, and that a planted leg's offset steps back by exactly that much
+each frame. So the mascot must advance exactly ``walk_step_px * scale`` per animation frame - no
+more, no less. Rather than integrate a velocity independently of the animation (the classic
+moonwalk bug), ``_walk`` derives the distance from the animation's own progress: the same scaled
+delta drives both. Easing in and out then works by slowing the *animation* down, which is also how
+a real gait slows - shorter time per step, same stride length.
+"""
+
+from __future__ import annotations
+
+import enum
+import logging
+import math
+import random
+from collections import deque
+
+from animator import Animator, SpriteSheet
+from mood import Mood
+from world import (
+    PART_DAY,
+    PART_EVENING,
+    PART_MORNING,
+    PART_NIGHT,
+    SEASON_AUTUMN,
+    SEASON_SPRING,
+    SEASON_SUMMER,
+    SEASON_WINTER,
+    WorldState,
+    parse_clock,
+)
+
+log = logging.getLogger(__name__)
+
+
+class State(enum.Enum):
+    IDLE = "idle"
+    WALK = "walk"
+    INJURED = "injured"
+    ANTIC = "antic"
+    HOVER_WAVE = "hover_wave"
+    ASK = "ask"
+    WORKING = "working"
+    ANGRY = "angry"
+    SLEEP = "sleep"
+    WAKE = "wake"
+    HIDDEN = "hidden"
+    DRAG = "drag"
+    PEEK = "peek"
+    PET = "pet"
+    PERCH = "perch"
+
+
+# --- tuning that is not worth a config key ------------------------------------------
+
+BLINK_MIN_MS, BLINK_MAX_MS = 2600, 7000
+WAVE_DURATION_MS = 2100
+WAVE_COOLDOWN_MS = 9000
+WORKING_MIN_MS, WORKING_MAX_MS = 1500, 2500
+ANGRY_DURATION_MS = 2500
+GRUMBLE_MS = 380
+STORM_OFF_MIN_PX, STORM_OFF_MAX_PX = 90, 190
+TURN_AROUND_CHANCE = 0.35
+
+#: Blinks come in three kinds. A single blink is one 120ms frame and reads as punctuation; the
+#: double is two in quick succession; the slow one holds half-mast lids and reads as tiredness.
+#: Which he uses is a MOOD, not a random pick - a sleepy blink at eleven in the morning says
+#: nothing, and the same blink at midnight says everything.
+BLINK_SINGLE = "blink"
+BLINK_DOUBLE = "blink_double"
+BLINK_SLOW = "blink_slow"
+#: (double, slow) chance by part of day; the remainder is an ordinary single blink.
+BLINK_MIX_BY_PART = {
+    PART_NIGHT: (0.15, 0.55),
+    PART_EVENING: (0.2, 0.3),
+    PART_MORNING: (0.2, 0.35),
+    PART_DAY: (0.25, 0.05),
+}
+
+#: A window appearing in front of him makes him jump. Short, and on its own cooldown so that
+#: alt-tabbing repeatedly does not turn him into a twitch.
+STARTLE_ANIM = "startle"
+STARTLE_MS = 700.0
+STARTLE_COOLDOWN_MS = 25000.0
+STARTLE_CHANCE = 0.45
+
+#: How long he keeps his eyes on the pointer, and how long before he will do it again.
+EYE_TRACK_MIN_MS, EYE_TRACK_MAX_MS = 1800.0, 3200.0
+EYE_TRACK_COOLDOWN_MS = 7000.0
+EYE_TRACK_STATE = "eyes_track"
+
+#: The idle antics pool: (animation state, weight, min ms, max ms, category).
+#: "eyes" antics are the attention-seeking ones and get weighted up when the cursor is nearby;
+#: "activity" antics are what he does to amuse himself when nobody is around; "fidget" antics are
+#: the short ones that fill the gaps, and they are the only category that can be switched off on
+#: its own.
+ANTICS: tuple[tuple[str, float, float, float, str], ...] = (
+    ("look_around", 1.4, 1800, 2800, "eyes"),
+    ("wink", 1.0, 1000, 1500, "eyes"),
+    ("sparkle", 1.0, 1200, 1900, "eyes"),
+    ("heart_eyes", 0.7, 1400, 2100, "eyes"),
+    ("football", 1.1, 2600, 4400, "activity"),
+    ("dance", 1.2, 2400, 4000, "activity"),
+    ("pushups", 0.9, 2400, 3800, "activity"),
+    ("hop", 1.1, 1300, 2100, "activity"),
+    ("sit_dangle", 0.8, 2600, 4400, "activity"),
+    # Under a second each, and none of them has anything you would notice on purpose. The whole
+    # point is the gaps: every other entry above is a set piece, and a creature made entirely of
+    # set pieces reads as a creature waiting for its next cue.
+    ("scratch", 1.3, 700, 1100, "fidget"),
+    ("foot_tap", 1.2, 800, 1300, "fidget"),
+    ("check_watch", 0.8, 900, 1400, "fidget"),
+)
+FIDGET_CATEGORY = "fidget"
+#: Multiplier applied to "eyes" antics while the pointer is close - he plays to an audience.
+EYES_ANTIC_AUDIENCE_BOOST = 2.5
+
+# --- personality presets -----------------------------------------------------------------
+#
+# A LENS over the settings, not a rewrite of them. The user's own numbers stay in the file exactly
+# as they typed them and every preset is a set of multipliers applied at the point of use, so
+# switching back to "balanced" restores what they had rather than what a preset last wrote over it.
+# That also means a preset and a hand-tuned config compose instead of fighting.
+#
+# Keys: antic_chance / beat / pace / annoyance are multipliers; weights composes into the ambient
+# pool the same way the time of day and the mood do.
+PERSONALITIES: dict[str, dict] = {
+    "balanced": {},
+    "chill": {
+        "antic_chance": 0.8,
+        "beat": 2.4,          # much longer pauses between activities
+        "pace": 0.85,
+        "annoyance": 1.75,    # takes a lot more poking to bother him
+        "weights": {
+            "sit_dangle": 2.2, "look_around": 1.5, "scratch": 1.3,
+            "dance": 0.5, "pushups": 0.4, "hop": 0.6, "football": 0.7,
+        },
+    },
+    "hyper": {
+        "antic_chance": 1.3,
+        "beat": 0.45,
+        "pace": 1.18,
+        "annoyance": 0.85,
+        "weights": {
+            "hop": 2.2, "dance": 1.9, "football": 1.7, "pushups": 1.5, "sparkle": 1.3,
+            "foot_tap": 1.6, "sit_dangle": 0.2, "check_watch": 0.4,
+        },
+    },
+    "sassy": {
+        "antic_chance": 1.05,
+        "beat": 0.85,
+        "pace": 1.06,
+        "annoyance": 0.5,     # half the patience
+        "weights": {
+            "wink": 2.6, "look_around": 1.4, "check_watch": 1.9, "heart_eyes": 0.5,
+            "pushups": 0.7, "sit_dangle": 0.7,
+        },
+    },
+}
+
+# --- being petted --------------------------------------------------------------------------
+#
+# Everything else in this file is something he does TO you or ABOUT you. This is the one thing you
+# do to him, and until it existed the whole interaction model ran one way: poke, poke, poke, sulk.
+#
+# The trigger is deliberately stricter than the wave's: the pointer must be *on him*, not merely
+# near, and it must hold still. A wave costs nothing if it misfires; leaning into a hand that is
+# not there does not read as affection, it reads as a bug.
+
+#: How far the pointer may drift and still count as held still. A hand resting on a mouse moves a
+#: pixel or two; zero tolerance would mean nobody could ever pet him.
+PET_JITTER_PX = 3
+#: Longest he will keep going, in case a pointer is simply abandoned on top of him.
+PET_MAX_MS = 6000.0
+#: One accumulated poke forgiven per this long of being petted.
+PET_DRAIN_MS = 1200.0
+#: A breath before he can be petted again, on top of the re-arm rule below.
+PET_COOLDOWN_MS = 2500.0
+PET_ANIM = "pet"
+
+# --- reacting to what you asked for ---------------------------------------------------------
+#
+# He already has your prompt: you typed it into his own bubble. So this costs nothing in privacy
+# and nothing in new art - it is a keyword table over states that already exist, played after the
+# working animation instead of dropping straight back to idle.
+#
+# The text is matched and discarded. It is never logged, at any level.
+
+#: Anything longer than this gets a double-take regardless of what it says.
+PROMPT_LONG_CHARS = 420
+#: (keywords, animation, min ms, max ms). First match wins, so the order is the priority order:
+#: gratitude beats everything, and the length check is the fallback rather than the headline.
+PROMPT_REACTIONS: tuple[tuple[tuple[str, ...], str, float, float], ...] = (
+    (("thank", "thanks", "cheers", "appreciate", "you're the best", "youre the best"),
+     "heart_eyes", 1500, 2200),
+    (("```", "def ", "class ", "import ", "function ", "const ", "select ", "#include", "</"),
+     "typing", 1800, 2600),
+    (("fix", "bug", "error", "broken", "crash", "failing", "fails", "debug", "stack trace"),
+     "strain", 2000, 3000),
+    (("email", "reply", "draft", "letter", "message to"), "mail", 1800, 2600),
+    (("why", "how does", "how do", "explain", "what is", "what's the difference"),
+     "look_around", 1600, 2400),
+)
+#: Played for a wall of text when nothing else matched.
+PROMPT_LONG_ANIM = "startle"
+
+#: The inline calculator answering something is a different event from a prompt going anywhere -
+#: see ``Behavior.calculated`` - but it borrows this animation from the Calculator-app persona
+#: further down. That entry's costume field is empty, so reusing it here carries no hat along and
+#: needs no new art, the same free reuse ``PROMPT_REACTIONS`` above already makes of "typing" and
+#: "mail".
+CALCULATED_ANIM = "counting"
+CALCULATED_MS = (1800.0, 2600.0)
+
+#: Shift-dropping an image to read text out of it is, again, a different event from a prompt
+#: going anywhere - see ``Behavior.read_image``. Reuses the same "look_around" animation the
+#: why/how/explain prompt reactions above already use, rather than a new "reading" state: he's
+#: making sense of something either way, and free reuse beats new art here too.
+READING_ANIM = "look_around"
+READING_MS = (1600.0, 2400.0)
+
+#: Talking into a microphone nothing can hear - see ``Behavior.talking_while_muted``. A wave,
+#: because this is the one thing he ever has to tell *you* rather than react to you having done
+#: something, and waving is already how he gets your attention. The earmuffs are the existing
+#: costume that most directly reads as "this is not being heard", applied as a costume= kwarg on
+#: the antic exactly as FOCUS_COSTUME and TASK_FINISHED_ANIM's "party" already are, so it needs no
+#: new art and is gone the instant the antic ends rather than touching your `costume` setting.
+MUTED_ANIM = "wave"
+MUTED_COSTUME = "earmuffs"
+MUTED_MS = 2000.0
+
+#: While you are away he settles down to wait, and greets you when you come back. This is
+#: deliberately *sitting*, not sleeping - only being pestered puts him to sleep.
+AWAY_ANTIC = "sit_dangle"
+GREET_ANTIC = "hop"
+GREET_MS = 1500.0
+
+# --- being ignored ---------------------------------------------------------------------
+#
+# "Away" means no input at all - you left. This is the other case: you are right here, working, and
+# none of it is aimed at him. Three stages, and then it STOPS. It never escalates past the third,
+# which is both less irritating and truer to life - real attention-seeking peaks and subsides.
+#
+# There is deliberately no stage where he walks over to your cursor. A mascot that leaves its spot
+# and comes at your pointer is the version of this that gets the app uninstalled.
+
+#: Multiples of ``attention_after_s`` at which each stage fires.
+NEGLECT_GLANCE_AT = 1.0     # he starts looking your way more. Invisible unless you are watching.
+NEGLECT_WAVE_AT = 2.0       # one unprompted wave, cursor nowhere near
+NEGLECT_GIVE_UP_AT = 3.5    # sits down and waits
+#: Weight boost on the attention-seeking antics once he has noticed being ignored.
+NEGLECT_EYES_BOOST = 2.0
+#: He sits, but glances up now and then, so it reads as *still hoping* rather than settled in for
+#: the duration - which is what the identical away-sit means.
+NEGLECT_SIT_ANTIC = "sit_dangle"
+NEGLECT_GLANCE_ANTIC = "look_around"
+NEGLECT_GLANCE_EVERY_MS = 21000.0
+NEGLECT_GLANCE_MS = 1600.0
+
+#: Reacting to whatever app you just switched to.
+FOREGROUND_REACT_CHANCE = 0.5
+FOREGROUND_COOLDOWN_MS = 12000.0
+#: Executables that make him happy to see you. Matched on the executable name only.
+CLAUDE_PROCESSES = frozenset({"claude.exe"})
+CLAUDE_ANTICS = ("heart_eyes", "sparkle", "wink")
+
+#: App personas: (animation, temporary headwear, min ms, max ms, executables).
+#: Matched on the executable name alone, exactly like every other app reaction - never on a window
+#: title. A hard-coded list is inevitably incomplete, which is why ``persona_apps`` in the config
+#: is merged over the top: extending it is a settings edit rather than a code change.
+_PERSONA_GROUPS: tuple[tuple[str, str, float, float, tuple[str, ...]], ...] = (
+    (
+        "typing", "glasses", 2600, 4200,
+        (
+            "code.exe", "code - insiders.exe", "codium.exe", "vscodium.exe",
+            "cursor.exe", "windsurf.exe", "devenv.exe", "pycharm64.exe", "idea64.exe",
+            "webstorm64.exe", "clion64.exe", "rider64.exe", "goland64.exe",
+            "sublime_text.exe", "zed.exe",
+        ),
+    ),
+    ("counting", "", 2200, 3200,
+     ("calculatorapp.exe", "calculator.exe", "calc.exe", "win32calc.exe")),
+    ("spreadsheet", "", 2800, 4200,
+     ("excel.exe", "et.exe", "gnumeric.exe", "scalc.exe")),
+    (
+        "mail", "", 2400, 3600,
+        (
+            "outlook.exe", "olk.exe", "hxoutlook.exe", "hxmail.exe", "thunderbird.exe",
+            "mailspring.exe", "bluemail.exe", "emclient.exe", "postbox.exe",
+        ),
+    ),
+)
+PERSONAS: dict[str, tuple[str, str, float, float]] = {
+    exe: (antic, costume, low, high)
+    for antic, costume, low, high, executables in _PERSONA_GROUPS
+    for exe in executables
+}
+#: How long a persona reaction runs when it comes from ``persona_apps`` rather than the table.
+CUSTOM_PERSONA_MS = (2400.0, 3600.0)
+GRAVITY_PX_PER_MS2 = 0.0028
+MAX_FALL_SPEED_PX_MS = 3.2
+
+# --- throwing him ----------------------------------------------------------------------
+#
+# Releasing him used to discard everything but his position: he dropped straight down however fast
+# you were moving. Now the drag's velocity is carried into the fall, so a flick sends him arcing
+# across the taskbar, bouncing off the ends, and rolling to a stop.
+
+#: Velocity is averaged over this much of the *end* of the drag rather than taken from the last
+#: two positions. That is the whole difference between a flick and "he flies whenever you let go":
+#: drag him, hold still for a moment, release, and a windowed average is reliably zero where a
+#: two-sample delta is only zero if the final sample happened to be stationary.
+THROW_SAMPLE_MS = 140.0
+#: Hard ceiling on launch speed. A violent flick should not fire him across three monitors and
+#: leave you hunting for where he went.
+MAX_THROW_SPEED_PX_MS = 4.0
+#: Above this release speed, a drop over a window is a throw, not a placement - the same reading
+#: _throw_velocity already takes to arc a flick across the taskbar decides here whether he sticks
+#: to a window or flies through it like anywhere else, so a fling that happens to end over one does
+#: not surprise you by grabbing it.
+PERCH_MAX_RELEASE_SPEED_PX_MS = 0.5
+#: Exponential decay per millisecond. Air is thin; the ground is not.
+AIR_DRAG_PER_MS = 0.9992
+ROLL_FRICTION_PER_MS = 0.997
+#: Energy kept when he hits the end of the strip, and when he lands.
+WALL_RESTITUTION = 0.45
+BOUNCE_RESTITUTION = 0.35
+#: Below these he stops bouncing / stops rolling and gets up.
+MIN_BOUNCE_SPEED_PX_MS = 0.45
+MIN_ROLL_SPEED_PX_MS = 0.06
+#: Hitting the end of the strip this fast hurts, however short the drop was. Deliberately a
+#: *separate* rule from INJURY_FALL_PX rather than a replacement: that threshold was tuned against
+#: real drops, and rewriting it in terms of speed would mean re-tuning something already verified.
+WALL_IMPACT_HURT_PX_MS = 1.5
+
+#: Drop him from higher than this and he lands hurt: bandaged, seeing stars, wobbling on his feet.
+#: Far enough that shuffling him along the taskbar never triggers it, low enough that actually
+#: picking him up and letting go always does.
+INJURY_FALL_PX = 60
+INJURY_ANIM = "injured"
+#: Played for the whole descent, however he got airborne.
+TUMBLE_ANIM = "tumble"
+
+#: While held by the cursor he squirms. Amplitude is in logical px (scaled by the sprite scale);
+#: the two axes run at different rates and the x axis is amplitude-modulated, so it reads as
+#: bursts of wriggling in every direction rather than a mechanical left-right shake.
+STRUGGLE_AMPLITUDE_PX = 3.5
+STRUGGLE_X_RATE = 0.019
+STRUGGLE_X_BURST_RATE = 0.0068
+STRUGGLE_Y_RATE = 0.0131
+
+# --- world awareness ------------------------------------------------------------------
+#
+# Two quite different mechanisms, and keeping them apart is what stops this turning into a dozen
+# new states:
+#
+# * **Moments** are one-off reactions to something specific - a stretch first thing, a dance at
+#   knocking-off time, fanning himself when the machine is pinned. They are priority checks in
+#   ``_choose_next_action``, in the same slot the cursor-tracking check occupies, *not* members of
+#   the ambient pool with a time-varying weight.
+# * **Mood** never fires anything. It leans on the weights of the antics he already has and on how
+#   fast he plays them, which is how "droopier and slower late at night" costs no new art at all.
+
+#: One budget shared by every moment. Per-trigger cooldowns would let a busy machine, a Friday
+#: afternoon and an app switch all land in the same second, which reads as a short circuit rather
+#: than as a character.
+REACTION_COOLDOWN_MS = 45000.0
+
+#: Per-kind limits on top of that. These are LONG, and measuring is what set them: at the first
+#: values (90s / 4min / 5min) a simulated day fired the seasonal moment 202 times - one every seven
+#: minutes - and the morning yawn 66 times. Each was individually correct and collectively a tic.
+#: The rates below work out at roughly 5 morning yawns, a dozen seasonal flourishes, and a fan
+#: every five minutes while the machine is actually pinned.
+HOT_COOLDOWN_MS = 300000.0        # 5 min
+MORNING_COOLDOWN_MS = 3600000.0   # 1 hour
+SEASONAL_COOLDOWN_MS = 5400000.0  # 90 min
+#: Shorter than the others on purpose: a build finishing is its own natural rate limiter (it needs
+#: another `task_min_busy_s` of sustained load before it can fire again at all), so this only needs
+#: to guard against one busy-then-quiet episode being read as two if the load dips right at the
+#: edge of `task_quiet_percent` on the way down.
+TASK_FINISHED_COOLDOWN_MS = 180000.0  # 3 min
+
+#: A once-a-day moment needs a *window* as well as a latch. Without one, launching him at six in
+#: the evening fires the four o'clock celebration two hours late - and so does waking from sleep.
+CLOCK_OFF_WINDOW_H = 0.25
+WEEK_OVER_DELAY_H = 0.5
+WEEK_OVER_WINDOW_H = 2.0
+#: Before this hour a new calendar date is still last night, so a machine left running does not
+#: get its "first sight of you today" stretch at midnight.
+NEW_DAY_HOUR = 5.0
+
+MORNING_MOMENT_CHANCE = 0.55
+SEASONAL_MOMENT_CHANCE = 0.4
+FRIDAY_AFTERNOON_FROM_H = 13.0
+FRIDAY_DANCE_BOOST = 3.0
+
+#: How much slower the ambient animation runs late on. Reactions are never slowed - a slow-motion
+#: tantrum reads as a bug, not as tiredness.
+_PACE_BY_PART = {PART_NIGHT: 0.7, PART_EVENING: 0.87}
+
+#: Weight multipliers on the ambient pool. Anything absent keeps its normal weight.
+_PART_OF_DAY_WEIGHTS: dict[str, dict[str, float]] = {
+    PART_NIGHT: {
+        "dance": 0.15, "pushups": 0.2, "football": 0.3, "hop": 0.4,
+        "sit_dangle": 2.6, "look_around": 1.4,
+    },
+    PART_MORNING: {"dance": 0.6, "look_around": 1.4, "sit_dangle": 1.3},
+    PART_EVENING: {"pushups": 0.6, "football": 0.7, "sit_dangle": 1.5},
+}
+_SEASON_WEIGHTS: dict[str, dict[str, float]] = {
+    # Spring has no dedicated art; it is bright and bouncy purely by weighting.
+    SEASON_SPRING: {"sparkle": 1.8, "hop": 1.6, "heart_eyes": 1.5},
+    SEASON_SUMMER: {"pushups": 0.5, "football": 0.7, "sit_dangle": 1.4},
+    SEASON_AUTUMN: {"sit_dangle": 1.5, "look_around": 1.4},
+    SEASON_WINTER: {"hop": 1.5, "dance": 1.3, "sit_dangle": 0.7},
+}
+#: Played when the machine is genuinely pinned. Summer shares it, which is why summer defers.
+CPU_ANIM = "hot"
+#: Played once a sustained-busy stretch drops back to quiet - a render, build, export or install
+#: finishing. Its own duration, not a random range like the other moments: the celebration is a
+#: fixed sequence (wind-up, punch, a twinkling held sparkle, settle), so playing it for anything
+#: shorter would cut it off mid-gesture and anything much longer would just repeat the smug ending.
+TASK_FINISHED_ANIM = "task_finished"
+#: 2240ms of animation (200+160+380+380+220+900) plus a 60ms buffer, so it always plays through to
+#: the smug settle rather than being cut off by a race with the antic clock.
+TASK_FINISHED_MS = 2300.0
+
+# --- dressing himself --------------------------------------------------------------------
+#
+# He owns fifty-odd costumes and, left alone, wears none of them. The fix is NOT to cycle them at
+# random: the costume is a choice you make from the tray and it persists, so a timer overwriting it
+# every few minutes would make that menu decorative - and a hat that changes for no reason says
+# nothing about him or about what is happening. It would be the only arbitrary thing in here.
+#
+# So a costume goes on when there is a REASON for it, through the same path the reading glasses
+# have always used. Two kinds, and the difference is how long they last:
+#
+# * A **moment costume** is worn for the length of one reaction - a hard hat while he fans himself
+#   at a pinned machine, a party hat for the knocking-off dance. Keyed on the moment rather than on
+#   the animation, so dancing because it is Friday afternoon does NOT get the hat; only actually
+#   knocking off does.
+# * A **seasonal costume** is worn continuously for as long as the season lasts. That one is meant
+#   to be predictable rather than surprising: "it is December so he has a beanie on" is a feature
+#   you can reason about.
+#
+# Both obey the rule the persona glasses established: if you have picked a costume yourself, yours
+# wins and neither of these ever fires.
+
+#: season -> what he wears all season. Deliberately a mix of hats and eyewear so the seasons do not
+#: all read as "a different hat".
+SEASON_COSTUMES: dict[str, str] = {
+    SEASON_WINTER: "beanie",
+    SEASON_SPRING: "flowercrown",
+    SEASON_SUMMER: "shades",
+    SEASON_AUTUMN: "leaf",
+}
+
+#: The seasonal moment for each season. Spring is deliberately absent - see above.
+SEASON_ANTICS: dict[str, str] = {
+    SEASON_WINTER: "shiver",
+    SEASON_SUMMER: CPU_ANIM,
+    SEASON_AUTUMN: "autumn",
+}
+
+#: States whose animation the mood is allowed to slow down.
+_MOOD_PACED_STATES = (State.IDLE, State.ANTIC)
+
+# --- playing with what is around him ---------------------------------------------------
+#
+# Both of these are strictly READ-ONLY with respect to other applications. He looks at where a
+# window is and he reacts to it; he never moves one. Nothing here can displace anybody's layout.
+
+#: Peeking: he sinks below the top edge of the taskbar until only his head and eyes show over it,
+#: looks about, and rises again. Implemented by shortening HIS OWN window and letting the sprite be
+#: clipped, never by fighting the shell for z-order - two topmost windows racing each other is not
+#: a fight worth picking, and losing it would leave him stuck behind the bar.
+#: Logical px, scaled with the sprite - 46% of his visible height, whatever the scale. Chosen by
+#: rendering the sink from 0 to 36px over a real taskbar and looking: below this he is merely
+#: standing low, and two pixels further down the taskbar starts eating his eyes.
+PEEK_SINK_PX = 13
+PEEK_DOWN_MS = 420.0
+PEEK_HOLD_MS = 1900.0
+PEEK_UP_MS = 460.0
+PEEK_COOLDOWN_MS = 480000.0       # 8 min
+PEEK_CHANCE = 0.5
+#: eyes_track is a 3x3 grid of directions; index 1 is the top row, centre column - straight up.
+PEEK_LOOK_FRAME = 1
+
+#: Straining at the underside of a window hanging just above him. He never shifts it, and that is
+#: the whole joke: the gag costs nothing and cannot break anyone's window arrangement.
+LEDGE_ANIM = "strain"
+#: The same animation, reused for a different reason: braced legs, arm rigid, teeth gritted reads
+#: as "gripping something hard" just as well as it reads as "pushing up at a window" - and it is
+#: held for as long as the sign is up, rather than for one antic's usual few seconds.
+POCKET_HOLD_ANIM = "strain"
+#: A focus session holds him in the same three frames State.WORKING already plays for its 1.5-2.5s
+#: post-prompt beat (WORKING_MIN_MS/MAX_MS below) - just held for the length of the session via the
+#: same 1e9ms trick as POCKET_HOLD_ANIM/AWAY_ANTIC, instead of a fixed few seconds. A real prompt
+#: sent mid-session plays the identical sprite through the real State.WORKING path and hands back
+#: to this hold with no visible seam, which is the whole reason this costs no new art.
+FOCUS_HOLD_ANIM = "working"
+#: The headwear he wears for the whole session, regardless of whatever costume you had picked -
+#: headphones read as "do not disturb" at a glance, the same reason they mean that on an actual
+#: desk. Applied the same way TASK_FINISHED_ANIM borrows "party": a costume= kwarg on the antic,
+#: not a change to the persistent `costume` setting, so it is gone the moment the session ends.
+FOCUS_COSTUME = "headphones"
+#: Every so often the working pose gives way to a burst of press-ups instead - existing art, no new
+#: frames - so a 25-minute hold reads as sustained effort rather than one frame left running. Timed
+#: from _tick_focus rather than folded into the reassertion in _choose_next_action, so knocking him
+#: into something else and snapping back (the pet-interruption case) never itself counts as a beat.
+FOCUS_BURST_ANIM = "pushups"
+FOCUS_BURST_MS = 2400.0
+FOCUS_BURST_INTERVAL_MIN_MS = 45000.0
+FOCUS_BURST_INTERVAL_MAX_MS = 90000.0
+LEDGE_COOLDOWN_MS = 900000.0      # 15 min after he has actually had a go at something
+#: ...and after a look that turned up nothing, which on an ordinary desktop is most looks. This
+#: has to exist: charging the cooldown only on success left ``wants_ledge`` permanently true, and
+#: the window enumeration - the most expensive probe in the app - then ran on ~89% of the 700ms
+#: geometry polls instead of the few times an hour it is budgeted for.
+LEDGE_LOOK_AGAIN_MS = 90000.0     # 90s
+LEDGE_MIN_MS, LEDGE_MAX_MS = 3200.0, 4600.0
+#: How far above his head a window's bottom edge may be and still be worth reaching for, as a
+#: fraction of his height. Measured on a real desktop: of 8 visible windows, the two within reach
+#: hung 48px and 74px above his head, so most of a body height is the useful band.
+LEDGE_REACH_FRACTION = 0.9
+
+# --- the contact shadow ------------------------------------------------------------------
+#
+# Without one he does not read as standing on the taskbar so much as hovering a pixel above it.
+# It is painted by Qt rather than baked into the sheet, and that is forced: a shadow has to be
+# partially transparent to work over a taskbar whose colour we do not know, and the art contract
+# bans partial alpha precisely because the per-pixel click mask is derived from it.
+#
+# Which means the shadow's own area has to be added to that mask by hand, and THAT is the thing to
+# be careful about - it is the same failure the peek fix exists to prevent, where input region
+# outside the sprite swallowed clicks meant for the taskbar underneath. So it is kept to a thin
+# band at his feet, inside his own silhouette's width, and the growth is measured rather than
+# assumed. See the shadow section of the README for the measured figure.
+
+SHADOW_H_PX = 3                  # logical px tall, before the sprite scale
+#: The shadow's width is rounded down to a multiple of this, so a landing does not force a new
+#: click mask on every tick as it spreads. See the note in ``Behavior.shadow``.
+SHADOW_WIDTH_QUANTUM_PX = 4
+#: How much wider than his actual stance. Slightly wider reads as contact; much wider reads as a
+#: puddle he is standing in.
+SHADOW_WIDTH_FACTOR = 1.5
+SHADOW_ALPHA = 104               # of 255, at full strength on the ground
+#: Beyond this much daylight under his feet there is no shadow at all, as a fraction of his
+#: height. Read from the frame's own pixels, so the hop fades it out without being told to.
+SHADOW_FADE_LIFT_FRACTION = 0.45
+#: A landing spreads and lightens it briefly - the one bit of squash-and-stretch he has, and it
+#: costs nothing because the shadow is drawn rather than drawn *by hand*.
+LAND_SQUASH_MS = 260.0
+LAND_SQUASH_SPREAD = 0.55
+
+# --- things that happen TO him -----------------------------------------------------------
+#
+# Everything else in this file is either a reaction to you or an activity he chose. These three are
+# involuntary, and that is precisely why they sell him as alive - nobody decides to sneeze.
+#
+# Rates are SCHEDULED rather than rolled at each decision point. A per-roll chance would make the
+# real frequency depend on how often he happens to reach a decision, which changes with the
+# personality preset, the antic chance and how much he is walking; drawing the next occurrence
+# from a target interval means "twice an hour" is twice an hour whatever else is going on.
+
+SNEEZES_PER_HOUR = 2.0
+TRIPS_PER_HOUR = 3.0
+#: Jitter around the mean interval, so they are not metronomic.
+QUIRK_SPREAD = (0.55, 1.45)
+
+SNEEZE_ANIM = "sneeze"
+SNEEZE_MS = 950.0
+#: The recoil throws him backwards a little. Small - it should look like a sneeze, not a shove.
+SNEEZE_RECOIL_PX = 4
+
+TRIP_ANIM = "trip"
+TRIP_MS = 470.0
+
+#: Hiccups come in threes, and they arrive after you have thrown him about.
+HICCUP_ANIM = "hiccup"
+HICCUP_MS = 560.0
+HICCUP_MIN, HICCUP_MAX = 3, 5
+#: How hard he has to land to get them.
+HICCUP_IMPACT_PX_MS = 1.1
+
+#: A single poke used to be completely invisible: nothing at all happened until the fourth one, at
+#: which point he stormed off. A brief glare makes the escalation legible instead of sudden.
+POKE_FLINCH_ANIM = "angry"
+POKE_FLINCH_MS = 420.0
+
+#: Scrolling the wheel over him spins him. No reason whatsoever; it is just funny.
+SPIN_MS = 620.0
+SPIN_COOLDOWN_MS = 900.0
+
+#: What he thinks of the costume you just put on him. Keyed on the costume, falling back by
+#: category, and it costs no new art at all - every one of these animations already exists.
+#: He owns fifty-odd costumes and, until this, had no opinion about any of them.
+COSTUME_OPINIONS: dict[str, str] = {
+    # ...that is ridiculous and you know it
+    "cone": "startle", "sombrero": "startle", "propeller": "startle", "party": "startle",
+    "groucho": "startle", "vrheadset": "startle",
+    # ...rather regal, actually
+    "crown": "wink", "tophat": "wink", "monocle": "wink", "mortarboard": "wink",
+    "tricorn": "wink", "viking": "wink", "cape": "wink",
+    # ...oh, I like this one
+    "catears": "heart_eyes", "bunnyears": "heart_eyes", "flowercrown": "heart_eyes",
+    "heartglasses": "heart_eyes", "halo": "heart_eyes", "scarf": "heart_eyes",
+    "beanie": "heart_eyes", "wings": "heart_eyes",
+}
+#: Anything not named above: he has a look at himself.
+COSTUME_OPINION_DEFAULT = "look_around"
+#: And taking one off gets the same look, not a celebration.
+COSTUME_OPINION_MS = (900.0, 1500.0)
+
+#: Target update interval while he is actually moving. The gait is tick-rate independent (each
+#: animation frame advances him exactly one stride regardless), so this trades only motion
+#: smoothness, and 20fps is finer than the sprite's own pixel grid at normal scale.
+MOVE_TICK_MS = 50.0
+
+#: Fraction of a walk spent accelerating (and the same again decelerating).
+EASE_FRACTION = 0.22
+#: Slowest the gait ever runs, as a fraction of full speed. Never 0, or he would stall mid-stride.
+MIN_SPEED_MULTIPLIER = 0.32
+
+
+def _smoothstep(t: float) -> float:
+    t = max(0.0, min(1.0, t))
+    return t * t * (3.0 - 2.0 * t)
+
+
+class Behavior:
+    """Owns where the mascot is, what he is doing, and how annoyed he is about it."""
+
+    def __init__(self, config, sheet: SpriteSheet, mood: Mood | None = None) -> None:
+        self._config = config
+        self._sheet = sheet
+        self.animator = Animator(sheet, "idle")
+        #: How the day has gone - the only part of him that survives a restart. Constructed here
+        #: when the caller does not supply one, so a test can build a Behavior on its own.
+        self.mood = mood if mood is not None else Mood(config)
+
+        self._state = State.IDLE
+        self._prev_state = State.IDLE
+        self._state_ms = 0.0
+
+        self.baseline_y = 0
+        self.x_min = 0
+        self.x_max = 0
+        self._x = 0.0
+        self._y = 0.0  # only meaningful while dragging or falling
+        self._facing = "right"
+
+        self._idle_timer_ms = self._next_wander_delay()
+        self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
+        self._blinking = False
+        self._blink_state = BLINK_SINGLE
+        self._startle_cooldown_ms = 0.0
+
+        self._walk_from = 0.0
+        self._walk_target = 0.0
+        self._pending_sleep = False
+        #: Whether the tool wheel is what put him in State.ASK - see wheel_opened.
+        self._wheel_hold = False
+        #: An antic to play once the current walk arrives - that is how he crosses the strip to
+        #: get *under* something before reacting to it.
+        self._pending_action: str | None = None
+        self._peek_cooldown_ms = 0.0
+        self._ledge: tuple[int, int, int] | None = None  # (bottom_y, left, right), screen px
+        self._ledge_cooldown_ms = 0.0
+
+        self._wave_cooldown_ms = 0.0
+        self._eye_track_cooldown_ms = 0.0
+        self._foreground_cooldown_ms = 0.0
+        self._away = False
+        #: A focus session, started from the tray. Not written to config - quitting mid-session
+        #: drops it, honestly, the same as the snippet pocket does.
+        self._focus_active = False
+        self._focus_remaining_ms = 0.0
+        self._focus_total_ms = 0.0
+        self._focus_burst_due_ms = 0.0
+        #: True for exactly one drain (see take_focus_finished), the tick a session completes on
+        #: its own - main.py uses it to fire an OS notification, since he might be hidden behind a
+        #: fullscreen app when it happens.
+        self._focus_finished = False
+        #: How long you have been present but not interacted with HIM. Distinct from the system
+        #: idle clock, which only knows whether you are at the machine at all.
+        self._neglect_ms = 0.0
+        self._neglect_stage = 0
+        self._neglect_glance_ms = 0.0
+        self._world: WorldState | None = None
+        self._reaction_cooldown_ms = 0.0
+        self._hot_cooldown_ms = 0.0
+        self._task_finished_cooldown_ms = 0.0
+        self._morning_cooldown_ms = 0.0
+        self._seasonal_cooldown_ms = 0.0
+        self._persona_costume = ""
+        #: The snippet billboard: a list of lines, never written to config or disk. Restarting
+        #: the app - or just quitting - empties it, the same way a real one would.
+        self._pocket: list[str] = []
+        self._antic: str | None = None
+        self._antic_ms = 0.0
+        self._last_antic: str | None = None
+        self._working_ms = 0.0
+        self._sleep_ms = 0.0
+        self._grumble_ms = 0.0
+        self._vx = 0.0
+        self._vy = 0.0
+        self._falling = False
+        self._rolling = False
+        self._pending_injury = False
+        self._fall_from_y = 0.0
+        #: (dt, dx, dy) over the tail of the current drag - see THROW_SAMPLE_MS.
+        self._drag_samples: deque[tuple[float, float, float]] = deque()
+        self._drag_last: tuple[float, float] | None = None
+        self._injured_ms = 0.0
+        #: Counts down after an impact and spreads the contact shadow while it runs.
+        self._land_squash_ms = 0.0
+        self._struggle_ms = 0.0
+        self._struggle_dx = 0.0
+        self._struggle_dy = 0.0
+        #: The window he is standing on, as (left, top, right, bottom) - or None. Purely cosmetic:
+        #: he reads its rectangle and follows it, the same as the overhead-window ledge does, and
+        #: nothing here ever moves, resizes or restacks it. Fed in from main.py every tick while
+        #: perched, the same way set_ledge/set_world feed in things only Win32 can see.
+        self._perch_rect: tuple[int, int, int, int] | None = None
+        #: Where along the window's top edge he stands, as a 0..1 fraction of its width - set once
+        #: on landing and then held, so a resize or a move carries him along proportionally rather
+        #: than pinning him to a screen coordinate the window has since moved out from under.
+        self._perch_frac = 0.5
+        self._resume_sleep_ms = 0.0
+
+        #: Being petted. ``_pet_armed`` is what stops it looping: after a pet the pointer has to
+        #: actually LEAVE him before another can start, so a cursor parked on the taskbar does not
+        #: put him in a permanent trance.
+        self._cursor_anchor: tuple[int, int] | None = None
+        self._cursor_still_ms = 0.0
+        self._pet_armed = True
+        self._cursor_was_over = False
+        self._pet_cooldown_ms = 0.0
+        self._pet_drain_ms = 0.0
+        #: What to play once the working animation finishes - see PROMPT_REACTIONS.
+        self._post_prompt: tuple[str, float, str] | None = None
+        #: The involuntary lot. Scheduled rather than rolled - see the note by SNEEZES_PER_HOUR.
+        self._sneeze_due_ms = self._next_quirk(SNEEZES_PER_HOUR)
+        self._trip_due_ms = self._next_quirk(TRIPS_PER_HOUR)
+        self._trip_armed = False
+        self._hiccups_left = 0
+        self._spin_cooldown_ms = 0.0
+        #: A point he has been asked to look at, overriding the cursor for one eye-track antic.
+        self._forced_look: tuple[int, int] | None = None
+
+        #: Sound events raised since the app last drained them. A queue rather than a callback so
+        #: this module stays free of Qt and of the audio layer entirely: it says what happened,
+        #: and something else decides whether that makes a noise.
+        self._sounds: list[str] = []
+
+        self._pokes: deque[float] = deque()
+        self._residual = 0.0
+        self._clock_ms = 0.0
+        self._last_click_ms = -1e9
+
+        self.paused = False
+
+    # --- geometry -----------------------------------------------------------------
+
+    @property
+    def sprite_w(self) -> int:
+        return self._sheet.sprite_w
+
+    @property
+    def sprite_h(self) -> int:
+        return self._sheet.sprite_h
+
+    @property
+    def sheet(self) -> SpriteSheet:
+        return self._sheet
+
+    def set_sheet(self, sheet: SpriteSheet) -> None:
+        """Swap in a sheet at a different scale, e.g. he moved to a monitor with another DPI.
+
+        The current animation is carried over so a rescale mid-stride does not restart the walk.
+        """
+        state, index = self.animator.state, self.animator.frame_index
+        self._sheet = sheet
+        keep = sheet.has_state(state)
+        self.animator = Animator(sheet, state if keep else "idle")
+        if keep:
+            self.animator.set_state(state, restart=True)
+            self.animator._index = index % sheet.frame_count(state)
+
+    @property
+    def x(self) -> int:
+        # The struggle offset is applied at render time only, never folded into _x, so it cannot
+        # drift or feed back into the cursor-driven drag anchor.
+        return int(round(self._x + self._struggle_dx))
+
+    @property
+    def state(self) -> State:
+        return self._state
+
+    @property
+    def facing(self) -> str:
+        return self._facing
+
+    def rest_top(self) -> int:
+        """Window top that puts the soles exactly on the walk strip."""
+        return self.baseline_y - (self._sheet.frame_h - self._sheet.baseline_offset) * self._sheet.scale
+
+    @property
+    def peek_sink(self) -> int:
+        """How far below his resting height he currently is, in screen px. 0 unless peeking."""
+        if self._state != State.PEEK:
+            return 0
+        depth = PEEK_SINK_PX * self._sheet.scale
+        elapsed = self._state_ms
+        if elapsed < PEEK_DOWN_MS:
+            return int(round(depth * _smoothstep(elapsed / PEEK_DOWN_MS)))
+        if elapsed < PEEK_DOWN_MS + PEEK_HOLD_MS:
+            return depth
+        rising = (elapsed - PEEK_DOWN_MS - PEEK_HOLD_MS) / PEEK_UP_MS
+        return int(round(depth * (1.0 - _smoothstep(rising))))
+
+    @property
+    def top(self) -> int:
+        if self._state == State.DRAG:
+            return int(round(self._y + self._struggle_dy))
+        if self._falling:
+            return int(round(self._y))
+        if self._perch_rect is not None:
+            # Keyed on the rectangle rather than on State.PERCH specifically: a sneeze, a wave, or
+            # clicking him to ask something all route through _begin_antic/_enter and leave PERCH
+            # for as long as they run, but none of them are a reason to snap him back down to the
+            # taskbar mid-antic - only _step_down_from_perch clearing the rectangle is.
+            return int(round(self._y))
+        return self.rest_top() + self.peek_sink
+
+    @property
+    def visible_height(self) -> int:
+        """How tall his window may be. Shorter than the sprite while he is peeking.
+
+        Sinking him and then *shortening the window* is what hides his lower half: whatever falls
+        below the taskbar's top edge is simply never drawn. No z-order games, no clipping region to
+        keep in sync, and no way for him to end up trapped behind the bar.
+        """
+        if self._state != State.PEEK:
+            return self.sprite_h
+        return max(1, min(self.sprite_h, self.baseline_y - self.top))
+
+    @property
+    def rect(self) -> tuple[int, int, int, int]:
+        """(x, y, w, h) of his window on screen - h shrinks while he peeks."""
+        return (self.x, self.top, self.sprite_w, self.visible_height)
+
+    @property
+    def shadow(self) -> tuple[int, int, int, int, int] | None:
+        """``(left, top, width, height, alpha)`` in WINDOW-LOCAL pixels, or None for no shadow.
+
+        None in every case where a shadow drawn inside his own window would be a lie: while he is
+        in the air or in your hand it cannot stay on the ground where it belongs, and while he is
+        peeking the window is cropped to the top of the taskbar so those rows are not drawn at all.
+        """
+        if not bool(self._config.get("shadow_enabled", True)):
+            return None
+        if self._state in (State.HIDDEN, State.DRAG, State.PEEK) or self._falling:
+            return None
+
+        left, right, lift = self._sheet.foot_print(
+            self.animator.state, self.animator.frame_index
+        )
+        if right <= left:
+            return None
+        fade = 1.0 - lift / max(1.0, self.sprite_h * SHADOW_FADE_LIFT_FRACTION)
+        if fade <= 0.0:
+            return None
+
+        squash = self._land_squash_ms / LAND_SQUASH_MS if LAND_SQUASH_MS else 0.0
+        spread = 1.0 + LAND_SQUASH_SPREAD * squash
+        scale = self._sheet.scale
+        width = int(round((right - left + 1) * SHADOW_WIDTH_FACTOR * spread))
+        # Quantised, because the window rebuilds its click mask - a SetWindowRgn call - whenever
+        # this rectangle changes. Left continuous, a 260ms landing widened the shadow a pixel at a
+        # time and forced a rebuild on every single tick: measured at 29 mask rebuilds for one
+        # landing against 13 with the shadow switched off. On the quantum it is a handful, and
+        # four logical pixels is well below what reads as a step in a soft-edged ellipse.
+        quantum = SHADOW_WIDTH_QUANTUM_PX * scale
+        width = max(quantum, (width // quantum) * quantum)
+        height = max(1, SHADOW_H_PX * scale)
+        centre = (left + right) // 2
+        # Sits on the sole line, straddling it, so the darkest part is exactly where he meets the
+        # ground rather than a band floating just below his feet.
+        top = self.sprite_h - self._sheet.sole_gap - height // 2
+        # Spreading on impact also thins it out; a landing shadow that got darker as it widened
+        # would read as him sinking into the taskbar.
+        alpha = int(round(SHADOW_ALPHA * fade / spread))
+        if alpha <= 0:
+            return None
+        return (centre - width // 2, top, width, height, alpha)
+
+    def set_strip(self, baseline_y: int, x_min: int, x_max: int) -> None:
+        """Adopt a new walk strip (resolution, DPI, monitor, or taskbar change)."""
+        self.baseline_y = int(baseline_y)
+        self.x_min = int(x_min)
+        self.x_max = max(int(x_min), int(x_max) - self.sprite_w)
+        self._x = min(max(self._x, self.x_min), self.x_max)
+        self._walk_target = min(max(self._walk_target, self.x_min), self.x_max)
+
+    def place_at(self, x: float | None) -> None:
+        """Position him, or send him to his configured home when ``x`` is None."""
+        if x is None:
+            fraction = min(1.0, max(0.0, float(self._config.get("home_fraction", 0.78))))
+            self._x = self.x_min + (self.x_max - self.x_min) * fraction
+        else:
+            self._x = min(max(float(x), self.x_min), self.x_max)
+
+    # --- things that happen to him ---------------------------------------------------
+
+    def _quirks_on(self) -> bool:
+        return bool(self._config.get("quirks_enabled", True)) and not self._away
+
+    def _next_quirk(self, per_hour: float) -> float:
+        """Milliseconds until the next occurrence of something that happens this often."""
+        if per_hour <= 0:
+            return float("inf")
+        return random.uniform(*QUIRK_SPREAD) * (3_600_000.0 / per_hour)
+
+    def _tick_quirks(self, dt_ms: float) -> None:
+        """Count down to the next sneeze and the next stumble.
+
+        Deliberately outside ``_neglect_suppressed``'s list of exemptions: a sneeze is involuntary,
+        so being ignored or being in a good mood has nothing to do with whether one arrives. It is
+        held off only while he is asleep, being carried, or off screen - places where playing it
+        would look like a glitch rather than a creature. PERCH is held off for a sharper reason
+        than the others: a quirk fires through _begin_antic, which knows how to get back to every
+        *other* held state (away, the pocket, focus) via _choose_next_action's reassertion, but the
+        perch position is not decided there at all - it comes back only through update_perch. A
+        sneeze mid-perch would leave him standing back on the taskbar the moment it ended, with no
+        code path that ever puts him back on the window.
+        """
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.PERCH):
+            return
+        if self._falling or self._rolling or not self._quirks_on():
+            return
+        self._sneeze_due_ms -= dt_ms
+        self._trip_due_ms -= dt_ms
+        if self._trip_due_ms <= 0:
+            # Armed rather than fired: a stumble only means anything while he is walking, so it
+            # waits for the next walk instead of happening on the spot.
+            self._trip_due_ms = self._next_quirk(TRIPS_PER_HOUR)
+            self._trip_armed = True
+
+    def _maybe_sneeze(self) -> bool:
+        if self._sneeze_due_ms > 0 or not self._quirks_on():
+            return False
+        if not self._sheet.has_state(SNEEZE_ANIM):
+            return False
+        self._sneeze_due_ms = self._next_quirk(SNEEZES_PER_HOUR)
+        # The recoil throws him the way he is NOT facing, which is what a sneeze does to you.
+        recoil = SNEEZE_RECOIL_PX * self._sheet.scale
+        self._x = min(max(self._x + (-recoil if self._facing == "right" else recoil),
+                          self.x_min), self.x_max)
+        log.debug("sneeze")
+        self._sound("sneeze")
+        self._begin_antic(SNEEZE_ANIM, SNEEZE_MS)
+        return True
+
+    def _maybe_trip(self) -> bool:
+        """Stumble mid-stride. Called from the walk, which is the only place it makes sense."""
+        if not self._trip_armed or not self._quirks_on():
+            return False
+        if not self._sheet.has_state(TRIP_ANIM):
+            self._trip_armed = False
+            return False
+        self._trip_armed = False
+        log.debug("tripped over nothing")
+        self._sound("trip")
+        self._begin_antic(TRIP_ANIM, TRIP_MS)
+        return True
+
+    def _maybe_hiccup(self) -> bool:
+        if self._hiccups_left <= 0 or not self._sheet.has_state(HICCUP_ANIM):
+            self._hiccups_left = 0
+            return False
+        self._hiccups_left -= 1
+        self._sound("hiccup")
+        self._begin_antic(HICCUP_ANIM, HICCUP_MS)
+        return True
+
+    def start_hiccups(self) -> None:
+        """Give him the hiccups. Earned by landing hard."""
+        if not self._quirks_on() or not self._sheet.has_state(HICCUP_ANIM):
+            return
+        self._hiccups_left = random.randint(HICCUP_MIN, HICCUP_MAX)
+        log.info("got the hiccups")
+
+    def spin(self) -> bool:
+        """Somebody scrolled the wheel over him. Returns True if he actually span."""
+        if not bool(self._config.get("scroll_to_spin", True)):
+            return False
+        if self._spin_cooldown_ms > 0 or not self._sheet.has_state(TUMBLE_ANIM):
+            return False
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
+            return False
+        if self._falling or self._rolling:
+            return False
+        self._spin_cooldown_ms = SPIN_COOLDOWN_MS
+        self.noticed()
+        self._sound("spin")
+        self._begin_antic(TUMBLE_ANIM, SPIN_MS)
+        return True
+
+    #: What "Do something" can pick from, and how often. The involuntary lot are weighted heavily
+    #: because they are the whole reason the button exists: on their own schedule you wait twenty
+    #: to thirty minutes to see one, and the trip additionally waits for him to be mid-walk.
+    #: The ambient pool is in there too, at a lower weight, so the button doubles as a way to
+    #: browse what he can actually do rather than only as a test harness for the rare three.
+    ON_DEMAND: tuple[tuple[str, float, float, float], ...] = (
+        (SNEEZE_ANIM, 3.0, SNEEZE_MS, SNEEZE_MS),
+        (TRIP_ANIM, 3.0, TRIP_MS, TRIP_MS),
+        (HICCUP_ANIM, 2.0, HICCUP_MS * 3, HICCUP_MS * 4),
+        (TUMBLE_ANIM, 2.0, SPIN_MS, SPIN_MS),
+    )
+
+    def do_something(self) -> str:
+        """Play one of his rarer animations now, chosen at random. Returns what he did.
+
+        Deliberately NOT "make him sneeze": a control for one specific reflex would turn the three
+        involuntary things into puppet strings, which is the one property that makes them work.
+        Asking him to do *something* keeps the character and still lets you see them on demand.
+        """
+        if self._state in (State.DRAG, State.HIDDEN):
+            return ""
+        self.noticed()
+        pool = [entry for entry in self.ON_DEMAND if self._sheet.has_state(entry[0])]
+        # The ambient antics, at a lower weight - see the note on ON_DEMAND.
+        pool += [
+            (name, weight * 0.35, low, high)
+            for name, weight, low, high, _cat in ANTICS
+            if self._sheet.has_state(name)
+        ]
+        if not pool:
+            return ""
+        name, _weight, low, high = random.choices(pool, weights=[e[1] for e in pool], k=1)[0]
+        # The same noise it would have made had it happened on its own - otherwise the button
+        # produces a silent sneeze, which is the one thing a sneeze cannot be.
+        self._sound({SNEEZE_ANIM: "sneeze", TRIP_ANIM: "trip",
+                     HICCUP_ANIM: "hiccup", TUMBLE_ANIM: "spin"}.get(name, ""))
+        # Straight into the animation rather than through the schedules: this is you asking, so it
+        # must not consume the next natural sneeze or leave a trip armed behind it.
+        self._begin_antic(name, random.uniform(low, high))
+        log.info("on demand: %s", name)
+        return name
+
+    def costume_chosen(self, costume: str) -> None:
+        """You just put something on him. He has an opinion about it.
+
+        Costs no new art: every reaction here is an animation he already had. What it buys is that
+        the wardrobe stops being a wardrobe - fifty-three costumes he was previously completely
+        indifferent to now get a reaction each.
+        """
+        if not bool(self._config.get("costume_reactions", True)):
+            return
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return
+        animation = COSTUME_OPINIONS.get(costume, COSTUME_OPINION_DEFAULT)
+        if not self._sheet.has_state(animation):
+            animation = COSTUME_OPINION_DEFAULT
+        if not self._sheet.has_state(animation):
+            return
+        self.noticed()
+        log.debug("opinion on %r: %s", costume or "nothing", animation)
+        self._begin_antic(animation, random.uniform(*COSTUME_OPINION_MS))
+
+    def look_at(self, x: int, y: int) -> None:
+        """Glance at a point on screen - where you just dropped something, for instance."""
+        if not self._sheet.has_state(EYE_TRACK_STATE):
+            return
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return
+        self._forced_look = (int(x), int(y))
+        self._begin_antic(EYE_TRACK_STATE, 650.0)
+
+    # --- sound ----------------------------------------------------------------------
+
+    def _sound(self, event: str) -> None:
+        # Bounded: if nothing is draining the queue - sound switched off, or a headless test -
+        # it must not grow for the lifetime of the process.
+        if len(self._sounds) < 8:
+            self._sounds.append(event)
+
+    def take_sounds(self) -> list[str]:
+        """Hand over everything that has happened since the last call, and forget it."""
+        if not self._sounds:
+            return []
+        events, self._sounds = self._sounds, []
+        return events
+
+    # --- the personality preset ---------------------------------------------------
+
+    def _preset(self) -> dict:
+        """The active preset's multipliers. ``balanced`` is an empty table, i.e. no lens at all."""
+        return PERSONALITIES.get(str(self._config.get("personality", "balanced")), {})
+
+    def _preset_factor(self, key: str) -> float:
+        try:
+            return max(0.01, float(self._preset().get(key, 1.0)))
+        except (TypeError, ValueError):
+            return 1.0
+
+    # --- annoyance ----------------------------------------------------------------
+
+    @property
+    def annoyance(self) -> int:
+        """Pokes counted inside the configured window."""
+        return len(self._pokes)
+
+    def _register_poke(self) -> None:
+        self._pokes.append(self._clock_ms)
+        self._residual += 1.0
+        log.debug("poke registered (window=%d residual=%.1f)", len(self._pokes), self._residual)
+
+    def _decay_annoyance(self, dt_ms: float) -> None:
+        window_ms = float(self._config["annoyance_window_s"]) * 1000.0
+        while self._pokes and self._clock_ms - self._pokes[0] > window_ms:
+            self._pokes.popleft()
+        decay_ms = max(1.0, float(self._config["annoyance_decay_s"]) * 1000.0)
+        self._residual = max(0.0, self._residual - dt_ms / decay_ms)
+
+    def _annoyance_threshold(self) -> int:
+        """Pokes before he snaps, after the preset's patience multiplier. Never below one."""
+        base = int(self._config["annoyance_threshold"])
+        return max(1, int(round(base * self._preset_factor("annoyance"))))
+
+    def _annoyance_exceeded(self) -> bool:
+        threshold = self._annoyance_threshold()
+        # Burst is the documented trigger ("4 pokes in 15s"). The residual is a slower backstop so
+        # someone poking steadily just under the burst rate still eventually gets a reaction.
+        return len(self._pokes) >= threshold or self._residual >= threshold * 2
+
+    def _clear_annoyance(self) -> None:
+        self._pokes.clear()
+        self._residual = 0.0
+
+    # --- external events ----------------------------------------------------------
+
+    def noticed(self) -> None:
+        """You did something with him. Resets the being-ignored clock.
+
+        Every route that counts has to call this, including the ones that never touch his window:
+        the global hotkey opens the bubble at your pointer without going anywhere near him, and so
+        does the tray. Missing one means he sulks at somebody who has just used him.
+        """
+        if self._neglect_stage:
+            log.debug("noticed after %.0fs of being ignored", self._neglect_ms / 1000.0)
+        self._neglect_ms = 0.0
+        self._neglect_stage = 0
+        self._neglect_glance_ms = 0.0
+
+    def click(self) -> bool:
+        """Handle a click on the mascot. Returns True if the ask bubble should open."""
+        self._last_click_ms = self._clock_ms
+        self.noticed()
+        if self._state in (State.SLEEP, State.WAKE):
+            self._grumble_ms = GRUMBLE_MS  # a grumble, but he is not getting up for you
+            return False
+        if self._state in (State.ANGRY, State.HIDDEN) or self._pending_sleep:
+            # _pending_sleep means he is mid-storm-off. That walk is part of the angry beat, so a
+            # click must not hijack it into a bubble and cancel the nap.
+            return False
+        # WORKING is deliberately interruptible: the brief only blocks clicks while he is asleep,
+        # angry, or hidden, and making the user wait out the animation to send a second prompt
+        # would be worse than cutting it short.
+        self._sound("open")
+        self._enter(State.ASK)
+        return True
+
+    def wheel_opened(self) -> bool:
+        """The tool wheel just fanned out round him. Stand still for it; returns whether he did.
+
+        It is drawn centred on where he is, so he cannot wander off out of the middle of it - the
+        same reason the ask bubble holds him in ``State.ASK``, which is reused here rather than
+        inventing a state that would look identical. Unlike a click it is not refused while he is
+        asleep or cross, because nothing about it needs him to perform: he simply is not held, and
+        the caller closes the wheel if he moves out from under it.
+        """
+        self.noticed()
+        self._wheel_hold = False
+        # PERCH too: standing on a window he is already still, and leaving that state would stop
+        # him following the window - while he stayed flagged as standing on it. Grabbing him is the
+        # only way off a perch, and right-clicking him must not become a second one.
+        if self._state in (State.SLEEP, State.WAKE, State.ANGRY, State.HIDDEN, State.DRAG,
+                           State.PERCH):
+            return False
+        if self._pending_sleep:
+            return False
+        self._enter(State.ASK)
+        self._wheel_hold = True
+        return True
+
+    def wheel_closed(self) -> None:
+        """The wheel went away. Let him go - unless a tool it picked has already given him a job.
+
+        Deliberately not a poke, unlike dismissing the bubble: putting the wheel away without
+        choosing is browsing, not brushing him off. Called before the chosen tool runs, so a tool
+        that sets his state (Ask, Focus) still gets the last word.
+        """
+        # Only a hold the wheel took itself: whatever state he was left in otherwise is not the
+        # wheel's to end.
+        if self._wheel_hold and self._state == State.ASK:
+            self._enter(State.IDLE)
+        self._wheel_hold = False
+
+    def bubble_dismissed(self) -> None:
+        """The bubble closed without sending - that is a poke."""
+        self.noticed()
+        self._register_poke()
+        self._sound("poke")
+        self.mood.nudge("poked")
+        if self._annoyance_exceeded():
+            self._begin_anger()
+        elif self._sheet.has_state(POKE_FLINCH_ANIM):
+            # A brief glare. Every poke below the threshold used to be completely invisible, so
+            # the fourth one arriving as a full storm-off had no build-up at all.
+            self._begin_antic(POKE_FLINCH_ANIM, POKE_FLINCH_MS)
+        elif self._state == State.ASK:
+            self._enter(State.IDLE)
+
+    def prompt_sent(self, text: str = "") -> None:
+        """A prompt actually went to Claude. Not a poke, and it takes the edge off.
+
+        ``text`` is optional and defaults to empty, because the launch path is what matters and
+        several callers legitimately have nothing to hand it. When it is supplied he reacts to the
+        *shape* of it once the working animation finishes - see ``_prompt_reaction``.
+        """
+        self.noticed()
+        self._pokes.clear()
+        self._residual = max(0.0, self._residual - 1.0)
+        self.mood.nudge("prompt_sent")
+        self._sound("send")
+        self._post_prompt = self._prompt_reaction(text)
+        self._working_ms = random.uniform(WORKING_MIN_MS, WORKING_MAX_MS)
+        self._enter(State.WORKING)
+
+    def _prompt_reaction(self, text: str) -> tuple[str, float, str] | None:
+        """Pick an animation from the shape of what you just asked, or None for no comment.
+
+        Matched against a fixed keyword table and then discarded: nothing about the prompt is
+        stored here and nothing about it is logged, including at DEBUG. The log line below names
+        the *animation*, never the text that chose it.
+        """
+        if not text or not bool(self._config.get("prompt_reactions", True)):
+            return None
+        lowered = text.lower()
+        for keywords, animation, low, high in PROMPT_REACTIONS:
+            if any(word in lowered for word in keywords):
+                moment = self._moment(animation, low, high)
+                if moment is not None:
+                    log.debug("reacting to the prompt with %s", animation)
+                    return moment
+        if len(text) >= PROMPT_LONG_CHARS:
+            moment = self._moment(PROMPT_LONG_ANIM, 900, 1300)
+            if moment is not None:
+                log.debug("that was a long one - %s", PROMPT_LONG_ANIM)
+                return moment
+        return None
+
+    def calculated(self, ok: bool) -> None:
+        """The inline calculator just answered something, instead of a prompt going anywhere.
+
+        Deliberately NOT routed through ``prompt_sent``: a calculation is not a thing that was
+        asked of the assistant, so it must not clear annoyance, nudge the mood, make the "send"
+        sound, or enter ``State.WORKING`` the way a real prompt does - see docs/PRIVACY.md and
+        docs/USING-HIM.md on why it stays out of prompt history too. He still needs to know you
+        were just here, though, or a calculator-heavy stretch reads as being ignored - see
+        ``noticed``'s own docstring on why every real interaction has to call it.
+
+        ``ok`` is whether the answer came out clean. A broken one - dividing by zero, say - gets
+        acknowledged by simply not being ignored; it is not a fist-pump moment, so it earns no
+        animation of its own.
+        """
+        self.noticed()
+        if not ok or self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return
+        if not self._sheet.has_state(CALCULATED_ANIM):
+            return
+        self._begin_antic(CALCULATED_ANIM, random.uniform(*CALCULATED_MS))
+
+    def read_image(self, ok: bool) -> None:
+        """He just read the text out of an image you Shift-dropped on him.
+
+        Same shape as ``calculated`` and the same reasoning: this is not a prompt, so it stays
+        out of ``prompt_sent`` entirely - no mood nudge, no "send" sound, no ``State.WORKING``,
+        no prompt history. ``noticed`` still fires unconditionally so a stretch of dropped
+        screenshots never reads as ignoring him. ``ok`` false covers everything from "no text in
+        that image" to "OCR isn't available right now" - none of it is worth an animation, only
+        acknowledgement that you were here.
+        """
+        self.noticed()
+        if not ok or self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return
+        if not self._sheet.has_state(READING_ANIM):
+            return
+        self._begin_antic(READING_ANIM, random.uniform(*READING_MS))
+
+    def talking_while_muted(self) -> bool:
+        """You have been talking into a muted microphone. Returns whether he showed it.
+
+        The one thing in here he tells *you*, rather than a reaction to something you did to him -
+        which is exactly why it must not call ``noticed``. Nothing about your microphone is an
+        interaction with him, and counting it as one would let a long muted call quietly suppress
+        the being-ignored stages that are supposed to fire when you are at the machine and not
+        looking at him.
+
+        It also does not touch the mood. Being unheard is not his good or bad day, and a meeting
+        you spent muted should not still be colouring how he behaves an hour later.
+
+        Suppressed while he is asleep, in your hand, or hidden, the same as every other antic -
+        the caller still puts a toast up in those cases, so the message never depends on him being
+        in a state to perform it. See main.NibApp._tick_devices for the dwell and the cooldown.
+        """
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
+            return False
+        if not self._sheet.has_state(MUTED_ANIM):
+            return False
+        self._begin_antic(MUTED_ANIM, MUTED_MS, costume=MUTED_COSTUME)
+        return True
+
+    def drag_start(self) -> None:
+        if self._state == State.HIDDEN:
+            return
+        self.noticed()
+        # A napping mascot can still be picked up. He ignores *clicks* while asleep, but refusing
+        # to be moved at all for the whole cooldown reads as the app having hung. The nap is not
+        # cancelled - the remaining time is restored once he lands.
+        if self._state == State.SLEEP:
+            self._resume_sleep_ms = max(self._resume_sleep_ms, self._sleep_ms)
+        # Grabbing him off a perch is the "remove it" gesture - deliberately un-graceful, the same
+        # way picking him up mid-fall or mid-tantrum interrupts whatever he was doing rather than
+        # waiting for a tidy moment. main.py stops polling the window on its next tick, once
+        # perched reads False here.
+        self._perch_rect = None
+        self._falling = False
+        self._rolling = False
+        self._pending_injury = False
+        self._vx = self._vy = 0.0
+        self._drag_samples.clear()
+        self._drag_last = None
+        self._y = float(self.rest_top())
+        self._struggle_ms = 0.0
+        self._enter(State.DRAG)
+
+    def drag_to(self, x: int, y: int) -> None:
+        if self._state != State.DRAG:
+            return
+        # Horizontally clamped to the strip, vertically free so he can still be lifted right up.
+        # Without the clamp he follows the pointer clean off the end of the desktop and is only
+        # snapped back on the next geometry poll - and a throw started from out there reflects off
+        # a wall he was already past, firing him back the way he came.
+        self._x = min(max(float(x), self.x_min), self.x_max)
+        self._y = float(y)
+
+    def drag_end(self, perch_rect: tuple[int, int, int, int] | None = None) -> None:
+        """Let go. Lands standing on ``perch_rect`` if you set him down gently on a window -
+        judged by the same release speed a throw already measures, so a real flick still flies
+        through it like anywhere else rather than sticking. Otherwise falls exactly as he always
+        has - ``perch_rect`` only ever arrives from main.py having already found a real window
+        under the drop point; nothing here goes looking for one."""
+        if self._state != State.DRAG:
+            return
+        vx, vy = self._throw_velocity()
+        if perch_rect is not None and math.hypot(vx, vy) <= PERCH_MAX_RELEASE_SPEED_PX_MS:
+            self.perch_on(perch_rect)
+            return
+        # Let go of the squirm so the fall reads as a clean drop rather than a wobble.
+        self._y += self._struggle_dy
+        self._x += self._struggle_dx
+        self._struggle_dx = 0.0
+        self._struggle_dy = 0.0
+        self._falling = True
+        self._rolling = False
+        self._vx, self._vy = vx, vy
+        self._fall_from_y = self._y  # remembered so the landing knows how far he fell
+        self._drag_samples.clear()
+        self._drag_last = None
+        if abs(self._vx) > 0.4:
+            log.debug("thrown at %.2f,%.2f px/ms", self._vx, self._vy)
+        self._enter(State.IDLE)
+
+    # --- perching on a window -------------------------------------------------------
+
+    @property
+    def perched(self) -> bool:
+        """True whenever a perch rectangle is held - not quite the same as State.PERCH.
+
+        A sneeze, a wave, or clicking him to ask something all leave State.PERCH for as long as
+        they run without releasing the perch itself (see the ``top`` property and
+        _choose_next_action's reassertion). main.py polls the target window on this, not on the
+        state, so a brief interruption never silently stops the window-following or the
+        gone-window detection - both would otherwise resume only once _choose_next_action next
+        happened to run, which is not guaranteed to be soon, or at all, once he's off doing
+        something with an antic that holds itself open-ended.
+        """
+        return self._perch_rect is not None
+
+    def perch_on(self, rect: tuple[int, int, int, int]) -> None:
+        """Land standing on ``rect`` instead of falling - called from drag_end when the drop
+        point was over a window. Purely cosmetic: he reads the rectangle and follows it, the same
+        as the overhead-window ledge already does, and nothing here ever moves, resizes or
+        restacks the window itself - see update_perch for the follow, and _reposition_perch for
+        where exactly he stands on it.
+        """
+        left, right = rect[0], rect[2]
+        width = max(1, (right - left) - self.sprite_w)
+        self._perch_frac = max(0.0, min(1.0, (self._x - left) / width))
+        self._perch_rect = rect
+        self._falling = False
+        self._rolling = False
+        self._pending_injury = False
+        self._vx = self._vy = 0.0
+        self._enter(State.PERCH)
+        self._reposition_perch()
+
+    def _reposition_perch(self) -> None:
+        """Recompute (x, y) from the held rectangle - his own feet stay welded to its top edge,
+        proportionally along its width, the same idea as how the taskbar peek keeps his window's
+        bottom edge welded to the bar rather than tracking an absolute screen position."""
+        if self._perch_rect is None:
+            return
+        left, top, right, _bottom = self._perch_rect
+        width = max(1, (right - left) - self.sprite_w)
+        self._x = left + self._perch_frac * width
+        self._y = float(top - (self._sheet.frame_h - self._sheet.baseline_offset) * self._sheet.scale)
+
+    def update_perch(self, rect: tuple[int, int, int, int] | None) -> None:
+        """Called every tick while perched, with the window's current rectangle - or None once
+        it's gone, minimized, or hidden behind something covering the whole monitor. Losing it
+        steps him back down with the same fall physics an ordinary drag-release uses, straight
+        down rather than thrown, since nothing flicked him.
+        """
+        if self._state != State.PERCH:
+            return
+        if rect is None:
+            log.info("perched window is gone - stepping back down")
+            self._release_perch()
+            self._falling = True
+            self._rolling = False
+            self._vx = self._vy = 0.0
+            self._fall_from_y = self._y
+            self._enter(State.IDLE)
+            return
+        self._perch_rect = rect
+        self._reposition_perch()
+
+    def _release_perch(self) -> None:
+        """Clear the held rectangle - the shared first step of every way off a perch.
+
+        Deliberately just the clear, nothing else: update_perch's window-gone case wants a fall
+        afterward, but _begin_anger and come_here move him some other way immediately after this
+        (storming off, walking to your pointer) and a fall on top of that would fight whichever
+        one it was. Either way, the point is the same - both are paths that move him without going
+        through _choose_next_action's reassertion, which a live rectangle would otherwise survive:
+        the ``top`` override reads it unconditionally, so his feet would stay welded to the window
+        while the walk slid his x out from underneath them.
+        """
+        self._perch_rect = None
+
+    # --- being petted -------------------------------------------------------------
+
+    def _cursor_is_over(self, cursor: tuple[int, int] | None) -> bool:
+        """Is the pointer actually on his sprite? Not "near" - on."""
+        if cursor is None:
+            return False
+        cx, cy = cursor
+        return (
+            self.x <= cx < self.x + self.sprite_w
+            and self.top <= cy < self.top + self.visible_height
+        )
+
+    def _track_cursor(self, dt_ms: float, cursor: tuple[int, int] | None) -> None:
+        """Accumulate how long the pointer has held still, and re-arm the pet when it leaves.
+
+        Runs on every tick in every state, because both halves have to be true across state
+        changes: the stillness that earns a pet is measured while he is walking about, and the
+        re-arm has to happen even while he is asleep or being dragged.
+        """
+        over = self._cursor_is_over(cursor)
+        if not over:
+            self._pet_armed = True
+        elif not self._cursor_was_over:
+            # Your pointer arriving ON him counts as noticing him, right now - not in half a
+            # second once the pet has earned its hold. This used to fall out of ``_maybe_wave``,
+            # which called ``noticed()``; now that the wave stands aside for a pending pet, the
+            # reset has to live here or he carries on sulking at somebody whose cursor is
+            # literally on top of him.
+            self.noticed()
+        self._cursor_was_over = over
+        if cursor is None:
+            self._cursor_anchor = None
+            self._cursor_still_ms = 0.0
+            return
+        anchor = self._cursor_anchor
+        if anchor is None or max(abs(cursor[0] - anchor[0]), abs(cursor[1] - anchor[1])) > PET_JITTER_PX:
+            self._cursor_anchor = cursor
+            self._cursor_still_ms = 0.0
+        else:
+            self._cursor_still_ms += dt_ms
+
+    def _pet_hold_ms(self) -> float:
+        return max(0.0, float(self._config.get("pet_hold_ms", 550)))
+
+    def _maybe_pet(self, cursor: tuple[int, int] | None) -> bool:
+        """Start a pet if the pointer is resting on him. Returns True if it began.
+
+        Checked *before* ``_maybe_wave``, and that order is load-bearing: the wave fires at
+        ``hover_wave_distance_px`` (120px by default), so a pointer coming to rest on him is
+        already deep inside wave range. Checked second, this would never once have run.
+        """
+        if not bool(self._config.get("petting_enabled", True)):
+            return False
+        if self._pet_cooldown_ms > 0 or not self._pet_armed or self._away:
+            return False
+        if self._falling or self._rolling:
+            return False
+        if not self._cursor_is_over(cursor):
+            return False
+        if self._cursor_still_ms < self._pet_hold_ms():
+            return False
+        self._pet_armed = False
+        self.noticed()
+        self.mood.nudge("petted")
+        log.info("being petted")
+        self._enter(State.PET)
+        return True
+
+    def _tick_pet(self, dt_ms: float, cursor) -> None:
+        """Lean into it for as long as the hand stays, forgiving a poke as he goes."""
+        self._advance(dt_ms)
+        # Draining the annoyance is the entire point of the feature: until this existed there was
+        # no way at all to take it back off, only to wait it out.
+        self._pet_drain_ms += dt_ms
+        while self._pet_drain_ms >= PET_DRAIN_MS:
+            self._pet_drain_ms -= PET_DRAIN_MS
+            if self._pokes:
+                self._pokes.popleft()
+            self._residual = max(0.0, self._residual - 1.0)
+        if not self._cursor_is_over(cursor) or self._state_ms >= PET_MAX_MS:
+            self._pet_cooldown_ms = PET_COOLDOWN_MS
+            self._pet_drain_ms = 0.0
+            self._enter(State.IDLE)
+
+    # --- coming when called -------------------------------------------------------
+
+    def come_here(self, x: float) -> bool:
+        """Walk to screen ``x`` (his centre, clamped to the strip). True if he set off.
+
+        Being *called* counts as attention, which is why this ends a sulk rather than being
+        refused by one: he is put out because you were not paying attention, and you just did.
+        Only a drag refuses outright - he is already in your hand - and being hidden, where there
+        is nothing on screen to come.
+
+        Note ``_begin_walk`` drops straight back to idle for a target under 4px away. A pointer
+        already sitting on him is therefore a no-op rather than a bug, and returns False.
+        """
+        if self._state in (State.HIDDEN, State.DRAG) or self._falling or self._rolling:
+            return False
+        self.noticed()
+        if self._state in (State.SLEEP, State.WAKE, State.ANGRY):
+            log.info("called while %s - getting up", self._state.value)
+            self._pending_sleep = False
+            self._clear_annoyance()
+            self._enter(State.IDLE)
+        if self._focus_active:
+            # Being called relocates him across the screen by explicit request - the same reason
+            # this ends a sulk also means it cannot leave a focus session claiming he is still at
+            # his post. Cancelled, not paused: you moved him yourself.
+            self.set_focus(False)
+        if self._perch_rect is not None:
+            # Same reasoning again: the walk below moves _x directly, and a live perch rectangle
+            # would keep his feet welded to the window while it does.
+            self._release_perch()
+        target = float(x) - self.sprite_w / 2.0
+        self._begin_walk(min(max(target, self.x_min), self.x_max))
+        return self._state == State.WALK
+
+    def set_hidden(self, hidden: bool) -> None:
+        if hidden and self._state != State.HIDDEN:
+            self._prev_state = self._state
+            self._enter(State.HIDDEN)
+        elif not hidden and self._state == State.HIDDEN:
+            # Only resume states that still make sense after an arbitrary gap. A fullscreen game
+            # can last hours, by which point a tantrum, a nap, a drag, or a half-typed bubble is
+            # stale - so anything transient comes back as plain idle. PERCH is the one exception
+            # to "transient": it is a deliberate, stable arrangement the same way WALK's
+            # destination is. update_perch is a no-op outside State.PERCH, so the held rectangle
+            # is simply whatever it last was - stale for at most the one tick it takes to resume
+            # and re-poll, at which point a window that closed while hidden is caught exactly the
+            # same way as one that closes in plain sight.
+            resumable = self._prev_state in (State.IDLE, State.WALK, State.PERCH)
+            self._enter(self._prev_state if resumable else State.IDLE)
+
+    # --- state helpers ------------------------------------------------------------
+
+    def _enter(self, state: State) -> None:
+        if state == self._state:
+            return
+        log.debug("state %s -> %s", self._state.value, state.value)
+        self._state = state
+        self._state_ms = 0.0
+        self._blinking = False
+
+        # _pending_sleep is only meaningful across the ANGRY -> storm-off WALK -> SLEEP sequence.
+        # Leaving that sequence by any other route (a drag, a fullscreen hide, a send) must clear
+        # it: click() refuses while it is set, so a stranded flag would make him unclickable for
+        # the rest of the session.
+        if state not in (State.ANGRY, State.WALK):
+            self._pending_sleep = False
+        if state not in (State.WALK, State.ANTIC):
+            # Same reasoning as _pending_sleep: leaving the walk-then-act sequence by any other
+            # route must drop the action, or it fires after some unrelated later walk.
+            self._pending_action = None
+        if state != State.ANTIC:
+            self._persona_costume = ""  # the hat belongs to the antic, not to him
+
+        if state == State.IDLE:
+            self._idle_timer_ms = self._next_wander_delay()
+            self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
+        elif state == State.SLEEP:
+            self._sleep_ms = float(self._config["sleep_cooldown_s"]) * 1000.0
+        elif state == State.PEEK:
+            # Spent here rather than at the call site, so entering a peek always costs the
+            # cooldown. Leaving that to the caller let him peek, land back in idle, and duck
+            # straight down again a beat later.
+            self._peek_cooldown_ms = PEEK_COOLDOWN_MS
+        elif state == State.PET:
+            self._pet_drain_ms = 0.0
+        elif state == State.PERCH:
+            self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
+        if state in (State.SLEEP, State.WAKE, State.PET):
+            self._sound(state.value)
+        self._sync_animation(restart=True)
+
+    def _next_wander_delay(self) -> float:
+        beat = self._preset_factor("beat")
+        low = float(self._config["wander_min_interval_s"]) * 1000.0 * beat
+        high = float(self._config["wander_max_interval_s"]) * 1000.0 * beat
+        if high < low:
+            low, high = high, low
+        return random.uniform(low, high)
+
+    def _animation_for_state(self) -> str:
+        if self._grumble_ms > 0 and self._state in (State.SLEEP, State.WAKE):
+            return "angry"
+        # Airborne, or still rolling along the ground: he tumbles either way, whatever he was
+        # doing beforehand. Rolling reuses the spin frames exactly, which is why it cost no art.
+        if (self._falling or self._rolling) and self._sheet.has_state(TUMBLE_ANIM):
+            return TUMBLE_ANIM
+        if self._state == State.ANTIC:
+            return self._antic or "idle"
+        return {
+            State.IDLE: self._blink_state if self._blinking else "idle",
+            State.WALK: f"walk_{self._facing}",
+            State.INJURED: INJURY_ANIM,
+            State.HOVER_WAVE: "wave",
+            State.ASK: "idle",
+            State.WORKING: "working",
+            State.ANGRY: "angry",
+            State.SLEEP: "sleep",
+            State.WAKE: "wake",
+            State.HIDDEN: "idle",
+            # Peeking holds one frame of the eye-direction grid, so he is looking upward over the
+            # edge rather than staring straight ahead while only his eyes are showing.
+            State.PEEK: (
+                EYE_TRACK_STATE if self._sheet.has_state(EYE_TRACK_STATE) else "idle"
+            ),
+            # A sheet without the pet frames falls back to the heart eyes, which says the same
+            # thing with art that has been there all along.
+            State.PET: (
+                PET_ANIM if self._sheet.has_state(PET_ANIM)
+                else "heart_eyes" if self._sheet.has_state("heart_eyes") else "idle"
+            ),
+            # Being hoisted around by the cursor is undignified - he scowls about it.
+            State.DRAG: "angry",
+            # Standing on a window: plain idle, blinks included - _tick_perch drives the blink
+            # exactly the way _tick_idle does, just without the wander clock underneath it.
+            State.PERCH: self._blink_state if self._blinking else "idle",
+        }[self._state]
+
+    def _sync_animation(self, *, restart: bool = False) -> None:
+        desired = self._animation_for_state()
+        if desired != self.animator.state:
+            self.animator.set_state(desired, restart=True)
+        elif restart:
+            self.animator.set_state(desired, restart=True)
+
+    # --- anger / sleep ------------------------------------------------------------
+
+    def _begin_anger(self) -> None:
+        log.info("annoyance threshold crossed - getting grumpy")
+        if self._focus_active:
+            # The storm-off walk below bypasses _choose_next_action entirely, which is the only
+            # place the working-pose hold gets reasserted. Left running, focus_active would keep
+            # reading True while he stomps off and naps - contradicting both his posture and the
+            # tray tooltip. Cancelled outright rather than paused: same as stopping it yourself,
+            # no completion reward for a session you got angry through.
+            self.set_focus(False)
+        if self._perch_rect is not None:
+            # Same bypass, same fix: the storm-off walk moves _x directly, and a live perch
+            # rectangle would otherwise keep his feet welded to the window while it does.
+            self._release_perch()
+        self._sound("grump")
+        self.mood.nudge("angered")
+        self._pending_sleep = True
+        # Reacting consumes the accumulated annoyance. Without this the same pokes stay inside the
+        # burst window and re-trigger anger on every further poke, compounding the reaction.
+        self._clear_annoyance()
+        self._enter(State.ANGRY)
+
+    def _storm_off(self, cursor: tuple[int, int] | None) -> None:
+        """Turn away from the pest and walk a short distance before napping."""
+        distance = random.uniform(STORM_OFF_MIN_PX, STORM_OFF_MAX_PX)
+        centre = self._x + self.sprite_w / 2
+        away_left = cursor is not None and cursor[0] > centre
+        target = self._x - distance if away_left else self._x + distance
+        if target < self.x_min or target > self.x_max:
+            target = self._x + distance if away_left else self._x - distance
+        self._begin_walk(min(max(target, self.x_min), self.x_max))
+        if self._state != State.WALK:
+            # Cornered at the end of the strip with nowhere to storm off to - nap on the spot.
+            self._pending_sleep = False
+            self._enter(State.SLEEP)
+
+    # --- walking ------------------------------------------------------------------
+
+    def _begin_walk(self, target: float) -> None:
+        self._walk_from = self._x
+        self._walk_target = min(max(target, self.x_min), self.x_max)
+        if abs(self._walk_target - self._x) < 4:
+            self._enter(State.IDLE)
+            return
+        self._facing = "right" if self._walk_target > self._x else "left"
+        self._enter(State.WALK)
+
+    # --- antics -------------------------------------------------------------------
+
+    def _begin_antic(self, name: str, duration_ms: float, costume: str = "") -> None:
+        self._antic = name
+        self._antic_ms = duration_ms
+        self._last_antic = name
+        # Assigned on every antic, not only the ones that want a hat: entering ANTIC from ANTIC is
+        # a no-op in _enter, so a stale value here would leave him wearing the last persona's
+        # glasses through whatever he does next.
+        self._persona_costume = costume
+        log.debug("antic: %s for %.0fms%s", name, duration_ms,
+                  f" wearing {costume}" if costume else "")
+        self._enter(State.ANTIC)
+
+    def _pick_antic(self, cursor: tuple[int, int] | None) -> tuple[str, float] | None:
+        """Weighted random antic, never the same one twice in a row.
+
+        The previous antic is excluded outright rather than merely de-weighted, so a repeat is
+        impossible rather than just unlikely - the same thing twice running reads as a glitch.
+        It comes back as soon as anything else has played, and it stays selectable if it is
+        somehow the only option left.
+        """
+        audience = self._cursor_is_near(cursor, self._eye_track_distance())
+        fidgets_on = bool(self._config.get("fidgets_enabled", True))
+        available = [
+            a for a in ANTICS
+            if self._sheet.has_state(a[0]) and (fidgets_on or a[4] != FIDGET_CATEGORY)
+        ]
+        if not available:
+            return None  # a trimmed-down sprite sheet should not crash the scheduler
+        candidates = [a for a in available if a[0] != self._last_antic] or available
+
+        mood = self._mood_weights()
+        pool = []
+        weights = []
+        for name, weight, low, high, category in candidates:
+            if category == "eyes" and audience:
+                weight *= EYES_ANTIC_AUDIENCE_BOOST
+            # The mood never picks anything itself; it only makes what he already does more or
+            # less likely - press-ups at two in the morning, dancing on a Friday afternoon.
+            weight *= mood.get(name, 1.0)
+            pool.append((name, low, high))
+            weights.append(weight)
+        if not any(weights):
+            weights = [1.0] * len(pool)  # a mood must never leave him with nothing to do
+        if not pool:
+            return None
+        name, low, high = random.choices(pool, weights=weights, k=1)[0]
+        return name, random.uniform(low, high)
+
+    # --- reactions to you ---------------------------------------------------------
+
+    def set_away(self, away: bool) -> None:
+        """Tell him whether you are at the machine. He settles to wait, and greets you back."""
+        if away == self._away:
+            return
+        self._away = away
+        if not away:
+            # You have just come back. Whatever he had worked himself up to before you left is
+            # stale; start the clock again rather than carrying on where he left off.
+            self.noticed()
+        if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
+            return
+        if away:
+            if self._sheet.has_state(AWAY_ANTIC):
+                log.debug("user away - settling down to wait")
+                self._begin_antic(AWAY_ANTIC, 1e9)  # held until you come back
+        else:
+            log.debug("user back - greeting")
+            self.mood.nudge("greeted")
+            if self._sheet.has_state(GREET_ANTIC):
+                self._begin_antic(GREET_ANTIC, GREET_MS)
+            else:
+                self._enter(State.IDLE)
+
+    @property
+    def away(self) -> bool:
+        return self._away
+
+    # --- focus sessions -------------------------------------------------------------
+
+    def set_focus(self, active: bool) -> None:
+        """Tray toggle: start a session at the configured length, or cancel it early.
+
+        Mirrors set_away's shape on purpose. A cancelled session earns nothing - no sound, no
+        mood nudge, no celebration - because it was not finished. That closes the obvious
+        start-then-immediately-stop loophole for free.
+        """
+        if active == self._focus_active:
+            return
+        if active:
+            minutes = max(1.0, float(self._config.get("focus_duration_min", 25)))
+            self._focus_active = True
+            self._focus_total_ms = minutes * 60_000.0
+            self._focus_remaining_ms = self._focus_total_ms
+            self._focus_burst_due_ms = random.uniform(
+                FOCUS_BURST_INTERVAL_MIN_MS, FOCUS_BURST_INTERVAL_MAX_MS)
+            log.info("focus session started: %.0f min", minutes)
+            # Right here, not left to wait for _choose_next_action's reassertion: that check
+            # exists to survive an INTERRUPTION, but the start itself is a direct tray click and
+            # deserves the same instant feedback pocket_grab/set_away's away-branch already give -
+            # otherwise he would keep wandering for however long was left of whatever he was
+            # already doing before the pose caught up.
+            if self._sheet.has_state(FOCUS_HOLD_ANIM):
+                self._begin_antic(FOCUS_HOLD_ANIM, 1e9, costume=FOCUS_COSTUME)
+        else:
+            log.info("focus session cancelled with %.0fs left", self.focus_remaining_s)
+            self._focus_active = False
+            self._focus_remaining_ms = 0.0
+            self._focus_total_ms = 0.0
+
+    @property
+    def focus_active(self) -> bool:
+        return self._focus_active
+
+    @property
+    def focus_remaining_s(self) -> float:
+        return max(0.0, self._focus_remaining_ms) / 1000.0
+
+    @property
+    def focus_total_s(self) -> float:
+        return max(0.0, self._focus_total_ms) / 1000.0
+
+    def take_focus_finished(self) -> bool:
+        """True exactly once, on the tick a session completes on its own. Drained like take_sounds."""
+        finished, self._focus_finished = self._focus_finished, False
+        return finished
+
+    def _tick_focus(self, dt_ms: float) -> None:
+        """Advance the session clock. Runs ahead of the HIDDEN/paused early returns in update() -
+        a length you committed to is not "behaviour" to freeze, or hiding behind a fullscreen app
+        (the default) would silently stall a session for as long as it stayed up. Auto-pause comes
+        from gating on _away instead - the exact idle signal set_away already reads, on its own
+        700ms poll, so a session left running while you are away just holds rather than lying
+        about how long you actually worked.
+        """
+        if not self._focus_active or self._away:
+            return
+        self._focus_remaining_ms -= dt_ms
+        if self._focus_remaining_ms <= 0:
+            self._finish_focus()
+            return
+        # The occasional press-up break, only while he is actually holding the plain working pose
+        # (not mid-burst already, and not off doing something else that will snap back on its own).
+        if (
+            self._state == State.ANTIC and self._antic == FOCUS_HOLD_ANIM
+            and self._sheet.has_state(FOCUS_BURST_ANIM)
+        ):
+            self._focus_burst_due_ms -= dt_ms
+            if self._focus_burst_due_ms <= 0:
+                self._begin_antic(FOCUS_BURST_ANIM, FOCUS_BURST_MS, costume=FOCUS_COSTUME)
+                self._focus_burst_due_ms = random.uniform(
+                    FOCUS_BURST_INTERVAL_MIN_MS, FOCUS_BURST_INTERVAL_MAX_MS)
+
+    def _finish_focus(self) -> None:
+        """The countdown reached zero on its own - as opposed to set_focus(False), an early stop,
+        which earns none of this."""
+        self._focus_active = False
+        self._focus_remaining_ms = 0.0
+        self._focus_total_ms = 0.0
+        self._focus_finished = True
+        # Mood, sound and the celebration antic are gated together, same as the CPU-driven
+        # task_finished moment: a "focus_done" chime playing over a mascot who is visibly asleep
+        # or being dragged around would contradict what is on screen worse than just staying quiet.
+        if (
+            self._state not in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY)
+            and not self._falling and not self._rolling
+        ):
+            self.mood.nudge("focus_done")
+            # Its own sound, not "cheer" - that one is already spoken for by the CPU-driven
+            # task_finished moment below, and the two completing back to back (a session ending
+            # right as a build finishes) should not sound like the same event twice.
+            self._sound("focus_done")
+            if self._sheet.has_state(TASK_FINISHED_ANIM):
+                self._begin_antic(TASK_FINISHED_ANIM, TASK_FINISHED_MS, costume="party")
+                # Charged, not gated: this must never be swallowed by an unrelated CPU
+                # celebration's own cooldown, but a CPU-drop landing moments later should not
+                # immediately echo it.
+                self._task_finished_cooldown_ms = TASK_FINISHED_COOLDOWN_MS
+        log.info("focus session complete")
+
+    def foreground_changed(self, process: str) -> None:
+        """React to you switching apps. Only the executable name is ever seen."""
+        if self._foreground_cooldown_ms > 0 or self._away:
+            return
+        if self._state not in (State.IDLE, State.WALK, State.ANTIC):
+            return
+        if not bool(self._config.get("antics_enabled", True)):
+            return
+
+        if process in CLAUDE_PROCESSES:
+            choices = [a for a in CLAUDE_ANTICS if self._sheet.has_state(a)]
+            if not choices:
+                return
+            self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+            log.debug("Claude came to the front - %s", choices)
+            self._begin_antic(random.choice(choices), random.uniform(1400, 2200))
+            return
+
+        persona = self._persona_for(process)
+        if persona is not None:
+            antic, costume, low, high = persona
+            if self._sheet.has_state(antic):
+                self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+                # Only dress him up if the user has not picked a hat themselves - theirs wins.
+                wants_hat = costume and self._may_dress()
+                log.debug("persona for %s: %s", process, antic)
+                self._begin_antic(antic, random.uniform(low, high), costume if wants_hat else "")
+                return
+
+        # No persona for this one, so he just reacts to the fact that something appeared. The
+        # startle sits AFTER the persona checks on purpose: jumping is what he does when he has
+        # nothing better to say about an app, and putting it first swallowed every persona.
+        # Its own short cooldown keeps a burst of alt-tabbing to one jump rather than a twitch.
+        if (
+            self._startle_cooldown_ms <= 0
+            and self._sheet.has_state(STARTLE_ANIM)
+            and random.random() < STARTLE_CHANCE
+        ):
+            self._startle_cooldown_ms = STARTLE_COOLDOWN_MS
+            self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+            self._begin_antic(STARTLE_ANIM, STARTLE_MS)
+            return
+
+        if random.random() < FOREGROUND_REACT_CHANCE and self._sheet.has_state("look_around"):
+            self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+            self._begin_antic("look_around", random.uniform(1200, 1900))
+
+    # --- world awareness ----------------------------------------------------------
+
+    def set_world(self, state: WorldState) -> None:
+        """Adopt a fresh snapshot from :mod:`world`. Polled on the app's slow timer, not the tick."""
+        self._world = state
+
+    @property
+    def persona_costume(self) -> str:
+        """Temporary headwear the current activity wants, or "" for none.
+
+        The app polls this and rebuilds the sprite sheet when it changes - measured at ~3ms, and
+        ~18ms even if every frame's pixmap and click mask has to be rebuilt, against a 12s
+        per-app cooldown. Never set while the user has chosen a costume of their own: a hat that
+        keeps vanishing reads as a bug, not as a feature.
+        """
+        return self._persona_costume
+
+    def clear_persona_costume(self) -> None:
+        """Drop any persona headwear immediately.
+
+        Called when the user picks a costume from the tray. Without it, choosing a hat *during* a
+        persona antic put the new hat on for a single frame and then had it replaced by the
+        persona's own for the rest of the antic - the exact "my hat keeps vanishing" behaviour the
+        theirs-wins rule exists to prevent.
+        """
+        self._persona_costume = ""
+
+    def _latch(self, key: str, token: str) -> bool:
+        """True the first time ``token`` is seen for ``key``, and never again.
+
+        Backed by the config, so "once a day" survives a restart rather than meaning "once per
+        run" - otherwise quitting and relaunching would replay the day's moments.
+        """
+        if str(self._config.get(key, "")) == token:
+            return False
+        self._config[key] = token
+        return True
+
+    def _may_dress(self) -> bool:
+        """May he put a costume on by himself right now?
+
+        One rule, applied everywhere: **yours wins**. If you have chosen a costume from the tray,
+        nothing here ever overrides it - not a persona, not a moment, not the season. A hat that
+        keeps vanishing reads as a bug rather than as a feature, which is why this check predates
+        all of them and why every new automatic costume has to route through it.
+        """
+        return (
+            bool(self._config.get("persona_costumes", True))
+            and not str(self._config.get("costume", "")).strip()
+        )
+
+    @property
+    def auto_costume(self) -> str:
+        """What the season says he should be wearing, or "" for nothing.
+
+        Ambient, unlike ``persona_costume``: it is not tied to an antic and does not expire, so he
+        keeps it on for as long as the season lasts. The app treats the persona one as taking
+        precedence, so a code editor still swaps the beanie for reading glasses and swaps back
+        afterwards.
+        """
+        state = self._world
+        if state is None or not bool(self._config.get("auto_costumes", True)):
+            return ""
+        if not bool(self._config.get("world_enabled", True)):
+            return ""
+        if not bool(self._config.get("seasonal_enabled", True)) or not self._may_dress():
+            return ""
+        return SEASON_COSTUMES.get(state.season, "")
+
+    # --- the snippet billboard -------------------------------------------------------
+
+    @property
+    def pocket_full(self) -> bool:
+        return bool(self._pocket)
+
+    @property
+    def pocket_text(self) -> str:
+        """What the sign currently shows, without taking it down. "" if there is nothing."""
+        return "\n\n".join(self._pocket)
+
+    def pocket_grab(self, text: str) -> bool:
+        """Add a snippet to the sign - it grows, rather than replacing what was already up.
+
+        Returns False for blank/whitespace-only text, so an empty clipboard does not silently put
+        an empty sign up.
+        """
+        text = text.strip()
+        if not text:
+            return False
+        self._pocket.append(text)
+        log.info("pocket: %d snippet(s) on the sign, %d character(s) total",
+                  len(self._pocket), len(self.pocket_text))
+        # Held with both arms braced rather than idling beside it: a sign is not much of a prop if
+        # he looks like he could wander off with it in one hand. 1e9 ms is "until told otherwise" -
+        # the same trick set_away uses for AWAY_ANTIC - and pocket_take is what tells him otherwise.
+        if self._sheet.has_state(POCKET_HOLD_ANIM):
+            self._begin_antic(POCKET_HOLD_ANIM, 1e9)
+        return True
+
+    def pocket_take(self) -> str:
+        """Take the sign down and return everything it showed - "" if it was already empty."""
+        text, self._pocket = self.pocket_text, []
+        if self._antic == POCKET_HOLD_ANIM:
+            self._antic_ms = 0.0  # the tick already in flight ends the antic and returns to idle
+        return text
+
+    def _moment(
+        self, name: str, low: float, high: float, costume: str = ""
+    ) -> tuple[str, float, str] | None:
+        """Package a moment, or None if this sheet does not have the animation for it.
+
+        ``costume`` is worn for the length of THIS moment only. It travels with the moment rather
+        than being looked up from the animation name, because the same animation means different
+        things in different places: the knocking-off dance earns a party hat and the Friday
+        afternoon dance, which is the identical animation from the ambient pool, does not.
+        """
+        if not name or not self._sheet.has_state(name):
+            return None
+        return name, random.uniform(low, high), (costume if self._may_dress() else "")
+
+    def _pick_moment(self) -> tuple[str, float, str] | None:
+        """A one-off reaction to something about the world, or None for "nothing to say"."""
+        state = self._world
+        if state is None or not bool(self._config.get("world_enabled", True)):
+            return None
+        if self._reaction_cooldown_ms > 0 or self._away:
+            return None
+
+        # First sight of you today. Gated on it being properly morning, so a machine left running
+        # overnight does not get its stretch the instant the date rolls over.
+        if state.hour >= NEW_DAY_HOUR and self._latch("last_seen_date", state.date_key):
+            moment = self._moment("stretch", 1500, 1650)
+            if moment is not None:
+                log.info("first sight of you today - having a stretch")
+                return moment
+
+        end = parse_clock(self._config.get("workday_end", ""))
+        if end is not None:
+            if (
+                not state.is_weekend
+                and end <= state.hour <= end + CLOCK_OFF_WINDOW_H
+                and self._latch("last_clock_off_date", state.date_key)
+            ):
+                moment = self._moment("dance", 2600, 3800, costume="party")
+                if moment is not None:
+                    log.info("knocking-off time")
+                    return moment
+            flop_from = end + WEEK_OVER_DELAY_H
+            if (
+                state.is_friday
+                and flop_from <= state.hour <= flop_from + WEEK_OVER_WINDOW_H
+                and self._latch("last_week_over_week", state.week_key)
+            ):
+                moment = self._moment("sit_dangle", 5000, 8000)
+                if moment is not None:
+                    log.info("that is the week done")
+                    return moment
+
+        if (
+            state.cpu_busy
+            and self._hot_cooldown_ms <= 0
+            and bool(self._config.get("cpu_reaction_enabled", True))
+        ):
+            # A hard hat while he fans himself: the machine is under load, so, work in progress.
+            moment = self._moment(CPU_ANIM, 2400, 3600, costume="hardhat")
+            if moment is not None:
+                self._hot_cooldown_ms = HOT_COOLDOWN_MS
+                log.info("machine pinned at %.0f%% - fanning himself", state.cpu_percent)
+                return moment
+
+        if (
+            state.task_just_finished
+            and self._task_finished_cooldown_ms <= 0
+            and bool(self._config.get("task_finished_reaction_enabled", True))
+        ):
+            # A fixed duration, not a random range like the other moments: this is a multi-beat
+            # celebration rather than a loopable mood, so playing it for anything shorter would
+            # cut it off mid-gesture.
+            moment = self._moment(TASK_FINISHED_ANIM, TASK_FINISHED_MS, TASK_FINISHED_MS,
+                                   costume="party")
+            if moment is not None:
+                self._task_finished_cooldown_ms = TASK_FINISHED_COOLDOWN_MS
+                log.info("sustained load just dropped - celebrating a finished task")
+                self._sound("cheer")
+                return moment
+
+        if (
+            state.part_of_day == PART_MORNING
+            and self._morning_cooldown_ms <= 0
+            and random.random() < MORNING_MOMENT_CHANCE
+        ):
+            moment = self._moment(random.choice(("yawn", "coffee")), 2200, 3400)
+            if moment is not None:
+                self._morning_cooldown_ms = MORNING_COOLDOWN_MS
+                return moment
+
+        if (
+            bool(self._config.get("seasonal_enabled", True))
+            # Not in the small hours: complaining about the summer heat at two in the morning is
+            # not seasonal, it is just baffling. At night the mood already has him winding down.
+            and state.part_of_day != PART_NIGHT
+            and self._seasonal_cooldown_ms <= 0
+            and random.random() < SEASONAL_MOMENT_CHANCE
+        ):
+            name = SEASON_ANTICS.get(state.season, "")
+            # Summer's reaction and the machine-under-load one are the same fanning animation, so
+            # summer stands aside while the load reaction is enabled. Otherwise "it is July" and
+            # "your machine is pinned" become the same signal and neither of them reads as
+            # anything. Summer then behaves like spring: a mood, not a moment.
+            if name == CPU_ANIM and bool(self._config.get("cpu_reaction_enabled", True)):
+                name = ""
+            moment = self._moment(name, 2600, 4000)
+            if moment is not None:
+                self._seasonal_cooldown_ms = SEASONAL_COOLDOWN_MS
+                return moment
+        return None
+
+    def _mood_weights(self) -> dict[str, float]:
+        """Multipliers for the ambient pool.
+
+        Four independent sources, composed **multiplicatively** rather than by replacement: the
+        time of day, the season, the persistent mood, and the personality preset - plus the
+        attention arc's boost. Every one of them means something different, and letting any one
+        overwrite the others would produce nonsense like a good mood cancelling the fact that it
+        is two in the morning.
+        """
+        weights: dict[str, float] = {}
+        for name, factor in self.mood.weights().items():
+            weights[name] = weights.get(name, 1.0) * factor
+        for name, factor in self._preset().get("weights", {}).items():
+            weights[name] = weights.get(name, 1.0) * float(factor)
+
+        state = self._world
+        if state is None or not bool(self._config.get("world_enabled", True)):
+            return weights
+        for name, factor in _PART_OF_DAY_WEIGHTS.get(state.part_of_day, {}).items():
+            weights[name] = weights.get(name, 1.0) * factor
+        if bool(self._config.get("seasonal_enabled", True)):
+            for name, factor in _SEASON_WEIGHTS.get(state.season, {}).items():
+                weights[name] = weights.get(name, 1.0) * factor
+        if self._neglect_stage >= 1:
+            # Stage one of being ignored: he does not do anything new, he just aims what he
+            # already does at you. Nothing here is visible as an event.
+            for name, _w, _lo, _hi, category in ANTICS:
+                if category == "eyes":
+                    weights[name] = weights.get(name, 1.0) * NEGLECT_EYES_BOOST
+        end = parse_clock(self._config.get("workday_end", ""))
+        if end is None:
+            end = 24.0
+        if state.is_friday and FRIDAY_AFTERNOON_FROM_H <= state.hour < end:
+            # He can feel it coming. A mood rather than a moment, so it colours the whole
+            # afternoon instead of firing once and clashing with the knocking-off dance.
+            weights["dance"] = weights.get("dance", 1.0) * FRIDAY_DANCE_BOOST
+        return weights
+
+    # --- being ignored --------------------------------------------------------------
+
+    def _neglect_step_ms(self) -> float:
+        """Seconds before the first stage, or 0 when the whole thing is switched off."""
+        if not bool(self._config.get("attention_enabled", True)):
+            return 0.0
+        return max(0.0, float(self._config.get("attention_after_s", 240))) * 1000.0
+
+    def _neglect_suppressed(self) -> bool:
+        """Times when asking for attention would be obnoxious rather than endearing."""
+        if self._away or self.paused:
+            return True
+        if self._state in (State.SLEEP, State.WAKE, State.ANGRY, State.DRAG, State.HIDDEN,
+                           State.PET, State.PERCH):
+            return True
+        if self._falling or self._rolling:
+            return True
+        # Mid-build. The worst possible moment to want to be noticed.
+        return self._world is not None and self._world.cpu_busy
+
+    def _tick_neglect(self, dt_ms: float) -> None:
+        """Count how long you have been here and not looked at him, and act on it."""
+        step = self._neglect_step_ms()
+        if step <= 0 or self._neglect_suppressed():
+            # Deliberately not decayed - stepping away for a moment should not wipe the clock,
+            # but it must not run up while you are gone either, or coming back from lunch would
+            # drop you straight into the last stage.
+            return
+        self._neglect_ms += dt_ms
+        if self._neglect_glance_ms > 0:
+            self._neglect_glance_ms = max(0.0, self._neglect_glance_ms - dt_ms)
+            return
+
+        # The give-up sit is held indefinitely, so _choose_next_action never runs again and the
+        # glance has to be started from here. Without it he sits stock still and is
+        # indistinguishable from the away-sit, which means something quite different.
+        if (
+            self._neglect_stage >= 3
+            and self._state == State.ANTIC
+            and self._antic == NEGLECT_SIT_ANTIC
+            and self._sheet.has_state(NEGLECT_GLANCE_ANTIC)
+        ):
+            self._neglect_glance_ms = NEGLECT_GLANCE_EVERY_MS
+            self._begin_antic(NEGLECT_GLANCE_ANTIC, NEGLECT_GLANCE_MS)
+
+    def _neglect_action(self) -> bool:
+        """Fire whichever stage is due. Returns True if he did something visible."""
+        step = self._neglect_step_ms()
+        if step <= 0 or self._neglect_suppressed():
+            return False
+        elapsed = self._neglect_ms
+
+        # Stage 3: he gives up and sits down to wait. Same animation as the away-sit, so he gets a
+        # glance upward every so often - that is the only thing distinguishing "still hoping" from
+        # "settled in until you come back".
+        if elapsed >= step * NEGLECT_GIVE_UP_AT:
+            if self._neglect_stage < 3:
+                log.info("ignored for %.0fs - giving up and sitting down", elapsed / 1000.0)
+                # Charged once, on the transition, not on every re-seat: he returns to this sit
+                # after each glance, and nudging there would grind him down all afternoon.
+                self.mood.nudge("ignored")
+            self._neglect_stage = 3
+            if not self._sheet.has_state(NEGLECT_SIT_ANTIC):
+                return False
+            # Re-seated every time he lands back in idle, which is how he returns to sitting
+            # after one of the glances rather than wandering off mid-sulk.
+            self._neglect_glance_ms = NEGLECT_GLANCE_EVERY_MS
+            self._begin_antic(NEGLECT_SIT_ANTIC, 1e9)
+            return True
+
+        # Stage 2: one wave, whether or not your pointer is anywhere near him.
+        if elapsed >= step * NEGLECT_WAVE_AT and self._neglect_stage < 2:
+            self._neglect_stage = 2
+            log.debug("ignored for %.0fs - waving", elapsed / 1000.0)
+            self._enter(State.HOVER_WAVE)
+            return True
+
+        # Stage 1: nothing visible fires; he just starts looking your way more often. The weight
+        # boost lives in _mood_weights.
+        if elapsed >= step * NEGLECT_GLANCE_AT and self._neglect_stage < 1:
+            self._neglect_stage = 1
+            log.debug("ignored for %.0fs - starting to glance over", elapsed / 1000.0)
+        return False
+
+    def _pick_blink(self) -> str:
+        """Which kind of blink to play, weighted by the time of day.
+
+        A sleepy blink is only meaningful because it is rare in the morning and common at night;
+        picked uniformly it would just be a slower blink and would say nothing at all.
+        """
+        part = self._world.part_of_day if self._world is not None else None
+        double_chance, slow_chance = BLINK_MIX_BY_PART.get(part, (0.25, 0.05))
+        # Being fed up and being tired look much the same around the eyes, so a flat mood adds to
+        # whatever the clock already asks for rather than getting an expression of its own.
+        slow_chance = min(0.9, slow_chance + self.mood.slow_blink_bonus())
+        roll = random.random()
+        if roll < slow_chance and self._sheet.has_state(BLINK_SLOW):
+            return BLINK_SLOW
+        if roll < slow_chance + double_chance and self._sheet.has_state(BLINK_DOUBLE):
+            return BLINK_DOUBLE
+        return BLINK_SINGLE
+
+    def _mood_pace(self) -> float:
+        """How fast the ambient animation runs: clock x persistent mood x preset.
+
+        All three multiply. They bottom out together around 0.7 * 0.9 * 0.85 = 0.54, which is slow
+        but still unmistakably moving - the floor that matters is in ``_speed_multiplier``, which
+        clamps the walk so a slow mood can never stall him mid-stride.
+        """
+        pace = self.mood.pace() * self._preset_factor("pace")
+        state = self._world
+        if state is not None and bool(self._config.get("world_enabled", True)):
+            pace *= _PACE_BY_PART.get(state.part_of_day, 1.0)
+        return pace
+
+    def _advance(self, dt_ms: float) -> None:
+        """Advance the animation at the mood's pace, for the states the mood is allowed to touch."""
+        if self._state in _MOOD_PACED_STATES:
+            dt_ms *= self._mood_pace()
+        self.animator.advance(dt_ms)
+
+    # --- what is hanging above him ------------------------------------------------
+
+    @property
+    def wants_ledge(self) -> bool:
+        """True when he is in the mood to look for something overhead.
+
+        The app only enumerates windows while this is set. Window enumeration is the most
+        expensive probe in the whole application - a Python callback per top-level window - so it
+        must not sit on the geometry timer; behind a 15-minute cooldown it runs perhaps four times
+        an hour, which costs nothing worth measuring.
+        """
+        return (
+            self._ledge_cooldown_ms <= 0
+            and self._reaction_cooldown_ms <= 0
+            and not self._away
+            and self._state in (State.IDLE, State.WALK, State.ANTIC)
+            and bool(self._config.get("play_with_windows", True))
+            and bool(self._config.get("antics_enabled", True))
+            and self._sheet.has_state(LEDGE_ANIM)
+        )
+
+    @property
+    def ledge_reach_px(self) -> int:
+        """How far above his head a window's bottom edge may hang and still be worth reaching for."""
+        return int(self.sprite_h * LEDGE_REACH_FRACTION)
+
+    def set_ledge(self, ledge: tuple[int, int, int] | None) -> None:
+        """Adopt ``(bottom_y, left, right)`` of a window hanging within reach, or None.
+
+        Only ever a rectangle. He is told *where* something is and nothing about what it is, and
+        he has no way to move it - the reaction is a strain that visibly fails.
+
+        Spending a cooldown here, on the *look*, is what keeps the probe cheap. Charging it only
+        when something was found meant that on a desktop with nothing overhead - the usual case -
+        ``wants_ledge`` never latched off and the app re-enumerated every top-level window on the
+        next poll, and the one after that, indefinitely.
+        """
+        self._ledge = ledge
+        self._ledge_cooldown_ms = max(self._ledge_cooldown_ms, LEDGE_LOOK_AGAIN_MS)
+
+    def _try_ledge(self) -> bool:
+        """Walk under an overhead window and heave at it. Returns True if he set off."""
+        ledge = self._ledge
+        self._ledge = None
+        if ledge is None or not self._sheet.has_state(LEDGE_ANIM):
+            return False
+        _bottom, left, right = ledge
+        # Stand under the middle of its edge, but not past the ends of his own strip.
+        centre = (left + right) / 2.0 - self.sprite_w / 2.0
+        target = min(max(centre, self.x_min), self.x_max)
+        self._ledge_cooldown_ms = LEDGE_COOLDOWN_MS
+        log.info("something is hanging overhead - going to have a go at it")
+        if abs(target - self._x) < 4:
+            self._begin_antic(LEDGE_ANIM, random.uniform(LEDGE_MIN_MS, LEDGE_MAX_MS))
+            return True
+        self._pending_action = LEDGE_ANIM
+        self._begin_walk(target)
+        return self._state == State.WALK
+
+    def _persona_for(self, process: str) -> tuple[str, str, float, float] | None:
+        """The persona for ``process``: (animation, headwear, min ms, max ms)."""
+        custom = self._config.get("persona_apps") or {}
+        if isinstance(custom, dict) and process in custom:
+            # A user-supplied mapping is animation-only; it wins over the built-in table.
+            return str(custom[process]), "", *CUSTOM_PERSONA_MS
+        return PERSONAS.get(process)
+
+    def _eye_track_distance(self) -> float:
+        return float(self._config.get("eye_track_distance_px", 420))
+
+    def _track_frame_index(self, cursor: tuple[int, int]) -> int:
+        """Pick the 3x3 eye-direction frame that points at the cursor."""
+        cx, cy = cursor
+        centre_x = self._x + self.sprite_w / 2
+        centre_y = self.top + self.sprite_h / 2
+        dead = max(10.0, self.sprite_w * 0.22)
+        col = 1 + (1 if cx > centre_x + dead else 0) - (1 if cx < centre_x - dead else 0)
+        row = 1 + (1 if cy > centre_y + dead else 0) - (1 if cy < centre_y - dead else 0)
+        return row * 3 + col
+
+    def _choose_next_action(self, cursor: tuple[int, int] | None) -> None:
+        """Decide what he does next. He does *something* - standing about is not an option."""
+        self._idle_timer_ms = self._next_wander_delay()
+
+        # Above everything else, including the pocket: a live perch rectangle means either an
+        # antic (a sneeze, a wave, asking him something) has left State.PERCH behind for as long
+        # as it ran, or - if _tick_perch's own never-calls-this-function guarantee is ever
+        # violated some other way - he is already there. Either way this must return, unconditional
+        # on the current state: falling through to the wander gate at the bottom is exactly the
+        # bug this exists to prevent, and checking only "!= State.PERCH" let it happen the one time
+        # this got called while already perched.
+        if self._perch_rect is not None:
+            if self._state != State.PERCH:
+                self._enter(State.PERCH)
+                self._reposition_perch()
+            return
+
+        # Holding the sign overrides everything else here, not just the wander at the bottom: a
+        # pet, a persona change, or anything else that knocks him out of the brace has to land back
+        # in it, not in an ordinary idle antic, or "gripping it hard" only lasts until the first
+        # interruption. pocket_grab already does this once for the initial reaction; this is what
+        # makes it hold no matter what else asks for his attention in between.
+        if self.pocket_full and self._sheet.has_state(POCKET_HOLD_ANIM):
+            self._begin_antic(POCKET_HOLD_ANIM, 1e9)
+            return
+
+        # Reasserted here for the same reason as the pocket above: set_away already seizes control
+        # directly the moment you go idle, but nothing previously reasserted it if something else
+        # (a manual costume change, a pet) interrupted it afterward - so an interrupted away could
+        # fall through to an ordinary antic while the tray still (correctly) called him "away",
+        # the one disagreement between his posture and the tray this feature cannot afford to
+        # introduce. Above the focus check: a session never overrides a genuine away, because
+        # posture and tooltip must never say two different things about whether you are here.
+        if self._away and self._sheet.has_state(AWAY_ANTIC):
+            self._begin_antic(AWAY_ANTIC, 1e9)
+            return
+
+        if self.focus_active and self._sheet.has_state(FOCUS_HOLD_ANIM):
+            self._begin_antic(FOCUS_HOLD_ANIM, 1e9, costume=FOCUS_COSTUME)
+            return
+
+        antics_on = bool(self._config.get("antics_enabled", True))
+
+        # Involuntary things go first. They are not something he weighs up against having a dance,
+        # and they are not gated on antics_enabled either: switching off his hobbies should not
+        # stop him sneezing.
+        if self._maybe_sneeze() or self._maybe_hiccup():
+            return
+
+        # Noticing your pointer wins: it is the only reaction that is actually about you.
+        if (
+            antics_on
+            and self._eye_track_cooldown_ms <= 0
+            and self._sheet.has_state(EYE_TRACK_STATE)
+            and self._cursor_is_near(cursor, self._eye_track_distance())
+        ):
+            self._eye_track_cooldown_ms = EYE_TRACK_COOLDOWN_MS
+            self._begin_antic(EYE_TRACK_STATE, random.uniform(EYE_TRACK_MIN_MS, EYE_TRACK_MAX_MS))
+            return
+
+        # Then anything the world has to say - the clock, the calendar, the machine's load. These
+        # are events rather than pool members, so they get their own check rather than a weight.
+        if antics_on:
+            moment = self._pick_moment()
+            if moment is not None:
+                self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
+                self._begin_antic(*moment)
+                return
+
+        # Being ignored. After the world's moments, before the ambient pool: it is about you,
+        # so it should not pre-empt the clock, but it should beat him amusing himself.
+        if antics_on and self._neglect_action():
+            return
+
+        # Playing with what is around him. Both of these are read-only about other windows.
+        if antics_on and self._reaction_cooldown_ms <= 0 and not self._away:
+            if self._ledge is not None and self._try_ledge():
+                self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
+                return
+            if (
+                self._peek_cooldown_ms <= 0
+                and bool(self._config.get("play_with_windows", True))
+                and random.random() < PEEK_CHANCE
+            ):
+                self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
+                log.debug("ducking behind the taskbar for a peek")
+                self._enter(State.PEEK)  # spends the peek cooldown itself
+                return
+
+        chance = min(1.0, float(self._config.get("antic_chance", 0.5))
+                     * self._preset_factor("antic_chance"))
+        if antics_on and random.random() < chance:
+            chosen = self._pick_antic(cursor)
+            if chosen is not None:
+                self._begin_antic(*chosen)
+                return
+
+        # Holding the sign up, or a focus session: he finishes whatever he was already doing but
+        # does not wander off to a new spot, or the whole point of either is defeated. (A genuine
+        # away already returned above, via its own reassertion, before this line is ever reached.)
+        if self._config["wander_enabled"] and not self.pocket_full and not self.focus_active:
+            self._begin_walk(self._pick_wander_target())
+
+    def _pick_wander_target(self) -> float:
+        low = float(self._config.get("walk_min_px", 120))
+        high = float(self._config.get("walk_max_px", 700))
+        if high < low:
+            low, high = high, low
+        distance = random.uniform(low, high)
+        going_right = self._facing == "right"
+        if random.random() < TURN_AROUND_CHANCE:
+            going_right = not going_right
+        target = self._x + distance if going_right else self._x - distance
+        if target > self.x_max or target < self.x_min:  # bounce off the end of the strip
+            target = self._x - distance if going_right else self._x + distance
+        return min(max(target, self.x_min), self.x_max)
+
+    def _speed_multiplier(self) -> float:
+        span = abs(self._walk_target - self._walk_from)
+        if span < 1:
+            return 1.0
+        progress = abs(self._x - self._walk_from) / span
+        if progress < EASE_FRACTION:
+            ramp = _smoothstep(progress / EASE_FRACTION)
+        elif progress > 1.0 - EASE_FRACTION:
+            ramp = _smoothstep((1.0 - progress) / EASE_FRACTION)
+        else:
+            ramp = 1.0
+        multiplier = MIN_SPEED_MULTIPLIER + (1.0 - MIN_SPEED_MULTIPLIER) * ramp
+
+        override = float(self._config["walk_speed_px_s"])
+        if override > 0:
+            natural = self._natural_speed_px_s()
+            if natural > 0:
+                multiplier *= override / natural
+        # Applied last, and to the walk as a whole rather than to the animation alone: _walk
+        # derives distance from the animation's own progress, so scaling both together slows him
+        # down without letting his feet start sliding.
+        return max(0.05, multiplier * self._mood_pace())
+
+    def _natural_speed_px_s(self) -> float:
+        frame_ms = max(1, self.animator.frame_duration)
+        return self._sheet.walk_step_px * self._sheet.scale * 1000.0 / frame_ms
+
+    def _walk(self, dt_ms: float) -> None:
+        multiplier = self._speed_multiplier()
+        scaled = dt_ms * multiplier
+        frame_ms = max(1, self.animator.frame_duration)
+        step_px = self._sheet.walk_step_px * self._sheet.scale
+        # Distance comes from the animation's own progress, so stride length is exact.
+        distance = step_px * (scaled / frame_ms)
+
+        if self._facing == "left":
+            distance = -distance
+        self._x += distance
+        self.animator.advance(scaled)
+
+        reached = (
+            self._x >= self._walk_target if self._facing == "right" else self._x <= self._walk_target
+        )
+        at_edge = self._x <= self.x_min or self._x >= self.x_max
+        self._x = min(max(self._x, self.x_min), self.x_max)
+
+        if reached or at_edge:
+            if self._pending_sleep:
+                self._pending_sleep = False
+                self._enter(State.SLEEP)
+            elif self._pending_action is not None:
+                # He walked over here to do something. Play it even if he only got as far as the
+                # end of the strip - giving up silently on arrival would read as him forgetting.
+                action, self._pending_action = self._pending_action, None
+                self._begin_antic(action, random.uniform(LEDGE_MIN_MS, LEDGE_MAX_MS))
+            elif at_edge and not reached:
+                self._facing = "left" if self._facing == "right" else "right"
+                self._begin_walk(self._pick_wander_target())
+            else:
+                self._enter(State.IDLE)
+
+    # --- the tick -----------------------------------------------------------------
+
+    def update(self, dt_ms: float, cursor: tuple[int, int] | None = None) -> None:
+        """Advance the mascot by ``dt_ms``. ``cursor`` is the global pointer position."""
+        if dt_ms <= 0:
+            return
+        dt_ms = min(float(dt_ms), 250.0)  # a long stall must not teleport him
+        self._clock_ms += dt_ms
+        # Ahead of the HIDDEN/pause returns below on purpose - see _tick_focus's own docstring.
+        self._tick_focus(dt_ms)
+
+        if self._state == State.HIDDEN:
+            return
+
+        # Before the pause check: the stillness clock and the pet re-arm both have to keep running
+        # while he is frozen, or unpausing with the pointer already on him fires an instant pet
+        # that nobody asked for.
+        self._track_cursor(dt_ms, cursor)
+
+        # Settle a drop even while paused. Pausing is meant to freeze *behaviour*, and leaving him
+        # hanging in mid-air until the user unpauses is a bug, not a feature.
+        if self._falling or self._rolling:
+            self._apply_flight(dt_ms)
+        # Runs on this side of the pause check for the same reason: a landing *during* a pause
+        # sets the squash, and the cooldown loop below never runs to clear it - so the shadow
+        # would stay spread until whenever the user happened to unpause.
+        if self._land_squash_ms > 0:
+            self._land_squash_ms = max(0.0, self._land_squash_ms - dt_ms)
+
+        if self.paused:
+            return
+
+        self._state_ms += dt_ms
+        self._decay_annoyance(dt_ms)
+        self.mood.tick(dt_ms)
+        self._tick_quirks(dt_ms)
+        self._tick_neglect(dt_ms)
+        if self._grumble_ms > 0:
+            self._grumble_ms = max(0.0, self._grumble_ms - dt_ms)
+        if self._wave_cooldown_ms > 0:
+            self._wave_cooldown_ms = max(0.0, self._wave_cooldown_ms - dt_ms)
+        if self._eye_track_cooldown_ms > 0:
+            self._eye_track_cooldown_ms = max(0.0, self._eye_track_cooldown_ms - dt_ms)
+        if self._foreground_cooldown_ms > 0:
+            self._foreground_cooldown_ms = max(0.0, self._foreground_cooldown_ms - dt_ms)
+        for attr in (
+            "_reaction_cooldown_ms",
+            "_hot_cooldown_ms",
+            "_task_finished_cooldown_ms",
+            "_morning_cooldown_ms",
+            "_seasonal_cooldown_ms",
+            "_peek_cooldown_ms",
+            "_ledge_cooldown_ms",
+            "_startle_cooldown_ms",
+            "_pet_cooldown_ms",
+            "_spin_cooldown_ms",
+        ):
+            remaining = getattr(self, attr)
+            if remaining > 0:
+                setattr(self, attr, max(0.0, remaining - dt_ms))
+
+        # Ahead of every state handler, because it has to beat _maybe_wave - which fires at 120px
+        # and would otherwise consume every pointer that came to rest on him. Only from the states
+        # where stopping to be petted makes sense: not mid-nap, mid-tantrum or mid-throw.
+        if self._state in (State.IDLE, State.WALK, State.ANTIC) and self._maybe_pet(cursor):
+            self._sync_animation()
+            return
+
+        handler = {
+            State.IDLE: self._tick_idle,
+            State.WALK: self._tick_walk,
+            State.INJURED: self._tick_injured,
+            State.ANTIC: self._tick_antic,
+            State.HOVER_WAVE: self._tick_wave,
+            State.ASK: self._tick_simple,
+            State.WORKING: self._tick_working,
+            State.ANGRY: self._tick_angry,
+            State.SLEEP: self._tick_sleep,
+            State.WAKE: self._tick_wake,
+            State.PEEK: self._tick_peek,
+            State.PET: self._tick_pet,
+            State.DRAG: self._tick_drag,
+            State.PERCH: self._tick_perch,
+        }[self._state]
+        handler(dt_ms, cursor)
+        self._sync_animation()
+
+    def next_tick_ms(self, floor_ms: float, ceiling_ms: float) -> float:
+        """How long the app may sleep before anything visible changes.
+
+        A fixed 33fps tick spends most of its budget recomputing state nobody can see: an idle
+        breathing frame lasts 450ms. Anything that *moves* still needs the full rate, so this
+        returns the floor while he is in motion and otherwise the time until the next frame flip or
+        pending timer, whichever comes first.
+        """
+        if self._state == State.DRAG:
+            # Full rate while he is actually in your hand. The throw velocity is sampled from
+            # these ticks, and at 50ms a flick is only three samples to average over.
+            return floor_ms
+        if self._state in (State.WALK, State.PEEK) or self._falling or self._rolling:
+            # Moving still needs regular updates, but not 33 a second: he travels ~54px/s and the
+            # art is made of 2px blocks, so ~20fps is already below the visible step size. Frames
+            # stay punctual because the next frame flip caps the interval.
+            return max(floor_ms, min(MOVE_TICK_MS, self.animator.remaining_ms))
+        if self._state == State.ANTIC and self._antic == EYE_TRACK_STATE:
+            return max(floor_ms, min(MOVE_TICK_MS, self.animator.remaining_ms))
+
+        candidates = [self.animator.remaining_ms]
+        if self._state == State.IDLE:
+            candidates.append(self._idle_timer_ms)
+            if not self._blinking:
+                candidates.append(self._blink_timer_ms)
+        elif self._state == State.ANTIC:
+            candidates.append(self._antic_ms)
+        elif self._state == State.SLEEP:
+            candidates.append(self._sleep_ms)
+        elif self._state == State.INJURED:
+            candidates.append(self._injured_ms)
+        elif self._state == State.WORKING:
+            candidates.append(self._working_ms - self._state_ms)
+        elif self._state == State.HOVER_WAVE:
+            candidates.append(WAVE_DURATION_MS - self._state_ms)
+        elif self._state == State.ANGRY:
+            candidates.append(ANGRY_DURATION_MS - self._state_ms)
+        elif self._state == State.PET:
+            # It ends when your hand leaves, which this clock cannot see - so it has to keep
+            # sampling the cursor rather than sleeping until the next frame flip.
+            return max(floor_ms, min(MOVE_TICK_MS, self.animator.remaining_ms))
+        if self._grumble_ms > 0:
+            candidates.append(self._grumble_ms)
+
+        soonest = min(c for c in candidates if c is not None)
+        return max(floor_ms, min(ceiling_ms, soonest))
+
+    def _sample_drag(self, dt_ms: float) -> None:
+        """Remember how fast he has been moving over the tail of this drag."""
+        if self._drag_last is not None:
+            self._drag_samples.append(
+                (dt_ms, self._x - self._drag_last[0], self._y - self._drag_last[1])
+            )
+            span = sum(s[0] for s in self._drag_samples)
+            while len(self._drag_samples) > 1 and span - self._drag_samples[0][0] >= THROW_SAMPLE_MS:
+                span -= self._drag_samples.popleft()[0]
+        self._drag_last = (self._x, self._y)
+
+    def _throw_velocity(self) -> tuple[float, float]:
+        """Average velocity over the tail of the drag, in px/ms, capped."""
+        span = sum(s[0] for s in self._drag_samples)
+        if span <= 0:
+            return 0.0, 0.0
+        vx = sum(s[1] for s in self._drag_samples) / span
+        vy = sum(s[2] for s in self._drag_samples) / span
+        speed = math.hypot(vx, vy)
+        if speed > MAX_THROW_SPEED_PX_MS:
+            scale = MAX_THROW_SPEED_PX_MS / speed
+            vx, vy = vx * scale, vy * scale
+        return vx, vy
+
+    def _apply_flight(self, dt_ms: float) -> None:
+        """Carry a throw through the air, off the ends of the strip, and along the ground."""
+        if self._falling:
+            self._vy = min(MAX_FALL_SPEED_PX_MS, self._vy + GRAVITY_PX_PER_MS2 * dt_ms)
+            self._vx *= AIR_DRAG_PER_MS**dt_ms
+            self._y += self._vy * dt_ms
+        else:
+            self._vx *= ROLL_FRICTION_PER_MS**dt_ms
+
+        self._x += self._vx * dt_ms
+        self._reflect_off_ends()
+
+        if self._falling:
+            resting = self.rest_top()
+            if self._y >= resting:
+                self._y = float(resting)
+                self._touch_down(resting)
+        elif abs(self._vx) < MIN_ROLL_SPEED_PX_MS:
+            self._rolling = False
+            self._settle()
+
+    def _reflect_off_ends(self) -> None:
+        """Bounce off the ends of the strip, losing energy.
+
+        Reflecting *here*, rather than letting the position get clamped later, is load-bearing:
+        ``set_strip`` clamps ``_x`` into bounds on every 700ms geometry poll, so an out-of-range
+        position with the velocity still pointing outward would pin him to the edge and jitter
+        there until the throw finished.
+        """
+        hit = 0.0
+        if self._x < self.x_min:
+            self._x = self.x_min + (self.x_min - self._x)
+            hit, self._vx = abs(self._vx), abs(self._vx) * WALL_RESTITUTION
+        elif self._x > self.x_max:
+            self._x = self.x_max - (self._x - self.x_max)
+            hit, self._vx = abs(self._vx), -abs(self._vx) * WALL_RESTITUTION
+        # A single huge step could reflect straight past the other end; the clamp is the backstop.
+        self._x = min(max(self._x, self.x_min), self.x_max)
+        # Not while a nap is pending: being moved mid-sleep never hurts him, and a wall is no
+        # different from the floor in that respect.
+        if (
+            hit >= WALL_IMPACT_HURT_PX_MS
+            and self._resume_sleep_ms <= 0
+            and not self._pending_injury
+            and self._would_injure(0.0, impact_px_ms=hit)
+        ):
+            log.info("hit the end of the strip at %.2f px/ms - ouch", hit)
+            self._pending_injury = True
+            self._vx = 0.0  # he crumples and drops rather than bouncing away
+
+    def _touch_down(self, resting: float) -> None:
+        """He has reached the strip. Bounce, roll, or stop.
+
+        Injury is *judged* here, at the impact - that is what hurts him, and ``INJURY_FALL_PX``
+        measures the drop that caused it - but it is *shown* once he stops moving. Entering the
+        state at touchdown froze him mid-skid: any throw from a real height hurts, so the roll
+        this feature exists for never appeared at all. Skidding to a halt and then sitting up
+        dazed is both better looking and better physics.
+        """
+        impact = self._vy
+        fallen = resting - self._fall_from_y
+        self._falling = False
+        self._vy = 0.0
+        # Every touchdown, including each bounce - so a ball-like landing gets a shadow that
+        # spreads on each contact rather than only on the first.
+        if impact > 0.05:
+            self._land_squash_ms = LAND_SQUASH_MS
+            if impact >= HICCUP_IMPACT_PX_MS and self._resume_sleep_ms <= 0:
+                self.start_hiccups()
+            # Only a real landing, not the tail of a bounce settling out. The sound layer has its
+            # own repeat guard as well, since he can touch down three times in half a second.
+            if impact >= MIN_BOUNCE_SPEED_PX_MS * 0.5:
+                self._sound("land")
+
+        if self._resume_sleep_ms <= 0 and self._would_injure(fallen):
+            log.info("dropped %.0fpx - ouch", fallen)
+            self._pending_injury = True
+
+        if impact >= MIN_BOUNCE_SPEED_PX_MS:
+            self._vy = -impact * BOUNCE_RESTITUTION
+            self._falling = True
+            self._fall_from_y = self._y  # the next landing measures the bounce, not the throw
+            return
+        if abs(self._vx) >= MIN_ROLL_SPEED_PX_MS:
+            self._rolling = True
+            return
+        self._settle()
+
+    def _settle(self) -> None:
+        """Everything has stopped moving: pick up the nap, or sit up hurt."""
+        self._vx = self._vy = 0.0
+        self._rolling = False
+        if self._resume_sleep_ms > 0:
+            # He was thrown mid-nap: now that he has stopped, serve out the rest of the cooldown.
+            remaining = self._resume_sleep_ms
+            self._resume_sleep_ms = 0.0
+            self._pending_injury = False
+            self._enter(State.SLEEP)
+            self._sleep_ms = remaining
+            return
+        if self._pending_injury:
+            self._pending_injury = False
+            self.mood.nudge("hurt")
+            self._injured_ms = float(self._config.get("injury_duration_s", 3.0)) * 1000.0
+            self._enter(State.INJURED)
+
+    def _would_injure(self, fallen_px: float, *, impact_px_ms: float = 0.0) -> bool:
+        """Was that hard enough to hurt? A long drop, or a hard sideways impact."""
+        if not bool(self._config.get("injury_enabled", True)):
+            return False
+        if fallen_px < INJURY_FALL_PX and impact_px_ms < WALL_IMPACT_HURT_PX_MS:
+            return False
+        if not self._sheet.has_state(INJURY_ANIM):
+            return False
+        return float(self._config.get("injury_duration_s", 3.0)) > 0
+
+    def _tick_injured(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        self._injured_ms -= dt_ms
+        if self._injured_ms <= 0:
+            self._enter(State.IDLE)
+
+    def _cursor_is_near(
+        self, cursor: tuple[int, int] | None, threshold: float | None = None
+    ) -> bool:
+        if cursor is None:
+            return False
+        if threshold is None:
+            threshold = float(self._config["hover_wave_distance_px"])
+        if threshold <= 0:
+            return False
+        cx, cy = cursor
+        centre_x = self._x + self.sprite_w / 2
+        centre_y = self.top + self.sprite_h / 2
+        return abs(cx - centre_x) <= threshold and abs(cy - centre_y) <= threshold
+
+    def _pet_pending(self, cursor: tuple[int, int] | None) -> bool:
+        """A pet is on its way: the pointer is on him and only the hold time is outstanding."""
+        return (
+            bool(self._config.get("petting_enabled", True))
+            and self._pet_armed
+            and self._pet_cooldown_ms <= 0
+            and not self._away
+            and not (self._falling or self._rolling)
+            and self._cursor_is_over(cursor)
+        )
+
+    def _maybe_wave(self, cursor: tuple[int, int] | None) -> bool:
+        if self._wave_cooldown_ms > 0 or self._falling or self._rolling or self._away:
+            return False
+        # Stand aside for a pet. Checking petting first in ``update`` is not enough on its own:
+        # the wave fires the instant a pointer comes within 120px, and a pet needs half a second
+        # of stillness first - so the wave always got there before the hold could complete, and
+        # petting was then unreachable from inside the 2.1s wave. Deferring is also the truer
+        # reading: a hand resting ON him is not a hello from across the desk.
+        if self._pet_pending(cursor):
+            return False
+        if not self._cursor_is_near(cursor):
+            return False
+        self.noticed()  # your pointer came to him; that counts
+        self._enter(State.HOVER_WAVE)
+        return True
+
+    def _tick_simple(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+
+    def _tick_drag(self, dt_ms: float, cursor) -> None:
+        """Squirm while held: he is trying to kick free and get back down."""
+        self._struggle_ms += dt_ms
+        t = self._struggle_ms
+        amplitude = STRUGGLE_AMPLITUDE_PX * self._sheet.scale
+        # Amplitude-modulated on x so the wriggling comes in bursts, and a slower, independent
+        # rate on y, which keeps the motion from collapsing into a straight diagonal line.
+        self._struggle_dx = amplitude * math.sin(t * STRUGGLE_X_RATE) * math.cos(
+            t * STRUGGLE_X_BURST_RATE
+        )
+        self._struggle_dy = amplitude * 0.75 * math.sin(t * STRUGGLE_Y_RATE + 1.1)
+        self._sample_drag(dt_ms)
+        self._advance(dt_ms)
+
+    def _tick_idle(self, dt_ms: float, cursor) -> None:
+        if self._maybe_wave(cursor):
+            return
+        self._advance(dt_ms)
+
+        if self._blinking:
+            if self.animator.finished:
+                self._blinking = False
+                self.animator.set_state("idle", restart=False)
+            return
+
+        self._blink_timer_ms -= dt_ms
+        if self._blink_timer_ms <= 0:
+            self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
+            self._blinking = True
+            self._blink_state = self._pick_blink()
+            self.animator.set_state(self._blink_state, restart=True)
+            return
+
+        if self._falling or self._rolling:
+            return
+        self._idle_timer_ms -= dt_ms
+        if self._idle_timer_ms <= 0:
+            self._choose_next_action(cursor)
+
+    def _tick_perch(self, dt_ms: float, cursor) -> None:
+        """Standing on a window. update_perch (driven from main.py's own poll of the window's
+        rectangle) is the only thing that repositions or releases him - all that happens on this
+        tick is the ordinary blink clock, so he still reads as alive rather than a sprite pasted
+        onto someone else's title bar. No wander clock here at all: leaving is never a timeout.
+        """
+        self._advance(dt_ms)
+        if self._blinking:
+            if self.animator.finished:
+                self._blinking = False
+                self.animator.set_state("idle", restart=False)
+            return
+        self._blink_timer_ms -= dt_ms
+        if self._blink_timer_ms <= 0:
+            self._blink_timer_ms = random.uniform(BLINK_MIN_MS, BLINK_MAX_MS)
+            self._blinking = True
+            self._blink_state = self._pick_blink()
+            self.animator.set_state(self._blink_state, restart=True)
+
+    def _tick_antic(self, dt_ms: float, cursor) -> None:
+        if self._antic == EYE_TRACK_STATE:
+            if self._forced_look is not None:
+                # He was asked to look at something specific - where you dropped a file, say - so
+                # for this one antic the pointer does not get a vote, and he does not give up early
+                # just because you moved the mouse away afterwards.
+                self.animator.hold(EYE_TRACK_STATE, self._track_frame_index(self._forced_look))
+            else:
+                # The frame is chosen by where your pointer is, not by a clock.
+                if cursor is not None:
+                    self.animator.hold(EYE_TRACK_STATE, self._track_frame_index(cursor))
+                # He gives up early if you take the pointer away entirely.
+                if not self._cursor_is_near(cursor, self._eye_track_distance() * 1.4):
+                    self._antic_ms = min(self._antic_ms, 250.0)
+        else:
+            self._advance(dt_ms)
+
+        self._antic_ms -= dt_ms
+        if self._antic_ms <= 0:
+            self._antic = None
+            self._forced_look = None
+            self._enter(State.IDLE)
+
+    def _tick_walk(self, dt_ms: float, cursor) -> None:
+        if not self._pending_sleep and self._maybe_wave(cursor):
+            return
+        # Only mid-stride, and never while storming off - a tantrum undercut by a pratfall reads
+        # as a bug rather than as comedy.
+        if not self._pending_sleep and self._maybe_trip():
+            return
+        self._walk(dt_ms)
+
+    def _tick_wave(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        if self._state_ms >= WAVE_DURATION_MS or not self._cursor_is_near(cursor):
+            self._wave_cooldown_ms = WAVE_COOLDOWN_MS
+            self._enter(State.IDLE)
+
+    def _tick_working(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        if self._state_ms < self._working_ms:
+            return
+        # He has finished thinking about it. If the prompt had a shape worth commenting on, this
+        # is where it lands - after the working beat, so the sequence reads as "on it... oh, THAT
+        # kind of job" rather than as a reaction that arrives before he has looked at it.
+        reaction, self._post_prompt = self._post_prompt, None
+        if reaction is not None:
+            self._begin_antic(*reaction)
+            return
+        self._enter(State.IDLE)
+
+    def _tick_angry(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        if self._state_ms >= ANGRY_DURATION_MS:
+            if self._pending_sleep:
+                self._storm_off(cursor)
+            else:
+                self._enter(State.IDLE)
+
+    def _tick_peek(self, dt_ms: float, cursor) -> None:
+        """Sink, look about over the edge, rise again."""
+        if self._sheet.has_state(EYE_TRACK_STATE):
+            self.animator.hold(EYE_TRACK_STATE, PEEK_LOOK_FRAME)
+        else:
+            self._advance(dt_ms)
+        if self._state_ms >= PEEK_DOWN_MS + PEEK_HOLD_MS + PEEK_UP_MS:
+            self._enter(State.IDLE)
+
+    def _tick_sleep(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        self._sleep_ms -= dt_ms
+        if self._sleep_ms <= 0:
+            self._enter(State.WAKE)
+            return
+        # A gentle hover near the end of the nap - and no recent poking - wakes him early.
+        total = max(1.0, float(self._config["sleep_cooldown_s"]) * 1000.0)
+        quiet = self._clock_ms - self._last_click_ms > 3000
+        if self._sleep_ms < total * 0.25 and quiet and self._cursor_is_near(cursor):
+            self._enter(State.WAKE)
+
+    def _tick_wake(self, dt_ms: float, cursor) -> None:
+        self._advance(dt_ms)
+        if self.animator.finished:
+            self._clear_annoyance()
+            self._enter(State.IDLE)
+
+

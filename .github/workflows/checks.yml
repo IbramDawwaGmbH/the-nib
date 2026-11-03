@@ -1,0 +1,67 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    # Windows, not Linux. Most of this app is Win32 - the taskbar geometry, the click mask read
+    # back from GetWindowRgn, the global hotkeys - and several suites assert against what Windows
+    # actually reports rather than against what Qt believes. On Linux they would not be testing
+    # the same thing.
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt
+          pip install pillow
+
+      - name: The sprite sheet matches its source
+        # The rendered sheet is committed, so a change to gen_sprites.py that nobody re-rendered
+        # would ship art that does not match the code that claims to produce it.
+        run: |
+          python tools/gen_sprites.py
+          git diff --exit-code --stat assets/ || (echo "::error::assets/ is stale - run tools/gen_sprites.py and commit the result" && exit 1)
+
+      - name: The sheet conforms to the art contract
+        run: python tools/validate_sheet.py assets/nib_sheet.png assets/frames.json
+
+      - name: Sounds regenerate byte-identically
+        run: python tools/gen_sounds.py
+
+      - name: Suites
+        # A display is needed: nearly every suite builds a real QApplication.
+        run: python tests/run_all.py
+
+      - name: Settings are documented
+        run: python tools/check_docs.py
+
+  build:
+    runs-on: windows-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: |
+          pip install -r requirements.txt pyinstaller pillow
+          python tools/gen_sounds.py
+      - name: Build
+        run: pyinstaller nib.spec
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Nib-windows
+          path: dist/Nib/
