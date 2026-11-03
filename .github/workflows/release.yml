@@ -1,0 +1,52 @@
+name: release
+
+# Pushing a tag like v1.2.0 builds the Windows app and publishes it as a GitHub Release, with that
+# version's section of CHANGELOG.md as the notes. The same build as the `build` job in checks.yml,
+# so what a user downloads is what CI already proved builds.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -r requirements.txt pyinstaller pillow
+          python tools/gen_sounds.py
+
+      - name: The suites still pass
+        run: python tests/run_all.py
+
+      - name: Build
+        run: pyinstaller nib.spec
+
+      - name: Zip
+        shell: pwsh
+        run: Compress-Archive -Path dist/Nib -DestinationPath "Nib-${{ github.ref_name }}-windows-x64.zip"
+
+      - name: Release notes from CHANGELOG.md
+        shell: python
+        run: |
+          import re, pathlib
+          tag = "${{ github.ref_name }}".lstrip("v")
+          text = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+          match = re.search(rf"^## \[?{re.escape(tag)}\]?.*?$(.*?)(?=^## |\Z)", text, re.M | re.S)
+          notes = match.group(1).strip() if match else "See CHANGELOG.md."
+          pathlib.Path("release-notes.md").write_text(notes + "\n", encoding="utf-8")
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes.md
+          files: Nib-${{ github.ref_name }}-windows-x64.zip

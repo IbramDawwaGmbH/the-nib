@@ -3,6 +3,11 @@
 For anyone who has never run a Python program. If you already have Python, the whole thing is
 `pip install -r requirements.txt` then `pythonw main.py` — skip to [Step 3](#step-3-start-him).
 
+**Don't want Python at all?** Download `Nib-…-windows-x64.zip` from the
+[latest release](https://github.com/IbramDawwaGmbH/the-nib/releases/latest), extract it, and run
+`Nib.exe`. It isn't code-signed, so Windows SmartScreen may warn you the first time: choose
+**More info → Run anyway**. The rest of this page is for running him from source.
+
 [← back to the README](../README.md)
 
 ---

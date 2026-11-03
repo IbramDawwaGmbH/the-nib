@@ -6,9 +6,12 @@
 </picture>
 
 [![checks](https://github.com/IbramDawwaGmbH/the-nib/actions/workflows/checks.yml/badge.svg)](https://github.com/IbramDawwaGmbH/the-nib/actions/workflows/checks.yml)
+[![latest release](https://img.shields.io/github/v/release/IbramDawwaGmbH/the-nib?label=release)](https://github.com/IbramDawwaGmbH/the-nib/releases/latest)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](LICENSE)
 [![platform: Windows 10/11](https://img.shields.io/badge/platform-Windows%2010%2F11-informational.svg)](docs/GETTING-STARTED.md)
 [![python: 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](requirements.txt)
+[![built with PySide6](https://img.shields.io/badge/built%20with-PySide6-41cd52.svg)](https://doc.qt.io/qtforpython-6/)
+[![last commit](https://img.shields.io/github/last-commit/IbramDawwaGmbH/the-nib)](https://github.com/IbramDawwaGmbH/the-nib/commits/main)
 
 He walks up and down the bar, blinks, plays football, does press-ups, watches your cursor, waves,
 sulks when you pester him, and naps it off. Click him — or press **Ctrl+Alt+C**, or drop a file on
@@ -20,14 +23,14 @@ him — and Claude, ChatGPT or Gemini opens with your prompt in the composer.
 
 <sub>The film is staged from his real sprite frames and timings — not a screen recording.</sub>
 
-<!-- Once the repo is on GitHub: drag assets/media/video/nib-film-v3.mp4 into the GitHub editor
-     here so it plays inline, and replace the two links above with the user-attachments URL. -->
-
 **[Getting started](docs/GETTING-STARTED.md) · [Behaviours](docs/BEHAVIOUR.md) · [Settings](docs/SETTINGS.md) · [Contributing](CONTRIBUTING.md)**
 
 </div>
 
 ---
+
+**[⬇ Download Nib for Windows](https://github.com/IbramDawwaGmbH/the-nib/releases/latest)** — extract
+the zip and run `Nib.exe`, no Python needed. Or run him from source:
 
 ```bash
 pip install -r requirements.txt
@@ -405,6 +408,8 @@ details and [Privacy](docs/PRIVACY.md) for what it keeps.
 | **[Troubleshooting](docs/TROUBLESHOOTING.md)** | When he misbehaves |
 | **[Privacy](docs/PRIVACY.md)** | What he looks at and what he stores |
 | **[Contributing](CONTRIBUTING.md)** | Branching, commits, and the six rules |
+| **[Changelog](CHANGELOG.md)** | What changed in each release |
+| **[Security](SECURITY.md)** | Reporting a problem privately |
 
 ## Requirements
 
