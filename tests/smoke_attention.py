@@ -68,7 +68,10 @@ def ignore_for(b, seconds, cursor=None):
 
 
 print("\n--- the three stages, in order, and then it stops ---")
-_cfg, b = fresh("stages")
+# Quirks off: a sneeze or a trip is involuntary and deliberately still fires while he is ignored
+# (see Behavior._tick_quirks), so one landing in the sample below would fail "does nothing else"
+# at random. That check is about what he chooses to do, not about his reflexes.
+_cfg, b = fresh("stages", quirks_enabled=False)
 seen = ignore_for(b, STEP_S * 4.2)
 check("all three stages fire", seen == [1, 2, 3], str(seen))
 check("and it never goes further", b._neglect_stage == 3, str(b._neglect_stage))
