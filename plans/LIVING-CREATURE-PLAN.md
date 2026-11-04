@@ -1,11 +1,11 @@
-> **Status:** WP1–WP4 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
-> Continue from **WP5**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP1–WP5 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
+> Continue from **WP6**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP1 name + mood
 > - [x] WP2 memory + Forget
 > - [x] WP3 greetings/milestones
 > - [x] WP4 voice/phrases
-> - [ ] WP5 needs (energy, affection, boredom)
+> - [x] WP5 needs (energy, affection, boredom)
 > - [ ] WP6 bond/gentle/play
 > - [ ] WP7 nap
 > - [ ] WP8 treat
