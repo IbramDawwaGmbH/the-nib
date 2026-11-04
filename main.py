@@ -15,6 +15,7 @@ import ctypes
 import logging
 import logging.handlers
 import os
+import random
 import sys
 import threading
 import time
@@ -74,6 +75,7 @@ from launcher import (  # noqa: E402
 from mascot_window import MascotWindow  # noqa: E402
 from memory import MEMORY_FILE, Memory  # noqa: E402
 from mood import Mood, label_for  # noqa: E402
+from phrases import PhraseBag, load_phrases  # noqa: E402
 import devices  # noqa: E402
 from ruler import RulerOverlay  # noqa: E402
 from tool_wheel import ToolWheel, WheelItem  # noqa: E402
@@ -81,6 +83,7 @@ from settings import SettingsWindow  # noqa: E402
 from sound import Sounds  # noqa: E402
 from tray import Tray  # noqa: E402
 import updater  # noqa: E402
+from voice import BUILTIN_PHRASES, NIB_PHRASES_FILE, Voice, lines_for  # noqa: E402
 from world import World, cpu_count  # noqa: E402
 
 log = logging.getLogger("nib")
@@ -96,6 +99,9 @@ CONFIG_FLUSH_MS = 10000   # write last_x et al. at most this often
 #: much longer is the machine waking from sleep, and the hours it slept were not hours you were
 #: at it - nor hours it was busy.
 MEMORY_MAX_POLL_S = 5.0
+#: How long a line he says stays up. Shorter than a tool's toast: it is a remark, not an answer,
+#: and it should be gone before it feels like something you have to deal with.
+SAY_MS = 4500
 
 #: How long he has to stand on a window, undisturbed, before it actually gets pinned on top - the
 #: landing itself is immediate, but the real always-on-top exception only kicks in once it is
@@ -248,6 +254,17 @@ class NibApp:
         self.memory = Memory(config.path.parent / MEMORY_FILE, config)
         self.behavior = Behavior(config, self.sheet, self.mood, memory=self.memory)
         self.behavior.paused = bool(config["paused"])
+        # The lines he says, now and then. The table is the shipped one plus your own
+        # nib_phrases.json next to *this* config (a scratch directory under the tests, as above);
+        # whether a line may be said at all is the Voice's call, and _say's - see voice.py.
+        self.voice = Voice(
+            PhraseBag(
+                load_phrases(ASSETS, config.path.parent, filename=NIB_PHRASES_FILE,
+                             builtin=BUILTIN_PHRASES),
+                random.Random(),
+            ),
+            config,
+        )
         # Silent unless the WAVs have been generated AND sound is switched on. Both halves fail
         # softly: no directory, no backend, no file - all of them end in nothing happening.
         self.sounds = Sounds(ASSETS / "sounds", config)
@@ -1025,6 +1042,10 @@ class NibApp:
         self.sounds.tick(dt_ms)
         for event in self.behavior.take_sounds():
             self.sounds.play(event)
+        # Drained every tick whether or not anything is said, so the queue never holds a greeting
+        # from an hour ago - by the time a line could be said, it would be about the wrong moment.
+        for kind, data in self.behavior.take_events():
+            self._on_creature_event(kind, data)
         if self.behavior.take_focus_finished():
             # A toast rather than relying on the on-screen celebration alone: he might be hidden
             # behind a fullscreen app when a session completes, and the toast is the one part of
@@ -1545,19 +1566,84 @@ class NibApp:
             self.window.fade_to(1.0)
         self._update_tick_rate()
 
+    # --- the lines he says ------------------------------------------------------------
+
+    def _voice_blocked(self) -> bool:
+        """Is now a bad moment for him to say anything, whatever voice.py would allow?
+
+        voice.py knows only time and counts; this is everything it cannot see. A line is a small
+        thing, so the bar is "not in the way of anything at all": nothing over the guard's fog or
+        a fullscreen app, nothing while you are focusing or typing in the bubble or aiming the
+        wheel, nothing while he is asleep, cross, held or hidden - and never over a toast that is
+        already up, which may be the intro, an update's progress or the calculator's answer. The
+        intro also counts between its tips, when the toast is briefly down.
+        """
+        return (
+            self._guard_busy()
+            or self.behavior.focus_active
+            or self.behavior.paused
+            or self.bubble.isVisible()
+            or self.tool_wheel.isVisible()
+            or self._snoozed
+            or self._hidden_by_fullscreen
+            or bool(self.config["ghost_mode"])
+            or self.behavior.away
+            or self.behavior.state in (State.SLEEP, State.WAKE, State.ANGRY, State.DRAG,
+                                       State.HIDDEN)
+            or self.toast.isVisible()
+            or self._intro_step >= 0
+        )
+
+    def _say(self, category: str, **fmt) -> str:
+        """Say one line from ``category`` in the toast, if now is a good moment and voice.py agrees.
+
+        Returns the line said, or ``""``. ``{name}``, ``{days}`` and ``{pets}`` are always on hand
+        for a line to use; an event can add its own. Clicking the line counts as noticing him -
+        the same small lift as coming back to the desk.
+        """
+        if self._voice_blocked():
+            return ""
+        totals = self.memory.totals
+        fmt.setdefault("days", self.memory.days_seen)
+        fmt.setdefault("pets", totals.get("pets", 0))
+        line = self.voice.say(category, name=str(self.config["name"]), **fmt)
+        if line:
+            # The category only, never the words: the line can carry his name, and the log is
+            # no place to start keeping a record of what he said.
+            log.info("said a %s line", category)
+            self._tell(line, duration_ms=SAY_MS, on_click=self._on_line_clicked)
+        return line
+
+    def _on_line_clicked(self) -> None:
+        self.behavior.noticed()
+        self.mood.nudge("greeted")
+
+    def _on_creature_event(self, kind: str, data: dict) -> None:
+        """Something happened that he might say a line about - see voice.lines_for.
+
+        The first category that gets a line wins, so at most one toast per event.
+        """
+        state = self.world.state
+        for category in lines_for(kind, data, hour=state.hour,
+                                  usual_hour=self.memory.usual_hour()):
+            if self._say(category, **{k: v for k, v in data.items()
+                                      if isinstance(v, (int, float, str))}):
+                return
+
     # --- update and restart --------------------------------------------------------
 
-    def _tell(self, text: str, sub: str = "", duration_ms: int = 6000) -> None:
+    def _tell(self, text: str, sub: str = "", duration_ms: int = 6000, on_click=None) -> None:
         """Say something in the toast above him - how every tool without a window of its own talks.
 
         Not while a guard is up: the fog is there to hide everything of his, toasts included.
+        ``on_click`` runs if the toast is clicked (it closes either way).
         """
         if self._guarding or self.guard.active:
             log.info("not shown during a guard: %s", text)
             return
         x, y, w, _h = self.behavior.rect
         self.toast.show_message(text, QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
-                                sub=sub, duration_ms=duration_ms)
+                                sub=sub, duration_ms=duration_ms, on_click=on_click)
 
     def _guard_busy(self) -> bool:
         """A guard is up, or about to be: its PIN setup is open."""

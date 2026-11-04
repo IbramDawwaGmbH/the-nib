@@ -40,6 +40,9 @@ a = Analysis(
         # The Away Guard's speech-bubble lines. guard_scene has a one-line fallback per category,
         # so a build without it still works - it would just say the same thing all day.
         ("assets/guard_phrases.json", "assets"),
+        # The lines Nib says in a toast now and then. Same deal: voice.py has one fallback line
+        # per category, so without the file he still talks - just with a much smaller vocabulary.
+        ("assets/nib_phrases.json", "assets"),
         # Sounds are optional too, and off by default - so a build that omitted them would fail
         # completely silently, which is why the whole directory is listed rather than each file.
         # Generate them first with:  python tools/gen_sounds.py
