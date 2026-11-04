@@ -24,7 +24,8 @@ from pathlib import Path
 from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).parent))
-from gen_sprites import COSTUME_CELL, COSTUME_PALETTE, outline_costume  # noqa: E402
+from gen_sprites import (COSTUME_CELL, COSTUME_PALETTE, COSTUME_SHADOW_ALPHA,  # noqa: E402
+                         costume_pixels, costume_shadow, outline_costume)
 
 ROOT = Path(__file__).parent.parent
 ASSETS = ROOT / "assets"
@@ -56,8 +57,9 @@ def frame_image(sheet: Image.Image, manifest: dict, state: str, index: int):
     return crop, manifest["anchors"].get(str(sheet_index), {})
 
 
-def render_piece(pattern: list[str]) -> tuple[Image.Image, tuple[int, int]]:
-    """Outline the pattern and paint it into a cell. Returns the image and the anchor shift."""
+def render_piece(pattern: list[str], shade: bool = True) -> tuple[Image.Image, tuple[int, int]]:
+    """Outline and shade the pattern exactly as the sheet does. Returns the image and the anchor
+    shift."""
     outlined = outline_costume(pattern)
     width, height = max(len(r) for r in outlined), len(outlined)
     if width > COSTUME_CELL or height > COSTUME_CELL:
@@ -65,23 +67,35 @@ def render_piece(pattern: list[str]) -> tuple[Image.Image, tuple[int, int]]:
             f"{width}x{height} once outlined, which is over the {COSTUME_CELL}x{COSTUME_CELL} "
             f"cell. The pattern itself must fit {COSTUME_CELL - 2}x{COSTUME_CELL - 2}."
         )
-    piece = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    pixels = piece.load()
     for y, row in enumerate(outlined):
-        for x, ch in enumerate(row):
+        for ch in row:
             if ch not in COSTUME_PALETTE:
                 raise ValueError(
                     f"unknown palette character {ch!r} at row {y}. "
                     f"Valid: {', '.join(k for k in COSTUME_PALETTE if k != '.')} and '.'"
                 )
-            colour = COSTUME_PALETTE[ch]
+    piece = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    pixels = piece.load()
+    for y, row in enumerate(costume_pixels(pattern, shade=shade)):
+        for x, colour in enumerate(row):
             if colour is not None:
                 pixels[x, y] = colour
     return piece, (1, 1)   # the outline pushed everything one pixel right and down
 
 
+def render_shadow(pattern: list[str]) -> Image.Image:
+    """The shadow a hat casts on him, in the piece's own coordinates."""
+    cast = costume_shadow(pattern)
+    shadow = Image.new("RGBA", (len(cast[0]), len(cast)), (0, 0, 0, 0))
+    for y, row in enumerate(cast):
+        for x, on in enumerate(row):
+            if on:
+                shadow.putpixel((x, y), (0, 0, 0, COSTUME_SHADOW_ALPHA))
+    return shadow
+
+
 def dress(frame: Image.Image, anchors: dict, item: dict, piece: Image.Image,
-          shift: tuple[int, int]) -> Image.Image:
+          shift: tuple[int, int], shadow: Image.Image | None = None) -> Image.Image:
     target = anchors.get(item.get("kind", "head"))
     if not target:
         return frame
@@ -93,6 +107,17 @@ def dress(frame: Image.Image, anchors: dict, item: dict, piece: Image.Image,
         canvas.alpha_composite(frame)
         return canvas
     out = frame.copy()
+    if shadow is not None:
+        # Only over his own pixels, as the runtime's SourceAtop does: darken, keep his alpha.
+        for sy in range(shadow.height):
+            for sx in range(shadow.width):
+                a = shadow.getpixel((sx, sy))[3]
+                fx, fy = x + sx, y + sy
+                if a and 0 <= fx < out.width and 0 <= fy < out.height:
+                    r, g, b, fa = out.getpixel((fx, fy))
+                    if fa:
+                        k = 1 - a / 255
+                        out.putpixel((fx, fy), (round(r * k), round(g * k), round(b * k), fa))
     # alpha_composite refuses negative destinations, so pad rather than clip - a costume hanging
     # off the top of the cell is a real thing to see, not something to silently crop.
     if x < 0 or y < 0:
@@ -115,7 +140,7 @@ def main() -> int:
     poses = [(s, i) for s, i in POSES if s in manifest["states"]]
     cell = 48 * ZOOM
     pad, label_w = 6, 150
-    rows = len(spec) * 2
+    rows = sum(2 + (1 if item.get("frames") else 0) for item in spec.values())
     canvas = Image.new(
         "RGBA",
         (label_w + len(poses) * (cell + pad) + pad, pad + rows * (cell + pad)),
@@ -123,19 +148,34 @@ def main() -> int:
     )
 
     problems = []
-    for r, (name, item) in enumerate(spec.items()):
+    r = 0
+    for name, item in spec.items():
+        patterns = [item.get("pattern")] + list(item.get("frames") or [])
         try:
-            piece, shift = render_piece(item["pattern"])
-        except (ValueError, KeyError) as exc:
+            pieces = [render_piece(p, shade=item.get("shade", True)) for p in patterns]
+        except (ValueError, KeyError, TypeError) as exc:
             problems.append(f"{name}: {exc}")
             continue
-        for half, bg in enumerate((LIGHT, DARK)):
-            y = pad + (r * 2 + half) * (cell + pad)
-            for c, (state, index) in enumerate(poses):
+        casts = item.get("shadow", item.get("kind") == "head" and item.get("layer", "over") == "over")
+        shadows = [render_shadow(p) if casts else None for p in patterns]
+        if any(pc[0].size != pieces[0][0].size for pc in pieces):
+            problems.append(f"{name}: every frame must be the same size as the first")
+        # Light and dark rows show each pose at its own step, as the runtime does; a moving
+        # costume gets a third row: idle's frames, then the walk's, one step each.
+        steps = [(s, i) for s, i in POSES]
+        rows_here = [("light", LIGHT, steps), ("dark", DARK, steps)]
+        if len(patterns) > 1:
+            anim = [("idle", i) for i in range(4)] + [("walk_right", i) for i in range(6)]
+            rows_here.append(("frames", LIGHT, anim[:len(poses)]))
+        for _label, bg, row_poses in rows_here:
+            y = pad + r * (cell + pad)
+            r += 1
+            for c, (state, index) in enumerate(row_poses):
                 frame, anchors = frame_image(sheet, manifest, state, index)
                 if frame is None:
                     continue
-                dressed = dress(frame, anchors, item, piece, shift)
+                piece, shift = pieces[index % len(pieces)]
+                dressed = dress(frame, anchors, item, piece, shift, shadows[index % len(pieces)])
                 tile = Image.new("RGBA", (48, 48), bg)
                 tile.alpha_composite(dressed)
                 canvas.paste(

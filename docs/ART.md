@@ -117,8 +117,25 @@ the two that raise an arm past his head — over a light *and* a dark taskbar, w
 usually fail. `tools/integrate_costumes.py` folds reviewed batches back into `gen_sprites.py`.
 
 The palette is wider than the body's: `D` dark, `W` white, `R` red, `G` gold, `B` blue, `N` green,
-`K` grey. Costumes live in their own PNG, so the body's seven-colour rule does not bind them —
-but the no-partial-alpha rule still does, because the click mask comes from the composited frame.
+`K` grey, `P` purple, `M` pink, `O` brown, `A` charcoal, `S` silver, `F` flame orange, `T` teal.
+Costumes live in their own PNG, so the body's seven-colour rule does not bind them — but the
+no-partial-alpha rule still does, because the click mask comes from the composited frame.
+
+Draw flat colour; **the sheet shades it for you**, lit from the top left as his body is. A pixel
+on a costume's top or left edge gets a highlight, one on its bottom or right edge a shade, and a
+one-pixel line stays flat so thin details don't turn to noise. White is only ever shaded. A `D`
+drawn *inside* a costume (a hat band, a seam) becomes a dark tone of the colour beside it, so
+only the silhouette keeps the hard outline that stands out on a light taskbar. `"shade": False`
+turns it off for one costume.
+
+A hat worn on top of his head also puts a **shadow** on him: the row just under it, darkened, on
+his own pixels only, so it never shows on the air or changes his click mask. A costume that floats
+(the halo) casts none; `"shadow": True/False` overrides either way.
+
+A costume can **move**: `"frames"` lists extra patterns, the same size as `"pattern"` and on the
+same anchor. It shows frame *n* of its own on frame *n* of whatever he is doing, so a propeller
+turns with his idle sway and spins faster when he walks, without a clock of its own and without
+redrawing him any more often. The preview adds a row that steps through them.
 
 ---
 

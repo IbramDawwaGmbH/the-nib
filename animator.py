@@ -185,20 +185,34 @@ class SpriteSheet:
             self._costume_items = {}
 
     def _costume_lowest(self, item: dict) -> int:
-        """Lowest opaque row within a costume's own cell. Scanned once, then cached."""
-        index = int(item["index"])
-        cached = self._costume_lows.get(index)
-        if cached is not None:
-            return cached
+        """Lowest opaque row within a costume's own cell - across all its frames, so a moving
+        costume is held at one height rather than bobbing as its frames change. Scanned once per
+        cell, then cached."""
         cell = self._costume_cell
-        piece = self._costume_sheet.copy(index * cell, 0, cell, cell)
         lowest = 0
-        for y in range(cell - 1, -1, -1):
-            if any(piece.pixelColor(x, y).alpha() > 0 for x in range(cell)):
-                lowest = y
-                break
-        self._costume_lows[index] = lowest
+        for index in self._costume_cells(item):
+            cached = self._costume_lows.get(index)
+            if cached is None:
+                piece = self._costume_sheet.copy(index * cell, 0, cell, cell)
+                cached = 0
+                for y in range(cell - 1, -1, -1):
+                    if any(piece.pixelColor(x, y).alpha() > 0 for x in range(cell)):
+                        cached = y
+                        break
+                self._costume_lows[index] = cached
+            lowest = max(lowest, cached)
         return lowest
+
+    @staticmethod
+    def _costume_cells(item: dict) -> list[int]:
+        """The sheet columns of a costume's frames: just ``index`` for one that doesn't move."""
+        frames = item.get("frames")
+        if isinstance(frames, list) and frames:
+            try:
+                return [int(f) for f in frames]
+            except (TypeError, ValueError):
+                pass
+        return [int(item["index"])]
 
     def available_costumes(self) -> list[str]:
         return list(self._costume_items)
@@ -256,13 +270,20 @@ class SpriteSheet:
                 if replacement is not None:
                     image.setPixelColor(x, y, replacement)
 
-    def _apply_costume(self, image: QImage, sheet_index: int) -> QImage:
+    def _apply_costume(self, image: QImage, sheet_index: int, step: int = 0) -> QImage:
         """Composite the costume onto an unscaled frame, at that frame's own anchor.
 
         Returns the image to carry on with - normally the one passed in, but a ``behind`` costume
         needs a fresh canvas, since a backpack or a jetpack has to be painted *first* and the
         creature drawn over the top of it. Drawing it over him instead would put the straps on his
         chest.
+
+        ``step`` is the frame's position in its animation: a moving costume (a propeller, a
+        flame) shows its frame ``step`` of its own, so it moves as he does - a turn per frame of
+        his idle sway, faster when he walks - with no clock of its own and nothing extra to redraw.
+        A hat's shadow is drawn first, and only over pixels he already has (SourceAtop), so it
+        darkens his head and never the air beside it; his alpha is untouched, and the click mask
+        with it.
         """
         if not self.costume or self._costume_sheet is None:
             return image
@@ -277,7 +298,9 @@ class SpriteSheet:
             # guessed: a scarf stamped at a fallback position would float somewhere arbitrary.
             return image
         cell = self._costume_cell
-        piece = self._costume_sheet.copy(int(item["index"]) * cell, 0, cell, cell)
+        cells = self._costume_cells(item)
+        column = cells[step % len(cells)]
+        piece = self._costume_sheet.copy(column * cell, 0, cell, cell)
         x = int(target[0]) - int(anchor[0])
         y = int(target[1]) - int(anchor[1])
 
@@ -302,6 +325,10 @@ class SpriteSheet:
             return canvas
 
         painter = QPainter(image)
+        if item.get("shadow") and self._costume_sheet.height() >= 2 * cell:
+            painter.setCompositionMode(QPainter.CompositionMode_SourceAtop)
+            painter.drawImage(x, y, self._costume_sheet.copy(column * cell, cell, cell, cell))
+            painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
         painter.drawImage(x, y, piece)
         painter.end()
         return image
@@ -366,7 +393,7 @@ class SpriteSheet:
         self._apply_skin(image)
         # Returns the image to carry on with: a `behind` costume hands back a new canvas with the
         # piece painted under him, so the result has to be taken rather than assumed in place.
-        image = self._apply_costume(image, sheet_index)
+        image = self._apply_costume(image, sheet_index, index % len(frames))
         if state in MIRRORED_STATES:
             image = _mirror(image)
         if self.scale != 1:

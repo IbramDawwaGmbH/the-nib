@@ -213,6 +213,79 @@ check("...trimmed exactly to its opaque pixels",
 check("an unknown costume has none", bare.costume_thumbnail("nope") is None)
 check("...and a second ask is the cached one", bare.costume_thumbnail("cap") is _thumbs["cap"])
 
+print("\n--- moving costumes ---")
+# A moving costume shows its frame (body frame % its frames), so it turns with his idle sway and
+# faster as he walks - and every one of those frames is held to the same rules as a still one.
+from PySide6.QtGui import QColor, QImage  # noqa: E402
+
+_costume_png = QImage(str(SRC / "assets" / "costumes.png"))
+_columns = _costume_png.width() // _cell
+moving = {n: it["frames"] for n, it in _items.items() if it.get("frames")}
+check("some costumes move", len(moving) >= 3, str(sorted(moving)))
+check("a moving costume's first frame is its own column",
+      all(frames[0] == _items[n]["index"] for n, frames in moving.items()))
+check("...and every frame is a real column of the sheet",
+      all(0 <= f < _columns for frames in moving.values() for f in frames))
+still_differ = []
+for name, frames in moving.items():
+    sheet = SpriteSheet(SHEET, FRAMES, 1, costume=name)
+    crops = [_costume_png.copy(f * _cell, 0, _cell, _cell) for f in frames]
+    if all(c == crops[0] for c in crops[1:]):
+        still_differ.append(name)
+    partial_here = [
+        (state, i) for state in ("idle", "walk_right") for i in range(sheet.frame_count(state))
+        if any(0 < sheet.pixmap(state, i).toImage().pixelColor(x, y).alpha() < 255
+               for y in range(48) for x in range(48))
+    ]
+    check(f"{name}: no frame of it introduces partial alpha", not partial_here, str(partial_here[:3]))
+check("...and their frames really differ", not still_differ, str(still_differ))
+frozen = [n for n, frames in moving.items() if len(set(frames)) < 2]
+check("no 'moving' costume lists the same frame twice and nothing else", not frozen, str(frozen))
+
+print("\n--- shading and the hat's shadow ---")
+shaded = {(_costume_png.pixelColor(x, y).rgba()) for x in range(_costume_png.width())
+          for y in range(_cell) if _costume_png.pixelColor(x, y).alpha() == 255}
+sys.path.insert(0, str(SRC / "tools"))
+from gen_sprites import COSTUME_PALETTE  # noqa: E402
+
+flat = {QColor(*c).rgba() for c in COSTUME_PALETTE.values() if c is not None}
+check("the costumes are shaded, not flat palette colours - highlights and shades of their own",
+      len(shaded - flat) >= len(shaded & flat), f"{len(shaded & flat)} flat, {len(shaded - flat)} tones")
+casters = [n for n, it in _items.items() if it.get("shadow")]
+check("hats worn on top cast a shadow on him", len(casters) >= 10, len(casters))
+check("...and nothing behind him or on his eyes does",
+      all(_items[n]["kind"] == "head" and _items[n].get("layer", "over") == "over" for n in casters))
+bad_alpha, no_shadow = [], []
+for name in casters:
+    lit = SpriteSheet(SHEET, FRAMES, 1, costume=name)
+    plain = SpriteSheet(SHEET, FRAMES, 1, costume=name)
+    plain._costume_items[name] = {**plain._costume_items[name], "shadow": False}
+    a, b = lit.pixmap("idle", 0).toImage(), plain.pixmap("idle", 0).toImage()
+    darker = 0
+    for y in range(48):
+        for x in range(48):
+            ca, cb = a.pixelColor(x, y), b.pixelColor(x, y)
+            if ca.alpha() != cb.alpha():
+                bad_alpha.append(f"{name} ({x},{y})")
+            elif ca != cb:
+                darker += ca.lightness() < cb.lightness()
+    if not darker:
+        no_shadow.append(name)
+check("the shadow only darkens him - not one pixel of his outline or mask changes",
+      not bad_alpha, "; ".join(bad_alpha[:4]))
+check("...and every hat that casts one darkens something", not no_shadow, str(no_shadow))
+old = SpriteSheet(SHEET, FRAMES, 1, costume=casters[0])
+old._costume_sheet = old._costume_sheet.copy(0, 0, old._costume_sheet.width(), _cell)
+plain = SpriteSheet(SHEET, FRAMES, 1, costume=casters[0])
+plain._costume_items[casters[0]] = {**plain._costume_items[casters[0]], "shadow": False}
+check("a costume sheet with no shadow row (an older one) still dresses him, without the shadow",
+      old.pixmap("idle", 0).toImage() == plain.pixmap("idle", 0).toImage())
+odd = SpriteSheet(SHEET, FRAMES, 1, costume=casters[0])
+odd._costume_items[casters[0]] = {**odd._costume_items[casters[0]], "frames": ["x", None]}
+check("frames that make no sense fall back to the costume's own cell",
+      odd.pixmap("idle", 1).toImage() == SpriteSheet(SHEET, FRAMES, 1, costume=casters[0])
+      .pixmap("idle", 1).toImage())
+
 print("\n--- he is still himself underneath ---")
 dressed = SpriteSheet(SHEET, FRAMES, 1, costume=COSTUMES[0])
 check("a dressed sheet has the same states", set(dressed.states()) == set(STATES))

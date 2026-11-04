@@ -61,11 +61,31 @@ def validate(name: str, item: dict) -> list[str]:
         problems.append(
             f"{name}: {width}x{height} once outlined, over the {COSTUME_CELL}px cell"
         )
+    frames = item.get("frames", [])
+    if not isinstance(frames, list):
+        problems.append(f"{name}: frames must be a list of patterns")
+        return problems
+    for n, frame in enumerate(frames, 1):
+        if not (isinstance(frame, list) and frame and all(isinstance(r, str) for r in frame)):
+            problems.append(f"{name}: frame {n} must be a non-empty list of strings")
+            continue
+        if {ch for row in frame for ch in row} - set(COSTUME_PALETTE):
+            problems.append(f"{name}: frame {n} has unknown palette characters")
+        if (len(frame), max(map(len, frame))) != (len(pattern), max(map(len, pattern))):
+            problems.append(f"{name}: frame {n} is not the same size as the pattern")
     return problems
 
 
 def emit(name: str, item: dict) -> str:
     rows = ",\n".join(f'            {row!r}' for row in item["pattern"])
+    flags = "".join(f'        "{key}": {bool(item[key])!r},\n'
+                    for key in ("shade", "shadow") if key in item)
+    frames = ""
+    if item.get("frames"):
+        frames = '        "frames": [\n' + "".join(
+            "            [\n" + "".join(f"                {r!r},\n" for r in frame) + "            ],\n"
+            for frame in item["frames"]
+        ) + "        ],\n"
     return (
         f'    "{name}": {{\n'
         f'        "kind": "{item["kind"]}",\n'
@@ -74,6 +94,7 @@ def emit(name: str, item: dict) -> str:
         f'        "category": "{item.get("category", "Other")}",\n'
         f'        "pattern": [\n{rows},\n'
         f'        ],\n'
+        + flags + frames +
         f'    }},\n'
     )
 

@@ -2,6 +2,28 @@
 
 Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.md#releases).
 
+## [1.2.0] - 2026-11-04
+
+His wardrobe, redone.
+
+### Changed
+
+- **Every costume is shaded now**, lit from the top left as he is, instead of flat colour, and a
+  hat worn on his head puts a soft shadow on him, so it looks worn rather than pasted on. Done
+  when the sheet is built, so it costs nothing while he runs.
+- **22 costumes redrawn**: the top hat, cowboy, witch and wizard hats, the mortarboard, the
+  eyepatch (one eye now, not his whole face), Groucho glasses, the monocle, the VR headset, the
+  jetpack, backpack, tool belt, cape, wings, scarf, halo, antennae, bunny ears, flower crown,
+  leaf and snow cap.
+- **Seven new costume colours**: purple, pink, brown, charcoal, silver, flame orange and teal.
+
+### Added
+
+- **Ten costumes move**: the propeller spins, the jetpack's flame flickers, the wings flap, the
+  cape and the scarf's tail sway, the halo bobs, the antennae wobble, a bunny ear twitches, the
+  mortarboard's tassel swings and the VR headset blinks. They move with him — faster when he
+  walks — and take nothing extra to draw.
+
 ## [1.1.1] - 2026-11-04
 
 Two small fixes to Update and restart. On 1.1.0, pick **Update and restart** on the wheel and he

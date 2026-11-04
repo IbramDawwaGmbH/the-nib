@@ -1756,7 +1756,21 @@ COSTUME_PALETTE: dict[str, tuple[int, int, int, int] | None] = {
     "B": (0x3E, 0x7C, 0xC4, 255),   # blue
     "N": (0x4E, 0x9E, 0x5F, 255),   # green
     "K": (0x9A, 0xA0, 0xA6, 255),   # grey / lens
+    # Added with the shaded costumes, so new ones are not all drawn from the same seven.
+    "P": (0x7E, 0x57, 0xC2, 255),   # purple
+    "M": (0xE8, 0x7C, 0xA8, 255),   # pink
+    "O": (0x8B, 0x5A, 0x2B, 255),   # brown - leather, wood, straw in shadow
+    "A": (0x3A, 0x3A, 0x44, 255),   # charcoal - a black that still reads against his outline
+    "S": (0xD8, 0xDD, 0xE3, 255),   # silver - metal, glass glint
+    "F": (0xF2, 0x8C, 0x28, 255),   # flame orange
+    "T": (0x2F, 0xA5, 0x9A, 255),   # teal
 }
+
+#: How strongly costumes are shaded: light from the top left, as on his body, whose highlight and
+#: shadow sit about this far either side of its base colour.
+COSTUME_LIGHT, COSTUME_DARK = 0.22, -0.20
+#: The cast shadow a hat puts on his head: black at this alpha, drawn only over his own pixels.
+COSTUME_SHADOW_ALPHA = 56
 
 #: Wide enough for a headphone band to arc over the crown and put its cups on the *sides* of his
 #: head. At 24 the cups landed on his face; at 32 they still sat up near the corners.
@@ -1879,21 +1893,25 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     # other free, with the strap running up and around the back of his head.
     # The strap has to run ABOVE the eye line: routed through it, it covered his good eye too and
     # the whole thing read as a dark blob rather than a patch.
-    "pirate": (
-        "eyes",
-        (10, 4),
-        [
-            "." * 12 + "D" * 8,
-            "." * 8 + "D" * 8 + "." * 4,
-            "D" * 8 + "DD" + "." * 10,
-            "D" * 8 + "." * 12,
-            "D" * 8 + "." * 12,
-            "D" * 8 + "." * 12,
-            "D" * 8 + "." * 12,
-            "D" * 8 + "." * 12,
-            ".DDDDDD." + "." * 12,
+    "pirate": {
+        "kind": "eyes",
+        "anchor": [4, 4],
+        "layer": "over",
+        "category": "Eyes",
+        "pattern": [
+            '..AA............',
+            '...AA...........',
+            '....AA..........',
+            '.....AAAAAAA....',
+            '......AAAAAAA...',
+            '......AAAAAAAAAA',
+            '......AAAAAAA...',
+            '......AAAAAAA...',
+            '......AAAAAAA...',
+            '.......AAAAA....',
+            '........AAA.....',
         ],
-    ),
+    },
     # --- BEGIN GENERATED COSTUMES ---
     "beanie": {
         "kind": "head",
@@ -1921,18 +1939,18 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            '....KKKKKKKKKKKKK....',
-            '....KDDDDDDDDDDDK....',
-            '....KDDDDDDDDDDDK....',
-            '....KDDDDDDDDDDDK....',
-            '....KDDDDDDDDDDDK....',
-            '....KDDDDDDDDDDDK....',
-            '....KDDDDDDDDDDDK....',
-            '....GGGGGGGGGGGGG....',
-            '....GGGGGGGGGGGGG....',
-            '....KDDDDDDDDDDDK....',
-            'KKKKKKKKKKKKKKKKKKKKK',
-            'DDDDDDDDDDDDDDDDDDDDD',
+            '...AAAAAAAAAAAAAAA...',
+            '...AASAAAAAAAAAAAA...',
+            '....ASAAAAAAAAAAA....',
+            '....ASAAAAAAAAAAA....',
+            '....ASAAAAAAAAAAA....',
+            '....ASAAAAAAAAAAA....',
+            '....AAAAAAAAAAAAA....',
+            '....RRRRRRRRRRRRR....',
+            '....RRRRRRRRRRRRR....',
+            'A...AAAAAAAAAAAAA...A',
+            'AAAAAAAAAAAAAAAAAAAAA',
+            '.AAAAAAAAAAAAAAAAAAA.',
         ],
     },
     "toque": {
@@ -1975,64 +1993,71 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "wizard": {
         "kind": "head",
-        "anchor": [12, 12],
+        "anchor": [13, 15],
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            '..................BBB',
-            '.................BBBB',
-            '................BBGBB',
-            '...............BBGGG',
-            '..............BBBBGB',
-            '.............BBBBBBB',
-            '............BBGBBBB',
-            '...........BBGGGBBB',
-            '..........BBBBGBBB',
-            '.........BBBBBBBBB',
-            '.......GGGGGGGGGGG',
-            '...BBBBBBBBBBBBBBBBBB',
-            'BBBBBBBBBBBBBBBBBBBBBBBB',
-            '.BBBBBBBBBBBBBBBBBBBBBB',
+            '.................PPP......',
+            '...............PPPPPP.....',
+            '..............PPPP.PPP....',
+            '.............PPPP...PPP...',
+            '.............PGPP....PP...',
+            '............PGGGP....G....',
+            '............PPGPPP..GGG...',
+            '...........PPPPPPP...G....',
+            '...........PPPPGGPP.......',
+            '..........PPPPGGPPP.......',
+            '..........PPPPGGPPPP......',
+            '.........PPPPPPGGPPP......',
+            '.........PPPPPPPPPPPP.....',
+            '........GGGGGGGGGGGGGG....',
+            '...PPPPPPPPPPPPPPPPPPPPPP.',
+            'PPPPPPPPPPPPPPPPPPPPPPPPPP',
+            '.PPPPPPPPPPPPPPPPPPPPPPPP.',
         ],
     },
     "witch": {
         "kind": "head",
-        "anchor": [11, 12],
+        "anchor": [11, 14],
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            '.................KKK',
-            '................KDDK',
-            '...............KDDDK',
-            '..............KDDDK',
-            '.............KDDDDK',
-            '............KDDDDDK',
-            '...........KDDDDDK',
-            '..........KDDDDDDK',
-            '.........KDDDDDDK',
-            '........NNGGGNNNN',
-            '......NNNNGGGNNNN',
-            '..KKKKDDDDDDDDDDDKKK',
-            'KKDDDDDDDDDDDDDDDDDDKK',
-            '.KKKKKKKKKKKKKKKKKKKK',
+            '.............PPPP.......',
+            '............PPPPPPP.....',
+            '...........PPPP..PPP....',
+            '...........PPP.....PP...',
+            '..........PPPP..........',
+            '..........PPPPP.........',
+            '.........PPPPPP.........',
+            '.........PPPPPPP........',
+            '........PPPPPPPP........',
+            '.......PPPPPPPPPP.......',
+            '.......PPPPPPPPPP.......',
+            '......AAAAGGGAAAAA......',
+            '......AAAAGAGAAAAA......',
+            'P.....AAAAGGGAAAAA.....P',
+            'PPPPPPPPPPPPPPPPPPPPPPPP',
+            '.PPPPPPPPPPPPPPPPPPPPPP.',
         ],
     },
     "cowboy": {
         "kind": "head",
-        "anchor": [14, 7],
+        "anchor": [15, 10],
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            '..........GGG..GGG',
-            '.........GGGG..GGGG',
-            '.........GGGGGGGGGG',
-            'GG.......GGGGGGGGGG.......GG',
-            'GGG......DDDDDDDDDD......GGG',
-            'GGG.....GGGGGGGGGGGG.....GGG',
-            'GGGGGGGGGGGGGGGGGGGGGGGGGGGG',
-            'GGGGGGGGGGGGGGGGGGGGGGGGGGGG',
-            '..GGGGGGGGGGGGGGGGGGGGGGGG',
-            '......GGGGGGGGGGGGGGGG',
+            '..........OOO..OOO............',
+            '.........OOOOODDOOOOO.........',
+            '........OOOOOOODOOOOOO........',
+            '........OOOOOOOOOOOOOO........',
+            '........OOOOOOOOOOOOOO........',
+            'O.......OOOOOOOOOOOOOO.......O',
+            'OO......GGGGGGGGGGGGGG......OO',
+            'OO......OOOOOOOOOOOOOO......OO',
+            'OOOOOOOOOOOOOOOOOOOOOOOOOOOOOO',
+            '.OOOOOOOOOOOOOOOOOOOOOOOOOOOO.',
+            '...OOOOOOOOOOOOOOOOOOOOOOOO...',
+            '.......OOOOOOOOOOOOOOOO.......',
         ],
     },
     "tricorn": {
@@ -2072,18 +2097,62 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "mortarboard": {
         "kind": "head",
-        "anchor": [14, 3],
+        "anchor": [14, 8],
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            'DDDDDDDDDDDDDDGGGGGGGGGGGGGGGG.',
-            'DDDDDDDDDDDDDDDDDDDDDDDDDDDDGG.',
-            'KKKKKKKKKKKKKKKKKKKKKKKKKKKKGG.',
-            '.......DDDDDDDDDDDDDD.......GG.',
-            '.......DDDDDDDDDDDDDD.......GG.',
-            '.......DDDDDDDDDDDDDD......GGGG',
-            '...........................GGGG',
-            '............................GG.',
+            '..........AAAAAAAAA............',
+            '......AAAAAAAAAAAAAAAAA........',
+            '..AAAAAAAAAAAAGGAAAAAAAAAAA....',
+            'AAAAAAAAAAAAAGGGGGGGGGGGGGGGG..',
+            '..AAAAAAAAAAAAAAAAAAAAAAAAA.G..',
+            '......AAAAAAAAAAAAAAAAA.....G..',
+            '........DDAAAAAAAAADD.......G..',
+            '........AADDDDDDDDDAA.......G..',
+            '........AAAAAAAAAAAAA......GGG.',
+            '........AAAAAAAAAAAAA......GGG.',
+            '...........................GGG.',
+        ],
+        "frames": [
+            [
+                '..........AAAAAAAAA............',
+                '......AAAAAAAAAAAAAAAAA........',
+                '..AAAAAAAAAAAAGGAAAAAAAAAAA....',
+                'AAAAAAAAAAAAAGGGGGGGGGGGGGGGG..',
+                '..AAAAAAAAAAAAAAAAAAAAAAAAA.G..',
+                '......AAAAAAAAAAAAAAAAA.....G..',
+                '........DDAAAAAAAAADD........G.',
+                '........AADDDDDDDDDAA........G.',
+                '........AAAAAAAAAAAAA.......GGG',
+                '........AAAAAAAAAAAAA.......GGG',
+                '............................GGG',
+            ],
+            [
+                '..........AAAAAAAAA............',
+                '......AAAAAAAAAAAAAAAAA........',
+                '..AAAAAAAAAAAAGGAAAAAAAAAAA....',
+                'AAAAAAAAAAAAAGGGGGGGGGGGGGGGG..',
+                '..AAAAAAAAAAAAAAAAAAAAAAAAA.G..',
+                '......AAAAAAAAAAAAAAAAA.....G..',
+                '........DDAAAAAAAAADD.......G..',
+                '........AADDDDDDDDDAA.......G..',
+                '........AAAAAAAAAAAAA......GGG.',
+                '........AAAAAAAAAAAAA......GGG.',
+                '...........................GGG.',
+            ],
+            [
+                '..........AAAAAAAAA............',
+                '......AAAAAAAAAAAAAAAAA........',
+                '..AAAAAAAAAAAAGGAAAAAAAAAAA....',
+                'AAAAAAAAAAAAAGGGGGGGGGGGGGGGG..',
+                '..AAAAAAAAAAAAAAAAAAAAAAAAA.G..',
+                '......AAAAAAAAAAAAAAAAA.....G..',
+                '........DDAAAAAAAAADD......G...',
+                '........AADDDDDDDDDAA......G...',
+                '........AAAAAAAAAAAAA.....GGG..',
+                '........AAAAAAAAAAAAA.....GGG..',
+                '..........................GGG..',
+            ],
         ],
     },
     "beret": {
@@ -2157,19 +2226,58 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "propeller": {
         "kind": "head",
-        "anchor": [8, 8],
+        "anchor": [10, 10],
         "layer": "over",
         "category": "Hats",
         "pattern": [
-            'RRRRRR...........',
-            '..RRRRRRKNNNNNN..',
-            '...........NNNNNN',
-            '........K........',
-            '........K........',
-            '....BBBBBBBBB....',
-            '..BBBBBBBBBBBBB..',
-            '.BBBBBBBBBBBBBBB.',
-            'RRRRRRRRRRRRRRRRR',
+            '..GGGGG.......GGGGG..',
+            'GGGGGGGGGRRRGGGGGGGGG',
+            '.....................',
+            '..........K..........',
+            '........BBRBB........',
+            '.....BBBBRRRBBBB.....',
+            '...BBBBBBRRRBBBBBB...',
+            '..BBBBBBRRRRRBBBBBB..',
+            '.BBBBBBBRRRRRBBBBBBB.',
+            'RRRRRRRRRRRRRRRRRRRRR',
+        ],
+        "frames": [
+            [
+                '............GGGGGG...',
+                '.....GGGGRRRGGGG.....',
+                '...GGGGGG............',
+                '..........K..........',
+                '........BBRBB........',
+                '.....BBBBRRRBBBB.....',
+                '...BBBBBBRRRBBBBBB...',
+                '..BBBBBBRRRRRBBBBBB..',
+                '.BBBBBBBRRRRRBBBBBBB.',
+                'RRRRRRRRRRRRRRRRRRRRR',
+            ],
+            [
+                '.........GGG.........',
+                '........GRRRG........',
+                '........GGGGG........',
+                '..........K..........',
+                '........BBRBB........',
+                '.....BBBBRRRBBBB.....',
+                '...BBBBBBRRRBBBBBB...',
+                '..BBBBBBRRRRRBBBBBB..',
+                '.BBBBBBBRRRRRBBBBBBB.',
+                'RRRRRRRRRRRRRRRRRRRRR',
+            ],
+            [
+                '...GGGGGG............',
+                '.....GGGGRRRGGGG.....',
+                '............GGGGGG...',
+                '..........K..........',
+                '........BBRBB........',
+                '.....BBBBRRRBBBB.....',
+                '...BBBBBBRRRBBBBBB...',
+                '..BBBBBBRRRRRBBBBBB..',
+                '.BBBBBBBRRRRRBBBBBBB.',
+                'RRRRRRRRRRRRRRRRRRRRR',
+            ],
         ],
     },
     "cone": {
@@ -2195,19 +2303,28 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "halo": {
         "kind": "head",
-        "anchor": [8, 8],
+        "anchor": [8, 9],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '....GGGGGGGG....',
-            '..GGWWWWWWWWGG..',
-            '..GGWWWWWWWWGG..',
-            '....GGGGGGGG....',
-            '................',
-            '................',
-            '................',
-            '................',
-            '................',
+            '....GWWGGGGGG....',
+            '..GG.........GG..',
+            '.GG...........GG.',
+            '.GGG.........GGG.',
+            '..GGGGGGGGGGGGG..',
+            '....GGGGGGGGG....',
+            '.................',
+        ],
+        "frames": [
+            [
+                '.................',
+                '....GGGGGGGGG....',
+                '..GG.........GG..',
+                '.GG...........GG.',
+                '.GGG.........WGG.',
+                '..GGGGGGGGGGWWG..',
+                '....GGGGGGGGG....',
+            ],
         ],
     },
     "horns": {
@@ -2242,80 +2359,127 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "bunnyears": {
         "kind": "head",
-        "anchor": [7, 12],
+        "anchor": [10, 12],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '..WW......WW..',
-            '.WWWW....WWWW.',
-            '.WRRW....WRRW.',
-            'WWRRWW..WWRRWW',
-            'WWRRWW..WWRRWW',
-            'WWRRWW..WWRRWW',
-            'WWRRWW..WWRRWW',
-            'WWRRWW..WWRRWW',
-            '.WRRW....WRRW.',
-            '.WRRW....WRRW.',
-            '.WWWW....WWWW.',
-            '.WWWW....WWWW.',
-            '.WWWW....WWWW.',
+            '...WWW.........WWW.....',
+            '..WWWWW.......WWWWW....',
+            '..WWMWW.......WWMWW....',
+            '..WMMMW.......WMMMW....',
+            '..WMMMW.......WMMMW....',
+            '..WMMMW.......WMMMW....',
+            '..WMMMW.......WMMMW....',
+            '..WMMMW.......WMMMW....',
+            '..WWMWW.......WWMWW....',
+            '...WMW.........WMW.....',
+            '...WMW.........WMW.....',
+            '...WWW.........WWW.....',
+            '...WWW.........WWW.....',
+        ],
+        "frames": [
+            [
+                '...WWW.............WWW.',
+                '..WWWWW...........WWWWW',
+                '..WWMWW..........WWMWW.',
+                '..WMMMW..........WMMMW.',
+                '..WMMMW..........WMMMW.',
+                '..WMMMW.........WMMMW..',
+                '..WMMMW.........WMMMW..',
+                '..WMMMW.........WMMMW..',
+                '..WWMWW........WWMWW...',
+                '...WMW..........WMW....',
+                '...WMW..........WMW....',
+                '...WWW.........WWW.....',
+                '...WWW.........WWW.....',
+            ],
         ],
     },
     "antennae": {
         "kind": "head",
-        "anchor": [8, 8],
+        "anchor": [11, 10],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '.GGG.........GGG.',
-            'GGGGG.......GGGGG',
-            'GGGGG.......GGGGG',
-            '.GGG.........GGG.',
-            '..D.........D....',
-            '...D.......D.....',
-            '....D.....D......',
-            '.....D...D.......',
-            '.....D...D.......',
+            '...MMMM........MMMM...',
+            '..MWWMMM......MWWMMM..',
+            '..MWMMMM......MWMMMM..',
+            '..MMMMMM......MMMMMM..',
+            '...MMMM........MMMM...',
+            '....K...........K.....',
+            '.....K..........K.....',
+            '......K........K......',
+            '......K........K......',
+            '.......K......K.......',
+            '........K.....K.......',
+        ],
+        "frames": [
+            [
+                '.....MMMM........MMMM.',
+                '....MWWMMM......MWWMMM',
+                '....MWMMMM......MWMMMM',
+                '....MMMMMM......MMMMMM',
+                '.....MMMM........MMMM.',
+                '......K...........K...',
+                '......K..........K....',
+                '.......K........K.....',
+                '.......K........K.....',
+                '........K......K......',
+                '........K.....K.......',
+            ],
         ],
     },
     "flowercrown": {
         "kind": "head",
-        "anchor": [11, 3],
+        "anchor": [12, 3],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '..WWW.....WWW.....WWW..',
-            '..WGW.NNN.WGW.NNN.WGW..',
-            '..WWWNNNNNWWWNNNNNWWW..',
-            'NNNNNNNNNNNNNNNNNNNNNNN',
-            'NNNNNNNNNNNNNNNNNNNNNNN',
+            '.MMM.......GGG.......MMM.',
+            'MMGMMNNWNNGGOGGNNWNNMMGMM',
+            'NMMMNNWGWNNGGGNNWGWNNMMMN',
+            'NNNNDNNWNNNDNNNDNNWNNDNNN',
+            'NNNDNNNNNNDNNNNNDNNNNNDNN',
         ],
     },
     "snowcap": {
         "kind": "head",
-        "anchor": [10, 3],
+        "anchor": [14, 8],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '....WWWWW............',
-            '..WWWWWWWWW...WWWWW..',
-            '.WWWWWWWWWWWWWWWWWWW.',
-            'WWWWWWWWWWWWWWWWWWWWW',
+            '...........WWWW.............',
+            '........WWWWWWWWW...........',
+            '......WWWWWWWWWWWW..WWWW....',
+            '.....WWWWWWWWWWWWWWWWWWWWW..',
+            '...WWWWWWWWWWWWWWWWWWWWWWWW.',
+            '..WWWWWWWWWWWWWWWWWWWWWWWWWW',
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWW',
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWW',
+            'SWWSSSSWWSSSSWWWSSSSSSWWSSWS',
+            '.SWS...WS...SWWS.....SW..SW.',
+            '..SS........SWS...........S.',
+            '..B..........B..............',
         ],
     },
     "leaf": {
         "kind": "head",
-        "anchor": [10, 5],
+        "anchor": [8, 11],
         "layer": "over",
         "category": "Head",
         "pattern": [
-            '............RRRRRR...',
-            '........RRRRRRRRRRRR.',
-            '....RRRRRRRRRDDDDDRR.',
-            '.RRRRRRDDDDDDDRRRR...',
-            '.RDDDDDDRRRRRR.......',
-            '..RRRRRRR............',
-            '.DD..................',
+            '........R......',
+            '.......RFR.....',
+            '....R..FFF..R..',
+            '....FF.FDF.FF..',
+            '.R.FFFFDFFFF.R.',
+            '.FFFDFFDFFDFFF.',
+            '..FFFDFDFDFFF..',
+            '...FFFDDDFFF...',
+            '...FFFDFFF.....',
+            '..FF..O..FF....',
+            '......O........',
+            '.....O.........',
         ],
     },
     "bandana": {
@@ -2359,25 +2523,26 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "monocle": {
         "kind": "eyes",
-        "anchor": [12, 2],
+        "anchor": [13, 3],
         "layer": "over",
         "category": "Eyes",
         "pattern": [
-            '....GGGGG',
-            '...GWWWWWG',
-            '..GWWDDDWWG',
-            '..GWWDDDWWG',
-            '..GWWDDDWWG',
-            '..GWWDDDWWG',
-            '.GGWWDDDWWG',
-            '.G.GWWWWWG',
-            'G...GGGGG',
-            'G',
-            'G',
-            '.G',
-            '.G',
-            '..G',
-            '..G',
+            '.....GGGGG...',
+            '...GWWGGGGG..',
+            '..GW.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '..GG.......GG',
+            '...GGGGGGGGG.',
+            '..G..GGGGG...',
+            '.G...........',
+            '.G...........',
+            '..G..........',
+            '..G..........',
         ],
     },
     "glasses3d": {
@@ -2500,40 +2665,98 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "vrheadset": {
         "kind": "eyes",
-        "anchor": [13, 2],
+        "anchor": [13, 5],
         "layer": "over",
         "category": "Eyes",
         "pattern": [
-            '....DDDDDDDDDDDDDDDDDD....',
-            '...DDDDDDDDDDDDDDDDDDDD...',
-            '...DDKKKKDDDDDDDDDDDDDD...',
-            'KKKDDKKKKDDDDDDDDDDDDDDKKK',
-            'KKKDDDKKKKDDDDDDDDDDDDDKKK',
-            'KKKDDDDDDDDDDDDDDDDDDDDKKK',
-            'KKKDDDDDDDDDDDDDDDDDDDDKKK',
-            '...DDDDDDDDDDDDDDDDDDDD...',
-            '...DDDDDDDDDDDDDDDDDDDD...',
-            '....DDDDDDDDDDDDDDDDDD....',
+            '...........KKKK...........',
+            '...........KKKK...........',
+            '.....AAAAAAAAAAAAAAAA.....',
+            '...AAAAAAAAAAAAAAAAAAAA...',
+            '...AATTTTTTTTTTTTTTTTAA...',
+            'KKKAATTTTTTTTTTTTTTTTAAKKK',
+            'KKKAATTWWWWTTTTWWWWTTAAKKK',
+            'KKKAATTWWWWTTTTWWWWTTAAKKK',
+            'KKKAATTWWWWTTTTWWWWTTAAKKK',
+            'KKKAATTTTTTTTTTTTTTTTAAKKK',
+            '...AATTTTTTTTTTTTTTTTAA...',
+            '...AAAAAAAAAAAAAAAAAAAA...',
+            '.....AAAAAAAAAAAAAAAA.....',
+        ],
+        "frames": [
+            [
+                '...........KKKK...........',
+                '...........KKKK...........',
+                '.....AAAAAAAAAAAAAAAA.....',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '.....AAAAAAAAAAAAAAAA.....',
+            ],
+            [
+                '...........KKKK...........',
+                '...........KKKK...........',
+                '.....AAAAAAAAAAAAAAAA.....',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '.....AAAAAAAAAAAAAAAA.....',
+            ],
+            [
+                '...........KKKK...........',
+                '...........KKKK...........',
+                '.....AAAAAAAAAAAAAAAA.....',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                'KKKAATTWWWWTTTTWWWWTTAAKKK',
+                'KKKAATTTTTTTTTTTTTTTTAAKKK',
+                '...AATTTTTTTTTTTTTTTTAA...',
+                '...AAAAAAAAAAAAAAAAAAAA...',
+                '.....AAAAAAAAAAAAAAAA.....',
+            ],
         ],
     },
     "scarf": {
         "kind": "neck",
-        "anchor": [16, 2],
+        "anchor": [13, 1],
         "layer": "over",
         "category": "Neck",
         "pattern": [
-            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            '...WWWWWWWWWWWWWWWWWWWWWWWWWWWW',
-            '...WWWWWWWWWWWWWWWWWWWWWWWWWWWW',
-            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRR',
-            'RRRRRRR',
-            'WWWWWWW',
-            'WWWWWWW',
-            'RRRRRRR',
-            'RRRRRRR',
-            'WWWWWWW',
-            'WWWWWWW',
+            'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+            'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+            'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+            '...RRRRR....................',
+            '...WWWWW....................',
+            '...RRRRR....................',
+            '...WWWWW....................',
+            '...W.W.W....................',
+        ],
+        "frames": [
+            [
+                'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+                'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+                'RRRWWWRRRWWWRRRWWWRRRWWWRRRW',
+                '...RRRRR....................',
+                '...WWWWW....................',
+                '....RRRRR...................',
+                '....WWWWW...................',
+                '.....W.W.W..................',
+            ],
         ],
     },
     "bowtie": {
@@ -2593,123 +2816,268 @@ COSTUMES: dict[str, tuple[str, tuple[int, int], list[str]]] = {
     },
     "toolbelt": {
         "kind": "body",
-        "anchor": [12, 1],
+        "anchor": [11, 3],
         "layer": "over",
         "category": "Body",
         "pattern": [
-            'DDDDDDDDDDGGGGGGDDDDDDDDDD',
-            'DDDDDDDDDDGDDDDGDDDDDDDDDD',
-            'DDDGGDDDDDGGGGGGDDDDDGGDDD',
-            '..KKKKKK..........KKDDKK..',
-            '..KKKKKK..........KKKKKK..',
-            '....KK..............KK....',
-            '....KK..............KK....',
+            '.KKKKKK........BB.S..S..',
+            '.KKKKKK........BB.SSSS..',
+            '...RR..........BB..SS...',
+            'OOOOOOOOOOGGGGOOOOOOOOOO',
+            'OOOOOOOOOOGDDGOOOOOOOOOO',
+            'OOOOOOOOOOGGGGOOOOOOOOOO',
         ],
     },
     "groucho": {
         "kind": "eyes",
-        "anchor": [11, 6],
+        "anchor": [11, 5],
         "layer": "over",
         "category": "Eyes",
         "pattern": [
-            '...DDDDDD......DDDDDD.',
-            '...DDDDDD......DDDDDD.',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '......................',
-            '.......KKKKKKKK.......',
-            '....KKKKKKKKKKKKKK....',
-            '....KKK..KKKK..KKK....',
+            '...AAAAAAA..AAAAAAA...',
+            '.AAAAAAAAA..AAAAAAAAA.',
+            '.OOOOOOOOO..OOOOOOOOO.',
+            'OO.......OOOO.......OO',
+            'O.........OO.........O',
+            'O.........OO.........O',
+            'O.........OO.........O',
+            'O.........OO.........O',
+            'O.........OO.........O',
+            'O.........OO.........O',
+            'O........MMMM........O',
+            'O.......MMMMMM.......O',
+            'OO......MMMMMM......OO',
+            '.OOOOOOOOMMMMOOOOOOOO.',
+            '.....AAAAAAAAAAAA.....',
+            '..AAAAAAAAAAAAAAAAAA..',
+            '.AAAAAAAA....AAAAAAAA.',
+            '.AAA..............AAA.',
         ],
     },
     "cape": {
         "kind": "neck",
-        "anchor": [19, 1],
+        "anchor": [18, 14],
         "layer": "behind",
         "category": "Behind",
         "pattern": [
-            '....RRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
-            '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
-            '.RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR.',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            'RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR',
-            '.RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR.',
-            '..RRRR..RRRRRRRRRRRRRRRRRR..RRRR....',
+            '...GG............................GG...',
+            '...GGRRRRRRRRRRRRRRRRRRRRRRRRRRRRGG...',
+            '.....RRRRRRRRRRRRRRRRRRRRRRRRRRRR.....',
+            '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR.....',
+            '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR.....',
+            '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR.....',
+            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '..RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+            '..RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '..RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+            '.RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
+            'RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
+            'RRDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
+            'RRR.RRR.RRR.RRR.RRR.RRR.RRR.RRR.RRR...',
+        ],
+        "frames": [
+            [
+                '...GG............................GG...',
+                '...GGRRRRRRRRRRRRRRRRRRRRRRRRRRRRGG...',
+                '.....RRRRRRRRRRRRRRRRRRRRRRRRRRRR.....',
+                '.....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+                '.....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+                '.....RRRRRRRRRRRRRRRRRRRRRRRRRRRRR....',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR...',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..',
+                '....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR..',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR..',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR..',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '...RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR.',
+                '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR',
+                '..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDRR',
+                '..RRR.RRR.RRR.RRR.RRR.RRR.RRR.RRR.RRR.',
+            ],
         ],
     },
     "wings": {
         "kind": "neck",
-        "anchor": [19, 12],
+        "anchor": [18, 23],
         "layer": "behind",
         "category": "Behind",
         "pattern": [
             '..WW..............................WW..',
-            '.WWWW............................WWWW.',
-            'WWWWWW..........................WWWWWW',
-            'WWWWWWW........................WWWWWWW',
+            '.WWWWW..........................WWWWW.',
             'WWWWWWWW......................WWWWWWWW',
-            'WWWWWWWWW....................WWWWWWWWW',
             'WWWWWWWWWW..................WWWWWWWWWW',
-            'WWWWWWWWWW..................WWWWWWWWWW',
-            'WWWWWWWWW....................WWWWWWWWW',
-            '.WWWWWWWW....................WWWWWWWW.',
-            '..WWWWWW......................WWWWWW..',
-            '...WWWW........................WWWW...',
-            '....WW..........................WW....',
+            'WWWWWWWWWWWW..............WWWWWWWWWWWW',
+            'SKWWWWWWWWWWW............WWWWWWWWWWWKS',
+            'SWKWWWWWWWWWW............WWWWWWWWWWKWS',
+            'WSWKWWWWWWWWW............WWWWWWWWWKWSW',
+            'WWSWKWWWWWWWW............WWWWWWWWKWSWW',
+            'WWWSWWWWWWWWW............WWWWWWWWWSWWW',
+            '.WWWSWWWWWWWW............WWWWWWWWSWWW.',
+            '.WW.WWWWWWWWW............WWWWWWWWW.WW.',
+            '..W.WW.WWWWWW............WWWWWW.WW.W..',
+            '.......WWWWWW............WWWWWW.......',
+            '......................................',
+            '......................................',
+            '......................................',
+            '......................................',
+            '......................................',
+            '......................................',
+        ],
+        "frames": [
+            [
+                '......................................',
+                '......................................',
+                '......................................',
+                '.......WW....................WW.......',
+                '.....WWWWWW................WWWWWW.....',
+                '...WWWWWWWWWW............WWWWWWWWWW...',
+                '.WWWWWWWWWWWW............WWWWWWWWWWWW.',
+                'WWWWWWWWWWWWW............WWWWWWWWWWWWW',
+                'WKWWKWWWWWWWW............WWWWWWWWKWWKW',
+                'WKWWKWWWW....................WWWWKWWKW',
+                'WKWWKWWW......................WWWKWWKW',
+                'WKWWKWW........................WWKWWKW',
+                'WKWWKWW........................WWKWWKW',
+                'WKWWKW..........................WKWWKW',
+                'WKWWKW..........................WKWWKW',
+                'WKW.KW..........................WK.WKW',
+                'WKW.W............................W.WKW',
+                'W.W.W............................W.W.W',
+                'W...W............................W...W',
+                'W....................................W',
+            ],
         ],
     },
     "backpack": {
         "kind": "body",
-        "anchor": [21, 10],
+        "anchor": [21, 25],
         "layer": "behind",
         "category": "Behind",
         "pattern": [
-            '....KKKKKK........',
-            '...BBBBBBBB.......',
-            '..BBBBBBBBBB......',
-            '..BBBBBBBBBBKKKKKK',
-            '..BBGGGGBBBB......',
-            '..BBGGGGBBBB......',
-            '..BBBBBBBBBB......',
-            '..BBBBBBBBBBKKKKKK',
-            '..BBBBBBBBBB......',
-            '..BBBBBBBBBB......',
-            '...BBBBBBBB.......',
-            '....BBBBBB........',
+            '.....AAAA....',
+            '....TTTTTTTTT',
+            '...TTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..DDDDTTTTTTT',
+            '.TTTTDTTTTTTT',
+            'TTTTTDTTTTTTT',
+            'TGGTTDTTTTTTT',
+            'TTTTTDTTTTTTT',
+            'TTTTTDTTTTTTT',
+            'TTTTTDTTTTTTT',
+            '.TTTTDTTTTTTT',
+            '..TTTTTTTTTTT',
+            '..TTTTTTTTTTT',
+            '...TTTTTTTTTT',
         ],
     },
     "jetpack": {
         "kind": "body",
-        "anchor": [21, 8],
+        "anchor": [18, 19],
         "layer": "behind",
         "category": "Behind",
         "pattern": [
-            '..KKK..KKK........',
-            '.KKKKKKKKKK.......',
-            '.KKKKKKKKKK.......',
-            '.KKKKKKKKKKKKKKKKK',
-            '.KKWWKKKWWK.......',
-            '.KKKKKKKKKK.......',
-            '.KKKKKKKKKKKKKKKKK',
-            '.KKKKKKKKKK.......',
-            '.KKKKKKKKKK.......',
-            '..KDK..KDK........',
-            '..RRR..RRR........',
-            '..GRG..GRG........',
-            '...G....G.........',
+            '..SSSS..........................SSSS..',
+            '.SSSSSSS......................SSSSSSS.',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'RRRRRRRR......................RRRRRRRR',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'SSSSSSSS......................SSSSSSSS',
+            'RRRRRRRR......................RRRRRRRR',
+            'SSSSSSSS......................SSSSSSSS',
+            '.SSSSSSS......................SSSSSSS.',
+            '..AAAA..........................AAAA..',
+            '.AAAAAA........................AAAAAA.',
+            '.FFFFF..........................FFFFF.',
+            '.FGGGF..........................FGGGF.',
+            '.FGWGF..........................FGWGF.',
+            '..FGF............................FGF..',
+            '..FGF............................FGF..',
+            '..FF..............................FF..',
+            '...R..............................R...',
+        ],
+        "frames": [
+            [
+                '..SSSS..........................SSSS..',
+                '.SSSSSSS......................SSSSSSS.',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'RRRRRRRR......................RRRRRRRR',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'RRRRRRRR......................RRRRRRRR',
+                'SSSSSSSS......................SSSSSSSS',
+                '.SSSSSSS......................SSSSSSS.',
+                '..AAAA..........................AAAA..',
+                '.AAAAAA........................AAAAAA.',
+                'FFFFFFF........................FFFFFFF',
+                'FGGGGGF........................FGGGGGF',
+                '.FGWGF..........................FGWGF.',
+                '.FGGF............................FGGF.',
+                '..RR..............................RR..',
+                '......................................',
+                '......................................',
+            ],
+            [
+                '..SSSS..........................SSSS..',
+                '.SSSSSSS......................SSSSSSS.',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'RRRRRRRR......................RRRRRRRR',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'SSSSSSSS......................SSSSSSSS',
+                'RRRRRRRR......................RRRRRRRR',
+                'SSSSSSSS......................SSSSSSSS',
+                '.SSSSSSS......................SSSSSSS.',
+                '..AAAA..........................AAAA..',
+                '.AAAAAA........................AAAAAA.',
+                '.FFFFF..........................FFFFF.',
+                '.FGGGF..........................FGGGF.',
+                '..FGF............................FGF..',
+                '..FGF............................FGF..',
+                '...FF............................FF...',
+                '...F..............................F...',
+                '...R..............................R...',
+            ],
         ],
     },
     # --- END GENERATED COSTUMES ---
@@ -2766,35 +3134,166 @@ def costume_spec(entry, name: str = "") -> tuple[str, tuple[int, int], list[str]
     return kind, tuple(anchor), pattern, layer, category
 
 
-def render_costumes(out_dir: Path) -> dict:
-    """Pack every costume into one strip, one cell each, and write the manifest.
+def costume_frames(entry) -> list[list[str]]:
+    """Every frame of a costume: its pattern, then the ``frames`` a moving one adds (a propeller
+    mid-turn, a flame mid-flicker). All share the one anchor, so they swap in place."""
+    pattern = costume_spec(entry)[2]
+    extra = entry.get("frames", []) if isinstance(entry, dict) else []
+    return [pattern, *extra]
 
-    A single row rather than a grid: the runtime crops by ``index * cell``, and keeping that
-    arithmetic to one dimension is worth more than the pixels a wrapped sheet would save.
+
+def costume_casts_shadow(entry, name: str = "") -> bool:
+    """A hat worn on top of his head darkens the row of him just under it. Not glasses (on his
+    face, nothing to cast onto), nothing behind him, nothing that hangs."""
+    kind, anchor, pattern, layer, _category = costume_spec(entry, name)
+    if isinstance(entry, dict) and "shadow" in entry:
+        return bool(entry["shadow"])
+    # One that floats - a halo - ends above the row it is anchored to: there is air under it,
+    # and a shadow would land on nothing.
+    lowest = max((y for y, row in enumerate(pattern) if row.strip(".")), default=-1)
+    return kind == "head" and layer == "over" and lowest >= anchor[1] - 1
+
+
+def _tone(colour: tuple[int, int, int, int], amount: float) -> tuple[int, int, int, int]:
+    """``colour`` lighter (``amount`` > 0) or darker (< 0), in lightness, keeping its hue - and,
+    like his own shading, a shade a touch more saturated than the base, a highlight a touch less."""
+    import colorsys
+
+    r, g, b, a = colour
+    h, lightness, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+    if amount > 0:
+        lightness += (1 - lightness) * amount
+        s = max(0.0, s - 0.05)
+    else:
+        lightness *= 1 + amount
+        s = min(1.0, s + 0.08)
+    r, g, b = colorsys.hls_to_rgb(h, lightness, s)
+    return round(r * 255), round(g * 255), round(b * 255), a
+
+
+def costume_pixels(pattern: list[str], *, shade: bool = True) -> list[list]:
+    """The outlined pattern as colours (``None`` = transparent), shaded the way his body is.
+
+    Light comes from the top left. A fill pixel with nothing of the costume above or to its left
+    takes the highlight; one with nothing below or to its right takes the shade; a pixel that is
+    both (a one-pixel line) keeps its base colour, or thin details turn to noise. White is only
+    ever shaded, never brightened. A line of outline drawn *between* two fills - the band on a top
+    hat, the seam on a hard hat - becomes a dark version of the fill beside it instead of the
+    near-black outer outline, so the inside of a costume reads as one object and only its
+    silhouette carries the hard edge that keeps it visible on a light taskbar.
+    """
+    grid = outline_costume(pattern)
+    height, width = len(grid), max(len(r) for r in grid)
+    rows = [row.ljust(width, ".") for row in grid]
+
+    def is_fill(x: int, y: int) -> bool:
+        return 0 <= y < height and 0 <= x < width and rows[y][x] not in ".D"
+
+    def is_clear(x: int, y: int) -> bool:
+        return not (0 <= y < height and 0 <= x < width) or rows[y][x] == "."
+
+    out: list[list] = [[None] * width for _ in range(height)]
+    for y in range(height):
+        for x in range(width):
+            ch = rows[y][x]
+            base = COSTUME_PALETTE[ch]
+            if base is None:
+                continue
+            if not shade:
+                out[y][x] = base
+                continue
+            if ch == "D":
+                fills = [rows[ny][nx] for nx, ny in ((x, y - 1), (x - 1, y), (x + 1, y), (x, y + 1))
+                         if is_fill(nx, ny)]
+                outer = any(is_clear(nx, ny)
+                            for nx, ny in ((x, y - 1), (x - 1, y), (x + 1, y), (x, y + 1)))
+                inner = fills and not outer and fills[0] != "W"
+                out[y][x] = _tone(COSTUME_PALETTE[fills[0]], -0.55) if inner else base
+                continue
+            lit = not is_fill(x, y - 1) or not is_fill(x - 1, y)
+            dim = not is_fill(x, y + 1) or not is_fill(x + 1, y)
+            thin = (not is_fill(x, y - 1) and not is_fill(x, y + 1)) or \
+                   (not is_fill(x - 1, y) and not is_fill(x + 1, y))
+            if thin or (lit and dim):
+                out[y][x] = base
+            elif ch == "W":
+                out[y][x] = _tone(base, -0.12) if dim else base
+            elif lit:
+                out[y][x] = _tone(base, COSTUME_LIGHT)
+            elif dim:
+                out[y][x] = _tone(base, COSTUME_DARK)
+            else:
+                out[y][x] = base
+    return out
+
+
+def costume_shadow(pattern: list[str]) -> list[list[bool]]:
+    """Where a hat's shadow falls: the pixel just under the lowest part of each of its columns,
+    in the same (outlined) coordinates. The runtime draws it only over his own pixels."""
+    grid = outline_costume(pattern)
+    height, width = len(grid), max(len(r) for r in grid)
+    rows = [row.ljust(width, ".") for row in grid]
+    cast = [[False] * width for _ in range(height + 1)]
+    for x in range(width):
+        lowest = max((y for y in range(height) if rows[y][x] != "."), default=None)
+        if lowest is not None and lowest + 1 <= height:
+            cast[lowest + 1][x] = True
+    return cast
+
+
+def render_costumes(out_dir: Path) -> dict:
+    """Pack every costume into the sheet, one cell each, and write the manifest.
+
+    Row 0 is the costumes themselves: every costume's first frame, in ``COSTUMES`` order, so a
+    costume's ``index`` is still its column; the extra frames of the moving ones follow after
+    them, listed in its ``frames``. Row 1 is the shadow each one casts on him, in the same
+    column. The runtime crops by ``column * cell``.
     """
     cell = COSTUME_CELL
-    sheet = Image.new("RGBA", (cell * len(COSTUMES), cell), (0, 0, 0, 0))
-    pixels = sheet.load()
+    cells: list[tuple[str, list[str], bool]] = []   # (name, pattern, casts a shadow)
     items = {}
+    extra: list[tuple[str, list[str], bool]] = []
+    for name, entry in COSTUMES.items():
+        frames = costume_frames(entry)
+        shadow = costume_casts_shadow(entry, name)
+        cells.append((name, frames[0], shadow))
+        extra.extend((name, f, shadow) for f in frames[1:])
+    columns = cells + extra
+    sheet = Image.new("RGBA", (cell * len(columns), cell * 2), (0, 0, 0, 0))
+    pixels = sheet.load()
     over_size = []
-    for i, (name, entry) in enumerate(COSTUMES.items()):
-        kind, anchor, pattern, layer, category = costume_spec(entry, name)
-        outlined = outline_costume(pattern)
-        width, height = max(len(r) for r in outlined), len(outlined)
+    frames_of: dict[str, list[int]] = {}
+    for column, (name, pattern, shadow) in enumerate(columns):
+        frames_of.setdefault(name, []).append(column)
+        entry = COSTUMES[name]
+        colours = costume_pixels(pattern, shade=not (isinstance(entry, dict)
+                                                      and entry.get("shade") is False))
+        width, height = len(colours[0]), len(colours)
         if width > cell or height > cell:
             over_size.append(f"{name} ({width}x{height})")
-        # the outline added a ring, so the attach point moves with it
-        anchor = (anchor[0] + 1, anchor[1] + 1)
-        ox = i * cell
-        for y, row in enumerate(outlined):
-            for x, ch in enumerate(row):
-                colour = COSTUME_PALETTE[ch]
+        ox = column * cell
+        for y, row in enumerate(colours):
+            for x, colour in enumerate(row):
                 if colour is not None and x < cell and y < cell:
                     pixels[ox + x, y] = colour
-        items[name] = {
-            "index": i, "kind": kind, "anchor": list(anchor),
+        if shadow:
+            for y, row in enumerate(costume_shadow(pattern)):
+                for x, cast in enumerate(row):
+                    if cast and x < cell and y < cell:
+                        pixels[ox + x, cell + y] = (0, 0, 0, COSTUME_SHADOW_ALPHA)
+    for name, entry in COSTUMES.items():
+        kind, anchor, _pattern, layer, category = costume_spec(entry, name)
+        frames = frames_of[name]
+        # the outline added a ring, so the attach point moves with it
+        item = {
+            "index": frames[0], "kind": kind, "anchor": [anchor[0] + 1, anchor[1] + 1],
             "layer": layer, "category": category,
         }
+        if len(frames) > 1:
+            item["frames"] = frames
+        if costume_casts_shadow(entry, name):
+            item["shadow"] = True
+        items[name] = item
     if over_size:
         # Loud, because the clip above is silent: an oversized pattern simply loses its right or
         # bottom edge and looks like a drawing mistake rather than a size limit.
