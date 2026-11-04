@@ -98,6 +98,7 @@ the-nib/
   behavior.py           state machine: wander, gait, antics, annoyance, sleep (Qt-free)
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
   mood.py               how the day went - the one thing that survives a restart (Qt-free)
+  needs.py              energy, affection and boredom - leans on what he does, two moments (Qt-free)
   memory.py             what he remembers about you two: counts, a 7-day window, memory.json (Qt-free)
   voice.py              whether he may say a line now - the gap, the daily cap - and which (Qt-free)
   phrases.py            shuffle bags and phrase-file loading, for the guard and for voice.py (Qt-free)
@@ -139,10 +140,10 @@ the-nib/
   .github/workflows/    CI: sheet is in sync, art contract, suites, docs, build
 ```
 
-`behavior.py`, `world.py`, `mood.py`, `memory.py`, `voice.py` and `phrases.py` are deliberately
-**free of Qt**, so the whole state machine can be reasoned about and tested headlessly without a
-display. `mood.py`, `memory.py` and `voice.py` also take an injectable clock, so a week of moods
-can be simulated in a millisecond.
+`behavior.py`, `world.py`, `mood.py`, `needs.py`, `memory.py`, `voice.py` and `phrases.py` are
+deliberately **free of Qt**, so the whole state machine can be reasoned about and tested
+headlessly without a display. `mood.py`, `needs.py`, `memory.py` and `voice.py` also take an
+injectable clock, so a week of moods can be simulated in a millisecond.
 
 Your data lives in `%APPDATA%\NibMascot`: `config.json` (settings and the little state he writes
 for himself) and, next to it, `memory.json` (the counts `memory.py` keeps; see

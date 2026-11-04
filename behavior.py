@@ -25,6 +25,7 @@ from collections import deque
 from animator import Animator, SpriteSheet
 from memory import Memory
 from mood import Mood
+from needs import BORED_ABOVE, Needs
 from world import (
     PART_DAY,
     PART_EVENING,
@@ -478,6 +479,30 @@ GREET_BOND_EXTRA: tuple[str, float] = ("heart_eyes", 1400.0)
 #: reason: nothing drains it yet, and a forgotten queue must not grow for a whole session.
 MAX_PENDING_EVENTS = 8
 
+# --- what he needs, acted on --------------------------------------------------------------
+#
+# needs.py keeps energy, affection and boredom, and almost all they do is lean on weights. These are
+# the two exceptions - moments, so they go through _pick_moment like every other moment and share
+# its 45-second budget - plus one thing that is only ever a line, never an antic.
+
+#: One cooldown shared by all three below, on top of the shared moment budget. Long, like the
+#: seasonal one and for the same reason: "he is tired" is a state of the evening, and a yawn every
+#: few minutes for it would turn a mood into a tic.
+NEEDS_MOMENT_COOLDOWN_MS = 5400000.0  # 90 min
+#: Worn out in the evening or at night: a big yawn and a heavy blink. Not in the day - a yawn at
+#: three in the afternoon reads as boredom, and boredom has its own lean.
+TIRED_ENERGY_BELOW = 0.25
+TIRED_SEQUENCE: tuple[tuple[str, float], ...] = (("yawn", 2800.0), (BLINK_SLOW, 800.0))
+#: Doted on, and your pointer is close: heart eyes, at you.
+FOND_AFFECTION_ABOVE = 0.85
+FOND_ANIM = "heart_eyes"
+FOND_MS = (1400.0, 2100.0)
+#: Interacting, for boredom's purposes, means the being-ignored clock was reset this recently - so
+#: boredom builds on the same clock that being ignored does, and only while that clock is running.
+#: Whenever it is on hold (asleep, away, the machine pinned, or the attention arc switched off)
+#: boredom stops building and fades instead - see update.
+INTERACTING_WITHIN_MS = 1000.0
+
 # --- dressing himself --------------------------------------------------------------------
 #
 # He owns fifty-odd costumes and, left alone, wears none of them. The fix is NOT to cycle them at
@@ -744,6 +769,7 @@ class Behavior:
         sheet: SpriteSheet,
         mood: Mood | None = None,
         memory: Memory | None = None,
+        needs: Needs | None = None,
     ) -> None:
         self._config = config
         self._sheet = sheet
@@ -755,6 +781,9 @@ class Behavior:
         #: and never writes a file, so every test that builds a Behavior on its own stays
         #: off the disk; the app passes one that saves to memory.json.
         self.memory = memory if memory is not None else Memory(None, config)
+        #: Energy, affection and boredom. The default reads the config but is never persisted -
+        #: only the app calls persist() - so a test's Behavior cannot write anything back.
+        self.needs = needs if needs is not None else Needs(config)
 
         self._state = State.IDLE
         self._prev_state = State.IDLE
@@ -812,6 +841,11 @@ class Behavior:
         self._task_finished_cooldown_ms = 0.0
         self._morning_cooldown_ms = 0.0
         self._seasonal_cooldown_ms = 0.0
+        self._needs_moment_cooldown_ms = 0.0
+        #: Antics to queue after a moment that is a short sequence rather than one antic - the
+        #: tired yawn's heavy blink. _pick_moment hands back one (name, ms, costume) like every
+        #: moment, and _begin_antic clears the queue, so the rest waits here until it has started.
+        self._moment_tail: list[tuple[str, float]] = []
         self._persona_costume = ""
         #: The costume a quick-change is hopping into, while the hop is in the air - see quick_change.
         self._quick_change: str | None = None
@@ -1388,6 +1422,8 @@ class Behavior:
         self._neglect_ms = 0.0
         self._neglect_stage = 0
         self._neglect_glance_ms = 0.0
+        # Whatever it was, it was something to do: boredom gets knocked right back down.
+        self.needs.nudge("interacted")
 
     def click(self) -> bool:
         """Handle a click on the mascot. Returns True if the ask bubble should open."""
@@ -1522,6 +1558,7 @@ class Behavior:
         self._pokes.clear()
         self._residual = max(0.0, self._residual - 1.0)
         self.mood.nudge("prompt_sent")
+        self.needs.nudge("prompt_sent")
         self.memory.record("prompts", self._date_key())
         self._sound("send")
         self._post_prompt = self._prompt_reaction(text)
@@ -1691,6 +1728,7 @@ class Behavior:
         if abs(self._vx) > 0.4:
             log.debug("thrown at %.2f,%.2f px/ms", self._vx, self._vy)
             self.memory.record("throws", self._date_key())
+            self.needs.nudge("thrown")
         self._enter(State.IDLE)
 
     # --- perching on a window -------------------------------------------------------
@@ -1835,6 +1873,7 @@ class Behavior:
         self._pet_armed = False
         self.noticed()
         self.mood.nudge("petted")
+        self.needs.nudge("petted")
         self.memory.record("pets", self._date_key())
         log.info("being petted")
         self._enter(State.PET)
@@ -2199,6 +2238,7 @@ class Behavior:
         else:
             log.debug("user back - greeting")
             self.mood.nudge("greeted")
+            self.needs.nudge("greeted")
             self._begin_sequence(self._greeting_for(gone_s))
 
     def _greeting_for(self, gone_s: float | None) -> list[tuple[str, float]]:
@@ -2333,6 +2373,7 @@ class Behavior:
             and not self._falling and not self._rolling
         ):
             self.mood.nudge("focus_done")
+            self.needs.nudge("focus_done")
             # Counted inside the gate for the same reason the mood is: the session it celebrates
             # is the one he was there to see.
             self.memory.record("focus_done", self._date_key())
@@ -2363,6 +2404,9 @@ class Behavior:
                 return
             self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
             log.debug("Claude came to the front - %s", choices)
+            # Every branch here that starts an antic is something happening around him, which
+            # takes the edge off boredom the way a world moment does.
+            self.needs.nudge("world_event")
             self._begin_antic(random.choice(choices), random.uniform(1400, 2200))
             return
 
@@ -2374,6 +2418,7 @@ class Behavior:
                 # Only dress him up if the user has not picked a hat themselves - theirs wins.
                 wants_hat = costume and self._may_dress()
                 log.debug("persona for %s: %s", process, antic)
+                self.needs.nudge("world_event")
                 self._begin_antic(antic, random.uniform(low, high), costume if wants_hat else "")
                 return
 
@@ -2388,11 +2433,13 @@ class Behavior:
         ):
             self._startle_cooldown_ms = STARTLE_COOLDOWN_MS
             self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+            self.needs.nudge("world_event")
             self._begin_antic(STARTLE_ANIM, STARTLE_MS)
             return
 
         if random.random() < FOREGROUND_REACT_CHANCE and self._sheet.has_state("look_around"):
             self._foreground_cooldown_ms = FOREGROUND_COOLDOWN_MS
+            self.needs.nudge("world_event")
             self._begin_antic("look_around", random.uniform(1200, 1900))
 
     # --- world awareness ----------------------------------------------------------
@@ -2538,8 +2585,15 @@ class Behavior:
             return None
         return name, random.uniform(low, high), (costume if self._may_dress() else "")
 
-    def _pick_moment(self) -> tuple[str, float, str] | None:
-        """A one-off reaction to something about the world, or None for "nothing to say"."""
+    def _pick_moment(
+        self, cursor: tuple[int, int] | None = None
+    ) -> tuple[str, float, str] | None:
+        """A one-off reaction to something about the world, or None for "nothing to say".
+
+        ``cursor`` is only for the fond moment, which wants your pointer near him; without it (the
+        rate scripts call this directly) that one moment simply never fires.
+        """
+        self._moment_tail = []
         state = self._world
         if state is None or not bool(self._config.get("world_enabled", True)):
             return None
@@ -2640,7 +2694,51 @@ class Behavior:
                 self._seasonal_cooldown_ms = SEASONAL_COOLDOWN_MS
                 return moment
 
+        moment = self._needs_moment(state, cursor)
+        if moment is not None:
+            return moment
         return self._remembered_moment(state)
+
+    def _needs_moment(
+        self, state: WorldState, cursor: tuple[int, int] | None
+    ) -> tuple[str, float, str] | None:
+        """The two moments energy and affection earn, and the one line boredom may.
+
+        * **Tired** - energy under ``TIRED_ENERGY_BELOW`` in the evening or at night: a big yawn,
+          then a heavy blink (the blink waits in ``_moment_tail``).
+        * **Fond** - affection over ``FOND_AFFECTION_ABOVE`` with your pointer near him: heart eyes.
+        * **Bored** - boredom over the "bored" edge: an event for voice.py and nothing to see. He
+          already shows boredom through the weights (checking his watch, tapping his foot); this
+          only lets him mention it, and returns None so the slot goes to whatever is next.
+
+        All three share ``NEEDS_MOMENT_COOLDOWN_MS``, so this is one beat per 90 minutes at most,
+        on top of the shared moment budget. Each raises its event only once it is actually
+        happening - a sheet without the art gets neither the antic nor the line about it.
+        """
+        needs = self.needs
+        if not needs.enabled or self._needs_moment_cooldown_ms > 0:
+            return None
+        if needs.energy < TIRED_ENERGY_BELOW and state.part_of_day in (PART_EVENING, PART_NIGHT):
+            name, ms = TIRED_SEQUENCE[0]
+            moment = self._moment(name, ms, ms)
+            if moment is not None:
+                self._needs_moment_cooldown_ms = NEEDS_MOMENT_COOLDOWN_MS
+                self._moment_tail = list(TIRED_SEQUENCE[1:])
+                log.info("worn out this late - a big yawn")
+                self._event("tired")
+                return moment
+        if needs.affection > FOND_AFFECTION_ABOVE and self._cursor_is_near(cursor):
+            moment = self._moment(FOND_ANIM, *FOND_MS)
+            if moment is not None:
+                self._needs_moment_cooldown_ms = NEEDS_MOMENT_COOLDOWN_MS
+                log.info("feeling fond - heart eyes at you")
+                self._event("fond")
+                return moment
+        if needs.boredom > BORED_ABOVE:
+            self._needs_moment_cooldown_ms = NEEDS_MOMENT_COOLDOWN_MS
+            log.info("bored")
+            self._event("bored")
+        return None
 
     def _remembered_moment(self, state: WorldState) -> tuple[str, float, str] | None:
         """The two moments that come from what he remembers rather than from the clock.
@@ -2693,14 +2791,18 @@ class Behavior:
     def _mood_weights(self) -> dict[str, float]:
         """Multipliers for the ambient pool.
 
-        Four independent sources, composed **multiplicatively** rather than by replacement: the
-        time of day, the season, the persistent mood, and the personality preset - plus the
-        attention arc's boost. Every one of them means something different, and letting any one
-        overwrite the others would produce nonsense like a good mood cancelling the fact that it
-        is two in the morning.
+        Five independent sources, composed **multiplicatively** rather than by replacement: the
+        time of day, the season, the persistent mood, his needs, and the personality preset -
+        plus the attention arc's boost. Every one of them means something different, and letting
+        any one overwrite the others would produce nonsense like a good mood cancelling the fact
+        that it is two in the morning.
         """
         weights: dict[str, float] = {}
         for name, factor in self.mood.weights().items():
+            weights[name] = weights.get(name, 1.0) * factor
+        # Energy, affection and boredom compose the same way, and like the mood they are about him
+        # rather than the clock, so they stay in even with world awareness switched off.
+        for name, factor in self.needs.weights().items():
             weights[name] = weights.get(name, 1.0) * factor
         for name, factor in self._preset().get("weights", {}).items():
             weights[name] = weights.get(name, 1.0) * float(factor)
@@ -2822,7 +2924,9 @@ class Behavior:
         double_chance, slow_chance = BLINK_MIX_BY_PART.get(part, (0.25, 0.05))
         # Being fed up and being tired look much the same around the eyes, so a flat mood adds to
         # whatever the clock already asks for rather than getting an expression of its own.
-        slow_chance = min(0.9, slow_chance + self.mood.slow_blink_bonus())
+        # Tiredness adds to it the same way: it is the most literal reason for a heavy blink.
+        slow_chance = min(0.9, slow_chance + self.mood.slow_blink_bonus()
+                          + self.needs.slow_blink_bonus())
         roll = random.random()
         if roll < slow_chance and self._sheet.has_state(BLINK_SLOW):
             return BLINK_SLOW
@@ -2831,13 +2935,13 @@ class Behavior:
         return BLINK_SINGLE
 
     def _mood_pace(self) -> float:
-        """How fast the ambient animation runs: clock x persistent mood x preset.
+        """How fast the ambient animation runs: clock x persistent mood x energy x preset.
 
-        All three multiply. They bottom out together around 0.7 * 0.9 * 0.85 = 0.54, which is slow
-        but still unmistakably moving - the floor that matters is in ``_speed_multiplier``, which
-        clamps the walk so a slow mood can never stall him mid-stride.
+        All four multiply. They bottom out together around 0.7 * 0.9 * 0.9 * 0.85 = 0.48, which is
+        slow but still unmistakably moving - the floor that matters is in ``_speed_multiplier``,
+        which clamps the walk so a slow mood can never stall him mid-stride.
         """
-        pace = self.mood.pace() * self._preset_factor("pace")
+        pace = self.mood.pace() * self.needs.pace() * self._preset_factor("pace")
         state = self._world
         if state is not None and bool(self._config.get("world_enabled", True)):
             pace *= _PACE_BY_PART.get(state.part_of_day, 1.0)
@@ -2992,12 +3096,17 @@ class Behavior:
         # Then anything the world has to say - the clock, the calendar, the machine's load. These
         # are events rather than pool members, so they get their own check rather than a weight.
         if antics_on:
-            moment = self._pick_moment()
+            moment = self._pick_moment(cursor)
             if moment is not None:
-                # needs.py (still to come) hears about this as a "world_event": something
-                # happened, so he is a little less bored. Nothing to tell it until it exists.
+                # Something happened, so he is a little less bored.
+                self.needs.nudge("world_event")
                 self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
                 self._begin_antic(*moment)
+                # After the call, which clears the queue. Steps without art are skipped, the same
+                # as _begin_sequence does.
+                self._antic_queue = [step for step in self._moment_tail
+                                     if self._sheet.has_state(step[0])]
+                self._moment_tail = []
                 return
 
         # Being ignored. After the world's moments, before the ambient pool: it is about you,
@@ -3013,7 +3122,9 @@ class Behavior:
             if (
                 self._peek_cooldown_ms <= 0
                 and bool(self._config.get("play_with_windows", True))
-                and random.random() < PEEK_CHANCE
+                # A bored mascot goes looking - up to 1.6x as likely to peek. Exactly 1.0 unless
+                # he is properly bored, so the roll is the same as ever.
+                and random.random() < PEEK_CHANCE * self.needs.peek_boost()
             ):
                 self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
                 log.debug("ducking behind the taskbar for a peek")
@@ -3144,6 +3255,22 @@ class Behavior:
         self._state_ms += dt_ms
         self._decay_annoyance(dt_ms)
         self.mood.tick(dt_ms)
+        # Behind the same HIDDEN and pause returns as the mood, and for the same reason: frozen is
+        # frozen. A restart is aged on the wall clock instead - see Needs._load.
+        world = self._world
+        # Boredom builds only while the being-ignored clock is actually running. Checked here
+        # rather than read off _neglect_ms alone: on hold (asleep, cross, held, petted, perched,
+        # mid-build, the arc switched off) that clock is frozen at whatever it had reached, which
+        # would otherwise keep boredom climbing all the way through a pinned build or a sleep.
+        neglect_running = self._neglect_step_ms() > 0 and not self._neglect_suppressed()
+        self.needs.tick(
+            dt_ms,
+            away=self._away,
+            part_of_day=(world.part_of_day if world is not None
+                         and bool(self._config.get("world_enabled", True)) else None),
+            present_interacting=(not neglect_running
+                                 or self._neglect_ms < INTERACTING_WITHIN_MS),
+        )
         self._tick_quirks(dt_ms)
         self._tick_neglect(dt_ms)
         if self._grumble_ms > 0:
@@ -3160,6 +3287,7 @@ class Behavior:
             "_task_finished_cooldown_ms",
             "_morning_cooldown_ms",
             "_seasonal_cooldown_ms",
+            "_needs_moment_cooldown_ms",
             "_peek_cooldown_ms",
             "_ledge_cooldown_ms",
             "_startle_cooldown_ms",
@@ -3375,6 +3503,7 @@ class Behavior:
         if self._pending_injury:
             self._pending_injury = False
             self.mood.nudge("hurt")
+            self.needs.nudge("hurt")
             self.memory.record("hurts", self._date_key())
             self._injured_ms = float(self._config.get("injury_duration_s", 3.0)) * 1000.0
             self._enter(State.INJURED)

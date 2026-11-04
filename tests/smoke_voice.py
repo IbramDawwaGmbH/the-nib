@@ -243,6 +243,9 @@ check("early and late are only about the first arrival",
 check("a milestone", lines_for("milestone", {"days": 30}) == ["milestone_days"])
 check("a focus streak", lines_for("focus_streak", {"count": 3}) == ["focus_streak"])
 check("a big week", lines_for("big_week", {}) == ["big_week"])
+check("tired, fond and bored each say their own line",
+      [lines_for(kind, {}) for kind in ("tired", "fond", "bored")]
+      == [["tired"], ["fond"], ["bored"]])
 check("an event nobody wrote lines for says nothing", lines_for("tick", {"n": 1}) == [])
 
 print("\n--- a refused remark falls back to the greeting ---")

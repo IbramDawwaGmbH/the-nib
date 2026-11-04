@@ -34,6 +34,16 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   Personality tab: `rare`, `normal` (14 a day, 20 minutes apart) or `off`. The lines are a local
   table, `assets/nib_phrases.json`; add your own in a `nib_phrases.json` next to `config.json`.
   Clicking a line counts as noticing him.
+- **Energy, affection and boredom.** Three slow quantities that colour what he already does: a
+  long day at the machine leaves him tired by the evening (more sitting, slower, heavier blinks),
+  time away rests him, a lot of petting makes him fond (more heart eyes and sparkles), and a long
+  stretch of nothing makes him bored (watch-checking, foot-tapping, a peek over the taskbar). Two
+  new moments ride on them — a yawn when he is worn out in the evening, heart eyes when he is
+  doted on and your pointer is near — each at most every 90 minutes, and he may say a line when
+  tired, fond or bored. At the starting point nothing changes at all. **Settings → About him**
+  names all three in words. A new `needs_enabled` setting on the Personality tab, and four hidden
+  values in `config.json` (`need_energy`, `need_affection`, `need_boredom`, `needs_saved_at`).
+  Forget everything resets them.
 
 ### Changed
 

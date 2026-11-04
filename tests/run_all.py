@@ -32,6 +32,7 @@ SUITES = [
     ("smoke_pet", "petting, coming when called, and the personality presets"),
     ("smoke_mood", "the persistent mood: decay, headroom, hostile clocks, disk writes"),
     ("smoke_memory", "what he remembers: counters, the 7-day window, bond, forget"),
+    ("smoke_needs", "energy, affection and boredom: drift, nudges, the two moments, disk writes"),
     ("smoke_voice", "the lines he says: gap, daily cap, launch quiet, the phrase table"),
     ("smoke_ui", "ghost mode, prompt history, the settings window, sound, the first-run tour"),
     ("smoke_costumes", "every costume on every frame"),

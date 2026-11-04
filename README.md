@@ -443,7 +443,7 @@ Windows 10 or 11, Python 3.10+, and whichever assistant you point him at. Claude
 python tests/run_all.py
 ```
 
-28 suites, about 30 seconds. They boot a real `QApplication`, build a real sprite sheet, and in
+29 suites, about 30 seconds. They boot a real `QApplication`, build a real sprite sheet, and in
 several cases read geometry back out of Win32 to check what Windows actually believes — because
 several of the bugs worth catching were "Qt thinks one thing and Windows thinks another".
 

@@ -102,6 +102,7 @@ rather than being silently rewritten to a time you never chose.
 | `mood_half_life_h` | `6.0` | Hours for a good or bad turn to half fade |
 | `memory_enabled` | `true` | Counts the days, pets, prompts and focus sessions you share. Counts only, kept in `memory.json` next to `config.json` — see [Privacy](PRIVACY.md). Off: nothing is counted and no file is written; one already there is kept until you **Forget everything** |
 | `memory_routine_enabled` | `true` | Lets him learn roughly what time you usually arrive (an hourly tally, nothing else). Off drops the tally from `memory.json` |
+| `needs_enabled` | `true` | Energy, affection and boredom that colour what he does: tired in the evening after a long day, fond after a lot of petting, bored when nothing happens. They only lean on what he already does, never nag. Off: all of it is gone and the stored values are left as they are, until you **Forget everything**. See [Energy, affection and boredom](BEHAVIOUR.md#energy-affection-and-boredom) |
 | `chatter_level` | `"rare"` | How often he says a line in a toast: `"rare"` is at most 6 a day, 45 min apart; `"normal"` at most 14, 20 min apart; `"off"` never. A greeting may skip the gap, never the daily cap. See [He says things, rarely](USING-HIM.md#he-says-things-rarely) |
 
 ### Appearance
@@ -164,6 +165,10 @@ lid or lock settings.
 | `costume_recents` | `[]` | The costumes you put on him last, newest first — the head of the [wardrobe](USING-HIM.md#the-wardrobe). Written, not for you to set |
 | `mood_spirits` | `0.0` | `-1.0`–`+1.0`, how the day has gone. Written, not for you to set |
 | `mood_saved_at` | `0.0` | Unix seconds at the last write, so the mood keeps fading while he is closed |
+| `need_energy` | `0.5` | `0.0`–`1.0`, how rested he is. Written by him, not for you to set |
+| `need_affection` | `0.5` | `0.0`–`1.0`, how fond he is feeling. Written by him |
+| `need_boredom` | `0.0` | `0.0`–`1.0`, how bored he is. Written by him |
+| `needs_saved_at` | `0.0` | Unix seconds at the last write, so he rests and gets over things while he is closed |
 | `last_seen_date` | `""` | Latch for the morning stretch. Written, not for you to set |
 | `last_clock_off_date` | `""` | Latch for the knocking-off dance |
 | `last_week_over_week` | `""` | Latch for the Friday flop, keyed on the ISO week |

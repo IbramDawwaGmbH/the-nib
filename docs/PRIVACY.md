@@ -113,8 +113,9 @@ Worth being explicit, since he watches a few things in order to feel alive:
   treatment the foreground-app reaction already gets. Muting your microphone is the only thing this
   feature ever *changes*, and it happens only when you ask for it — the tray entry, the shortcut,
   or the toast — never on a timer and never as a side effect of anything he does on his own.
-- **Everything he remembers stays on your machine.** Settings, position, costume, your prompts and
-  how the day has gone live in `%APPDATA%\NibMascot\config.json`. What he remembers *about you
+- **Everything he remembers stays on your machine.** Settings, position, costume, your prompts,
+  how the day has gone and how rested, fond and bored he is (three numbers and when they were
+  written) live in `%APPDATA%\NibMascot\config.json`. What he remembers *about you
   two* lives next to it in `memory.json`: the day you first ran him, the date he last saw you, how
   many days he has seen you, lifetime counts of pets, prompts, completed focus sessions, treats,
   throws and hard landings, the same counts for the eight most recent days he has counts for

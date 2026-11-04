@@ -459,8 +459,14 @@ nib.mood.nudge("petted")
 nib._update_presence()
 check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits",
       nib.tray._tray.toolTip())
-check("the status line says the same", nib._status_text()["line"] == "Nib is in good spirits.",
+nib.needs.reset()
+check("the status line says the same, with a word for each need",
+      nib._status_text()["line"] == "Nib is in good spirits — okay, fine, busy.",
       str(nib._status_text()))
+nib.config["needs_enabled"] = False
+check("...and only the mood with needs switched off",
+      nib._status_text()["line"] == "Nib is in good spirits.", str(nib._status_text()))
+nib.config["needs_enabled"] = True
 
 about = S.SettingsWindow(fresh_config("about"), costumes=[], skins=["default"],
                          status=lambda: {"line": "x"})
