@@ -122,6 +122,12 @@ DEFAULTS: dict[str, Any] = {
     "mood_half_life_h": 6.0,      # how long a good or bad turn takes to half fade
     "mood_spirits": 0.0,          # -1..+1, written by him
     "mood_saved_at": 0.0,         # unix seconds at the last write, so the decay survives a restart
+    # What he remembers about the two of you - counts only, kept in memory.json next to this
+    # file rather than in it. See memory.py, and docs/PRIVACY.md for the whole list of what's in it.
+    "memory_enabled": True,
+    #: The one part of that close to a time: a 24-slot tally of the hour he first saw you each
+    #: day, so he can know when you usually arrive. Off drops the tally from the file.
+    "memory_routine_enabled": True,
     # Latches, so a once-a-day moment stays once a day across restarts. Written, not read by you.
     "last_seen_date": "",
     "last_clock_off_date": "",

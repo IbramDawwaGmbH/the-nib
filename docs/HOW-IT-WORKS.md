@@ -98,6 +98,7 @@ the-nib/
   behavior.py           state machine: wander, gait, antics, annoyance, sleep (Qt-free)
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
   mood.py               how the day went - the one thing that survives a restart (Qt-free)
+  memory.py             what he remembers about you two: counts, a 7-day window, memory.json (Qt-free)
   animator.py           sprite slicing, skins, costume compositing, frame clock
   mascot_window.py      frameless translucent always-on-top window, drops, drags, the shadow
   bubble.py             the ask bubble, prompt history recall, and the failure toast
@@ -134,9 +135,14 @@ the-nib/
   .github/workflows/    CI: sheet is in sync, art contract, suites, docs, build
 ```
 
-`behavior.py`, `world.py` and `mood.py` are deliberately **free of Qt**, so the whole state machine
-can be reasoned about and tested headlessly without a display. `mood.py` also takes an injectable
-clock, so a week of moods can be simulated in a millisecond.
+`behavior.py`, `world.py`, `mood.py` and `memory.py` are deliberately **free of Qt**, so the whole
+state machine can be reasoned about and tested headlessly without a display. `mood.py` and
+`memory.py` also take an injectable clock, so a week of moods can be simulated in a millisecond.
+
+Your data lives in `%APPDATA%\NibMascot`: `config.json` (settings and the little state he writes
+for himself) and, next to it, `memory.json` (the counts `memory.py` keeps; see
+[Privacy](PRIVACY.md) for every key). Both are written atomically, from the same ten-second flush,
+and only when something in them changed.
 
 `behavior.py` never touches the audio layer either — it raises named *events* into a small queue
 and something else decides whether that makes a noise.

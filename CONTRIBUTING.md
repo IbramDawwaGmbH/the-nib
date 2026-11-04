@@ -135,7 +135,7 @@ narrow, named, and opt-in on every single use (the modifier key, not a setting y
 rather than a quiet widening of what "nothing reads a file" means. It never reads a window's
 content, only a file you handed it directly.
 
-### 5. `behavior.py`, `world.py` and `mood.py` stay free of Qt
+### 5. `behavior.py`, `world.py`, `mood.py` and `memory.py` stay free of Qt
 
 So the whole state machine can be reasoned about and tested headlessly.
 

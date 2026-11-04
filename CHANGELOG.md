@@ -13,6 +13,13 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   tooltip is his name and his mood in a word — `Nib — fine`, `Nib — in good spirits` — and it
   changes as soon as you pet him. A new **About him** tab in Settings says the same in a sentence.
 - A fifth first-run tip: that you can rename him, and where to see how he's doing.
+- **He remembers you.** He keeps count of the days you've shared and the pets, prompts and focus
+  sessions along the way (and the throws and hard landings), plus the same counts day by day for
+  the last week — counts only, no app names, times or text, in a new `memory.json` next to
+  `config.json`. **Settings → About him** shows it in plain words, and **Forget everything…**
+  there deletes it. Two new settings on the Personality tab: `memory_enabled`, and
+  `memory_routine_enabled` for the hourly tally of when you usually arrive.
+  [Privacy](docs/PRIVACY.md) lists every key in the file.
 
 ### Changed
 

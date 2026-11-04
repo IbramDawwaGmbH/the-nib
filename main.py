@@ -72,6 +72,7 @@ from launcher import (  # noqa: E402
     open_download_page,
 )
 from mascot_window import MascotWindow  # noqa: E402
+from memory import MEMORY_FILE, Memory  # noqa: E402
 from mood import Mood, label_for  # noqa: E402
 import devices  # noqa: E402
 from ruler import RulerOverlay  # noqa: E402
@@ -91,6 +92,10 @@ IDLE_TICK_MS = 250        # ceiling: when nothing is going to change, sleep this
 GEOMETRY_POLL_MS = 700    # taskbar, monitor, and fullscreen checks
 TOPMOST_POLL_MS = 3000    # other apps steal the top-most slot; take it back
 CONFIG_FLUSH_MS = 10000   # write last_x et al. at most this often
+#: The most one presence poll may add to the minute counters. Polls are 700ms apart; anything
+#: much longer is the machine waking from sleep, and the hours it slept were not hours you were
+#: at it - nor hours it was busy.
+MEMORY_MAX_POLL_S = 5.0
 
 #: How long he has to stand on a window, undisturbed, before it actually gets pinned on top - the
 #: landing itself is immediate, but the real always-on-top exception only kicks in once it is
@@ -237,7 +242,11 @@ class NibApp:
         # How the day has gone. Built here rather than inside Behavior so the app owns when it is
         # written back - it goes out on the same flush timer as everything else.
         self.mood = Mood(config)
-        self.behavior = Behavior(config, self.sheet, self.mood)
+        # What he remembers about you two, in its own file next to the config. Next to *this*
+        # config rather than at config_path(): the same place in the app, and a scratch directory
+        # under the tests, which boot a real NibApp and must never write the user's real memory.
+        self.memory = Memory(config.path.parent / MEMORY_FILE, config)
+        self.behavior = Behavior(config, self.sheet, self.mood, memory=self.memory)
         self.behavior.paused = bool(config["paused"])
         # Silent unless the WAVs have been generated AND sound is switched on. Both halves fail
         # softly: no directory, no backend, no file - all of them end in nothing happening.
@@ -290,6 +299,20 @@ class NibApp:
         #: long you were gone. time.time() because the behaviour clock caps each tick at 250ms, and
         #: so loses a night the machine slept through.
         self._away_since: float | None = None
+        #: The day memory last recorded a first sighting for, so the poll does not ask every 700ms.
+        self._memory_day = ""
+        #: Seconds of presence and of a busy machine not yet a whole minute. One record() per
+        #: full minute, never per poll - see MEMORY_MAX_POLL_S for why the step is capped.
+        self._present_acc = 0.0
+        self._busy_acc = 0.0
+        self._memory_polled = time.monotonic()
+        #: Whether you were present at the previous poll - None before the first one. A sighting
+        #: that does not follow an absence (or a start) is the day rolling over under you, not an
+        #: arrival, and stays out of the hour tally; see Memory.first_sight.
+        self._memory_was_present: bool | None = None
+        #: A day first seen by rollover, whose real arrival is still to be tallied the first time
+        #: you come back to the machine that day. "" when there is none.
+        self._arrival_pending = ""
         self._last_foreground = ""
         self._hotkey_hwnd = 0
         self._come_hotkey_hwnd = 0
@@ -645,7 +668,8 @@ class NibApp:
 
     def _update_presence(self) -> None:
         """Notice when you step away, come back, or switch app - and what the world is doing."""
-        self.behavior.set_world(self.world.read())
+        state = self.world.read()
+        self.behavior.set_world(state)
 
         # Only when he is actually in the mood to look. Enumerating top-level windows is the
         # priciest probe here, and behind its 15-minute cooldown this runs a few times an hour.
@@ -673,6 +697,8 @@ class NibApp:
                 gone_s = max(0.0, time.time() - self._away_since)
                 self._away_since = None
             self.behavior.set_away(away, gone_s=gone_s)
+
+        self._update_memory(state)
 
         if bool(self.config["react_to_apps"]):
             process = win.get_foreground_process()
@@ -713,6 +739,46 @@ class NibApp:
             # him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows before
             # the first poll gets here.
             self.tray.set_tooltip(f"{name} — {label_for(self.mood.spirits)}")
+
+    def _update_memory(self, state) -> None:
+        """First sighting of the day, and the minutes you were here and the machine was busy.
+
+        Read off the behaviour's ``away`` rather than the idle check above, which is skipped
+        entirely while snoozed or with ``away_after_s`` at 0 - and in both of those he treats you
+        as present, so memory should too.
+        """
+        now = time.monotonic()
+        step = min(max(0.0, now - self._memory_polled), MEMORY_MAX_POLL_S)
+        self._memory_polled = now
+        present = not self.behavior.away
+        # An arrival is the first poll of the session or the first one back from away - not a
+        # date that changed while you sat there, nor a Forget or a switch-on mid-session.
+        arrived = present and self._memory_was_present is not True
+        self._memory_was_present = present
+        if not self.memory.enabled:
+            # Nothing banked while off, so switching it back on does not pay out minutes from
+            # before; and the day is left unmarked, so it is counted the moment it is back on.
+            self._present_acc = self._busy_acc = 0.0
+            self._memory_day = ""
+            self._arrival_pending = ""
+            return
+        if present and state.date_key != self._memory_day:
+            new_day = self.memory.first_sight(state.date_key, state.hour, tally=arrived)
+            self._memory_day = state.date_key
+            self._arrival_pending = state.date_key if new_day and not arrived else ""
+        elif arrived and self._arrival_pending == state.date_key:
+            self.memory.tally_arrival(state.hour)
+            self._arrival_pending = ""
+        if present:
+            self._present_acc += step
+            if self._present_acc >= 60.0:
+                self._present_acc -= 60.0
+                self.memory.record("present_min", state.date_key)
+        if state.cpu_busy:
+            self._busy_acc += step
+            if self._busy_acc >= 60.0:
+                self._busy_acc -= 60.0
+                self.memory.record("busy_min", state.date_key)
 
     def _update_fullscreen(self, monitor) -> None:
         fullscreen = win.is_fullscreen_on_monitor(monitor)
@@ -1803,6 +1869,7 @@ class NibApp:
                 costumes=self.sheet.available_costumes(),
                 skins=available_skins(),
                 status=self._status_text,
+                forget=self._forget_memory,
             )
             self._settings.changed.connect(self._on_settings_changed)
             self._settings.history_cleared.connect(lambda: self.behavior.noticed())
@@ -1813,8 +1880,43 @@ class NibApp:
         self._settings.activateWindow()
 
     def _status_text(self) -> dict:
-        """How he is, for Settings → About him. Words only - the same label the tooltip uses."""
-        return {"line": f"{self.config['name']} is {label_for(self.mood.spirits)}."}
+        """How he is, and what he remembers, for Settings → About him. Words only, never a score.
+
+        ``memory`` is the list of plain-English lines from memory.py, or one line saying it is off;
+        ``can_forget`` greys the Forget button out when there is nothing to forget.
+        """
+        name = str(self.config["name"])
+        if self.memory.enabled:
+            lines = self.memory.summary_lines(name)
+        else:
+            lines = [f"{name} isn't keeping count - memory is switched off on the Personality tab."]
+            if not self.memory.is_empty:
+                lines.append("What he already knew is kept until you forget it.")
+        return {
+            "line": f"{name} is {label_for(self.mood.spirits)}.",
+            "memory": lines,
+            "can_forget": not self.memory.is_empty,
+        }
+
+    def _forget_memory(self) -> None:
+        """Settings → About him → Forget everything: back to the day you met.
+
+        The file goes, and so does how the day has gone - a mood built on the days just forgotten
+        would otherwise outlive them. Settings, costume and prompt history are untouched; those
+        have their own controls.
+        """
+        self.memory.forget()
+        needs = getattr(self, "needs", None)
+        if needs is not None:
+            needs.reset()
+        self.mood.reset()
+        # Today counts again from the next poll - a fresh start, met today, rather than nothing
+        # until tomorrow - and the part-minutes banked so far belonged to what was wiped. Not
+        # polled from here: the panel should show the empty memory you just asked for first.
+        self._memory_day = ""
+        self._arrival_pending = ""
+        self._present_acc = self._busy_acc = 0.0
+        self.behavior.noticed()
 
     def _on_settings_changed(self, keys: set) -> None:
         """React to the handful of settings that need more than a config write.
@@ -2044,6 +2146,9 @@ class NibApp:
         # Quantised inside Mood, so this is a no-op within a hundredth of the range rather than a
         # disk write every ten seconds for as long as he is running.
         self.mood.persist()
+        # Dirty only when a count moved, and the most frequent count is a minute of presence - so
+        # this writes memory.json at most about once a minute, and never while nothing happens.
+        self.memory.save_if_dirty()
         if self.behavior.state not in (State.DRAG,):
             x = self.behavior.x
             if self._last_saved_x is None or abs(x - self._last_saved_x) > 2:

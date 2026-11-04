@@ -346,6 +346,12 @@ Set `mood_enabled` to `false` and it reports a flat zero, contributing nothing a
 "Right now" line on **Settings → About him**. Both use his `name`. With `mood_enabled` off the
 word is always *fine*.
 
+**What he remembers is separate.** The mood is one number about *today*; the longer story — the
+days you have shared and how many pets, prompts and focus sessions — is kept in `memory.json` by
+`memory.py`, and like the mood it never fires anything on its own. See
+[What he remembers](USING-HIM.md#what-he-remembers). **Forget everything** wipes it and resets the
+mood to neutral with it.
+
 ---
 
 ## App personas

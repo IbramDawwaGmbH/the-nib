@@ -19,9 +19,11 @@ import enum
 import logging
 import math
 import random
+import time
 from collections import deque
 
 from animator import Animator, SpriteSheet
+from memory import Memory
 from mood import Mood
 from world import (
     PART_DAY,
@@ -712,13 +714,23 @@ def _smoothstep(t: float) -> float:
 class Behavior:
     """Owns where the mascot is, what he is doing, and how annoyed he is about it."""
 
-    def __init__(self, config, sheet: SpriteSheet, mood: Mood | None = None) -> None:
+    def __init__(
+        self,
+        config,
+        sheet: SpriteSheet,
+        mood: Mood | None = None,
+        memory: Memory | None = None,
+    ) -> None:
         self._config = config
         self._sheet = sheet
         self.animator = Animator(sheet, "idle")
         #: How the day has gone - the only part of him that survives a restart. Constructed here
         #: when the caller does not supply one, so a test can build a Behavior on its own.
         self.mood = mood if mood is not None else Mood(config)
+        #: What he remembers about the two of you - counts only. The default keeps them in memory
+        #: and never writes a file, so every test that builds a Behavior on its own stays
+        #: off the disk; the app passes one that saves to memory.json.
+        self.memory = memory if memory is not None else Memory(None, config)
 
         self._state = State.IDLE
         self._prev_state = State.IDLE
@@ -1450,6 +1462,7 @@ class Behavior:
         self._pokes.clear()
         self._residual = max(0.0, self._residual - 1.0)
         self.mood.nudge("prompt_sent")
+        self.memory.record("prompts", self._date_key())
         self._sound("send")
         self._post_prompt = self._prompt_reaction(text)
         self._working_ms = random.uniform(WORKING_MIN_MS, WORKING_MAX_MS)
@@ -1617,6 +1630,7 @@ class Behavior:
         self._drag_last = None
         if abs(self._vx) > 0.4:
             log.debug("thrown at %.2f,%.2f px/ms", self._vx, self._vy)
+            self.memory.record("throws", self._date_key())
         self._enter(State.IDLE)
 
     # --- perching on a window -------------------------------------------------------
@@ -1761,6 +1775,7 @@ class Behavior:
         self._pet_armed = False
         self.noticed()
         self.mood.nudge("petted")
+        self.memory.record("pets", self._date_key())
         log.info("being petted")
         self._enter(State.PET)
         return True
@@ -2231,6 +2246,9 @@ class Behavior:
             and not self._falling and not self._rolling
         ):
             self.mood.nudge("focus_done")
+            # Counted inside the gate for the same reason the mood is: the session it celebrates
+            # is the one he was there to see.
+            self.memory.record("focus_done", self._date_key())
             # Its own sound, not "cheer" - that one is already spoken for by the CPU-driven
             # task_finished moment below, and the two completing back to back (a session ending
             # right as a build finishes) should not sound like the same event twice.
@@ -2291,6 +2309,16 @@ class Behavior:
             self._begin_antic("look_around", random.uniform(1200, 1900))
 
     # --- world awareness ----------------------------------------------------------
+
+    def _date_key(self) -> str:
+        """Today, as the token memory files its counts under.
+
+        The world's own key whenever there is one, so a count and the once-a-day latches agree on
+        what day it is even across midnight; the wall clock only before the first world reading.
+        """
+        if self._world is not None:
+            return self._world.date_key
+        return time.strftime("%Y-%m-%d")
 
     def set_world(self, state: WorldState) -> None:
         """Adopt a fresh snapshot from :mod:`world`. Polled on the app's slow timer, not the tick."""
@@ -3203,6 +3231,7 @@ class Behavior:
         if self._pending_injury:
             self._pending_injury = False
             self.mood.nudge("hurt")
+            self.memory.record("hurts", self._date_key())
             self._injured_ms = float(self._config.get("injury_duration_s", 3.0)) * 1000.0
             self._enter(State.INJURED)
 

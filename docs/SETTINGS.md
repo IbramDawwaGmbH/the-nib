@@ -100,6 +100,8 @@ rather than being silently rewritten to a time you never chose.
 | `sleep_cooldown_s` | `60` | Nap length |
 | `mood_enabled` | `true` | Let a good or bad stretch carry over between sessions |
 | `mood_half_life_h` | `6.0` | Hours for a good or bad turn to half fade |
+| `memory_enabled` | `true` | Counts the days, pets, prompts and focus sessions you share. Counts only, kept in `memory.json` next to `config.json` — see [Privacy](PRIVACY.md). Off: nothing is counted and no file is written; one already there is kept until you **Forget everything** |
+| `memory_routine_enabled` | `true` | Lets him learn roughly what time you usually arrive (an hourly tally, nothing else). Off drops the tally from `memory.json` |
 
 ### Appearance
 
