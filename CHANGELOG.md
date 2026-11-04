@@ -2,11 +2,13 @@
 
 Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.md#releases).
 
-## [1.0.1] - 2026-11-04
+## [1.0.2] - 2026-11-04
 
-The screen guard's PIN field now always takes your typing after a blackout.
+The screen guard's PIN field now always takes your typing after a blackout. (1.0.1 was tagged with
+these same fixes, but its build stopped on a flaky test, so it has no download; 1.0.2 is that
+release.)
 
-**Download** `Nib-v1.0.1-windows-x64.zip` below, extract it over the old folder (or anywhere), and
+**Download** `Nib-v1.0.2-windows-x64.zip` below, extract it over the old folder (or anywhere), and
 run `Nib.exe`. Running from source? `git pull`.
 
 ### Fixed
