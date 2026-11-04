@@ -128,6 +128,13 @@ DEFAULTS: dict[str, Any] = {
     #: The one part of that close to a time: a 24-slot tally of the hour he first saw you each
     #: day, so he can know when you usually arrive. Off drops the tally from the file.
     "memory_routine_enabled": True,
+    # Energy, affection and boredom - see needs.py. Like the mood they only lean on what he
+    # already does, and the four values below them are written by him, aged across a restart.
+    "needs_enabled": True,
+    "need_energy": 0.5,           # 0 worn out .. 1 bright-eyed
+    "need_affection": 0.5,        # 0 lonely .. 1 doted on
+    "need_boredom": 0.0,          # 0 kept busy .. 1 bored stiff
+    "needs_saved_at": 0.0,        # unix seconds at the last write, like mood_saved_at
     #: How often he says a line in a toast - see voice.py. "rare" is at most 6 a day, 45 minutes
     #: apart; "normal" at most 14, 20 minutes apart; "off" never. Greetings skip the gap, not the cap.
     "chatter_level": "rare",
@@ -253,6 +260,11 @@ _BOUNDS: dict[str, tuple[float, float]] = {
     # No upper clamp worth the name: it is a unix timestamp, and a future one only means the
     # decay has nothing to apply. mood.py is what actually guards a clock that has jumped.
     "mood_saved_at": (0.0, 1.0e12),
+    "need_energy": (0.0, 1.0),
+    "need_affection": (0.0, 1.0),
+    "need_boredom": (0.0, 1.0),
+    # The same as mood_saved_at: needs.py guards a clock that has jumped, not this.
+    "needs_saved_at": (0.0, 1.0e12),
     # Never fully invisible: a mascot you cannot see and cannot click is indistinguishable from a
     # crashed one, and the tray is then the only way back.
     "ghost_opacity": (0.08, 1.0),

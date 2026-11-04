@@ -75,6 +75,7 @@ from launcher import (  # noqa: E402
 from mascot_window import MascotWindow  # noqa: E402
 from memory import MEMORY_FILE, Memory  # noqa: E402
 from mood import Mood, label_for  # noqa: E402
+from needs import Needs  # noqa: E402
 from phrases import PhraseBag, load_phrases  # noqa: E402
 import devices  # noqa: E402
 from ruler import RulerOverlay  # noqa: E402
@@ -252,7 +253,11 @@ class NibApp:
         # config rather than at config_path(): the same place in the app, and a scratch directory
         # under the tests, which boot a real NibApp and must never write the user's real memory.
         self.memory = Memory(config.path.parent / MEMORY_FILE, config)
-        self.behavior = Behavior(config, self.sheet, self.mood, memory=self.memory)
+        # Energy, affection and boredom - built here for the same reason as the mood: the app owns
+        # when they are written back, on the same flush.
+        self.needs = Needs(config)
+        self.behavior = Behavior(config, self.sheet, self.mood, memory=self.memory,
+                                 needs=self.needs)
         self.behavior.paused = bool(config["paused"])
         # The lines he says, now and then. The table is the shipped one plus your own
         # nib_phrases.json next to *this* config (a scratch directory under the tests, as above);
@@ -1617,6 +1622,8 @@ class NibApp:
     def _on_line_clicked(self) -> None:
         self.behavior.noticed()
         self.mood.nudge("greeted")
+        # Half a pet: you reached out to him, but it was a click on a toast, not a hand on him.
+        self.needs.nudge("petted", 0.5)
 
     def _on_creature_event(self, kind: str, data: dict) -> None:
         """Something happened that he might say a line about - see voice.lines_for.
@@ -1969,7 +1976,9 @@ class NibApp:
         """How he is, and what he remembers, for Settings → About him. Words only, never a score.
 
         ``memory`` is the list of plain-English lines from memory.py, or one line saying it is off;
-        ``can_forget`` greys the Forget button out when there is nothing to forget.
+        ``can_forget`` greys the Forget button out when there is nothing to forget. ``line`` is how
+        he is right now: the mood's word and, with needs on, a word each for energy, affection and
+        boredom.
         """
         name = str(self.config["name"])
         if self.memory.enabled:
@@ -1978,8 +1987,12 @@ class NibApp:
             lines = [f"{name} isn't keeping count - memory is switched off on the Personality tab."]
             if not self.memory.is_empty:
                 lines.append("What he already knew is kept until you forget it.")
+        line = f"{name} is {label_for(self.mood.spirits)}"
+        if self.needs.enabled:
+            # Words for all three, in a fixed order - "rested, loved, busy" - never a number.
+            line += " — " + ", ".join(self.needs.labels())
         return {
-            "line": f"{name} is {label_for(self.mood.spirits)}.",
+            "line": line + ".",
             "memory": lines,
             "can_forget": not self.memory.is_empty,
         }
@@ -1987,17 +2000,15 @@ class NibApp:
     def _forget_memory(self) -> None:
         """Settings → About him → Forget everything: back to the day you met.
 
-        The file goes, and so does how the day has gone - a mood built on the days just forgotten
-        would otherwise outlive them. Settings, costume and prompt history are untouched; those
-        have their own controls.
+        The file goes, and so does how the day has gone, and how rested, loved and bored he is - a
+        mood built on the days just forgotten would otherwise outlive them. Settings, costume and
+        prompt history are untouched; those have their own controls.
         """
         self.memory.forget()
         # The milestone and focus-streak latches are config keys, out of memory.forget's reach;
         # without this the next 7th day after a wipe would find "7" already celebrated.
         self.behavior.memory_forgotten()
-        needs = getattr(self, "needs", None)
-        if needs is not None:
-            needs.reset()
+        self.needs.reset()
         self.mood.reset()
         # Today counts again from the next poll - a fresh start, met today, rather than nothing
         # until tomorrow - and the part-minutes banked so far belonged to what was wiped. Not
@@ -2235,6 +2246,9 @@ class NibApp:
         # Quantised inside Mood, so this is a no-op within a hundredth of the range rather than a
         # disk write every ten seconds for as long as he is running.
         self.mood.persist()
+        # Quantised the same way. Energy drifts while you are here, so this writes about once
+        # every seven minutes at most - and nothing at all with needs_enabled off.
+        self.needs.persist()
         # Dirty only when a count moved, and the most frequent count is a minute of presence - so
         # this writes memory.json at most about once a minute, and never while nothing happens.
         self.memory.save_if_dirty()

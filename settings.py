@@ -76,6 +76,7 @@ HIDDEN = frozenset({
     "costume_recents", "persona_apps", "last_seen_date", "last_clock_off_date", "last_week_over_week",
     "last_milestone_days", "last_focus_streak_date",
     "mood_spirits", "mood_saved_at", "paused", "launch_on_startup",
+    "need_energy", "need_affection", "need_boredom", "needs_saved_at",
     # A scrypt hash, not something anyone can type - the first guard sets it, clearing it in
     # config.json resets it. A text box holding it would only invite pasting a PIN in plain text.
     "guard_pin_hash",
@@ -106,7 +107,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
-        "memory_enabled", "memory_routine_enabled", "chatter_level",
+        "memory_enabled", "memory_routine_enabled", "needs_enabled", "chatter_level",
     )),
     ("Look and sound", (
         "sprite_scale", "costume", "skin", "shadow_enabled",
@@ -159,6 +160,7 @@ HELP: dict[str, str] = {
     "mood_half_life_h": "How long a good or bad turn takes to half fade.",
     "memory_enabled": "Count the days, pets, prompts and focus sessions you share. Counts only.",
     "memory_routine_enabled": "Learn roughly what time you usually arrive. An hourly tally.",
+    "needs_enabled": "Energy, affection and boredom that colour what he does.",
     "chatter_level": "How often he says a line in a toast. Rare: at most 6 a day, 45 min apart.",
     "sprite_scale": "0 picks an integer scale from your monitor's DPI.",
     "shadow_enabled": "The soft contact shadow under his feet.",

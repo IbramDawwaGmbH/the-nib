@@ -236,6 +236,8 @@ One-off reactions to something specific. They are priority checks, not entries i
 | **Seasonal** | Every 90 min or so | Winter: shivers in falling snow. Autumn: watches a leaf tumble past |
 | **Day milestone** | The 7th, 30th, 100th and 365th day he has seen you — once each, ever | The task-finished party, hat and cheer included |
 | **Focus streak** | Your third finished focus session of the day — once a day | The same party |
+| **Tired** | He is [worn out](#energy-affection-and-boredom), in the evening or at night — at most every 90 min | A big yawn, then a heavy slow blink |
+| **Fond** | He is [doted on](#energy-affection-and-boredom) and your pointer is near him — at most every 90 min | Heart eyes, at you |
 
 Three rules keep these from stacking up, and each came out of a measurement rather than a guess:
 
@@ -374,6 +376,73 @@ each be said out loud in the toast — one short sentence, at most 6 a day and 4
 at the default `chatter_level`, and never when it would be in the way. The line rides on the
 moment; it never makes one happen. See
 [He says things, rarely](USING-HIM.md#he-says-things-rarely).
+
+---
+
+## Energy, affection and boredom
+
+The mood is how the day has *gone*. These three are the state he is *in*, each from 0 to 1, kept
+by `needs.py` and written to `config.json` next to the mood:
+
+| Need | Goes up | Goes down |
+| --- | --- | --- |
+| **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
+| **Affection** — lonely to doted on | A pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
+| **Boredom** — kept busy to bored stiff | **+0.1 an hour** while you are here and doing nothing with him | Anything you do with him knocks **0.5** off; something happening around him (a moment, an app reaction) 0.2; otherwise it fades on a 2-hour half-life |
+
+A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, about three hours at
+the machine makes him tired, so an ordinary working day ends in a tired evening — and lunch away
+from the desk perks him up again. A night off has him rested in the morning. Kindness is tapered
+the same way the mood's is (squared headroom), so no amount of petting pins affection at the top.
+
+**They never fire anything, with two small exceptions.** Like the mood, they only lean on what
+he already does:
+
+| When | What changes |
+| --- | --- |
+| **Tired** (energy under 0.35) | Sits and checks his watch more; hops, dances, football and press-ups down to 0.4×. Plays up to **10% slower**, and the heavy slow blink comes far more often |
+| **Rested** (energy over 0.75) | Hops and dances more |
+| **Loved** (affection over 0.7) | Heart eyes, sparkles and winks more |
+| **Lonely** (affection under 0.3) | Looks about more, and aims everything he does with his eyes at you |
+| **Bored** (boredom over 0.6) | Checks his watch, taps his foot, scratches and sits about more — and is up to **1.6×** as likely to duck behind the taskbar for a look |
+
+Each lean grows from nothing at its edge to the full figure at the end of the range. Inside the
+bands — which includes the starting point — **every multiplier is exactly 1.0**, so a fresh
+mascot behaves precisely as he did before any of this existed (`tests/fidget_rate.py`,
+`tests/quirk_rate.py` and `tests/day_rate.py` are the check).
+
+The two exceptions are [moments](#moments--things-he-does-once), and wait their turn like every
+other: a **tired** yawn and heavy blink, only in the evening or at night, and **fond** heart eyes
+when he is doted on (affection over 0.85) and your pointer is near. They share one 90-minute
+cooldown on top of the 45-second budget every moment shares. Boredom gets no moment at all —
+past 0.6 he may only *say* so, once per that same 90 minutes, through the
+[lines he says](USING-HIM.md#he-says-things-rarely). Measured over a simulated day held worn out
+(`tests/day_rate.py`): **8 tired yawns**, all in the evening or the small hours and at least 90
+minutes apart; held at the starting point, none.
+
+**It is not a Tamagotchi.** Nothing here can be failed, and nothing asks to be topped up. A
+neglected mascot is a bit lonely and a bit bored — he looks about and checks his watch — and he
+gets over it on his own, on a half-life, whether you do anything or not. He never stops doing
+anything he does today: no lean goes below 0.4×.
+
+**Boredom runs on the being-ignored clock.** It builds only while that clock is running. Whenever
+being ignored is on hold — while you are away, while he is asleep, cross, held, being petted or
+perched, while the machine is pinned, and always with `attention_enabled` off — it stops building
+and fades on its half-life instead.
+
+**While he is closed** the stored values are aged on the wall clock as if you had been away:
+energy comes back, affection drifts to the middle, boredom fades. They are stored to two
+decimals, so energy draining while you work rewrites `config.json` about once every seven
+minutes at most. A clock that jumps backwards ages nothing.
+
+**Where you can read them.** As words on **Settings → About him**, after the mood:
+`Nib is in good spirits — rested, loved, busy.` Energy is *tired*, *okay* or *rested*; affection
+*lonely*, *fine* or *loved*; boredom *busy*, *fine* or *bored*. Never a number.
+**Forget everything** resets them to the starting point with the mood.
+
+Set `needs_enabled` to `false` and all of it — the leans, the two moments, the bored line — is
+gone, and the stored values are left exactly as they were (until you **Forget everything**, which
+resets them whether they are on or off).
 
 ---
 

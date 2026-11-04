@@ -11,7 +11,8 @@ Two kinds of day, each run 200 times with different random breaks:
   odd milestone or focus streak, nothing else.
 * **Stormy** - the worst case for chatter: back from a ten-to-twenty-minute break every half hour
   all day, a heavy yesterday, an early start, a milestone, a focus streak and a big week, plus a
-  needs remark (tired, fond, bored - the lines WP5 will raise) asked for every quarter of an hour.
+  needs remark (tired, fond, bored - the events Behavior._needs_moment raises) asked for every
+  quarter of an hour, far more often than its 90-minute cooldown would ever allow.
 
 Both assume nothing ever blocks a line - no bubble, no focus session, no fullscreen app - so the
 numbers are an upper bound on what the app shows. Exits non-zero if any day goes over the cap at
@@ -60,7 +61,7 @@ def schedule(rng, stormy):
                                                "overnight": False}))
             minute += 30
         for minute in range(arrive + 7, 600, 15):
-            events.append((minute, "needs", {"category": rng.choice(("tired", "fond", "bored"))}))
+            events.append((minute, rng.choice(("tired", "fond", "bored")), {}))
         events += [(150, "milestone", {"days": 30}), (450, "focus_streak", {"count": 3}),
                    (570, "big_week", {})]
     else:
@@ -88,10 +89,7 @@ def run_day(level, seed, stormy):
     for minute, kind, data in schedule(rng, stormy):
         clock.now = start + minute * 60.0
         hour = 7.5 + minute / 60.0
-        if kind == "needs":
-            categories = [data["category"]]
-        else:
-            categories = V.lines_for(kind, data, hour=hour, usual_hour=USUAL_HOUR)
+        categories = V.lines_for(kind, data, hour=hour, usual_hour=USUAL_HOUR)
         for category in categories:
             line = voice.say(category, days=data.get("days", 30), pets=412)
             if line:
