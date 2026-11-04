@@ -234,6 +234,8 @@ One-off reactions to something specific. They are priority checks, not entries i
 | **Machine pinned** | System load sustained over `cpu_busy_percent` | Wilts and fans himself, sweating |
 | **Task finished** | A long sustained-load stretch drops back to quiet | Winds up, punches the air, holds a twinkling sparkly beat, settles into a smug grin — with a cheer if sound is on |
 | **Seasonal** | Every 90 min or so | Winter: shivers in falling snow. Autumn: watches a leaf tumble past |
+| **Day milestone** | The 7th, 30th, 100th and 365th day he has seen you — once each, ever | The task-finished party, hat and cheer included |
+| **Focus streak** | Your third finished focus session of the day — once a day | The same party |
 
 Three rules keep these from stacking up, and each came out of a measurement rather than a guess:
 
@@ -260,6 +262,17 @@ he fans himself for as long as load stays sustained above `cpu_busy_percent` —
 then genuinely drops back to quiet, so a build's ordinary dips between compile units do not read as
 it finishing early. They cannot overlap: by the time there is anything to celebrate, load has
 already dropped, so fanning has already stopped.
+
+**The two moments from [what he remembers](USING-HIM.md#what-he-remembers)** have no window and no
+chance: each waits on its latch (`last_milestone_days`, `last_focus_streak_date`), so a restart on
+the seventh day does not throw the party twice, and being beaten to the slot by another moment only
+delays it. Neither fires before 05:00, so a day that begins at
+midnight waits for morning. The milestone counts **days he has actually seen you**, not days since you met — a
+fortnight's holiday does not make a month. Both share the task-finished party *and its 3-minute
+cooldown*: every finished focus session already ends in that party, so without the cooldown the
+third would get two in a row. Instead the streak's waits a moment and follows on. In a simulated
+day with 30 days and a bond near the top in memory, the milestone fires exactly once and everything else
+fires as often as it does on a fresh install — see `tests/day_rate.py`.
 
 ### Mood — things that change how he already behaves
 
@@ -351,6 +364,10 @@ days you have shared and how many pets, prompts and focus sessions — is kept i
 `memory.py`, and like the mood it never fires anything on its own. See
 [What he remembers](USING-HIM.md#what-he-remembers). **Forget everything** wipes it and resets the
 mood to neutral with it.
+
+A few things *read* it, and each adds a beat rather than a new behaviour: the
+[day milestone and focus streak](#moments--things-he-does-once) moments, and two touches on his
+greeting when you come back (below). With `memory_enabled` off none of them happen.
 
 ---
 
@@ -501,7 +518,11 @@ Set `play_with_windows` to `false` to switch both off.
   wave under 10 minutes, the hop up to four hours, and after a night away a stretch, a yawn and
   then the hop. (Gone *at least* `away_after_s` to count, so with the default 150 the wave covers
   2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — only being pestered puts him
-  to sleep.
+  to sleep. Two things he [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on
+  a morning after a heavy day the overnight wake-up finishes with a coffee, and once he knows you
+  well — a month or so of days together and a few hundred pets, the bond `memory.py` calls
+  *close* — the hop is followed by heart eyes. The wave never changes: a coffee break is not a
+  reunion.
 - **He watches the wheel.** His eyes follow the tool you're aiming at, the tools that give him
   nothing to do get a short beat when picked, and putting the wheel away without choosing gets a
   head scratch. See [the tool wheel](USING-HIM.md#the-tool-wheel).

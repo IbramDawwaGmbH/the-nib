@@ -73,6 +73,7 @@ CHOICES: dict[str, tuple[str, ...]] = {
 HIDDEN = frozenset({
     "config_version", "last_x", "last_monitor", "last_prompt", "prompt_history",
     "costume_recents", "persona_apps", "last_seen_date", "last_clock_off_date", "last_week_over_week",
+    "last_milestone_days", "last_focus_streak_date",
     "mood_spirits", "mood_saved_at", "paused", "launch_on_startup",
     # A scrypt hash, not something anyone can type - the first guard sets it, clearing it in
     # config.json resets it. A text box holding it would only invite pasting a PIN in plain text.

@@ -71,12 +71,19 @@ of which hour you first turn up each day, so he can learn that you are usually i
 Working past midnight is not an arrival: a day that begins while you are already there is tallied
 the first time you come back to it. That is all of it: **counts, never names, times or text**. [Privacy](PRIVACY.md) lists every key in the file.
 
+**He acts on it, quietly.** A party on the 7th, 30th, 100th and 365th day he has seen you and on
+your third finished focus session of a day, a coffee at the end of his good-morning after a heavy
+day, and heart eyes after the hop once he knows you well. See
+[Moments](BEHAVIOUR.md#moments--things-he-does-once) and
+[How he reacts to you](BEHAVIOUR.md#how-he-reacts-to-you).
+
 **Settings → About him** shows it in plain words — `Nib has known you 23 days (since 4 Nov
 2026).`, `412 pets · 87 prompts · 12 focus sessions`, `Usually sees you around 08:00.` — under the
 line about how he is right now.
 
 **To clear it**, press **Forget everything…** on that tab and confirm. It deletes `memory.json`
-and lets his mood start fresh, as if you had just met; today then counts as your first day.
+and lets his mood start fresh, as if you had just met; today then counts as your first day, and
+the day milestones are there to be had again.
 Your settings, his costume and your prompt history are not touched — those have their own
 controls. **To stop it**, switch off `memory_enabled` (Settings → Personality): nothing more is
 counted and no file is written. Switching it off does not delete what is already there; Forget

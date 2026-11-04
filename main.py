@@ -1906,6 +1906,9 @@ class NibApp:
         have their own controls.
         """
         self.memory.forget()
+        # The milestone and focus-streak latches are config keys, out of memory.forget's reach;
+        # without this the next 7th day after a wipe would find "7" already celebrated.
+        self.behavior.memory_forgotten()
         needs = getattr(self, "needs", None)
         if needs is not None:
             needs.reset()

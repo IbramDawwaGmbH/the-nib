@@ -166,6 +166,8 @@ lid or lock settings.
 | `last_seen_date` | `""` | Latch for the morning stretch. Written, not for you to set |
 | `last_clock_off_date` | `""` | Latch for the knocking-off dance |
 | `last_week_over_week` | `""` | Latch for the Friday flop, keyed on the ISO week |
+| `last_milestone_days` | `""` | Latch for the [day milestones](BEHAVIOUR.md#moments--things-he-does-once): the last day-count he celebrated (`7`, `30`, `100`, `365`). Written, not for you to set |
+| `last_focus_streak_date` | `""` | Latch for the focus-streak party, keyed on the date |
 | `log_level` | `"INFO"` | `DEBUG` for verbose diagnostics |
 | `config_version` | `2` | Drives migrations — see below |
 
