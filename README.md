@@ -114,7 +114,7 @@ He is not a static image with a click handler.
   time, shivers in winter, fans himself when your machine is pinned, and puts a beanie on for the
   season.
 - **He remembers how the day went.** Pet him and he's visibly bouncier for hours — and it survives
-  a restart, fading on a half-life.
+  a restart, fading on a half-life. Hover over the tray icon and it says how he is, by name.
 - **He never moves your windows.** Not nudged, not resized, never brought to the front. There is
   exactly one deliberate exception — see [Drop him on a window](#drop-him-on-a-window) — and it is
   narrow enough to name in one sentence: dropping him on a window pins *that* window on top,

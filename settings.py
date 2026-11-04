@@ -22,6 +22,7 @@ rebuild the sprite sheet and re-register the hotkey from under a running mascot.
 from __future__ import annotations
 
 import logging
+from typing import Callable
 
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QFont
@@ -101,7 +102,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "play_with_windows",
     )),
     ("Personality", (
-        "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
+        "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
     )),
     ("Look and sound", (
@@ -149,6 +150,7 @@ HELP: dict[str, str] = {
     "workday_end": '"16:00", or "" to disable knocking-off and the Friday flop.',
     "cpu_busy_percent": "Aggregate load across all cores, so one pegged core is far below this.",
     "play_with_windows": "Peeking over the taskbar, and heaving at a window overhead.",
+    "name": "What he's called in the tray, his toasts and the lines he says. Up to 24 characters.",
     "personality": "A lens over the numbers on this page. Your own values are kept.",
     "mood_enabled": "Let a good or bad stretch carry over between sessions.",
     "mood_half_life_h": "How long a good or bad turn takes to half fade.",
@@ -215,9 +217,24 @@ class SettingsWindow(QDialog):
     changed = Signal(set)
     history_cleared = Signal()
 
-    def __init__(self, config, *, costumes: list[str], skins: list[str], parent=None) -> None:
+    def __init__(
+        self,
+        config,
+        *,
+        costumes: list[str],
+        skins: list[str],
+        status: Callable[[], dict] | None = None,
+        forget: Callable[[], None] | None = None,
+        parent=None,
+    ) -> None:
         super().__init__(parent)
         self._config = config
+        #: How he is right now, asked for fresh on every reload rather than handed over once: the
+        #: window outlives the moment it was opened in, and a stale "in good spirits" from an hour
+        #: ago is worse than no line at all. None (the tests, mostly) leaves the tab saying so.
+        self._status = status
+        #: Wiping what he remembers about you. Kept for the memory panel, which is not here yet.
+        self._forget = forget
         self.setWindowTitle("Nib settings")
         self.setMinimumSize(520, 560)
         self._fields: dict[str, _Field] = {}
@@ -251,6 +268,17 @@ class SettingsWindow(QDialog):
             else:
                 log.info("settings with no editable control: %s", leftover)
                 page.deleteLater()
+
+        # Built by hand and kept out of GROUPS on purpose: it shows him rather than the config, so
+        # it holds no _Field - which is also what keeps it out of the "every key is reachable" and
+        # "nothing hidden leaked" accounting, both of which count fields, not tabs.
+        self._about_index = tabs.addTab(self._build_about_tab(), "About him")
+        self._tabs = tabs
+        # Refreshed again whenever the tab is opened, not only on reload: the window stays open
+        # while you pet him, and the line should be right the moment you switch to it.
+        tabs.currentChanged.connect(
+            lambda index: self._refresh_about() if index == self._about_index else None
+        )
 
         note = QLabel(
             "Changes apply as soon as you click Apply. The sprite scale, the shortcuts and the "
@@ -313,6 +341,30 @@ class SettingsWindow(QDialog):
         scroll.setWidget(page)
         return scroll
 
+    def _build_about_tab(self) -> QWidget:
+        """The "About him" tab: how he is right now, in words. Never a number."""
+        page = QWidget(self)
+        form = QFormLayout(page)
+        form.setLabelAlignment(Qt.AlignRight | Qt.AlignTop)
+        self._now_label = QLabel(self)
+        self._now_label.setWordWrap(True)
+        form.addRow("Right now", self._now_label)
+        form.addRow(self._hint(
+            "The same words are on the tray icon's tooltip. They change with how the day has "
+            "gone - pet him, then come back to this tab."
+        ))
+        return page
+
+    def _refresh_about(self) -> None:
+        """Ask for a fresh status line. A failure blanks the line rather than the whole window."""
+        line = ""
+        if self._status is not None:
+            try:
+                line = str(self._status().get("line", ""))
+            except Exception:
+                log.debug("could not read his status", exc_info=True)
+        self._now_label.setText(line or "Nothing to say yet.")
+
     def _hint(self, text: str) -> QLabel:
         label = QLabel(text, self)
         label.setWordWrap(True)
@@ -368,12 +420,13 @@ class SettingsWindow(QDialog):
     # --- values ---------------------------------------------------------------------
 
     def reload(self) -> None:
-        """Pull every control's value back from the config."""
+        """Pull every control's value back from the config, and his status line with it."""
         for key, field in self._fields.items():
             try:
                 field.write(self._config[key])
             except Exception:
                 log.debug("could not show %s", key, exc_info=True)
+        self._refresh_about()
 
     def apply(self) -> set[str]:
         """Write everything back. Returns the keys whose stored value actually changed."""
