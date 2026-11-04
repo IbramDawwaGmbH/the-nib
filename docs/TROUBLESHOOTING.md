@@ -49,8 +49,17 @@ the lid or pressing the power button still does whatever Windows is set to do, b
 changes power settings. If background work must keep running, set the lid and power-button actions
 to **Do nothing** in Control Panel → Power Options → *Choose what closing the lid does*.
 
+**Blacked out and typing does nothing.** Click the black screen once (with several monitors, any
+of them works): that brings the PIN field up on the main monitor and puts the cursor in it. If keys
+still do nothing, tap Ctrl, Shift, Alt and AltGr once each, in case one of them is stuck down, then
+type the PIN. If it still fails, Ctrl+Alt+Del → **Lock** and sign in to Windows, which ends the
+guard while `windows_unlock_clears_guard` is on (the default). Then send `%APPDATA%\NibMascot\nib.log`; the lines that say what went wrong contain
+`owner_click`, `PIN not ready`, `held back`, `took the foreground during/after Hello` or
+`was disabled`.
+
 **I forgot the guard PIN.** Ctrl+Alt+Del → **Lock**, then sign back in to Windows: that ends the
-guard (`windows_unlock_clears_guard`). Clear `guard_pin_hash` in `config.json` to choose a new PIN
+guard while `windows_unlock_clears_guard` is on (the default; with it off, only signing out of
+Windows does). Clear `guard_pin_hash` in `config.json` to choose a new PIN
 next time.
 
 **The screens stayed black after Nib closed.** Nib died mid-guard and its helper is doing its job.

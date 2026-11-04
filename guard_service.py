@@ -47,6 +47,7 @@ from typing import Any, Callable
 from PySide6.QtCore import QObject, QProcess, Qt, QTimer, Signal
 from PySide6.QtGui import QCursor, QGuiApplication
 from PySide6.QtWidgets import (
+    QApplication,
     QDialog,
     QDialogButtonBox,
     QLabel,
@@ -84,6 +85,19 @@ CORE_EXIT_WAIT_MS = 1500
 AUTO_GUARD_POLL_MS = 15000
 #: Status-line battery warning: on battery and at or below this percentage.
 BATTERY_WARN_PERCENT = 20
+#: A foreground change this soon after a Hello prompt ended belongs to the prompt closing (Windows
+#: hands the foreground back to whatever it likes), not to a person at the keyboard.
+HELLO_GRACE_S = 1.5
+#: Foreground owners that are the Hello prompt itself: a change to one of these during the grace is
+#: not even logged (anything else - the shell, an app window - goes into the intrusion log).
+#: "pid:0" is the core's name for a window already gone - the prompt that just closed.
+HELLO_HOST_EXES = frozenset({"", "pid:0", "credentialuibroker.exe", "consent.exe"})
+#: How long a one-off note ("Hello is busy - type your PIN") stays on the status line.
+NOTE_S = 6.0
+#: After a click on the guard, how long until the PIN field is checked for really taking keys, and
+#: how long to wait for the core's answer about the keyboard before judging without it.
+VERIFY_AFTER_MS = 300
+VERIFY_REPLY_MS = 400
 #: Shortest PIN the first-run setup accepts.
 MIN_PIN_LEN = 4
 
@@ -153,6 +167,35 @@ def lock_workstation() -> bool:
         return False
 
 
+def close_nib_modals(limit: int = 10) -> list[str]:
+    """Close every app-modal window of Nib's own (a "Restore defaults?" box, a file picker...).
+
+    While one is open, Qt blocks input to every other window of the app - the overlays included -
+    so a guard started over it would show a PIN field nothing can be typed or clicked into. Each is
+    rejected like Escape would ("No", "Cancel"). Returns the class names of what was closed.
+    """
+    closed: list[str] = []
+    for _ in range(limit):
+        widget = QApplication.activeModalWidget()
+        if widget is None:
+            break
+        closed.append(type(widget).__name__)
+        try:
+            if isinstance(widget, QDialog):
+                widget.reject()
+            else:
+                widget.close()
+            if QApplication.activeModalWidget() is widget:
+                widget.hide()
+        except Exception:
+            log.debug("closing a modal window failed", exc_info=True)
+            break
+    if closed:
+        log.info("guard: closed %d modal window(s) first so the guard can take input: %s",
+                 len(closed), ", ".join(closed))
+    return closed
+
+
 def orphan_core_covering() -> bool:
     """True when a previous guard core is still blacking out the screens (its Nib died mid-guard)."""
     try:
@@ -214,8 +257,10 @@ def format_log(entries: list[LogEntry]) -> list[str]:
 class PinSetupDialog(QDialog):
     """Set the guard PIN: entered twice, at least ``MIN_PIN_LEN`` characters.
 
-    Only shown when Windows Hello cannot be used and no PIN exists yet - the guard has to have
-    *some* way back in before it is allowed to cover the screen.
+    Shown on the first guard of any PC that has no PIN yet, Windows Hello or not: Hello is an extra
+    button, never the only way in. A Hello that cannot be used at the moment (reader busy, camera
+    covered, the prompt opening behind the overlay) must not leave the owner facing a guard with
+    no field to type into.
     """
 
     def __init__(self, parent: QWidget | None = None, *, reason: str = "") -> None:
@@ -314,7 +359,21 @@ class GuardService(QObject):
         self._verifier.finished.connect(self._on_pin_checked)
         self._verifier.hashed.connect(self._on_pin_hashed)
         self._setup_open = False
+        #: Whether a PIN hashed by the setup dialog starts a guard (not when set up after one).
+        self._start_after_setup = True
+        #: A guard resumed after a crash without a stored PIN: ask for one once it ends.
+        self._setup_after_guard = False
         self._hello_pending = False
+        #: monotonic() when the last Hello prompt reported; see HELLO_GRACE_S.
+        self._hello_done_at = float("-inf")
+        #: Bumped on every guard, so a late Hello answer can never unlock a newer guard.
+        self._guard_gen = 0
+        self._note_text = ""
+        self._note_until = 0.0
+        #: The click backstop's check: waiting for the core's status reply, and whether this click
+        #: may still retry taking the keyboard once.
+        self._verify_waiting = False
+        self._verify_retry = False
 
         #: Windows Hello availability: None until the background probe answers.
         self._hello: bool | None = None
@@ -440,17 +499,26 @@ class GuardService(QObject):
         parts = stored.split("$")
         return stored if len(parts) == 3 and parts[0] == "scrypt" and all(parts) else ""
 
-    def _auth_ready(self, *, interactive: bool) -> bool:
-        """True when there is a way back in. Otherwise (interactive) open the PIN setup."""
-        if self._hello_usable() or self._pin_hash():
+    def _auth_ready(self, *, interactive: bool, start_after: bool = True) -> bool:
+        """True when a guard PIN exists. Otherwise (interactive) open the PIN setup, whose PIN
+        starts a guard once hashed (unless ``start_after`` is False).
+
+        Windows Hello alone is not enough: when it cannot be used mid-guard there would be no field
+        to type into at all - only Ctrl+Alt+Del and a Windows sign-in.
+        """
+        if self._pin_hash():
             return True
         if not interactive:
             return False
         if str(self.config.get("guard_auth", "hello")) == "pin":
             reason = ""
+        elif self._hello_usable():
+            reason = ("Windows Hello works on this PC too; the PIN is your way in whenever Hello "
+                      "can't be used.")
         else:
             reason = "Windows Hello isn't available on this PC."
         self._setup_open = True
+        self._start_after_setup = start_after
         dialog = PinSetupDialog(reason=reason)
         try:
             accepted = dialog.exec() == QDialog.Accepted
@@ -472,7 +540,7 @@ class GuardService(QObject):
         self.config["guard_pin_hash"] = stored
         self.config.save_if_dirty()
         log.info("guard: PIN set")
-        if self.controller.mode is Mode.IDLE:
+        if self._start_after_setup and self.controller.mode is Mode.IDLE:
             self._start()
 
     def _auth_state(self) -> dict:
@@ -494,6 +562,12 @@ class GuardService(QObject):
     def _resume_after_crash(self) -> None:
         if self.controller.mode is not Mode.IDLE:
             return
+        if not self._pin_hash():
+            # A guard from before every guard had a PIN (Hello only). The orphan's black screens
+            # still need taking over - and signing in to Windows ends this one, as there is no
+            # PIN - but the owner gets asked for a PIN as soon as it is over.
+            log.warning("guard: resuming a guard that has no PIN - asking for one once it ends")
+            self._setup_after_guard = True
         self._start()
         self.controller.event("core_restarted", "Nib restarted during a guard")
 
@@ -501,7 +575,9 @@ class GuardService(QObject):
         """IDLE -> FOG: put the mascot away, cover every monitor, start the core."""
         from guard_overlay import OverlaySet
 
+        close_nib_modals()
         self._auto_armed = False
+        self._guard_gen += 1
         self.started.emit()
         self._overlays = OverlaySet(self.config, sheet=self._sheet_provider(), parent=self)
         o = self._overlays
@@ -512,6 +588,7 @@ class GuardService(QObject):
         o.typing_changed.connect(self._on_typing)
         o.pointer_near_field.connect(self._on_near_field)
         o.hwnds_changed.connect(self._on_hwnds)
+        o.owner_click.connect(self._on_owner_click)
         o.set_auth(**self._auth_state())
         o.show("fog")
         self._hook_scene()
@@ -529,6 +606,10 @@ class GuardService(QObject):
 
     def _finish(self) -> None:
         """-> IDLE: take everything down, bring the mascot back, show what happened."""
+        # A prompt still open belongs to this guard: close it (while the overlays still exist), and
+        # never let it answer into the next guard - that is what _guard_gen is for, too.
+        guard_auth.cancel_hello()
+        self._hello_pending = False
         self._tick_timer.stop()
         self._status_timer.stop()
         # Core first, for the same reason as the Peek: closing the overlays moves the foreground.
@@ -543,6 +624,14 @@ class GuardService(QObject):
         self._hooked_scene = None
         self.ended.emit()
         self._show_log_card()
+        if self._setup_after_guard:
+            self._setup_after_guard = False
+            if not self._pin_hash():
+                QTimer.singleShot(0, self._setup_pin_after_guard)
+
+    def _setup_pin_after_guard(self) -> None:
+        if self.controller.mode is Mode.IDLE and not self._setup_open:
+            self._auth_ready(interactive=True, start_after=False)
 
     # --- the one mode listener --------------------------------------------------------------------
 
@@ -555,6 +644,7 @@ class GuardService(QObject):
                 if self._chip is not None:
                     self._chip.hide()
                 if o is not None:
+                    close_nib_modals()  # a dialog opened during the peek would block the overlays
                     o.set_auth(**self._auth_state())
                     o.show("fog")
                     self._hook_scene()
@@ -620,6 +710,57 @@ class GuardService(QObject):
     def _on_near_field(self, near: bool) -> None:
         self._scene_call("set_near_field", bool(near))
 
+    def _on_owner_click(self) -> None:
+        """A click on any guard window, fog or blackout: whatever happened before, end with a PIN
+        field that takes the keys. See ``_verify_typeable`` for how that is checked."""
+        o = self._overlays
+        if o is None or self.controller.mode not in (Mode.FOG, Mode.BLACKOUT):
+            return
+        if self._hello_pending:
+            # A click on the fog while the prompt is open means "I'll type instead".
+            log.info("guard: click on the guard while Hello was open - cancelling it")
+            guard_auth.cancel_hello()
+        o.take_keyboard()
+        self._send({"cmd": "owner_click"})
+        self._verify_retry = True
+        QTimer.singleShot(VERIFY_AFTER_MS, self._verify_typeable)
+
+    def _verify_typeable(self) -> None:
+        """Ask the core how the keyboard looks, then judge (``_finish_verify``)."""
+        if self._overlays is None or self.controller.mode not in (Mode.FOG, Mode.BLACKOUT):
+            return
+        if self._hello_pending:
+            return  # a prompt opened since the click: it has the keyboard, rightly
+        self._verify_waiting = True
+        self._send({"cmd": "status"})
+        QTimer.singleShot(VERIFY_REPLY_MS, lambda: self._finish_verify(None))
+
+    def _finish_verify(self, status: dict | None) -> None:
+        """Every condition for a typed PIN to land in the field, logged as one line; on any
+        failure the keyboard is taken once more. ``None`` = could not be checked (no core reply,
+        or no real window)."""
+        if not self._verify_waiting:
+            return
+        self._verify_waiting = False
+        o = self._overlays
+        if o is None or self.controller.mode not in (Mode.FOG, Mode.BLACKOUT) or self._hello_pending:
+            return
+        state = o.keyboard_state()
+        state["core_keys"] = None if status is None else bool(status.get("foreground_ok", True))
+        if status is not None:
+            state["held"] = status.get("held")
+            state["win_down"] = status.get("win_down")
+        failed = [k for k in ("field", "focus", "active", "modal", "foreground", "enabled",
+                              "core_keys")
+                  if state.get(k) is False]
+        if failed:
+            log.warning("guard: PIN not ready after a click (%s): %s", ", ".join(failed), state)
+            if self._verify_retry:
+                self._verify_retry = False
+                o.take_keyboard()
+        else:
+            log.debug("guard: PIN ready after a click: %s", state)
+
     def _on_hwnds(self, hwnds: list) -> None:
         self._last_hwnds = [int(h) for h in hwnds if h]
         self._send({"cmd": "overlay_hwnds", "hwnds": self._last_hwnds})
@@ -658,28 +799,48 @@ class GuardService(QObject):
             return
         if self.controller.mode not in (Mode.FOG, Mode.BLACKOUT):
             return
+        if guard_auth.hello_busy():
+            # A cancelled unparented prompt may still be open somewhere (Nib cannot close it); a
+            # second one on top would only add another window to type into by mistake.
+            log.info("guard: a Windows Hello prompt is still open - not opening another")
+            self._show_note("Windows Hello is busy - type your PIN")
+            return
         self._hello_pending = True
+        gen = self._guard_gen
         overlays = self._overlays
         # Stop re-raising / activating *before* the prompt can appear. Whether topmost must go too
         # is only known once request_hello has picked its path (the HWND interop can fail at
         # request time even when the probe said it was there), so that part waits for
         # on_fallback, which runs just before the unparented prompt opens.
         overlays.set_prompt_open(True, untopmost=False)
-        guard_auth.request_hello(
-            overlays.primary.hwnd(), "Nib: confirm it's you to unlock the screen",
-            self._on_hello_done,
-            on_fallback=self._on_hello_fallback,
-        )
+        self._send({"cmd": "prompt", "open": True})
+        try:
+            guard_auth.request_hello(
+                overlays.primary.hwnd(), "Nib: confirm it's you to unlock the screen",
+                lambda ok, g=gen: self._on_hello_done(ok, g),
+                on_fallback=self._on_hello_fallback,
+            )
+        except Exception:
+            log.exception("guard: Windows Hello could not start")
+            self._on_hello_done(False, gen)
 
     def _on_hello_fallback(self) -> None:
         """The unparented prompt is about to open: it would land behind topmost overlays."""
         if self._hello_pending and self._overlays is not None:
             self._overlays.set_prompt_open(True, untopmost=True)
 
-    def _on_hello_done(self, ok: bool) -> None:
+    def _on_hello_done(self, ok: bool, gen: int | None = None) -> None:
+        if gen is not None and gen != self._guard_gen:
+            log.info("guard: a Windows Hello answer from an earlier guard - ignored")
+            return
+        if not self._hello_pending:
+            return  # already answered (cancelled, or the guard that asked has ended)
+        self._hello_done_at = time.monotonic()
         self._hello_pending = False
+        self._send({"cmd": "prompt", "open": False})
         if self._overlays is not None:
             self._overlays.set_prompt_open(False)
+            self._overlays.ensure_enabled()  # a parented prompt may have disabled its owner
         # A cancelled or failed Hello prompt is not counted as a wrong attempt: Windows Hello does
         # its own lockout, and cancelling a dialog is the most innocent thing anyone can do.
         if ok and self.controller.mode in (Mode.FOG, Mode.BLACKOUT):
@@ -724,11 +885,19 @@ class GuardService(QObject):
                 log.warning("guard core silent for %.0f s - killing it", now - self._core_last_heard)
                 self._core.kill()
 
+    def _show_note(self, text: str) -> None:
+        """A short-lived line on the status bar, for things the owner must do now."""
+        self._note_text = text
+        self._note_until = time.monotonic() + NOTE_S
+        self._refresh_status()
+
     def _refresh_status(self) -> None:
         if self._overlays is None:
             return
         c = self.controller
         parts: list[str] = []
+        if self._note_text and time.monotonic() < self._note_until:
+            parts.append(self._note_text)
         if c.guarded_since is not None:
             minutes = max(0, int((time.time() - c.guarded_since) // 60))
             parts.append(f"guarding {minutes} min")
@@ -764,7 +933,7 @@ class GuardService(QObject):
             return
         if not self._auth_ready(interactive=False):
             # Never pop the PIN setup at an empty desk - log once per idle stretch instead.
-            log.info("guard: auto-guard skipped - no Hello and no PIN set up yet")
+            log.info("guard: auto-guard skipped - no guard PIN set yet")
             self._auto_armed = False
             return
         log.info("guard: idle %.0f min - guarding automatically", idle / 60.0)
@@ -941,7 +1110,10 @@ class GuardService(QObject):
             self._refresh_status()
         elif ev == "event":
             self._on_core_event(str(msg.get("kind", "")), str(msg.get("detail", "") or ""))
-        elif ev in ("pong", "status"):
+        elif ev == "status":
+            if self._verify_waiting:
+                self._finish_verify(msg)
+        elif ev == "pong":
             pass
 
     def _windows_unlock_ends_guard(self) -> bool:
@@ -969,14 +1141,27 @@ class GuardService(QObject):
             log.info("guard: Windows locked")
             return
         if kind == FOREGROUND_KIND:
-            recent = time.monotonic() - self._last_input < RECENT_INPUT_S
-            c.event(kind, detail, recent_input=recent)
+            now = time.monotonic()
+            recent = now - self._last_input < RECENT_INPUT_S
+            if self._hello_pending or now - self._hello_done_at < HELLO_GRACE_S:
+                # Someone just clicked "Windows Hello": the prompt (or its closing, which hands
+                # the foreground back to whatever Windows likes) moved the foreground, and the
+                # click is the "recent input". No blackout for that. But anyone can click the
+                # button, so a window other than the prompt itself (the shell after a touchpad
+                # swipe, an app from the taskbar) still goes into the intrusion log the owner
+                # sees. Keys stay held back by the core and the screen is taken back below.
+                if detail.lower() in HELLO_HOST_EXES:
+                    log.info("guard: the Hello prompt moved the foreground - not counted")
+                else:
+                    log.info("guard: %s took the foreground during/after Hello - logged, "
+                             "no blackout", detail)
+                    c.event(kind, f"{detail} (during Windows Hello)", recent_input=False)
+            else:
+                c.event(kind, detail, recent_input=recent)
             if self._hello_pending:
                 # A foreign window came up while a Hello prompt had the overlays standing down
                 # (no re-raise, maybe not even topmost). Give up on the prompt - done(False) clears
                 # the prompt state - so the screen is taken back now, not when it times out.
-                log.info("guard: %s took the foreground during Hello - cancelling the prompt",
-                         detail or "a window")
                 guard_auth.cancel_hello()
             if self._overlays is not None and self._overlays.visible:
                 self._overlays.reassert(force=True)  # take the screen back either way

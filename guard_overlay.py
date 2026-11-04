@@ -61,7 +61,16 @@ from collections.abc import Callable
 from typing import Any
 
 from PySide6.QtCore import QEvent, QObject, QPoint, QPointF, QRect, QSize, Qt, QTimer, Signal
-from PySide6.QtGui import QColor, QCursor, QGuiApplication, QImage, QPainter, QPixmap, QScreen
+from PySide6.QtGui import (
+    QColor,
+    QCursor,
+    QGuiApplication,
+    QImage,
+    QKeyEvent,
+    QPainter,
+    QPixmap,
+    QScreen,
+)
 from PySide6.QtWidgets import (
     QApplication,
     QHBoxLayout,
@@ -109,6 +118,10 @@ ACCENT = "#D9552E"  # Nib's body colour (same value as bubble.ACCENT; not import
 
 MODES = ("fog", "blackout", "choice")
 
+#: A click on a secondary overlay must not activate it: the keyboard belongs to the primary.
+WM_MOUSEACTIVATE = 0x0021
+MA_NOACTIVATE = 3
+
 # --- Win32 (display affinity) ------------------------------------------------------
 
 if sys.platform == "win32":
@@ -133,8 +146,23 @@ if sys.platform == "win32":
     _fg_user32.SetForegroundWindow.restype = wintypes.BOOL
     _fg_user32.BringWindowToTop.argtypes = [wintypes.HWND]
     _fg_user32.BringWindowToTop.restype = wintypes.BOOL
+    _fg_user32.IsWindow.argtypes = [wintypes.HWND]
+    _fg_user32.IsWindow.restype = wintypes.BOOL
+    _fg_user32.IsWindowEnabled.argtypes = [wintypes.HWND]
+    _fg_user32.IsWindowEnabled.restype = wintypes.BOOL
+    _fg_user32.EnableWindow.argtypes = [wintypes.HWND, wintypes.BOOL]
+    _fg_user32.EnableWindow.restype = wintypes.BOOL
+    _fg_user32.IsHungAppWindow.argtypes = [wintypes.HWND]
+    _fg_user32.IsHungAppWindow.restype = wintypes.BOOL
     _fg_kernel32.GetCurrentThreadId.argtypes = []
     _fg_kernel32.GetCurrentThreadId.restype = wintypes.DWORD
+    _fg_kernel32.OpenProcess.argtypes = [wintypes.DWORD, wintypes.BOOL, wintypes.DWORD]
+    _fg_kernel32.OpenProcess.restype = wintypes.HANDLE
+    _fg_kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    _fg_kernel32.CloseHandle.restype = wintypes.BOOL
+    _fg_kernel32.QueryFullProcessImageNameW.argtypes = [
+        wintypes.HANDLE, wintypes.DWORD, wintypes.LPWSTR, ctypes.POINTER(wintypes.DWORD)]
+    _fg_kernel32.QueryFullProcessImageNameW.restype = wintypes.BOOL
 else:  # pragma: no cover - the app is Windows-only, but keep imports harmless elsewhere
     _user32 = None
     _fg_user32 = None
@@ -180,13 +208,42 @@ def _set_topmost(hwnd: int) -> None:
         log.debug("set_topmost failed hwnd=%s", hwnd, exc_info=True)
 
 
+def _exe_of_window(hwnd: Any) -> str:
+    """The exe name owning ``hwnd``, for log lines only. Never raises."""
+    try:
+        pid = wintypes.DWORD(0)
+        _fg_user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+        h = _fg_kernel32.OpenProcess(0x1000, False, pid.value)  # PROCESS_QUERY_LIMITED_INFORMATION
+        if not h:
+            return f"pid:{pid.value}"
+        try:
+            size = wintypes.DWORD(520)
+            buf = ctypes.create_unicode_buffer(size.value)
+            if _fg_kernel32.QueryFullProcessImageNameW(h, 0, buf, ctypes.byref(size)):
+                return buf.value.rsplit("\\", 1)[-1]
+            return f"pid:{pid.value}"
+        finally:
+            _fg_kernel32.CloseHandle(h)
+    except Exception:
+        return "?"
+
+
+#: The last foreground window an ``AttachThreadInput`` was refused for (logged once per window).
+_attach_refused_for = 0
+
+
 def _force_foreground(hwnd: int) -> bool:
     """Make OUR OWN ``hwnd`` the foreground window even when Nib is a background process.
 
     ``AttachThreadInput`` to the current foreground thread lets ``SetForegroundWindow`` through
     (see the module docstring); detached again straight away. Returns whether ``hwnd`` is now
     the foreground window. Never raises.
+
+    Not attached to a hung window's thread (``IsHungAppWindow``): attaching to a queue nobody is
+    pumping can freeze Nib's own GUI thread with it. An elevated foreground window refuses the
+    attach (UIPI); that is logged once per window - a click on the fog recovers either way.
     """
+    global _attach_refused_for
     if not hwnd or _fg_user32 is None:
         return False
     try:
@@ -197,7 +254,13 @@ def _force_foreground(hwnd: int) -> bool:
         fg_tid = _fg_user32.GetWindowThreadProcessId(fg, None) if fg else 0
         attached = False
         if fg_tid and fg_tid != me:
-            attached = bool(_fg_user32.AttachThreadInput(me, fg_tid, True))
+            if _fg_user32.IsHungAppWindow(fg):
+                log.debug("foreground window is hung - not attaching to it")
+            else:
+                attached = bool(_fg_user32.AttachThreadInput(me, fg_tid, True))
+                if not attached and int(fg) != _attach_refused_for:
+                    _attach_refused_for = int(fg)
+                    log.debug("attach refused (elevated/UIPI?) fg=%s", _exe_of_window(fg))
         try:
             _fg_user32.BringWindowToTop(wintypes.HWND(hwnd))
             _fg_user32.SetForegroundWindow(wintypes.HWND(hwnd))
@@ -208,6 +271,35 @@ def _force_foreground(hwnd: int) -> bool:
         return bool(now) and int(now) == int(hwnd)
     except Exception:
         log.debug("forcing the foreground failed hwnd=%s", hwnd, exc_info=True)
+        return False
+
+
+def _is_real_window(hwnd: int) -> bool:
+    """True for a live native window (never on the offscreen test platform)."""
+    if not hwnd or _fg_user32 is None:
+        return False
+    try:
+        return bool(_fg_user32.IsWindow(wintypes.HWND(hwnd)))
+    except Exception:
+        return False
+
+
+def _ensure_enabled(hwnd: int) -> bool:
+    """Re-enable OUR OWN ``hwnd`` if something disabled it. Returns True if it had to.
+
+    A Hello prompt parented to the overlay may disable its owner the way a modal dialog does; if
+    the prompt goes away without re-enabling it (cancelled, crashed), the overlay takes no input
+    at all - no click, no key - and the PIN field cannot be typed into.
+    """
+    if not _is_real_window(hwnd):
+        return False
+    try:
+        if _fg_user32.IsWindowEnabled(wintypes.HWND(hwnd)):
+            return False
+        _fg_user32.EnableWindow(wintypes.HWND(hwnd), True)
+        return True
+    except Exception:
+        log.debug("EnableWindow failed hwnd=%s", hwnd, exc_info=True)
         return False
 
 
@@ -424,6 +516,8 @@ class GuardOverlay(QWidget):
     choice_unlock = Signal()
     typing_changed = Signal(bool)
     pointer_near_field = Signal(bool)
+    #: A mouse press on any guard window in fog or blackout (seen by the primary's app-wide filter).
+    owner_click = Signal()
 
     def __init__(
         self,
@@ -459,6 +553,8 @@ class GuardOverlay(QWidget):
         self._pin_enabled = True
         self._scene: QWidget | None = None
         self._revealed = False
+        #: Secondaries only: where a key typed on this monitor goes (``OverlaySet._forward_key``).
+        self._key_sink: Callable[[QKeyEvent], None] | None = None
 
         h = max(480, screen.geometry().height())
         self._ui_px = max(14, h // 55)  # base font size in physical px
@@ -566,9 +662,20 @@ class GuardOverlay(QWidget):
         row.addWidget(self._pin)
         self._hello_btn = QPushButton("Windows Hello", self._auth_panel)
         self._hello_btn.setCursor(Qt.PointingHandCursor)
+        # Like the unlock link: a click works, but the keyboard focus never lands here, so the
+        # keys of a PIN can never go to a button that ignores them.
+        self._hello_btn.setFocusPolicy(Qt.NoFocus)
         self._hello_btn.clicked.connect(self.hello_requested.emit)
         row.addWidget(self._hello_btn)
         auth.addLayout(row)
+        # Only when there is no stored PIN hash (cleared by hand mid-guard, or a guard resumed after
+        # a crash from before every guard had a PIN): say what still works. See set_auth.
+        self._no_pin = QLabel("No guard PIN set: use Windows Hello, or Ctrl+Alt+Del then Lock",
+                              self._auth_panel)
+        self._no_pin.setObjectName("guardStatus")
+        self._no_pin.setAlignment(Qt.AlignCenter)
+        self._no_pin.hide()
+        auth.addWidget(self._no_pin)
         self._countdown = QLabel("", self._auth_panel)
         self._countdown.setObjectName("guardCountdown")
         self._countdown.setAlignment(Qt.AlignCenter)
@@ -717,6 +824,10 @@ class GuardOverlay(QWidget):
         self._pin_enabled = bool(pin)
         self._hello_btn.setVisible(self._hello_enabled)
         self._pin.setVisible(self._pin_enabled)
+        self._no_pin.setText(
+            "No guard PIN set: use Windows Hello, or Ctrl+Alt+Del then Lock" if self._hello_enabled
+            else "No guard PIN set: Ctrl+Alt+Del, Lock, then sign in to Windows")
+        self._no_pin.setVisible(not self._pin_enabled)
         self._backoff_until = time.monotonic() + max(0.0, float(backoff_s))
         self._tick_backoff()
         if backoff_s > 0:
@@ -759,6 +870,7 @@ class GuardOverlay(QWidget):
             if force:
                 _set_topmost(self.hwnd())  # SWP_NOACTIVATE: the prompt keeps the keyboard
             return  # a Hello prompt is up: no raising over it, no focus stealing
+        self.ensure_enabled()
         self.raise_()
         _set_topmost(self.hwnd())
         if self.primary and not self.isActiveWindow():
@@ -766,12 +878,71 @@ class GuardOverlay(QWidget):
             self.activateWindow()
             if self._mode in ("fog", "blackout"):
                 self._focus_pin()
+        if (self.primary and self._revealed and self._mode in ("fog", "blackout")
+                and QApplication.focusWidget() is not self._pin):
+            # Active, but the focus wandered off the field (Tab, a click on a button): typing
+            # would go nowhere. Put it back.
+            self._focus_pin()
 
     def hwnd(self) -> int:
         try:
             return int(self.winId())
         except Exception:
             return 0
+
+    def take_keyboard(self) -> None:
+        """Primary, after a click on any guard window: end with a PIN field that takes keys.
+
+        Done even while a Hello prompt is marked open - the click on the fog means "I'll type
+        instead" (the service cancels the prompt first).
+        """
+        if not self.primary or not self.isVisible() or self._mode not in ("fog", "blackout"):
+            return
+        if _ensure_enabled(self.hwnd()):
+            log.warning("guard: primary overlay was disabled (Hello owner?) - re-enabled")
+        self.raise_()
+        _set_topmost(self.hwnd())
+        _force_foreground(self.hwnd())
+        self.activateWindow()
+        self.reveal_auth()
+        if QApplication.focusWidget() is not self._pin and self._pin.isVisible() \
+                and self._pin.isEnabled():
+            self._pin.setFocus(Qt.MouseFocusReason)
+
+    def keyboard_state(self) -> dict[str, Any]:
+        """Everything that must hold for a typed PIN to land in the field (diagnostics).
+
+        Native checks read ``None`` where there is no real window (the offscreen test platform).
+        """
+        hwnd = self.hwnd()
+        real = _is_real_window(hwnd)
+        state: dict[str, Any] = {
+            "field": bool(self.primary and ((self._pin.isVisible() and self._pin.isEnabled())
+                                            or self._in_backoff())),
+            "focus": bool(self.primary) and QApplication.focusWidget() is self._pin,
+            "active": self.isActiveWindow(),
+            # An app-modal dialog of Nib's own blocks every input to the overlays.
+            "modal": QApplication.activeModalWidget() is None,
+            "foreground": None,
+            "enabled": None,
+        }
+        if real:
+            try:
+                fg = _fg_user32.GetForegroundWindow()
+                state["foreground"] = bool(fg) and int(fg) == hwnd
+                if not state["foreground"] and fg:
+                    state["fg_exe"] = _exe_of_window(fg)
+                state["enabled"] = bool(_fg_user32.IsWindowEnabled(wintypes.HWND(hwnd)))
+            except Exception:
+                log.debug("keyboard_state native checks failed", exc_info=True)
+        return state
+
+    def set_key_sink(self, sink: Callable[[QKeyEvent], None] | None) -> None:
+        self._key_sink = sink
+
+    @property
+    def revealed(self) -> bool:
+        return self._revealed
 
     # --- extensions beyond the contract ----------------------------------------------
 
@@ -788,6 +959,12 @@ class GuardOverlay(QWidget):
                 log.debug("drop topmost failed", exc_info=True)
         elif not open_:
             self.reassert()
+
+    def ensure_enabled(self) -> None:
+        """See ``_ensure_enabled``. Only while no prompt is open: an open one may disable us."""
+        if not self._prompt_open and _ensure_enabled(self.hwnd()):
+            log.warning("guard: %s overlay was disabled (Hello owner?) - re-enabled",
+                        "primary" if self.primary else "secondary")
 
     def allow_close(self) -> None:
         self._allow_close = True
@@ -845,7 +1022,8 @@ class GuardOverlay(QWidget):
             self._pin.setFocus(Qt.OtherFocusReason)
 
     # The PIN panel stays hidden until a mouse click anywhere on a guard window, so a passer-by sees
-    # no field to try, and hides again after a quiet spell. Typing before that click goes nowhere.
+    # no field to try, and hides again after a quiet spell. The click also takes the keyboard back
+    # (``owner_click`` -> ``take_keyboard``), on whichever monitor it lands.
 
     def reveal_auth(self) -> None:
         if not self.primary or self._mode not in ("fog", "blackout"):
@@ -865,9 +1043,14 @@ class GuardOverlay(QWidget):
     def eventFilter(self, obj, event) -> bool:  # noqa: N802
         # App-wide, so clicks on the scene (which handles its own presses) count too.
         if event.type() == QEvent.MouseButtonPress and isinstance(obj, QWidget):
-            if isinstance(obj.window(), GuardOverlay):
+            win = obj.window()
+            if isinstance(win, GuardOverlay):
                 self._note_input()
                 self.reveal_auth()
+                # Not for the Hello button: that click opens a prompt, which must keep the keyboard.
+                if (win.mode in ("fog", "blackout") and self._mode in ("fog", "blackout")
+                        and obj is not getattr(self, "_hello_btn", None)):
+                    self.owner_click.emit()
         return False
 
     def _submit_pin(self) -> None:
@@ -990,6 +1173,29 @@ class GuardOverlay(QWidget):
     def keyPressEvent(self, event) -> None:  # noqa: N802
         self._note_input()
         event.accept()  # Esc and friends do nothing on the overlay itself
+        if not self.primary and self._key_sink is not None:
+            # This monitor got the keyboard anyway (activated before WM_MOUSEACTIVATE could say
+            # no): hand the key to the PIN field rather than drop it.
+            try:
+                self._key_sink(event)
+            except Exception:
+                log.debug("forwarding a key to the primary failed", exc_info=True)
+
+    def nativeEvent(self, event_type, message):  # noqa: N802
+        if not self.primary and sys.platform == "win32":
+            try:
+                if bytes(event_type) == b"windows_generic_MSG":
+                    msg = wintypes.MSG.from_address(int(message))
+                    if msg.message == WM_MOUSEACTIVATE:
+                        # The click is still delivered to Qt (it reveals the field and takes the
+                        # keyboard for the primary); this window just never becomes active.
+                        return True, MA_NOACTIVATE
+            except Exception:
+                pass
+        try:
+            return super().nativeEvent(event_type, message)
+        except Exception:
+            return False, 0
 
 
 # --- all monitors ------------------------------------------------------------------------
@@ -1011,6 +1217,8 @@ class OverlaySet(QObject):
     pointer_near_field = Signal(bool)
     #: The set of overlay HWNDs changed (show / hot-plug); resend ``overlay_hwnds`` to the core.
     hwnds_changed = Signal(list)
+    #: A click on any guard window in fog or blackout: the service takes the keyboard back.
+    owner_click = Signal()
 
     def __init__(
         self,
@@ -1032,7 +1240,9 @@ class OverlaySet(QObject):
         self._primary_screen: QScreen | None = None
         self._mode = "fog"
         self._status = ""
-        self._auth: dict[str, Any] = {"hello": True, "pin": True, "backoff_s": 0.0}
+        self._auth: dict[str, Any] = {"hello": True, "pin": True}
+        #: monotonic() when the current backoff ends, so a rebuilt primary shows what is left.
+        self._backoff_until = 0.0
         self._prompt: tuple[bool, bool] = (False, False)
         self._visible = False
         #: When this guard began (monotonic): the REC clock in every monitor's corner. Survives
@@ -1134,15 +1344,47 @@ class OverlaySet(QObject):
             self.primary.set_status(text)
 
     def set_auth(self, *, hello: bool, pin: bool, backoff_s: float) -> None:
-        self._auth = {"hello": hello, "pin": pin, "backoff_s": backoff_s}
+        self._auth = {"hello": hello, "pin": pin}
+        self._backoff_until = time.monotonic() + max(0.0, float(backoff_s))
         if self.primary is not None:
             self.primary.set_auth(hello=hello, pin=pin, backoff_s=backoff_s)
+
+    def take_keyboard(self) -> None:
+        """After Qt's own click handling: make the primary's PIN field take the keys."""
+        QTimer.singleShot(0, self._take_keyboard_now)
+
+    def _take_keyboard_now(self) -> None:
+        primary = self.primary
+        if primary is not None and self._visible:
+            primary.take_keyboard()
+
+    def keyboard_state(self) -> dict[str, Any]:
+        primary = self.primary
+        if primary is None:
+            return {"field": False, "focus": False, "active": False, "primary": False}
+        return primary.keyboard_state()
+
+    def _forward_key(self, event: QKeyEvent) -> None:
+        """A key typed while a secondary overlay had the keyboard: give it to the PIN field."""
+        primary = self.primary
+        if primary is None or not primary.revealed or primary.mode not in ("fog", "blackout"):
+            return  # no field showing yet: a click reveals it, keys alone never do
+        pin = primary._pin
+        if pin.isVisible() and pin.isEnabled():
+            copy = QKeyEvent(event.type(), event.key(), event.modifiers(), event.text(),
+                             event.isAutoRepeat(), event.count())
+            QApplication.sendEvent(pin, copy)
+        self.take_keyboard()
 
     def set_prompt_open(self, open_: bool, *, untopmost: bool = False) -> None:
         """Call with True while a Windows Hello prompt is up, False when it is done."""
         self._prompt = (bool(open_), bool(untopmost))
         for overlay in self._overlays.values():
             overlay.set_prompt_open(open_, untopmost=untopmost)
+
+    def ensure_enabled(self) -> None:
+        for overlay in self._overlays.values():
+            overlay.ensure_enabled()
 
     def refresh_fog(self) -> None:
         if not self._visible:
@@ -1194,8 +1436,13 @@ class OverlaySet(QObject):
             overlay.choice_unlock.connect(self.choice_unlock)
             overlay.typing_changed.connect(self.typing_changed)
             overlay.pointer_near_field.connect(self.pointer_near_field)
+            overlay.owner_click.connect(self.owner_click)
             overlay.set_status(self._status)
-            overlay.set_auth(**self._auth)
+            # What is left of the backoff, not the whole of it again.
+            overlay.set_auth(**self._auth,
+                             backoff_s=max(0.0, self._backoff_until - time.monotonic()))
+        else:
+            overlay.set_key_sink(self._forward_key)
         overlay.set_mode(self._mode)
         if self._prompt[0]:
             overlay.set_prompt_open(True, untopmost=self._prompt[1])

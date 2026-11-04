@@ -508,11 +508,13 @@ follows the pointer, and he stands guard on a little stage underneath with a run
 Nothing is paused: the guard is only windows on top, plus a small helper process that holds the
 keyboard shortcuts and keeps the machine awake.
 
-**Getting back in.** Windows Hello if this PC has it — the button opens the normal Hello prompt — or
-your guard PIN. The PIN field is hidden: **click anywhere** on the guard (fog or blackout alike) and
-it appears, then type the PIN and press Enter. Left untouched for 20 seconds it hides again. The
-first time you guard on a PC without Hello, he asks you to choose a PIN (at least four characters,
-typed twice); only a scrypt hash of it is stored. Once you are in you get a choice:
+**Getting back in.** Every guard has a PIN. The first time you guard on any PC he asks you to
+choose one (at least four characters, typed twice), even when Windows Hello works; only a scrypt
+hash of it is stored. Hello, if this PC has it, is an extra button next to the field that opens the
+normal Hello prompt, never a replacement. The PIN field is hidden: **click anywhere** on the guard
+(fog or blackout alike, on any monitor) and it appears on the main one with the cursor already in
+it; type the PIN and press Enter. Left untouched for 20 seconds it hides again. Once you are in you
+get a choice:
 
 - **Peek N min** (`guard_peek_minutes`, 2 by default), the big button in the middle (Enter picks it),
   lifts the guard for a few minutes. A small chip in the corner counts down, with **+N min** and
@@ -527,21 +529,23 @@ Pick neither and after a minute it goes back to fog, so an unlocked screen is ne
 **What turns the screens black.** While guarded, the Windows key, Alt+Tab, Alt+Esc, Alt+F4 and
 Ctrl+Esc are swallowed; pressing one, three wrong PINs (`guard_blackout_after_attempts`),
 Ctrl+Alt+Del, or someone clicking another window to the front blacks out every monitor. Only red
-eyes stay, and the PIN field. A window an agent opens on its own (no one at the keyboard) is
+eyes stay, and the PIN field. Opening Windows Hello, and a window popping up while it is open or
+closing, does not black out; any window other than the Hello prompt is still written to the
+"while you were away" log. A window an agent opens on its own (no one at the keyboard) is
 pushed back under the fog and only logged. Wrong PINs make you wait 1 s, 2 s, 4 s … up to 30 s
 between tries. If some other window has the keyboard while the fog is up (say the guard came back
 by itself after a peek), every key is quietly held back rather than typed into it — click the fog
 and type your PIN.
 
 **Win+L still locks Windows**, deliberately. Unlocking Windows ends the guard too
-(`windows_unlock_clears_guard`; always, if you have no guard PIN), which is the way back in if
-you forget the PIN or Hello stops working: Ctrl+Alt+Del → Lock → your Windows sign-in. To choose a new PIN, clear `guard_pin_hash` in `config.json`.
+(`windows_unlock_clears_guard`, on by default; always, if no guard PIN is stored), which is the
+way back in if you forget the PIN or Hello stops working: Ctrl+Alt+Del → Lock → your Windows sign-in. To choose a new PIN, clear `guard_pin_hash` in `config.json`.
 
 **If Nib crashes mid-guard**, the helper process covers every screen in plain black and holds the
 keyboard until you unlock Windows; start Nib again and it picks the guard back up, blacked out.
 
 Optional: `guard_auto_after_idle_min` guards by itself after that many idle minutes (off by default,
-and only once a PIN or Hello is set up); `guard_lock_fallback` locks Windows after ten wrong PINs;
+and only once a guard PIN is set); `guard_lock_fallback` locks Windows after ten wrong PINs;
 `guard_scene` picks eyes, Nib or both; `guard_background_fx` switches off the life in the fog (his
 little worker bots, the dust, the camera scan line and **REC** clock, the time-of-day glow). Lines
 he says come from `assets/guard_phrases.json`; a `guard_phrases.json` in the settings folder adds

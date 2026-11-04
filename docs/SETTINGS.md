@@ -139,15 +139,15 @@ lid or lock settings.
 | `guard_hotkey` | `"ctrl+alt+g"` | Covers every monitor until you unlock. `""` disables it; the wheel and tray entries always work |
 | `guard_peek_minutes` | `2` | How long **Peek** lifts the guard before it comes back by itself. `1`–`180` |
 | `guard_auth` | `"hello"` | `"hello"` offers Windows Hello when this PC has it, with the guard PIN as backup; `"pin"` never offers Hello |
-| `guard_pin_hash` | `""` | scrypt hash of your guard PIN, set by the first-run prompt. Never the PIN itself. Clear it to choose a new PIN next time. Not shown in the settings window |
+| `guard_pin_hash` | `""` | scrypt hash of your guard PIN, set by the prompt on the first guard (Hello or not). Never the PIN itself. Clear it to choose a new PIN next time. Not shown in the settings window |
 | `guard_scene` | `"both"` | What stands guard on the fog: `"both"`, `"eyes"` (phrases as a banner, no Nib) or `"nib"` (no giant eyes) |
 | `guard_fog_strength` | `5` | `1`–`5`, how heavily the desktop is blurred. Even `1` leaves text unreadable |
 | `guard_background_fx` | `true` | Life in the fog: dim worker bots, drifting dust that dodges the pointer, a security-camera scan line with a blinking **REC** and the time guarded, and a slow glow that turns warmer in the evening and starry at night. In blackout only a faint red pulse and the REC stay. Light on the CPU (it slows down when nobody is around and stops during Peek); `false` gives plain fog |
 | `guard_blackout_after_attempts` | `3` | Wrong PINs before every screen goes black. The wait between tries doubles regardless (1 s, 2 s, 4 s … 30 s) |
 | `guard_sounds` | `true` | His guard noises. `sound_enabled` still has to be on |
-| `guard_auto_after_idle_min` | `0` | Guard by itself after this many idle minutes; `0` never does. Needs Hello or a PIN to be set up already |
+| `guard_auto_after_idle_min` | `0` | Guard by itself after this many idle minutes; `0` never does. Needs a guard PIN to be set already |
 | `guard_lock_fallback` | `false` | Ten wrong PINs also locks Windows. Locking does not stop background work |
-| `windows_unlock_clears_guard` | `true` | Unlocking Windows ends the guard — the way back in if you forget the PIN. Always on while no guard PIN is set, so a Hello that breaks mid-guard never leaves you without a way back |
+| `windows_unlock_clears_guard` | `true` | Unlocking Windows ends the guard — the way back in if you forget the PIN. Turned off, a forgotten PIN leaves only signing out of Windows. Always on while no guard PIN is stored (cleared by hand, or a guard from before every guard had one) |
 
 ### State and diagnostics
 

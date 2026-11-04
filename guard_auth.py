@@ -33,6 +33,7 @@ import hmac
 import logging
 import os
 import threading
+import time
 import unicodedata
 import uuid
 from ctypes import wintypes
@@ -309,6 +310,10 @@ class _HelloRequest(QObject):
         self._info = 0
         self._elapsed_ms = 0
         self._timer: QTimer | None = None
+        #: The fallback path's worker thread (its prompt cannot be closed from here).
+        self._worker: threading.Thread | None = None
+        #: monotonic() when this request was given up on while its prompt was still open.
+        self._abandoned_at = 0.0
         # Queued because the receiver (self, main thread) differs from the emitting worker
         # thread - this is what lands the fallback's answer back on the main thread.
         self._from_worker.connect(self._finish)
@@ -419,24 +424,47 @@ class _HelloRequest(QObject):
                 ok = result == _VERIFIED
             except Exception as exc:
                 log.warning("Hello fallback failed (%s)", type(exc).__name__)
-            self._from_worker.emit(ok)
+            try:
+                self._from_worker.emit(ok)
+            except RuntimeError:
+                pass  # the request object is gone (Nib quitting)
 
-        threading.Thread(target=work, name="nib-hello", daemon=True).start()
+        self._worker = threading.Thread(target=work, name="nib-hello", daemon=True)
+        self._worker.start()
 
     def _fallback_timed_out(self) -> None:
         log.warning("Hello prompt (fallback) timed out - giving up on it")
+        self._abandon()
         self._finish(False)
+
+    def _abandon(self) -> None:
+        """Remember a prompt that is given up on but may still be open (see ``hello_busy``)."""
+        if self._worker is not None and self._worker.is_alive():
+            self._abandoned_at = time.monotonic()
+            _abandoned.add(self)
 
     # -- shared --
 
     def cancel(self) -> None:
-        """Give up on this prompt now: cancel the operation if we can, report False."""
+        """Give up on this prompt now: cancel the operation if we can, report False.
+
+        The fallback (unparented) prompt cannot be closed from here: it stays on screen until the
+        user answers it or Windows times it out. The request is kept in ``_abandoned`` until its
+        worker ends, so ``hello_busy`` can refuse to stack a second prompt on top of it.
+        """
         if self._info:
             try:
                 _vcall(self._info, _SLOT_ASYNCINFO_CANCEL, [])
             except Exception:
                 log.debug("IAsyncInfo::Cancel failed", exc_info=True)
+        elif self._worker is not None and self._worker.is_alive():
+            log.info("Hello prompt (fallback) cannot be closed from Nib - it stays until answered")
+            self._abandon()
         self._finish(False)
+
+    def busy(self) -> bool:
+        """True while this request is waiting, or its fallback prompt is still on screen."""
+        return self._done is not None or (self._worker is not None and self._worker.is_alive())
 
     def _cleanup(self) -> None:
         if self._timer is not None:
@@ -460,6 +488,22 @@ class _HelloRequest(QObject):
 
 #: Keeps in-flight requests alive until they report (nothing else holds a reference).
 _pending: set[_HelloRequest] = set()
+#: Cancelled fallback requests whose prompt is still open (their worker has not returned yet).
+_abandoned: set[_HelloRequest] = set()
+
+
+def hello_busy() -> bool:
+    """True while any Hello prompt may still be on screen: a request waiting for its answer, or a
+    cancelled fallback prompt that only the user (or Windows' own timeout) can close.
+
+    An abandoned prompt stops counting after ``_HELLO_TIMEOUT_S``: it sits under the overlays where
+    nobody can answer it, and its worker has no timeout of its own, so without a cap Hello would
+    stay refused for the rest of the guard (and every later one)."""
+    now = time.monotonic()
+    for req in list(_abandoned):
+        if not req.busy() or now - req._abandoned_at >= _HELLO_TIMEOUT_S:
+            _abandoned.discard(req)
+    return bool(_pending) or bool(_abandoned)
 
 
 def request_hello(
@@ -508,7 +552,11 @@ def request_hello(
             on_fallback()
         except Exception:
             log.exception("Hello on_fallback callback raised")
-    req.start_fallback(message)
+    try:
+        req.start_fallback(message)
+    except Exception:
+        log.exception("Hello fallback could not start")
+        req._finish(False)
     return True
 
 

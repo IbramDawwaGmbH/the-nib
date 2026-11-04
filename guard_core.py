@@ -18,7 +18,9 @@ Why a separate process (``Nib.exe --guard-core <parent_pid>``) and why ctypes on
 Protocol (stdin/stdout, UTF-8 JSON, one object per line, flushed after each write):
 
 * Nib -> core: ``guard``, ``peek``, ``unlock``, ``ping``, ``overlay_hwnds`` (``hwnds: [...]``),
-  ``cover``, ``uncover``, and the extra diagnostic ``status``.
+  ``cover``, ``uncover``, ``prompt`` (``open: bool`` - a Windows Hello prompt opened / closed),
+  ``owner_click`` (someone clicked a guard window: re-judge the foreground, let held keys go
+  stale), and the extra diagnostic ``status``.
 * core -> Nib: ``ready``, ``pong``, ``status`` and ``event`` (``kind``, ``detail``, ``t`` = Unix time).
   Event kinds: ``blocked_key``, ``foreground_stolen``, ``desktop_switch``, ``input`` (throttled to at
   most one per 500 ms, physical keyboard/mouse only), ``session_lock``, ``session_unlock``.
@@ -90,6 +92,7 @@ WM_APP_STDIN_EOF = WM_APP + 3
 WM_APP_PARENT_DIED = WM_APP + 4
 WM_APP_HANDOFF = WM_APP + 5  # a newer core took over while we were covering as an orphan
 WM_APP_RESET_FILTER = WM_APP + 6  # (hook thread) forget held keys: a desktop switch ate their key-ups
+WM_APP_SOFTEN_FILTER = WM_APP + 7  # (hook thread) KeyFilter.soften(): a click on the guard
 
 WTS_SESSION_LOCK = 0x7
 WTS_SESSION_UNLOCK = 0x8
@@ -117,7 +120,9 @@ SW_SHOW = 5
 BLACK_BRUSH = 4
 IDC_ARROW = 32512
 GA_ROOT = 2
+GA_ROOTOWNER = 3
 
+THREAD_PRIORITY_ABOVE_NORMAL = 1
 SYNCHRONIZE = 0x00100000
 PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
 INFINITE = 0xFFFFFFFF
@@ -295,6 +300,7 @@ _proto(_user32.SetWinEventHook, HANDLE, wintypes.DWORD, wintypes.DWORD, wintypes
 _proto(_user32.UnhookWinEvent, wintypes.BOOL, HANDLE)
 _proto(_user32.GetWindowThreadProcessId, wintypes.DWORD, HWND, ctypes.POINTER(wintypes.DWORD))
 _proto(_user32.GetAncestor, HWND, HWND, wintypes.UINT)
+_proto(_user32.GetClassNameW, ctypes.c_int, HWND, wintypes.LPWSTR, ctypes.c_int)
 _proto(_user32.GetAsyncKeyState, ctypes.c_short, ctypes.c_int)
 _proto(_user32.LockWorkStation, wintypes.BOOL)
 _proto(_user32.SetProcessDpiAwarenessContext, wintypes.BOOL, ctypes.c_ssize_t)
@@ -302,6 +308,8 @@ _proto(_user32.SetProcessDpiAwarenessContext, wintypes.BOOL, ctypes.c_ssize_t)
 # kernel32
 _proto(_kernel32.GetModuleHandleW, wintypes.HMODULE, wintypes.LPCWSTR)
 _proto(_kernel32.GetCurrentThreadId, wintypes.DWORD)
+_proto(_kernel32.GetCurrentThread, HANDLE)
+_proto(_kernel32.SetThreadPriority, wintypes.BOOL, HANDLE, ctypes.c_int)
 _proto(_kernel32.SetThreadExecutionState, wintypes.DWORD, wintypes.DWORD)
 _proto(_kernel32.OpenProcess, HANDLE, wintypes.DWORD, wintypes.BOOL, wintypes.DWORD)
 _proto(_kernel32.CloseHandle, wintypes.BOOL, HANDLE)
@@ -349,6 +357,31 @@ def key_name(vk: int) -> str:
     return _KEY_NAMES.get(vk, f"0x{vk:02X}")
 
 
+#: A remembered key press goes stale after this long without a down (see ``KeyFilter``).
+STALE_MS = 1500
+
+
+def _now_ms() -> float:
+    return time.monotonic() * 1000.0
+
+
+#: Keys whose name is safe to put in a log: the modifiers. Every other held key could be a PIN
+#: character, so it is only ever counted.
+_MODIFIER_NAMES = {
+    0x10: "Shift", 0x11: "Ctrl", 0x12: "Alt", 0xA0: "LShift", 0xA1: "RShift", 0xA2: "LCtrl",
+    0xA3: "RCtrl", 0xA4: "LAlt", 0xA5: "RAlt", VK_LWIN: "LWin", VK_RWIN: "RWin",
+}
+
+
+def describe_held(vks: list[int]) -> list[str]:
+    """``KeyFilter.held()`` for a log line: modifier names, and only a count of anything else."""
+    names = [_MODIFIER_NAMES[vk] for vk in vks if vk in _MODIFIER_NAMES]
+    other = sum(1 for vk in vks if vk not in _MODIFIER_NAMES)
+    if other:
+        names.append(f"+{other} other")
+    return names
+
+
 class KeyFilter:
     """The swallow/report decisions of the keyboard hook, kept free of any Win32 call.
 
@@ -374,8 +407,18 @@ class KeyFilter:
       at the fog - or anything typed blind by someone else - would land in that hidden app. Not
       reported: the owner typing before clicking the fog must not blackout per keystroke, and the
       ``input`` event already says "someone is here". A click on the fog activates it and lifts this.
-    * A key-up is swallowed only if its key-down was: eating an up whose down got through would
-      leave that key logically stuck for the rest of the system.
+    * Every key press gets **one verdict**, remembered until its key-up: an auto-repeat of a press
+      that was swallowed is swallowed; an auto-repeat of a press that got through is held back only
+      if the rules say so *now* (a foreign window took the foreground mid-press), and that never
+      changes the press's verdict. A key-up is swallowed only if every down of that press was:
+      eating an up whose down got through would leave that key - Ctrl, Shift, Win - logically
+      stuck for the rest of the system, and every PIN key would then arrive with it held.
+    * A remembered press goes **stale** after ``STALE_MS`` without a down (a held key repeats far
+      more often than that; the longest typematic delay is 1 s). The next down of that key is a
+      new press, judged afresh. This is what heals a key-up the hook never saw (a secure desktop,
+      an elevated window, a hook Windows dropped for a moment): without it a lost Win key-up made
+      every later key a swallowed, reported ``Win+<key>``. Win itself is always swallowed, so
+      staleness changes only what is *reported*, never what the shell sees.
     * Auto-repeat downs of a swallowed key are swallowed silently (one report per press).
     """
 
@@ -384,7 +427,9 @@ class KeyFilter:
         #: Set by the main thread from foreground events; read in the hook callback (a bool store
         #: and load are atomic under the GIL, so no lock is needed).
         self.foreground_ok = True
-        self._swallowed: set[int] = set()
+        #: vk -> [down swallowed, last down (ms), up swallowed]. "up swallowed" stays True only
+        #: while every down of the press was swallowed.
+        self._held: dict[int, list] = {}
         self._win_down = False
         self._win_used = False
 
@@ -398,43 +443,59 @@ class KeyFilter:
         not work: a key-down the hook swallowed never reaches the async key state, so a Win that
         really is held would read as up.)
         """
-        self._swallowed.clear()
+        self._held.clear()
         self._win_down = False
         self._win_used = False
 
-    def decide(
-        self, vk: int, up: bool, alt: bool, ctrl: bool = False, shift: bool = False
-    ) -> tuple[bool, tuple[str, str] | None]:
-        if up:
-            if vk not in self._swallowed:
-                return False, None
-            self._swallowed.discard(vk)
-            if vk in _WIN_KEYS:
-                report = None
-                if self._win_down and not self._win_used:
-                    report = ("key", "Win")
-                if not (self._swallowed & _WIN_KEYS):
-                    self._win_down = False
-                    self._win_used = False
-                return True, report
-            return True, None
+    def soften(self) -> None:
+        """Make every remembered press stale, but keep its verdict.
 
-        repeat = vk in self._swallowed
+        A late key-up of a swallowed down is still eaten (the OS never saw that down), and the next
+        down of any key is judged as a new press. Used on every hook reinstall and on a click on
+        the guard - unlike ``reset`` it can never let an up through whose down was eaten.
+        """
+        for entry in list(self._held.values()):
+            entry[1] = float("-inf")
+        self._win_down = False
+        self._win_used = False
+
+    def held(self) -> list[int]:
+        """The vks of presses whose down was swallowed (diagnostics; safe from another thread).
+
+        Raw vks may be PIN characters: anything that leaves the core goes through ``describe_held``.
+        """
+        try:
+            return sorted(vk for vk, e in list(self._held.items()) if e[0])
+        except RuntimeError:  # the hook thread changed the dict mid-copy
+            return []
+
+    @property
+    def win_down(self) -> bool:
+        return self._win_down
+
+    def _win_active(self, t: float) -> bool:
+        """A swallowed Win press seen within ``STALE_MS``: the next key is a Win combo."""
+        for k in _WIN_KEYS:
+            e = self._held.get(k)
+            if e is not None and e[0] and t - e[1] <= STALE_MS:
+                return True
+        return False
+
+    def _judge(
+        self, vk: int, alt: bool, ctrl: bool, shift: bool, t: float, repeat: bool
+    ) -> tuple[bool, tuple[str, str] | None]:
         if vk in _WIN_KEYS:
-            self._swallowed.add(vk)
-            if not self._win_down:
-                self._win_down = True
+            if not self._win_active(t):
                 self._win_used = False
+            self._win_down = True
             return True, None
-        if self._win_down:
-            self._swallowed.add(vk)
+        if self._win_active(t):
             if repeat:
                 return True, None
             self._win_used = True
             if vk == VK_L:
                 return True, ("lock", "")
             return True, ("key", "Win+" + key_name(vk))
-
         name = None
         if alt and vk == VK_TAB:
             name = "Alt+Tab"
@@ -445,12 +506,44 @@ class KeyFilter:
         elif ctrl and vk == VK_ESCAPE:
             name = "Ctrl+Shift+Esc" if shift else "Ctrl+Esc"
         if name is not None:
-            self._swallowed.add(vk)
             return True, (None if repeat else ("key", name))
         if self.swallow_all or not self.foreground_ok:
-            self._swallowed.add(vk)
             return True, None
         return False, None
+
+    def decide(
+        self, vk: int, up: bool, alt: bool, ctrl: bool = False, shift: bool = False,
+        t_ms: float | None = None,
+    ) -> tuple[bool, tuple[str, str] | None]:
+        t = _now_ms() if t_ms is None else t_ms
+        if up:
+            entry = self._held.pop(vk, None)
+            if entry is None or not entry[2]:
+                return False, None
+            if vk in _WIN_KEYS:
+                report = None
+                if self._win_down and not self._win_used:
+                    report = ("key", "Win")
+                if not any(k in self._held and self._held[k][0] for k in _WIN_KEYS):
+                    self._win_down = False
+                    self._win_used = False
+                return True, report
+            return True, None
+
+        entry = self._held.get(vk)
+        if entry is not None and t - entry[1] <= STALE_MS:
+            # An auto-repeat of a press already judged.
+            entry[1] = t
+            if entry[0]:
+                return True, None
+            swallow, _ = self._judge(vk, alt, ctrl, shift, t, repeat=True)
+            return swallow, None  # the press keeps its verdict, so its key-up still passes
+        # A new press - or a stale one whose key-up was never seen. If any earlier down of it got
+        # through, the OS may think it is still held, so its key-up must get through too.
+        swallow, report = self._judge(vk, alt, ctrl, shift, t, repeat=False)
+        up_swallow = swallow and (entry is None or entry[2])
+        self._held[vk] = [swallow, t, up_swallow]
+        return swallow, report
 
 
 # --- hook thread -------------------------------------------------------------------------------------
@@ -498,7 +591,8 @@ class _HookThread(threading.Thread):
                         ctrl = bool(_user32.GetAsyncKeyState(VK_CONTROL) & 0x8000)
                         shift = bool(_user32.GetAsyncKeyState(VK_SHIFT) & 0x8000)
                     swallow, report = self.filter.decide(
-                        vk, bool(flags & LLKHF_UP), bool(flags & LLKHF_ALTDOWN), ctrl, shift
+                        vk, bool(flags & LLKHF_UP), bool(flags & LLKHF_ALTDOWN), ctrl, shift,
+                        float(kb.time),
                     )
                     if report is not None:
                         self.reports.put(report)
@@ -550,6 +644,11 @@ class _HookThread(threading.Thread):
         # Force creation of this thread's message queue so PostThreadMessageW(WM_QUIT) works.
         _user32.PeekMessageW(ctypes.byref(msg), None, 0, 0, 0)
         self._tid = _kernel32.GetCurrentThreadId()
+        try:
+            # A busy laptop must not make the callback slow enough for Windows to drop the hook.
+            _kernel32.SetThreadPriority(_kernel32.GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL)
+        except Exception:
+            log.debug("SetThreadPriority failed", exc_info=True)
         self.ok = self._install()
         self.installed.set()
         timer = _user32.SetTimer(None, 0, HOOK_REINSTALL_MS, None)
@@ -561,11 +660,17 @@ class _HookThread(threading.Thread):
                 if msg.message == WM_TIMER and msg.hwnd is None and msg.wParam == timer:
                     self._install()
                     self.reinstalls += 1
+                    # If Windows dropped the old hook for a while, key-ups were missed: let every
+                    # remembered press go stale so the next down of each key is judged afresh.
+                    self.filter.soften()
                     continue
                 if msg.message == WM_APP_RESET_FILTER and msg.hwnd is None:
                     # Done here, on the thread the callback runs on, so it can never interleave
                     # with a half-finished decide().
                     self.filter.reset()
+                    continue
+                if msg.message == WM_APP_SOFTEN_FILTER and msg.hwnd is None:
+                    self.filter.soften()
                     continue
                 _user32.TranslateMessage(ctypes.byref(msg))
                 _user32.DispatchMessageW(ctypes.byref(msg))
@@ -582,6 +687,13 @@ class _HookThread(threading.Thread):
             _user32.PostThreadMessageW(self._tid, WM_APP_RESET_FILTER, 0, 0)
         else:
             self.filter.reset()
+
+    def soften_filter(self) -> None:
+        """Ask the hook thread to ``KeyFilter.soften()``."""
+        if self._tid:
+            _user32.PostThreadMessageW(self._tid, WM_APP_SOFTEN_FILTER, 0, 0)
+        else:
+            self.filter.soften()
 
     def stop(self, timeout: float = 2.0) -> None:
         if self._tid:
@@ -606,6 +718,16 @@ def _exe_name_for_pid(pid: int) -> str:
         return f"pid:{pid}"
     finally:
         _kernel32.CloseHandle(h)
+
+
+def _class_name(hwnd: int) -> str:
+    try:
+        buf = ctypes.create_unicode_buffer(256)
+        if _user32.GetClassNameW(hwnd, buf, 256):
+            return buf.value
+    except Exception:
+        pass
+    return "?"
 
 
 def _monitor_rects() -> list[tuple[int, int, int, int]]:
@@ -648,6 +770,11 @@ class GuardCore:
         self.power_held = False
         self.orphan = False  # Nib died while guarded; we are covering on our own
         self.stdin_closed = False
+        #: A Windows Hello prompt is open (Nib said so): every foreground change is logged in full,
+        #: so the process that really hosts the prompt shows up in nib.log.
+        self.prompt_open = False
+        #: The last foreground window judged, so the tick re-judges only on a change.
+        self._last_fg = 0
         self.overlay_hwnds: set[int] = set()
         self.filter = KeyFilter()
         self.hooks: _HookThread | None = None
@@ -796,33 +923,53 @@ class GuardCore:
         else:
             self.filter.reset()
 
-    def _sample_foreground(self) -> None:
-        """Re-judge the current foreground window for ``KeyFilter.foreground_ok``.
+    def _soften_filter(self) -> None:
+        if self.hooks is not None and self.hooks.is_alive():
+            self.hooks.soften_filter()
+        else:
+            self.filter.soften()
 
-        Foreground *events* only arrive on a change and only while guarded, so the state is also
-        sampled when guarding starts and whenever the overlay HWND list changes.
+    def _sample_foreground(self) -> tuple[str, str]:
+        """Re-judge the *real* foreground window for ``KeyFilter.foreground_ok``.
+
+        Foreground *events* only arrive on a change (and a destroyed window, or one that came up
+        while the hook was briefly gone, can leave the verdict wrong), so this also runs on every
+        tick where the foreground handle changed, when guarding starts, when the overlay HWND
+        list changes, after a desktop switch, a session unlock or a display change, and on every
+        click on the guard. It never emits ``foreground_stolen``: only real WinEvents do, so what
+        blacks the screen out stays the same. Returns ``(exe, class)`` of the window judged.
         """
         if not self.guarded:
             self.filter.foreground_ok = True
-            return
+            return "", ""
         fg = _user32.GetForegroundWindow()
         if not fg:
-            return  # mid-switch: keep the last verdict
-        ok, exe = self._is_whitelisted(fg)
+            return "", ""  # mid-switch: keep the last verdict
+        self._last_fg = int(fg)
+        ok, exe, cls = self._is_whitelisted(fg)
         if ok != self.filter.foreground_ok:
-            log.info("foreground %s -> keys %s", exe or "ours", "pass" if ok else "held back")
+            log.info("foreground %s/%s -> keys %s", exe or "ours", cls,
+                     "pass" if ok else "held back")
         self.filter.foreground_ok = ok
+        return exe or "ours", cls
 
-    def _is_whitelisted(self, hwnd: int) -> tuple[bool, str]:
+    def _is_whitelisted(self, hwnd: int) -> tuple[bool, str, str]:
+        """``(ok, exe, window class)`` for a foreground window. ``exe`` is "" for our own."""
+        cls = _class_name(hwnd)
         root = _user32.GetAncestor(hwnd, GA_ROOT) or hwnd
         if hwnd in self.overlay_hwnds or root in self.overlay_hwnds:
-            return True, ""
+            return True, "", cls
+        owner = _user32.GetAncestor(hwnd, GA_ROOTOWNER) or 0
+        if owner and owner in self.overlay_hwnds:
+            # Owned by one of our overlays: a Hello prompt parented to it, whatever process
+            # hosts it on this Windows build.
+            return True, "", cls
         pid = wintypes.DWORD(0)
         _user32.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
         if pid.value in (self.pid, self.parent_pid):
-            return True, ""
+            return True, "", cls
         exe = _exe_name_for_pid(pid.value)
-        return exe.lower() in FOREGROUND_WHITELIST_EXES, exe
+        return exe.lower() in FOREGROUND_WHITELIST_EXES, exe, cls
 
     def _win_event(self, _hook: int, event: int, hwnd: int | None, *_rest: Any) -> None:
         try:
@@ -831,8 +978,25 @@ class GuardCore:
             if event == EVENT_SYSTEM_DESKTOPSWITCH:
                 self._reset_filter()  # key-ups on the other desktop never reach our hook
                 self.emit_event("desktop_switch")
+                self._sample_foreground()
             elif event == EVENT_SYSTEM_FOREGROUND and hwnd:
-                ok, exe = self._is_whitelisted(hwnd)
+                ok, exe, cls = self._is_whitelisted(hwnd)
+                if exe == "pid:0":
+                    # The window is already gone: judge what really has the foreground now
+                    # instead of trusting a dead handle.
+                    real = _user32.GetForegroundWindow()
+                    if not real:
+                        return  # mid-switch: keep the last verdict; the tick re-judges
+                    if int(real) != int(hwnd):
+                        ok, exe, cls = self._is_whitelisted(real)
+                        hwnd = real
+                self._last_fg = int(hwnd)
+                if self.prompt_open:
+                    log.info("foreground during Hello: %s/%s -> keys %s", exe or "ours", cls,
+                             "pass" if ok else "held back")
+                elif ok != self.filter.foreground_ok:
+                    log.info("foreground %s/%s -> keys %s", exe or "ours", cls,
+                             "pass" if ok else "held back")
                 self.filter.foreground_ok = ok
                 if not ok:
                     self.emit_event("foreground_stolen", exe)
@@ -860,6 +1024,10 @@ class GuardCore:
         self._drain_keys()
         now = time.monotonic()
         hooks = self.hooks
+        if self.guarded:
+            fg = _user32.GetForegroundWindow()
+            if fg and int(fg) != self._last_fg:
+                self._sample_foreground()  # heals a verdict a missed or stale event left wrong
         if self.guarded and hooks is not None:
             li = hooks.last_input
             if li > self._input_emitted_for and now - self._last_input_emit >= INPUT_THROTTLE_S:
@@ -902,8 +1070,26 @@ class GuardCore:
             "covering": len(self.cover_hwnds),
             "orphan": self.orphan,
             "foreground_ok": self.filter.foreground_ok,
+            "held": describe_held(self.filter.held()),  # never raw vks: they may be PIN digits
+            "win_down": self.filter.win_down,
+            "prompt_open": self.prompt_open,
             "reinstalls": self.hooks.reinstalls if self.hooks else 0,
         }
+
+    def _owner_click(self) -> None:
+        """Someone clicked a guard window. Re-judge the *real* foreground (never assume it is
+        ours - if a foreign window still has it, keys stay held back) and let every remembered
+        key press go stale, so a key-up lost along the way cannot keep the next keys eaten."""
+        exe, cls = self._sample_foreground()
+        held = self.filter.held()
+        win_down = self.filter.win_down
+        self._soften_filter()
+        if held or win_down or not self.filter.foreground_ok:
+            log.info("owner_click: fg=%s/%s keys=%s held=%s win_down=%s", exe, cls,
+                     "pass" if self.filter.foreground_ok else "held",
+                     describe_held(held), win_down)
+        else:
+            log.debug("owner_click: fg=%s/%s keys=pass", exe, cls)
 
     def handle(self, cmd: dict[str, Any]) -> None:
         name = cmd.get("cmd")
@@ -922,6 +1108,7 @@ class GuardCore:
         elif name == "peek":
             self.guarded = False
             self.peeking = True
+            self.prompt_open = False
             self._stop_tripwires()
             self._take_power()  # keep (or take) the power request through the peek
             log.info("peeking")
@@ -940,6 +1127,11 @@ class GuardCore:
             self.uncover()
         elif name == "status":
             self.emit(self._status())
+        elif name == "prompt":
+            self.prompt_open = bool(cmd.get("open"))
+            log.info("Hello prompt %s", "open" if self.prompt_open else "closed")
+        elif name == "owner_click":
+            self._owner_click()
         else:
             log.warning("unknown command %r", name)
 
@@ -992,6 +1184,8 @@ class GuardCore:
             if msg == WM_WTSSESSION_CHANGE:
                 if wparam in (WTS_SESSION_LOCK, WTS_SESSION_UNLOCK):
                     self._reset_filter()  # Win+L's key-ups happened where our hook can't see
+                if wparam == WTS_SESSION_UNLOCK:
+                    self._sample_foreground()
                 if wparam == WTS_SESSION_LOCK:
                     self.emit_event("session_lock")
                 elif wparam == WTS_SESSION_UNLOCK:
@@ -1004,6 +1198,7 @@ class GuardCore:
             if msg == WM_DISPLAYCHANGE:
                 if self.cover_hwnds:
                     self.cover()
+                self._sample_foreground()  # a dock, a lid or a KVM shuffles the windows
                 return 0
             return _user32.DefWindowProcW(hwnd, msg, wparam, lparam)
         except Exception:
