@@ -53,7 +53,9 @@ a = Analysis(
     ],
     # guard_core is imported only on the --guard-core path at the top of main.py, and
     # guard_scene / guard_overlay lazily, so name them rather than trust the import scan to follow.
-    hiddenimports=["asyncio", "guard_core", "guard_scene", "guard_overlay"] + _winrt_hidden,
+    # updater (and the version it reads) for the same reason: --after-update imports it up there.
+    hiddenimports=["asyncio", "guard_core", "guard_scene", "guard_overlay", "updater", "version"]
+    + _winrt_hidden,
     hookspath=[],
     runtime_hooks=[],
     excludes=["tkinter", "unittest"],

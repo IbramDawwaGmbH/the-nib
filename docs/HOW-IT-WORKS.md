@@ -109,6 +109,8 @@ the-nib/
   win_integration.py    taskbar, monitors, DPI, fullscreen, idle, hotkeys, ghost mode, Run key
   launcher.py           builds the prefill link for whichever assistant you chose
   config.py             load/save/migrate config.json
+  updater.py            Update and restart: git fast-forward or release zip, then the hand-over (Qt-free)
+  version.py            the version a release build compares itself against
   assets/
     nib_sheet.png     the sprite sheet
     frames.json         state -> frames, durations, per-frame anchors

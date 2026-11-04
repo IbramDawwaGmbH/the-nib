@@ -125,6 +125,10 @@ He is not a static image with a click handler.
   way the window-pin above is the one exception to never moving your windows: Shift-drop an image
   on him and he reads the text out of *that* image, and only that image, locally. See
   [Privacy](docs/PRIVACY.md) and [Drop-to-OCR](#drop-to-ocr) below.
+- **He makes no network requests of his own** — with one named exception, the same way: pick
+  **Update and restart** on his wheel and he fetches his own update from GitHub (plus, from a git
+  checkout, any packages it newly needs from PyPI, through pip), then and only then. Nothing checks
+  for updates by itself. See [Update and restart](#update-and-restart) below.
 
 ## He notices when a job finishes
 
@@ -206,7 +210,8 @@ ordinary word reads as a sentence, not a mistake.
 **Currency is deliberately left out.** "3 dollars in euros" goes to the assistant exactly as before,
 untouched. Every other conversion here is a fixed, physical-constant ratio — true forever, safe to
 bundle directly into the code — while an exchange rate isn't: it's either a live lookup, and Nib
-makes no network requests of its own, or a bundled table that goes stale the day you install it.
+makes no network requests of its own (the one exception is fetching his own update, when you ask),
+or a bundled table that goes stale the day you install it.
 Currency may get its own, clearly opt-in feature later. It isn't "coming soon" — it's an open
 question.
 
@@ -394,6 +399,20 @@ It is a strong deterrent for coworkers, kids and cats, not a vault: Ctrl+Alt+Del
 (it blacks the screens out instead). See [Using him](docs/USING-HIM.md#the-screen-guard) for the
 details and [Privacy](docs/PRIVACY.md) for what it keeps.
 
+## Update and restart
+
+**Update and restart**, last in the wheel's App group, brings him up to date and starts him again —
+on every laptop you run him on, the way that copy was installed. A git checkout gets `git fetch
+origin` and a fast-forward of its branch, never a merge, a rebase or a reset; local changes to his
+files, or a branch that has gone its own way, are left alone and he says why. If the update changed
+`requirements.txt`, pip installs it, from PyPI. The release build asks GitHub for the latest
+release and, if it's newer, downloads and checks the zip, then swaps it in — all of it, or none of
+it — and comes back. Already up to date, he says so and doesn't restart. He won't do it while the
+screen guard is up or in the middle of a focus session.
+
+This is the one network request he ever makes of his own, and only when you pick it. See
+[Using him](docs/USING-HIM.md#update-and-restart).
+
 ## Documentation
 
 | | |
@@ -422,7 +441,7 @@ Windows 10 or 11, Python 3.10+, and whichever assistant you point him at. Claude
 python tests/run_all.py
 ```
 
-25 suites, about 25 seconds. They boot a real `QApplication`, build a real sprite sheet, and in
+26 suites, about 30 seconds. They boot a real `QApplication`, build a real sprite sheet, and in
 several cases read geometry back out of Win32 to check what Windows actually believes — because
 several of the bugs worth catching were "Qt thinks one thing and Windows thinks another".
 

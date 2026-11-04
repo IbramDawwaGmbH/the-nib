@@ -862,6 +862,38 @@ finally:
         C._kernel32.CloseHandle(core._handoff_event)
         core._handoff_event = 0
 
+print("\n--- a start blocker (an update waiting for its restart) stops new guards, not running ones ---")
+svc = make(guard_auto_after_idle_min=1)
+svc.start_blocker = lambda: "an update is waiting for its restart"
+svc.request_guard()
+pump()
+check("the wheel / hotkey cannot start a guard", svc.controller.mode is Mode.IDLE, svc.controller.mode)
+real_idle = win_integration.get_idle_seconds
+win_integration.get_idle_seconds = lambda: 3600.0
+try:
+    svc._auto_armed = True
+    svc._check_auto_guard()
+    pump()
+    check("nor can the idle auto-guard", svc.controller.mode is Mode.IDLE, svc.controller.mode)
+    check("...which disarms until someone is back, rather than retrying every poll",
+          svc._auto_armed is False)
+    svc.start_blocker = lambda: ""
+    svc._auto_armed = True
+    svc._check_auto_guard()
+    pump()
+    check("with the blocker clear, the auto-guard starts as before", svc.controller.mode is Mode.FOG,
+          svc.controller.mode)
+finally:
+    win_integration.get_idle_seconds = real_idle
+svc.start_blocker = lambda: "an update is waiting for its restart"
+svc.controller._set_mode(Mode.PEEK)
+pump()
+svc.request_guard()
+pump()
+check("a running guard's Lock now is not blocked", svc.controller.mode is not Mode.PEEK,
+      svc.controller.mode)
+svc.shutdown()
+
 print("\n" + "=" * 60)
 print("FAILURES: " + ", ".join(fails) if fails else "guard wiring OK")
 sys.exit(1 if fails else 0)

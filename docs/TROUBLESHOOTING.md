@@ -66,4 +66,26 @@ next time.
 Lock and unlock Windows (Win+L, then sign in), or just start Nib again — it takes over and you can
 unlock as normal.
 
+**Update and restart said no, or didn't come back.** Whatever he said is the reason, and nothing was
+changed unless he said **Updated**:
+
+- *"You've changed some of my files"* or *"gone different ways"* — a git checkout he won't touch.
+  Commit, stash or sort out the branch yourself (`git status`), then try again; he never merges,
+  rebases or resets for you.
+- *"This branch doesn't follow anything"* — `git branch --set-upstream-to=origin/main`.
+- *"I couldn't reach GitHub"* — offline, a proxy, or GitHub having a moment. Try again later.
+- *"I can't write to my own folder"* — he's under Program Files or another protected folder.
+  Download the new zip from the releases page and extract it over the old folder yourself.
+- *"My packages didn't update"* — usually because a running Nib keeps PySide6's files open. Quit
+  him from the tray, run `pip install -r requirements.txt` in his folder, and start him again.
+- *He quit and didn't come back* — start him from wherever you normally do. For the release build,
+  `%APPDATA%\NibMascot\update.log` says what the file swap did; `nib.log` says what the update
+  itself decided. If the swap failed, the old files are put back and the old version starts again.
+  If he did come back but as the old version, the log says why — usually something still running
+  from his folder, or a file held open (an antivirus scan, say). Pick Update and restart again.
+- *"I've updated - restart me first"* — a git checkout's files are already new, but he hasn't
+  restarted into them yet (pip is still installing, or a guard or focus session is holding up the
+  restart). No new guard starts until he has, the idle auto-guard included. Quit him from the tray
+  and start him again (or finish the focus session) before guarding.
+
 **Anything else.** Set `log_level` to `DEBUG` and read `%APPDATA%\NibMascot\nib.log`.

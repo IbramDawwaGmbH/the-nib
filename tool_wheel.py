@@ -459,6 +459,21 @@ def _icon_wardrobe(p: QPainter) -> None:
     p.drawPath(body)
 
 
+
+def _icon_update(p: QPainter) -> None:
+    # A down arrow inside a turning one: fetch the new version, then start again.
+    p.drawArc(QRectF(3.5, 3.5, 17, 17), 70 * 16, -300 * 16)
+    head = QPainterPath(QPointF(2.8, 5.2))
+    head.lineTo(6.5, 5.5)
+    head.lineTo(6.2, 9.3)
+    p.drawPath(head)
+    p.drawLine(QPointF(12, 7.5), QPointF(12, 15.5))
+    tip = QPainterPath(QPointF(9, 12.6))
+    tip.lineTo(12, 15.6)
+    tip.lineTo(15, 12.6)
+    p.drawPath(tip)
+
+
 ICONS = {
     "guard": _icon_guard,
     "wardrobe": _icon_wardrobe,
@@ -473,6 +488,7 @@ ICONS = {
     "settings": _icon_settings,
     "tips": _icon_tips,
     "home": _icon_home,
+    "update": _icon_update,
     "ask": _icon_ask,
     "again": _icon_again,
     "measure": _icon_measure,

@@ -33,6 +33,15 @@ if __name__ == "__main__" and len(sys.argv) >= 3 and sys.argv[1] == "--guard-cor
         _parent_pid = 0
     sys.exit(guard_core.run(_parent_pid))
 
+# ``main.py --after-update <pid>`` is the Nib that "Update and restart" started to replace process
+# <pid>. Unlike the core it goes on to start normally - but only once the old one has exited, as
+# that one holds the single-instance mutex until it does. Waited for here, before Qt loads, and the
+# two arguments dropped so nothing after this sees them; main() covers the not-__main__ case.
+if __name__ == "__main__" and len(sys.argv) >= 2 and sys.argv[1] == "--after-update":
+    import updater
+
+    updater.consume_after_update(sys.argv)
+
 # Must be set before any Qt module is imported - see the module docstring.
 os.environ.setdefault("QT_ENABLE_HIGHDPI_SCALING", "0")
 os.environ.setdefault("QT_SCALE_FACTOR_ROUNDING_POLICY", "PassThrough")
@@ -69,6 +78,7 @@ from tool_wheel import ToolWheel, WheelItem  # noqa: E402
 from settings import SettingsWindow  # noqa: E402
 from sound import Sounds  # noqa: E402
 from tray import Tray  # noqa: E402
+import updater  # noqa: E402
 from world import World, cpu_count  # noqa: E402
 
 log = logging.getLogger("nib")
@@ -126,6 +136,9 @@ INTRO_GAP_MS = 900
 #: has already fired by then - this delays his animation, not your launch.
 DROP_GLANCE_MS = 550
 
+#: An update's restart held up by a guard or a focus session looks again this often.
+UPDATE_RESTART_RETRY_MS = 5000
+
 
 def _assets_dir() -> Path:
     """Assets live next to the source, or inside the bundle when frozen by PyInstaller."""
@@ -169,6 +182,15 @@ class _OcrBridge(QObject):
     """
 
     finished = Signal(str, str)
+
+
+class _UpdateBridge(QObject):
+    """The same job as ``_OcrBridge``, for ``updater``: it runs on a plain thread and calls back
+    there, and these carry what it says back onto the UI thread. ``finished`` carries an
+    ``updater.Outcome``."""
+
+    progress = Signal(str)
+    finished = Signal(object)
 
 
 def _wardrobe_ring(sheet: SpriteSheet, wearing: str, recents: list[str]) -> list[WheelItem]:
@@ -290,6 +312,18 @@ class NibApp:
         self._ruler: RulerOverlay | None = None
         self._ocr_bridge = _OcrBridge()
         self._ocr_bridge.finished.connect(self._on_ocr_finished)
+        #: Update and restart. Set from the click until the outcome is back, so a second pick
+        #: while one is running is refused rather than racing it over the same files.
+        self._updating = False
+        #: A checkout updated on disk whose restart is waiting for a guard or focus session to
+        #: end. This process is still the old code, so it starts no guard of its own meanwhile.
+        self._restart_pending = False
+        #: Set from the update thread the moment it is allowed to merge: from then on the files on
+        #: disk may be newer than this process, whatever the outcome says later.
+        self._files_changing = False
+        self._update_bridge = _UpdateBridge()
+        self._update_bridge.progress.connect(self._on_update_progress)
+        self._update_bridge.finished.connect(self._on_update_finished)
         # Created in _start_timers, which runs after the first geometry pass - and that pass can
         # already want to throttle the clock if a fullscreen app is up at launch.
         self._tick_timer: QTimer | None = None
@@ -299,6 +333,7 @@ class NibApp:
         self.guard = GuardService(
             config, sheet_provider=lambda: self.sheet, sounds=self.sounds, ui_scale=self.ui_scale,
         )
+        self.guard.start_blocker = self._guard_start_blocker
 
         self._connect()
         self._refresh_geometry(initial=True)
@@ -1274,6 +1309,8 @@ class NibApp:
         items.append(WheelItem("settings", "Settings", "settings", group=app))
         items.append(WheelItem("tips", "Show tips", "tips", group=app))
         items.append(WheelItem("reset", "Send him home", "home", group=app))
+        # Last on the ring: the furthest a stray flick can be from it, as it ends in a restart.
+        items.append(WheelItem("update", "Update and restart", "update", group=app))
         return items
 
     def _open_tool_wheel(self, position: QPoint) -> None:
@@ -1380,6 +1417,8 @@ class NibApp:
             self.show_intro()
         elif key == "reset":
             self._on_reset_position()
+        elif key == "update":
+            self._on_update_requested()
         # Last, after the handler: a tool that gave him a job keeps it (see Behavior.tool_picked).
         if self.behavior.tool_picked(key):
             self._apply_frame()
@@ -1423,6 +1462,128 @@ class NibApp:
             self.window.fade_to(1.0)
         self._update_tick_rate()
 
+    # --- update and restart --------------------------------------------------------
+
+    def _tell(self, text: str, sub: str = "", duration_ms: int = 6000) -> None:
+        """Say something in the toast above him - how every tool without a window of its own talks.
+
+        Not while a guard is up: the fog is there to hide everything of his, toasts included.
+        """
+        if self._guarding or self.guard.active:
+            log.info("not shown during a guard: %s", text)
+            return
+        x, y, w, _h = self.behavior.rect
+        self.toast.show_message(text, QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
+                                sub=sub, duration_ms=duration_ms)
+
+    def _guard_busy(self) -> bool:
+        """A guard is up, or about to be: its PIN setup is open."""
+        return self._guarding or self.guard.active or self.guard.setting_up
+
+    def _update_blocker(self) -> str:
+        """Why an update may not start right now, or ""."""
+        return updater.refusal(running=self._updating, guarding=self._guard_busy(),
+                               focusing=self.behavior.focus_active)
+
+    def _on_update_requested(self) -> None:
+        """The wheel's Update and restart. Decides how this copy updates, then hands the work to a
+        thread - the wheel has already closed, and nothing here waits on git or the network."""
+        why = self._update_blocker()
+        if why:
+            self._tell(why)
+            return
+        mode = updater.detect_mode()
+        log.info("update requested (%s)", mode.kind)
+        if mode.kind == updater.MODE_NONE:
+            self._tell(mode.reason, sub="Nothing was changed.")
+            return
+        if mode.kind == updater.MODE_GIT:
+            # GuardService imports these the first time it needs them. Now, while the files on
+            # disk are still the ones this process started from, so a guard that does go up
+            # before the restart runs old code throughout, not old code with new parts.
+            import guard_overlay  # noqa: F401
+            import guard_scene  # noqa: F401
+        self._updating = True
+        self._tell("Checking for updates…", duration_ms=60000)
+        bridge = self._update_bridge
+        updater.start(mode, progress=bridge.progress.emit, done=bridge.finished.emit,
+                      log_path=config_path().parent / "update.log", blocked=self._merge_blocker)
+
+    def _merge_blocker(self) -> str:
+        """Asked from the update thread just before a checkout's files change: is a restart still
+        all right? A guard or focus session that began during the fetch says no. A yes also marks
+        the files as changing (a plain bool, set from the thread), so no new guard starts from
+        here on - not during pip, not in the moment before the restart, not by the idle timer."""
+        why = updater.refusal(running=False, guarding=self._guard_busy(),
+                              focusing=self.behavior.focus_active)
+        if not why:
+            self._files_changing = True
+        return why
+
+    def _guard_start_blocker(self) -> str:
+        """GuardService.start_blocker: a checkout that is new on disk but not restarted yet."""
+        if self._files_changing or self._restart_pending:
+            return "an update is waiting for its restart"
+        return ""
+
+    def _on_update_progress(self, text: str) -> None:
+        self._tell(text, duration_ms=60000)
+
+    def _on_update_finished(self, outcome) -> None:
+        """Up to date or failed: say so, and that is all. Updated: say so, then restart.
+
+        An update that is about to restart still counts as running until it does (or doesn't), so a
+        second pick in the moment before the restart is refused rather than started alongside it.
+        """
+        log.info("update: %s - %s", outcome.kind, outcome.message)
+        if outcome.kind not in (updater.RESTART, updater.HANDOFF):
+            self._updating = False
+            self._files_changing = False   # only a fast-forward that went through changes them
+            self._tell(outcome.message, sub=outcome.sub)
+            return
+        self._tell(outcome.message, sub=outcome.sub)
+        # Long enough to read the line; longer when there is small print (pip failing) to read too.
+        QTimer.singleShot(4500 if outcome.sub else 1500, lambda o=outcome: self._restart_after_update(o))
+
+    def _restart_after_update(self, outcome, waited: bool = False) -> None:
+        """Start the replacement, then quit through the tray's own Quit, config saved and all.
+
+        Checked again here, not only at the click: a guard or a focus session can have started in
+        the moment between the files changing and now, and quitting would end either one. So the
+        restart waits for it to end instead - checking every few seconds, still counting as a
+        running update - and then goes ahead, with a word first so he doesn't just vanish.
+        Waiting rather than giving up, because a checkout is already new on disk: this process
+        must not carry on as the old code for longer than it has to.
+        """
+        guarding, focusing = self._guard_busy(), self.behavior.focus_active
+        if guarding or focusing:
+            if outcome.kind == updater.RESTART:
+                self._restart_pending = True
+            if not waited:
+                busy = "the screen guard is down" if guarding else "your focus session is over"
+                self._tell(f"Updated. I'll restart once {busy}.")
+            QTimer.singleShot(UPDATE_RESTART_RETRY_MS,
+                              lambda o=outcome: self._restart_after_update(o, waited=True))
+            return
+        if waited:
+            self._tell("Restarting into the update…")
+            QTimer.singleShot(1500, lambda o=outcome: self._restart_after_update(o))
+            return
+        try:
+            updater.launch_restart(outcome)
+        except OSError:
+            log.exception("could not start the updated Nib")
+            self._updating = False
+            if outcome.kind == updater.HANDOFF:
+                updater.discard(outcome)
+            else:
+                self._restart_pending = True   # the files are new all the same
+            self._tell("Updated, but I couldn't start again by myself.",
+                       sub="Quit me from the tray and start me again.")
+            return
+        log.info("restarting after the update")
+        self._on_quit()
+
     # --- the away guard -------------------------------------------------------------
 
     def _on_guard_requested(self) -> None:
@@ -1430,6 +1591,14 @@ class NibApp:
         including what "guard" means mid-Peek (lock now) or while already guarded (nothing)."""
         log.info("guard requested")
         self.tool_wheel.close()
+        if self._guard_start_blocker() and not self.guard.active:
+            # A new guard from this process would be the old GuardService driving a guard core
+            # started from the new files on disk. "Lock now" in a Peek is the running guard's.
+            log.info("guard refused: an update is waiting for its restart")
+            self._tell("I've updated - restart me first, then I'll guard.",
+                       sub="Quit me from the tray and start me again." if not self._updating
+                       else "I'll restart by myself as soon as I can.")
+            return
         self.guard.request_guard()
 
     def _set_guarding(self, active: bool) -> None:
@@ -1844,6 +2013,8 @@ def main() -> int:
         import guard_core
 
         return guard_core.run(int(sys.argv[2]) if sys.argv[2].isdigit() else 0)
+    # Before the mutex - see the top of this file. A no-op if that already dealt with it.
+    updater.consume_after_update(sys.argv)
     # Logging first, so warnings raised while *reading* the config are not thrown away.
     setup_logging("INFO")
     config = Config()

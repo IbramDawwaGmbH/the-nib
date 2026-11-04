@@ -105,7 +105,7 @@ The ring, in order:
 | --- | --- |
 | **Tools** | Ask · Send again · Measure · Read text from an image · Focus · Pin the clipboard · Mute microphone · More… |
 | **Him** | Do something · Surprise costume · Wardrobe… · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
-| **App** | Switch Chat/Cowork · Settings · Show tips · Send him home |
+| **App** | Switch Chat/Cowork · Settings · Show tips · Send him home · Update and restart |
 
 It always opens at the start, with every tool from the first group on the arc. That's deliberate:
 the hold-and-flick is muscle memory, and muscle memory needs the same tool in the same direction
@@ -140,7 +140,8 @@ Pausing gets nothing, because it freezes him on the spot, and neither does **Sto
 you end early earns nothing, by design. Ask, Send again, Read, starting a focus session, Pin the
 clipboard, Do something and Surprise costume already have reactions of their own — though a Read
 whose file picker you cancel leaves him as he was; Hide and Guard
-take him off screen, and More… and Wardrobe… open something else. Right-click him while he's asleep and the wheel still
+take him off screen, Update and restart says how it went, and More… and Wardrobe… open something
+else. Right-click him while he's asleep and the wheel still
 opens — nothing on it needs him awake — but he grumbles the way a click would, and won't react to
 picks until he's up. Standing on a window he isn't held by the wheel, so he doesn't watch it or
 react to picks there either.
@@ -211,7 +212,7 @@ of that table wrong.
 Currency conversion is left out on purpose, for the same reason: "3 dollars in euros" is sent like
 any other prompt. Every other conversion here is a fixed, physical-constant ratio, true forever and
 safe to bundle; an exchange rate isn't — it's either a live network call, and Nib makes none of its
-own, or a bundled table that goes stale. It may become its own, clearly opt-in feature later; it
+own (bar fetching its own update when you ask), or a bundled table that goes stale. It may become its own, clearly opt-in feature later; it
 isn't promised.
 
 Nothing about a calculation counts as a prompt: it doesn't join your prompt history, doesn't
@@ -555,6 +556,45 @@ your own. See the
 It is a strong deterrent for coworkers, kids and cats, not a vault: Ctrl+Alt+Del cannot be blocked
 (it blacks the screens out instead), a touchpad gesture or a toast can show through for a moment
 before the fog re-asserts itself, and turn on Do Not Disturb if notifications matter.
+
+### Update and restart
+
+**Update and restart**, last in the wheel's App group, brings him up to date and starts him again.
+Nothing else ever checks: no start-up check, no timer, no "a new version is available" nag. Each
+copy updates the way it was installed, decided when you pick it:
+
+- **Running from a git checkout** (`pyw main.py`): `git fetch origin`, then, if his branch is behind
+  the one it follows, a fast-forward to it (`git merge --ff-only`). That's all he ever does to the
+  repository. He leaves everything alone, and tells you why, if you've changed any of his tracked
+  files (untracked ones don't count), if the branch and origin have gone different ways, or if the
+  branch follows nothing, or follows a remote other than origin. If `requirements.txt` changed, he
+  runs `pip install -r requirements.txt` with the Python he's running under, which downloads the
+  changed packages from PyPI; if that fails, the new code is kept and he says so. A fetch that
+  stalls, or an ssh remote that would ask for a passphrase, gives up rather than waiting.
+- **Running the release build** (`Nib.exe`): he asks GitHub for the latest release. If it's newer
+  than his own version, he downloads `Nib-vX.Y.Z-windows-x64.zip`, checks it against the digest
+  GitHub publishes for it, checks it's a whole zip with `Nib/Nib.exe` inside and nothing that would
+  land outside the folder, and unpacks it to a temporary folder. Then he quits, and a small helper
+  waits for him (and his guard helper) to be gone, moves the old `Nib.exe` and `_internal` aside,
+  copies the new ones in and starts him again. It's all or nothing: if anything is still running
+  from the folder, a file is held open, or the copy fails, the old files go back exactly as they
+  were and the old version starts. Nothing an old version left in `_internal` survives an update.
+  Anything else you keep in that folder is left where it is, and your settings aren't there at all
+  (they're in `%APPDATA%\NibMascot`). If his folder can't be written to — under Program Files, say —
+  he says so up front and leaves it to you to extract the new zip by hand.
+- **Anything else** (a downloaded source zip, no git installed): he says he can't, and nothing
+  changes.
+
+He says how it's going in a small note above him: checking, updating, and then either **I'm up to
+date** (no restart), a one-line reason it didn't happen, or **Restarting…**. The restart is the
+same as **Quit** from the tray — settings saved, the guard's helper stopped — followed by a fresh
+start. He won't start an update while the screen guard is up (or being set up), during a focus
+session, or while one is already running. If a guard or focus session starts while a git checkout
+is still fetching, he stops before changing anything and you pick it again afterwards. If one starts
+after the files have changed (or while the release build is about to swap), he holds the restart
+until it's over, says so, and restarts then — and until he has, he won't start a new screen guard,
+because the old program would be running a guard from the new files. This is the one network
+request Nib ever makes of his own; see [Privacy](PRIVACY.md).
 
 ---
 

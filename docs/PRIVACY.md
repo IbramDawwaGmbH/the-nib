@@ -53,7 +53,8 @@ Worth being explicit, since he watches a few things in order to feel alive:
   polls it and nothing stores it.
 - **Prompts go only to the assistant you chose**, by handing a URL to the Windows shell — either a
   documented `claude://` link to the desktop app, or an ordinary `https://` link that your browser
-  opens. Nib makes **no network requests of its own**, has no API key, and never talks to any of
+  opens. Nib makes **no network requests of its own** — with one named exception, Update and
+  restart, below, and only when you pick it — has no API key, and never talks to any of
   these services directly. The seasonal reactions come from your calendar, not from a weather
   service — deliberately, so this line stays true. See [Providers](PROVIDERS.md).
 - **Your prompt history is stored, locally, and you can turn it off.** Up in the bubble walks back
@@ -68,7 +69,8 @@ Worth being explicit, since he watches a few things in order to feel alive:
   conversion in the bubble happens entirely inside `calculator.py`, with no network request of any
   kind — which is also why currency conversion is left out: every other conversion here is a fixed,
   physical-constant ratio, safe to bundle forever, while an exchange rate is either a live lookup or
-  a table that goes stale, and Nib makes no network requests of its own. The answer only reaches the
+  a table that goes stale, and Nib makes no network requests of its own (bar fetching its own
+  update when you ask, below). The answer only reaches the
   clipboard if you click the toast to put it there, and nothing about a calculation — the expression
   or the answer — is logged, at any level, including `DEBUG`, the same rule as above.
 - **The pixel ruler never looks at what's on screen.** It reads cursor position and monitor
@@ -87,6 +89,20 @@ Worth being explicit, since he watches a few things in order to feel alive:
   the bubble it prefilled, the same as any other prompt, and nothing about a read — the image, the
   extracted text, or which of the two engines handled it — is logged, at any level, including
   `DEBUG`.
+- **Update and restart is the one feature that makes a network request of its own — and only
+  when you pick it from the wheel.** Nothing checks for updates by itself: not at start-up, not on
+  a timer, not in the background. From a git checkout it runs `git fetch origin` and a fast-forward
+  against the repository you cloned — and, only if the update changed `requirements.txt`,
+  `pip install -r requirements.txt`, which downloads the changed packages from PyPI (the Python
+  Package Index, or whichever index your pip is set up to use) and sends pip's own user agent,
+  which names your Python version, Windows version and CPU type, the same as any pip install you
+  run yourself. Nothing else. From the release build it asks
+  `api.github.com` for this repository's latest release and, only if that is newer than the one
+  you have, downloads its zip from GitHub. That request carries a generic `Nib-updater` user agent
+  and nothing about you, your machine or your settings — no ID, no analytics, no "this version is
+  running" ping; GitHub sees it the way it sees any download, which is your IP address. Your
+  settings live in `%APPDATA%\NibMascot`, which an update never touches, and `update.log` there
+  records only what the file swap did.
 - **The mic and camera indicator reads state, never content.** Whether the default microphone is
   muted comes from `IAudioEndpointVolume`; whether anything is using the mic or camera comes from
   the `CapabilityAccessManager` consent store, the same place the Windows privacy indicator reads.

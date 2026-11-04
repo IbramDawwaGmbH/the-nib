@@ -2,6 +2,35 @@
 
 Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.md#releases).
 
+## [1.1.0] - 2026-11-04
+
+Nib can now update himself: pick **Update and restart** on the tool wheel.
+
+**Download** `Nib-v1.1.0-windows-x64.zip` below, extract it over the old folder (or anywhere), and
+run `Nib.exe`. Running from source? `git pull` once more; after that, the wheel does it for you.
+
+### Added
+
+- **Update and restart**, last in the tool wheel's App group, with its own icon. Running from a git
+  checkout, it runs `git fetch origin` and fast-forwards the branch (never a merge, rebase, reset or
+  stash; local changes or a diverged branch are left alone, with the reason), reinstalls
+  `requirements.txt` if it changed, and restarts. Running the release build, it fetches the latest
+  release from GitHub if it's newer, checks the zip's digest and contents, and a small helper swaps
+  it in after Nib quits — all of it or none of it — and starts him again (the old version, put back
+  whole, if the swap fails). Already up to date: he says so and stays put. Not while the screen
+  guard is up or during a focus session; one that starts while it runs stops it before anything
+  changes, or holds the restart until it's over. See
+  [Using him](https://github.com/IbramDawwaGmbH/the-nib/blob/main/docs/USING-HIM.md#update-and-restart).
+- `version.py` holds the version the release build compares itself against, and a release is not
+  built from a tag that doesn't match it.
+
+### Changed
+
+- **Nib makes one network request of its own now** — only when you pick Update and restart: to
+  GitHub, and, from a git checkout whose update changed `requirements.txt`, to PyPI through pip.
+  Nothing checks for updates by itself. [Privacy](https://github.com/IbramDawwaGmbH/the-nib/blob/main/docs/PRIVACY.md)
+  names it as the one exception.
+
 ## [1.0.2] - 2026-11-04
 
 The screen guard's PIN field now always takes your typing after a blackout. (1.0.1 was tagged with

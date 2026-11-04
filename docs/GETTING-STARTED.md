@@ -18,7 +18,8 @@ A small program that puts an animated character on your taskbar. Clicking him op
 type a question, and your AI assistant opens with that question already filled in.
 
 It runs entirely on your computer. It doesn't create an account, doesn't sign in to anything, and
-makes no internet connections of its own.
+makes no internet connections of its own — except, when you ask it to, to fetch its own update from
+GitHub (and, if you run it from a git checkout, any Python packages that update needs, from PyPI).
 
 **You need Windows 10 or 11.** It uses Windows-specific features — the taskbar, the tray, global
 shortcuts — so it won't run on a Mac or on Linux.

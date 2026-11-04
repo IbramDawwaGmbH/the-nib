@@ -75,7 +75,9 @@ survivors are `tumble` where he is genuinely on his side.
 
 ## Releases
 
-Semantic versioning, tagged on `main`:
+Semantic versioning, tagged on `main`. Bump `version.py` and turn `## [Unreleased]` in
+`CHANGELOG.md` into the version's own section first: the release build refuses a tag that doesn't
+match `version.py`, and the suites check it matches the changelog.
 
 ```bash
 git tag -a v1.2.0 -m "v1.2.0"

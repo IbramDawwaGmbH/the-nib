@@ -396,6 +396,9 @@ class GuardService(QObject):
         self._last_input = 0.0
         self._choice_since = 0.0
         self._auto_armed = True
+        #: Why a new guard may not start right now, or "". Set by Nib: a checkout updated on disk
+        #: but not yet restarted would start the new guard core from the old GuardService.
+        self.start_blocker: Callable[[], str] = lambda: ""
 
         self._tick_timer = QTimer(self)
         self._tick_timer.setInterval(TICK_MS)
@@ -436,6 +439,11 @@ class GuardService(QObject):
         return self.controller.mode is not Mode.IDLE
 
     @property
+    def setting_up(self) -> bool:
+        """True while the first-run PIN setup is open - a guard that is about to start."""
+        return self._setup_open
+
+    @property
     def overlays(self):
         return self._overlays
 
@@ -458,6 +466,8 @@ class GuardService(QObject):
             return
         if mode is not Mode.IDLE or self._setup_open:
             return
+        if self.start_blocker():
+            return  # Nib has already said why
         if not self._auth_ready(interactive=True):
             return  # the setup dialog will start the guard once the PIN is hashed
         self._start()
@@ -930,6 +940,11 @@ class GuardService(QObject):
             self._auto_armed = True  # someone was here since the last guard: re-arm
             return
         if not self._auto_armed or self.controller.mode is not Mode.IDLE or self._setup_open:
+            return
+        why = self.start_blocker()
+        if why:
+            log.info("guard: auto-guard skipped - %s", why)
+            self._auto_armed = False
             return
         if not self._auth_ready(interactive=False):
             # Never pop the PIN setup at an empty desk - log once per idle stretch instead.

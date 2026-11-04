@@ -48,8 +48,11 @@ prompt is trimmed before it's sent rather than silently losing its end somewhere
 
 - **The prompt is prefilled, not sent.** You review it and press send yourself. That's intended for
   every provider, not a limitation of one.
-- **No network requests of Nib's own.** Handing a URL to the shell is not a request. He never
-  talks to any of these services directly, has no API key, and reads no account or usage data.
+- **No network requests of Nib's own** — with one named exception, Update and restart, which
+  talks to GitHub (and, from a git checkout whose update changed `requirements.txt`, to PyPI
+  through pip), and only when you pick it (see [Privacy](PRIVACY.md)). Handing a URL
+  to the shell is not a request. He never talks to any of these services directly, has no API key,
+  and reads no account or usage data.
 - **The prompt is never logged.** Only its length. See [Privacy](PRIVACY.md).
 
 ---

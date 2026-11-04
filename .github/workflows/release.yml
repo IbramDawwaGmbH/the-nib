@@ -21,6 +21,20 @@ jobs:
           python-version: "3.12"
           cache: pip
 
+      - name: The tag matches version.py
+        # The build's idea of its own version is what "Update and restart" compares the latest
+        # release against. A v1.3.0 built from a tree that says 1.2.0 would offer itself as an
+        # update to itself forever, so it is not built at all.
+        shell: python
+        run: |
+          import sys
+          sys.path.insert(0, ".")
+          from version import __version__
+          tag = "${{ github.ref_name }}"
+          if tag != f"v{__version__}":
+              print(f"::error::tag {tag} does not match version.py ({__version__}) - bump it first")
+              sys.exit(1)
+
       - name: Install
         run: |
           pip install -r requirements.txt pyinstaller pillow

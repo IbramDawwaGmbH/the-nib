@@ -831,7 +831,7 @@ for name in [anim for anim, _ms in Bh.TOOL_BEATS.values()] + [Bh.WHEEL_CANCEL_AN
     check(f"the sheet has '{name}'", sheet.has_state(name))
 # Tools whose handlers already give him something to do, or take him away: no beat on top.
 EXEMPT = {"ask", "again", "read", "focus", "pocket", "do_something", "costume", "wardrobe",
-          "more", "hide", "guard"}
+          "more", "hide", "guard", "update"}
 ring = re.findall(r'WheelItem\("(\w+)"', inspect.getsource(M.NibApp._wheel_items))
 check("set up: the ring's keys were found", len(ring) >= 18, ring)
 for key in ring:
