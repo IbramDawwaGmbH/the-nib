@@ -83,8 +83,8 @@ pythonw main.py
 He appears on your taskbar and starts walking. The window you typed into can be closed —
 `pythonw` (with the **w**) runs him without a console attached.
 
-**The first time**, he gives you a short tour — four tips over about half a minute, covering the
-things you'd otherwise never find.
+**The first time**, he gives you a short tour — five tips over about half a minute, covering the
+things you'd otherwise never find, and that you can rename him.
 
 <details>
 <summary>Nothing appeared</summary>

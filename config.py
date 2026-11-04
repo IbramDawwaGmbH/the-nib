@@ -178,6 +178,9 @@ DEFAULTS: dict[str, Any] = {
     #: A lens over the numbers above rather than a rewrite of them: the preset scales what you
     #: have set, your file keeps your own values, and switching back to "balanced" restores them.
     "personality": "balanced",
+    #: What *he* is called - in the tray tooltip, his toasts and the lines he says. Not the app's
+    #: name: window titles and error dialogs still say Nib, because they are about the program.
+    "name": "Nib",
     "sprite_scale": 0,  # 0 = auto from monitor DPI
     "costume": "",      # "" = bare-headed; see assets/costumes.json for the names
     #: The costumes you put on him last, newest first, so the wardrobe opens on them. Checked
@@ -269,6 +272,8 @@ _TEXT_KEYS = (
     # guard_pin_hash is verified (and rejected if malformed) by guard_auth.verify_pin; here it only
     # has to stay a string, since a non-string default would otherwise be stored verbatim.
     "guard_hotkey", "guard_pin_hash",
+    # name is trimmed and capped by its own branch in _coerce, above the generic text one.
+    "name",
 )
 
 #: Longest single stored prompt. Matches ``launcher.MAX_PROMPT_CHARS`` but is duplicated rather
@@ -279,6 +284,8 @@ _MAX_STORED_PROMPT = 14000
 _MAX_HISTORY = 200
 #: How many costumes the wardrobe remembers - one arc of the wheel.
 _MAX_COSTUME_RECENTS = 8
+#: Longest name he can be given. Long enough for any real name, short enough for a tooltip.
+_MAX_NAME = 24
 
 
 def _fresh_defaults() -> dict[str, Any]:
@@ -327,6 +334,16 @@ def _coerce(key: str, value: Any) -> Any:
         # Never "None" or a number turned into text: a hash that looks set but is not would leave
         # the PIN path unusable while still counting as "a way back in".
         return value.strip() if isinstance(value, str) else default
+    if key == "name":
+        # Capped because it lands in a tray tooltip and a one-line toast, both of which truncate
+        # or wrap badly; blank falls back rather than leaving him nameless, since every line that
+        # uses it ("{name} is fine.") reads as broken with nothing there. A non-string (a JSON
+        # null or number from a hand-edited file) is the default rather than str()'d, or he would
+        # be called "None". Inner runs of whitespace - a newline, a tab - collapse to one space so
+        # a tooltip stays on one line, and the strip comes after the cut so it can't end in one.
+        if not isinstance(value, str):
+            return default
+        return " ".join(value.split())[:_MAX_NAME].strip() or default
     if key in _TEXT_KEYS:
         return str(value)
     if key == "prompt_history":

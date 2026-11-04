@@ -72,7 +72,7 @@ from launcher import (  # noqa: E402
     open_download_page,
 )
 from mascot_window import MascotWindow  # noqa: E402
-from mood import Mood  # noqa: E402
+from mood import Mood, label_for  # noqa: E402
 import devices  # noqa: E402
 from ruler import RulerOverlay  # noqa: E402
 from tool_wheel import ToolWheel, WheelItem  # noqa: E402
@@ -123,13 +123,15 @@ WARDROBE_PREFIX = "wear:"
 WARDROBE_RECENTS = 5
 
 #: The one-off tour, shown on a first run. Each is (message, sub-line, how long to hold it).
-#: These are the four things that are genuinely undiscoverable - the hotkey opens the bubble at
+#: The first four are the things that are genuinely undiscoverable - the hotkey opens the bubble at
 #: your pointer without going near him, and nothing on screen suggests you can drop a file on him.
+#: The last is that he has a name you can change, and a tab saying how he is.
 INTRO_STEPS: tuple[tuple[str, str, int], ...] = (
     ("Hello. Click me to ask Claude something.", "I'll put a bubble above your taskbar.", 6000),
     ("Double-click sends your last prompt again.", "No typing at all.", 5500),
     ("Drop a file on me to ask about it.", "Or drop some text to fill the box.", 5500),
     ("Press %s from anywhere.", "That one's easy to miss - it's the fastest way in.", 7000),
+    ("You can rename me in Settings → Personality.", "And see how I'm doing there too.", 5000),
 )
 INTRO_GAP_MS = 900
 
@@ -682,10 +684,13 @@ class NibApp:
                 # frame or two of it bare-headed before the glasses appeared.
                 self._sync_persona_costume()
 
+        # His name, not the app's: this is the line that is about *him*. Read on every poll rather
+        # than cached, so a rename in Settings shows here on the next 700ms tick with no restart.
+        name = str(self.config["name"])
         if self.behavior.focus_active:
             remaining = int(self.behavior.focus_remaining_s)
             label = "paused (away)" if self.behavior.away else "focusing"
-            self.tray.set_tooltip(f"Nib - {label}, {remaining // 60}:{remaining % 60:02d} left")
+            self.tray.set_tooltip(f"{name} - {label}, {remaining // 60}:{remaining % 60:02d} left")
         elif self._device_state is not None and self._device_badge_kind():
             muted, mic_live, camera_live = self._device_state
             if mic_live and muted:
@@ -696,14 +701,18 @@ class NibApp:
                 said = "camera is live"
             else:
                 said = "microphone is live"
-            self.tray.set_tooltip(f"Nib - {said}")
+            self.tray.set_tooltip(f"{name} - {said}")
         elif self._perch_pinned:
             # The one case worth a tooltip of its own even without a countdown: a fullscreen
             # window can cover him entirely once it is the thing pinned on top, so the tray - icon
             # badge and all - is the only place left this is visible from.
-            self.tray.set_tooltip("Nib - pinned a window on top; grab him to let it go")
+            self.tray.set_tooltip(f"{name} - pinned a window on top; grab him to let it go")
         else:
-            self.tray.set_tooltip(Tray.DEFAULT_TOOLTIP)
+            # Nothing more pressing to say, so say how he is - the one place the mood is
+            # readable at a glance without opening anything. The same words as Settings → About
+            # him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows before
+            # the first poll gets here.
+            self.tray.set_tooltip(f"{name} — {label_for(self.mood.spirits)}")
 
     def _update_fullscreen(self, monitor) -> None:
         fullscreen = win.is_fullscreen_on_monitor(monitor)
@@ -954,7 +963,7 @@ class NibApp:
             # A toast rather than relying on the on-screen celebration alone: he might be hidden
             # behind a fullscreen app when a session completes, and the toast is the one part of
             # this that still reaches you either way.
-            self.tray.notify("Nib", "Focus session complete - nice work.")
+            self.tray.notify(str(self.config["name"]), "Focus session complete - nice work.")
             self._refresh_tray()
         # Reconciled here every tick, rather than only from the tray toggle, so every way a session
         # can end - it finishing on its own, anger cancelling it, being called over - takes the
@@ -1793,6 +1802,7 @@ class NibApp:
                 self.config,
                 costumes=self.sheet.available_costumes(),
                 skins=available_skins(),
+                status=self._status_text,
             )
             self._settings.changed.connect(self._on_settings_changed)
             self._settings.history_cleared.connect(lambda: self.behavior.noticed())
@@ -1801,6 +1811,10 @@ class NibApp:
         self._settings.show()
         self._settings.raise_()
         self._settings.activateWindow()
+
+    def _status_text(self) -> dict:
+        """How he is, for Settings → About him. Words only - the same label the tooltip uses."""
+        return {"line": f"{self.config['name']} is {label_for(self.mood.spirits)}."}
 
     def _on_settings_changed(self, keys: set) -> None:
         """React to the handful of settings that need more than a config write.
@@ -1829,6 +1843,10 @@ class NibApp:
         if "shadow_enabled" in keys:
             self._last_frame_key = None
             self._apply_frame(force=True)
+        if "name" in keys:
+            # The presence timer would get there within 700ms anyway; this just means the tooltip
+            # is already right by the time you look down from the Apply button.
+            self._update_presence()
         self._refresh_tray()
 
     def show_intro(self) -> None:

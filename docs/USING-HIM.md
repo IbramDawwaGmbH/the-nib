@@ -38,13 +38,27 @@ The launcher half: asking things, dropping things, and getting him out of the wa
 
 ### The first time you run him
 
-He gives you a short tour — four tips, one at a time, over about half a minute — covering the
+He gives you a short tour — five tips, one at a time, over about half a minute — covering the
 things that are genuinely undiscoverable: the click, the double-click, dropping a file on him, and
-the global shortcut. It runs **once**, latched on `intro_seen`.
+the global shortcut, and last that he has a name you can change. It runs **once**, latched on
+`intro_seen`.
 
 That last one is the reason the tour exists at all. The hotkey opens the bubble at your pointer
 without going anywhere near him, so nothing on screen ever suggests it is there — and it is the
 fastest way to use the whole app. **Show tips** in the tray menu replays the tour whenever you like.
+
+### How he's doing
+
+**Hover over the tray icon.** When nothing more pressing is going on, the tooltip is just his name
+and how he is: `Nib — fine`, `Nib — in good spirits`, `Nib — a bit flat`. Pet him and it changes
+within a second. It is the same word his mood uses everywhere — never a number — and it steps
+aside for the things that matter more right then: a focus countdown, a live microphone or camera,
+a pinned window. **Settings → About him** says the same thing in a sentence. See
+[How the day went](BEHAVIOUR.md#how-the-day-went) for what moves it.
+
+**He has a name, and you can change it.** `name` (Settings → Personality, first on the tab) is
+what the tray tooltip, his toasts and the lines he says call him. It applies as soon as you click
+Apply — no restart. Window titles and error boxes still say Nib, because those are about the app.
 
 ### The ask bubble
 
@@ -669,7 +683,8 @@ and three thuds in half a second is a bug that sounds like a machine gun.
 
 ## Tray menu
 
-Right-click the tray icon (a left click opens the same menu — it deliberately does **not** toggle
+Hover over the icon for his name and how he is (see [How he's doing](#how-hes-doing)); right-click
+it for the menu (a left click opens the same menu — it deliberately does **not** toggle
 pause, which used to be an easy way to freeze him by accident). **Right-clicking him directly opens
 the exact same menu** — Windows can tuck the tray icon into the overflow area, and he is usually
 easier to find than it is — with a few things pinned above it that only make sense right on him:

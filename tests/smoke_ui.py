@@ -422,6 +422,99 @@ app.processEvents()
 nib.config["tool_wheel_enabled"] = True
 nib.behavior.noticed = real_noticed
 
+print("\n--- his name, and the mood you can see ---")
+check("a blank name falls back to Nib", cfg_module._coerce("name", "   ") == "Nib",
+      repr(cfg_module._coerce("name", "   ")))
+check("...a long one is cut to 24", cfg_module._coerce("name", "x" * 40) == "x" * 24,
+      repr(cfg_module._coerce("name", "x" * 40)))
+check("...and spaces round it are trimmed", cfg_module._coerce("name", "  Pip ") == "Pip")
+check("...a JSON null or number is the default, not 'None'",
+      cfg_module._coerce("name", None) == "Nib" and cfg_module._coerce("name", 42) == "Nib",
+      repr((cfg_module._coerce("name", None), cfg_module._coerce("name", 42))))
+check("...a newline in it becomes one space, so the tooltip stays one line",
+      cfg_module._coerce("name", "Sir\n\tPip") == "Sir Pip",
+      repr(cfg_module._coerce("name", "Sir\n\tPip")))
+check("...and the cut never leaves a trailing space",
+      cfg_module._coerce("name", "a" * 23 + " b") == "a" * 23,
+      repr(cfg_module._coerce("name", "a" * 23 + " b")))
+check("the focus-complete notification uses his name",
+      'notify(str(self.config["name"]), "Focus session complete'
+      in inspect.getsource(M.NibApp._tick))
+check("the tooltip is composed from the mood label",
+      "label_for" in inspect.getsource(M.NibApp._update_presence))
+check("...with no hard-coded 'Nib - ' left in it",
+      '"Nib - ' not in inspect.getsource(M.NibApp._update_presence))
+
+# Live, on the real tray. Device indicators off so a microphone that happens to be live on the
+# machine running the tests cannot claim the tooltip first.
+nib.config["mic_indicator_enabled"] = False
+nib.config["camera_indicator_enabled"] = False
+if nib.behavior.focus_active:
+    nib.behavior.set_focus(False)
+nib.mood.reset()
+nib._update_presence()
+check("a fresh mood reads as fine in the tray", nib.tray._tray.toolTip() == "Nib — fine",
+      nib.tray._tray.toolTip())
+nib.mood.nudge("petted")
+nib._update_presence()
+check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits",
+      nib.tray._tray.toolTip())
+check("the status line says the same", nib._status_text() == {"line": "Nib is in good spirits."},
+      str(nib._status_text()))
+
+about = S.SettingsWindow(fresh_config("about"), costumes=[], skins=["default"],
+                         status=lambda: {"line": "x"})
+titles = [about._tabs.tabText(i) for i in range(about._tabs.count())]
+check("settings has an About him tab", "About him" in titles, str(titles))
+check("...showing the status line", about._now_label.text() == "x", about._now_label.text())
+check("...and it holds no setting of its own", set(about._fields) == set(window._fields))
+check("the name is the first thing on the Personality tab",
+      dict(S.GROUPS)["Personality"][0] == "name")
+about.close()
+
+# The line is asked for again when the tab is opened, so it can't go stale while the window
+# sits open and he is petted behind it.
+said = ["first"]
+about = S.SettingsWindow(fresh_config("about-live"), costumes=[], skins=["default"],
+                         status=lambda: {"line": said[0]})
+said[0] = "second"
+about._tabs.setCurrentIndex(about._tabs.count() - 1)
+check("...and asks again when the tab is opened", about._now_label.text() == "second",
+      about._now_label.text())
+about.close()
+about = S.SettingsWindow(fresh_config("about-none"), costumes=[], skins=["default"])
+check("with no status it says so rather than nothing",
+      about._now_label.text() == "Nothing to say yet.", about._now_label.text())
+about.close()
+
+
+def broken_status():
+    raise RuntimeError("no mood")
+
+
+about = S.SettingsWindow(fresh_config("about-broken"), costumes=[], skins=["default"],
+                         status=broken_status)
+check("...and a status that fails doesn't take the window with it",
+      about._now_label.text() == "Nothing to say yet.", about._now_label.text())
+about.close()
+
+# Renaming applies on Apply, with no restart: the settings window writes the config, and the
+# app's change handler refreshes the tooltip straight away.
+nib._on_settings()
+nib._settings._fields["name"].write("Pip")
+nib._settings.apply()
+check("a rename reaches the tooltip on Apply", nib.tray._tray.toolTip().startswith("Pip — "),
+      nib.tray._tray.toolTip())
+check("...and the About him line", nib._settings._now_label.text().startswith("Pip is "),
+      nib._settings._now_label.text())
+nib._settings.close()
+# The busier tooltips carry the new name too, not just the mood one.
+nib.behavior.set_focus(True)
+nib._update_presence()
+check("...and the focus countdown", nib.tray._tray.toolTip().startswith("Pip - focusing"),
+      nib.tray._tray.toolTip())
+nib.behavior.set_focus(False)
+
 nib._on_quit()
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "ghost, history, settings, sound, tour OK")

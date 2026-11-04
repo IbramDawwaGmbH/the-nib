@@ -2,6 +2,23 @@
 
 Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.md#releases).
 
+## [Unreleased]
+
+### Added
+
+- **He has a name**, and you can change it: `name`, first on Settings → Personality. It is what
+  the tray tooltip, his toasts and his lines call him, and a rename applies on Apply with no
+  restart. Window titles still say Nib — that's the app.
+- **You can see how he is.** Hover over the tray icon: when nothing more pressing is showing, the
+  tooltip is his name and his mood in a word — `Nib — fine`, `Nib — in good spirits` — and it
+  changes as soon as you pet him. A new **About him** tab in Settings says the same in a sentence.
+- A fifth first-run tip: that you can rename him, and where to see how he's doing.
+
+### Changed
+
+- The tray tooltip's focus, microphone and pinned-window lines start with his name instead of a
+  fixed "Nib", and so does the focus-complete notification.
+
 ## [1.2.0] - 2026-11-04
 
 His wardrobe, redone.

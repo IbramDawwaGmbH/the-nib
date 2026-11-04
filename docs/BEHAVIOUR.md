@@ -340,6 +340,12 @@ zero elapsed rather than being allowed to amplify the mood instead of fading it.
 
 Set `mood_enabled` to `false` and it reports a flat zero, contributing nothing anywhere.
 
+**Where you can read it.** As a word, never the number: *delighted*, *in good spirits*, *fine*,
+*a bit flat* or *thoroughly fed up*. It is the tray icon's tooltip whenever nothing more pressing
+(a focus countdown, a live mic or camera, a pinned window) has it — `Nib — fine` — and the
+"Right now" line on **Settings → About him**. Both use his `name`. With `mood_enabled` off the
+word is always *fine*.
+
 ---
 
 ## App personas

@@ -37,8 +37,9 @@ class Tray(QObject):
     mic_toggle_requested = Signal()
     guard_requested = Signal()
 
-    #: What the tray icon's tooltip says when nothing more specific (a running focus session -
-    #: see main._update_presence) is overriding it via set_tooltip.
+    #: What the tray icon's tooltip says until main._update_presence first runs. From then on it
+    #: always has something more specific to say - a focus countdown, a live mic, or simply his
+    #: name and how he is - so this is a fallback, not the usual text.
     DEFAULT_TOOLTIP = "Nib - click him to ask Claude something"
 
     def __init__(

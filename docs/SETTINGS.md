@@ -92,6 +92,7 @@ rather than being silently rewritten to a time you never chose.
 
 | Key | Default | Meaning |
 | --- | --- | --- |
+| `name` | `"Nib"` | What he's called in the tray, toasts and lines he says. Trimmed, line breaks become spaces, at most 24 characters; blank goes back to `"Nib"`. Window titles still say Nib — that is the app's name, not his |
 | `personality` | `"balanced"` | `"balanced"`, `"chill"`, `"hyper"` or `"sassy"` — a lens over the numbers below, not a rewrite of them |
 | `annoyance_threshold` | `4` | Pokes needed to anger him |
 | `annoyance_window_s` | `15` | Burst window for those pokes |
