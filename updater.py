@@ -81,6 +81,12 @@ AFTER_UPDATE_FLAG = "--after-update"
 AFTER_UPDATE_WAIT_S = 20.0
 #: How long the release helper waits for the old Nib before copying anyway.
 HELPER_WAIT_S = 60
+#: How long the update thread waits for the UI thread to answer the merge check.
+ASK_TIMEOUT_S = 30.0
+#: The temp folder a release is staged in (``tempfile.mkdtemp``'s prefix).
+WORK_PREFIX = "nib-update-"
+#: A staged folder older than this is left over, not in use: the helper is done within minutes.
+STALE_WORK_S = 6 * 3600
 
 _CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000)
 _CREATE_NEW_PROCESS_GROUP = getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200)
@@ -532,7 +538,7 @@ def helper_script(source: Path, install: Path, work: Path, pid: int, log_path: P
 def update_release(install: Path, *, current: str = __version__, http: Http | None = None,
                    progress: Progress = lambda _m: None, pid: int | None = None,
                    log_path: Path | None = None, can_write: Callable[[Path], bool] = writable,
-                   make_workdir: Callable[[], str] = lambda: tempfile.mkdtemp(prefix="nib-update-"),
+                   make_workdir: Callable[[], str] = lambda: tempfile.mkdtemp(prefix=WORK_PREFIX),
                    ) -> Outcome:
     """Fetch the latest release if it is newer, check it, unpack it, and write the helper."""
     http = http or UrllibHttp()
@@ -633,10 +639,78 @@ def run_update(mode: Mode, *, progress: Progress = lambda _m: None, run: Runner 
         return Outcome(FAILED, "Something went wrong while updating; nothing changed.")
 
 
+def ask_elsewhere(post: Callable[[Callable[[], None]], None], decide: Callable[[], str],
+                  timeout_s: float = ASK_TIMEOUT_S) -> str:
+    """Have ``decide`` answer on another thread - the UI thread - and wait for what it says.
+
+    ``post`` hands it a function to run there. Why bother: ``decide`` (Nib's merge blocker) both
+    checks whether a guard is up and, on a yes, marks the files as changing; every guard starts on
+    the UI thread, so deciding there means a guard either started before the check (and is seen) or
+    starts after it (and sees the mark) - never in between, as it could with the check made here.
+
+    No answer within ``timeout_s`` (the UI thread stuck on something) is a no. Under one lock with
+    the answer, so a ``decide`` that runs after that is skipped rather than marking files that are
+    never going to change. A ``decide`` that raises is a no too.
+    """
+    lock = threading.Lock()
+    answered = threading.Event()
+    box: dict = {"why": None, "gave_up": False}
+
+    def answer() -> None:
+        with lock:
+            if box["gave_up"]:
+                return
+            try:
+                box["why"] = str(decide() or "")
+            except Exception:  # noqa: BLE001
+                log.exception("the merge check failed")
+                box["why"] = "Something got in the way of the update."
+        answered.set()
+
+    post(answer)
+    if answered.wait(timeout_s):
+        return box["why"]
+    with lock:
+        if box["why"] is not None:
+            return box["why"]
+        box["gave_up"] = True
+    log.warning("the merge check got no answer in %.0fs", timeout_s)
+    return "I was too busy to finish the update just then."
+
+
+def sweep_stale(*, root: Path | None = None, max_age_s: float = STALE_WORK_S,
+                now: Callable[[], float] = time.time) -> int:
+    """Delete staged releases left in the temp folder by a Nib that never got to use them - one
+    that crashed, or was killed, between the download and the restart. Only folders this module
+    makes (``nib-update-*``), and only old ones: a helper still mid-swap is minutes old at most.
+    How many it removed."""
+    root = Path(tempfile.gettempdir()) if root is None else root
+    removed = 0
+    try:
+        candidates = list(root.glob(WORK_PREFIX + "*"))
+    except OSError:
+        return 0
+    for folder in candidates:
+        try:
+            if not folder.is_dir() or folder.is_symlink():
+                continue
+            if now() - folder.stat().st_mtime < max_age_s:
+                continue
+        except OSError:
+            continue
+        shutil.rmtree(folder, ignore_errors=True)
+        if not folder.exists():
+            removed += 1
+    if removed:
+        log.info("removed %d staged update folder(s) left behind", removed)
+    return removed
+
+
 def start(mode: Mode, *, progress: Progress, done: Callable[[Outcome], None],
           log_path: Path | None = None, blocked: Callable[[], str] = lambda: "") -> threading.Thread:
     """Run the update on its own thread. Every callback runs on that thread, not the caller's -
-    ``blocked`` included, so it must only read state, never change it."""
+    ``blocked`` included, so anything it decides that has to line up with the UI thread goes
+    through ``ask_elsewhere``."""
     thread = threading.Thread(
         target=lambda: done(run_update(mode, progress=progress, log_path=log_path,
                                        blocked=blocked)),

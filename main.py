@@ -16,6 +16,7 @@ import logging
 import logging.handlers
 import os
 import sys
+import threading
 import time
 from pathlib import Path
 
@@ -191,6 +192,8 @@ class _UpdateBridge(QObject):
 
     progress = Signal(str)
     finished = Signal(object)
+    #: A function the update thread wants run here, on the UI thread (``updater.ask_elsewhere``).
+    run_here = Signal(object)
 
 
 def _wardrobe_ring(sheet: SpriteSheet, wearing: str, recents: list[str]) -> list[WheelItem]:
@@ -318,12 +321,17 @@ class NibApp:
         #: A checkout updated on disk whose restart is waiting for a guard or focus session to
         #: end. This process is still the old code, so it starts no guard of its own meanwhile.
         self._restart_pending = False
-        #: Set from the update thread the moment it is allowed to merge: from then on the files on
-        #: disk may be newer than this process, whatever the outcome says later.
+        #: Set (on the UI thread, at the update thread's asking) the moment a merge is allowed:
+        #: from then on the files on disk may be newer than this process, whatever the outcome
+        #: says later.
         self._files_changing = False
+        #: A downloaded release waiting for its restart (an ``updater.Outcome`` of kind HANDOFF).
+        #: Thrown away if Nib quits some other way first, so it doesn't sit in %TEMP% for good.
+        self._staged = None
         self._update_bridge = _UpdateBridge()
         self._update_bridge.progress.connect(self._on_update_progress)
         self._update_bridge.finished.connect(self._on_update_finished)
+        self._update_bridge.run_here.connect(self._run_from_update)
         # Created in _start_timers, which runs after the first geometry pass - and that pass can
         # already want to throttle the clock if a fullscreen app is up at launch.
         self._tick_timer: QTimer | None = None
@@ -1507,13 +1515,22 @@ class NibApp:
         self._tell("Checking for updates…", duration_ms=60000)
         bridge = self._update_bridge
         updater.start(mode, progress=bridge.progress.emit, done=bridge.finished.emit,
-                      log_path=config_path().parent / "update.log", blocked=self._merge_blocker)
+                      log_path=config_path().parent / "update.log",
+                      blocked=lambda: updater.ask_elsewhere(bridge.run_here.emit, self._merge_blocker))
+
+    def _run_from_update(self, fn) -> None:
+        """``_UpdateBridge.run_here``: run what the update thread sent, here on the UI thread."""
+        fn()
 
     def _merge_blocker(self) -> str:
-        """Asked from the update thread just before a checkout's files change: is a restart still
-        all right? A guard or focus session that began during the fetch says no. A yes also marks
-        the files as changing (a plain bool, set from the thread), so no new guard starts from
-        here on - not during pip, not in the moment before the restart, not by the idle timer."""
+        """Just before a checkout's files change: is a restart still all right? A guard or focus
+        session that began during the fetch says no. A yes also marks the files as changing, so no
+        new guard starts from here on - not during pip, not in the moment before the restart, not
+        by the idle timer.
+
+        Runs on the UI thread (the update thread asks through ``updater.ask_elsewhere``), the
+        thread every guard starts on, so the check and the mark are one step as far as a guard is
+        concerned: it starts before them and is seen, or after them and sees the mark."""
         why = updater.refusal(running=False, guarding=self._guard_busy(),
                               focusing=self.behavior.focus_active)
         if not why:
@@ -1541,6 +1558,8 @@ class NibApp:
             self._files_changing = False   # only a fast-forward that went through changes them
             self._tell(outcome.message, sub=outcome.sub)
             return
+        if outcome.kind == updater.HANDOFF:
+            self._staged = outcome
         self._tell(outcome.message, sub=outcome.sub)
         # Long enough to read the line; longer when there is small print (pip failing) to read too.
         QTimer.singleShot(4500 if outcome.sub else 1500, lambda o=outcome: self._restart_after_update(o))
@@ -1575,6 +1594,7 @@ class NibApp:
             log.exception("could not start the updated Nib")
             self._updating = False
             if outcome.kind == updater.HANDOFF:
+                self._staged = None
                 updater.discard(outcome)
             else:
                 self._restart_pending = True   # the files are new all the same
@@ -1582,6 +1602,7 @@ class NibApp:
                        sub="Quit me from the tray and start me again.")
             return
         log.info("restarting after the update")
+        self._staged = None   # the helper has it now: it swaps it in, then deletes it
         self._on_quit()
 
     # --- the away guard -------------------------------------------------------------
@@ -1954,7 +1975,17 @@ class NibApp:
     def _on_ruler_closed(self) -> None:
         self._ruler = None
 
+    def _drop_staged(self) -> None:
+        """Quitting while a downloaded release still waits for its restart (a guard or a focus
+        session held it up, and you quit from the tray instead): it is not going to be used, so
+        it goes. The next Update and restart fetches it again."""
+        if self._staged is not None:
+            log.info("quitting before the update's restart - throwing the download away")
+            updater.discard(self._staged)
+            self._staged = None
+
     def _on_quit(self) -> None:
+        self._drop_staged()
         self.bubble.close_silently()
         self.billboard.take_down()
         self.focus_timer.take_down()
@@ -2026,6 +2057,9 @@ def main() -> int:
     if not win.acquire_single_instance():
         log.warning("another Nib is already running - exiting")
         return 0
+    # Downloads a crashed or killed Nib staged and never used. Off the UI thread: a whole unpacked
+    # release takes a moment to delete, and nothing waits on it.
+    threading.Thread(target=updater.sweep_stale, name="nib-sweep", daemon=True).start()
 
     app = QApplication(sys.argv)
     app.setApplicationName("Nib")

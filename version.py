@@ -6,4 +6,4 @@ a release is built from: ``release.yml`` refuses to build ``v1.2.0`` from a tree
 an update to itself forever (see ``updater.py``).
 """
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"

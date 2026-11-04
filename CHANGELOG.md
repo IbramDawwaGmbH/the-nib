@@ -2,6 +2,20 @@
 
 Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.md#releases).
 
+## [1.1.1] - 2026-11-04
+
+Two small fixes to Update and restart. On 1.1.0, pick **Update and restart** on the wheel and he
+fetches this one himself.
+
+### Fixed
+
+- A screen guard started in the same instant a git checkout's update got the go-ahead could slip
+  past the check that holds new guards back until the restart. The go-ahead is now decided on the
+  same thread every guard starts on, so one or the other wins, never both.
+- Quitting from the tray while a downloaded release waited for its restart (held up by a guard or a
+  focus session) left the download in your temp folder. It is thrown away now, and any left behind
+  by a Nib that crashed or was killed are cleared out the next time he starts.
+
 ## [1.1.0] - 2026-11-04
 
 Nib can now update himself: pick **Update and restart** on the tool wheel.

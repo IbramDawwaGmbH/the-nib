@@ -839,12 +839,14 @@ start_kw = []
 def fake_nib(*, guarding=False, active=False, setting_up=False, focusing=False):
     nib = types.SimpleNamespace(
         _updating=False, _guarding=guarding, _restart_pending=False, _files_changing=False,
+        _staged=None,
         guard=types.SimpleNamespace(active=active, setting_up=setting_up,
                                     request_guard=lambda: guards.append(True)),
         tool_wheel=types.SimpleNamespace(close=lambda: None),
         behavior=types.SimpleNamespace(focus_active=focusing),
         _update_bridge=types.SimpleNamespace(progress=types.SimpleNamespace(emit=lambda _t: None),
-                                             finished=types.SimpleNamespace(emit=lambda _o: None)),
+                                             finished=types.SimpleNamespace(emit=lambda _o: None),
+                                             run_here=types.SimpleNamespace(emit=lambda fn: fn())),
         _tell=lambda text, sub="", duration_ms=0: told.append((text, sub)),
         _on_quit=lambda: quits.append(True),
     )
@@ -853,6 +855,7 @@ def fake_nib(*, guarding=False, active=False, setting_up=False, focusing=False):
     nib._restart_after_update = lambda o, waited=False: M.NibApp._restart_after_update(nib, o, waited)
     nib._merge_blocker = lambda: M.NibApp._merge_blocker(nib)
     nib._guard_start_blocker = lambda: M.NibApp._guard_start_blocker(nib)
+    nib._drop_staged = lambda: M.NibApp._drop_staged(nib)
     return nib
 
 
@@ -1012,6 +1015,123 @@ check("nothing is said over a guard", "self._guarding or self.guard.active" in s
 check("the outcome comes back to the UI thread through a Qt signal",
       "finished = Signal(object)" in inspect.getsource(M._UpdateBridge))
 check("the work runs on its own daemon thread", "daemon=True" in inspect.getsource(U.start))
+
+print("\n--- the merge check is answered on the UI thread (ask_elsewhere) ---")
+import threading  # noqa: E402
+
+ui_thread = threading.get_ident()
+check("an answer comes back as given",
+      U.ask_elsewhere(lambda fn: fn(), lambda: "a guard is up") == "a guard is up")
+check("...and a yes as a yes", U.ask_elsewhere(lambda fn: fn(), lambda: "") == "")
+
+
+def explode():
+    raise RuntimeError("boom")
+
+
+check("a check that raises is a no, not a merge", U.ask_elsewhere(lambda fn: fn(), explode) != "")
+
+late, marked = [], []
+why = U.ask_elsewhere(late.append, lambda: marked.append(True) or "", timeout_s=0.05)
+check("no answer in time is a no", why != "" and "busy" in why, why)
+late[0]()
+check("...and an answer that turns up afterwards changes nothing (no files marked)", not marked)
+
+# The real thing: the update thread emits through _UpdateBridge, the UI thread runs the check.
+class PlainOwner:   # NibApp is a plain class, not a QObject: connect the same way it does
+    def run(self, fn):
+        M.NibApp._run_from_update(self, fn)
+
+
+bridge = M._UpdateBridge()
+owner = PlainOwner()
+seen = []
+bridge.run_here.connect(owner.run)
+box = {}
+
+
+def from_update_thread():
+    box["why"] = U.ask_elsewhere(bridge.run_here.emit,
+                                 lambda: seen.append(threading.get_ident()) or "", timeout_s=10)
+
+
+worker = threading.Thread(target=from_update_thread)
+worker.start()
+deadline = time.monotonic() + 10
+while worker.is_alive() and time.monotonic() < deadline:
+    app.processEvents()
+    time.sleep(0.01)
+worker.join(1)
+check("through the Qt signal, the check runs on the UI thread, not the update thread",
+      seen == [ui_thread] and box.get("why") == "", (seen, ui_thread, box))
+
+nib = fake_nib()
+real_start = U.start
+try:
+    kws = []
+    U.start = lambda mode, **kw: kws.append(kw)
+    U.detect_mode = lambda: U.Mode(U.MODE_GIT, checkout)
+    M.NibApp._on_update_requested(nib)
+    blocked = kws[-1]["blocked"]
+    check("the update thread's merge check goes through the bridge to _merge_blocker",
+          blocked() == "" and nib._files_changing)
+    nib = fake_nib()
+    U.start = lambda mode, **kw: kws.append(kw)
+    M.NibApp._on_update_requested(nib)
+    # A guard starts on the UI thread before the check is answered there: the check sees it.
+    nib.guard.active = True
+    check("a guard that started before the check is seen, and nothing is marked",
+          kws[-1]["blocked"]() != "" and not nib._files_changing)
+finally:
+    U.start, U.detect_mode = real_start, real[1]
+check("main wires the bridge's run_here to the UI-thread runner",
+      "run_here.connect(self._run_from_update)" in inspect.getsource(M.NibApp.__init__))
+
+print("\n--- a staged download is not left behind ---")
+real_discard = U.discard
+try:
+    dropped = []
+    U.discard = lambda outcome: dropped.append(outcome)
+    nib = fake_nib()
+    staged = U.Outcome(U.HANDOFF, "Got v9.9.9. Restarting…", helper=SCRATCH / "x" / "nib-update.cmd")
+    M.QTimer = types.SimpleNamespace(singleShot=lambda ms, fn: None)
+    nib._updating = True
+    M.NibApp._on_update_finished(nib, staged)
+    check("a downloaded release is remembered until its restart", nib._staged is staged)
+    M.NibApp._drop_staged(nib)
+    check("quitting before the restart throws it away", dropped == [staged] and nib._staged is None)
+    M.NibApp._drop_staged(nib)
+    check("...once", dropped == [staged])
+    check("_on_quit drops it first", inspect.getsource(M.NibApp._on_quit).split("\n")[1].strip()
+          == "self._drop_staged()")
+    dropped.clear()
+    U.launch_restart = lambda outcome, pid=None: None
+    nib = fake_nib()
+    nib._staged = staged
+    M.NibApp._restart_after_update(nib, staged)
+    check("the restart itself hands it to the helper instead: not thrown away",
+          nib._staged is None and not dropped and quits)
+finally:
+    U.discard, U.launch_restart, M.QTimer = real_discard, real[2], real[4]
+
+print("\n--- leftovers from a crashed Nib are swept at start-up ---")
+tmp = fresh_dir("sweep")
+old_dir, new_dir, other = tmp / "nib-update-old", tmp / "nib-update-new", tmp / "not-nib-old"
+for d in (old_dir, new_dir, other):
+    (d / "new").mkdir(parents=True)
+    (d / "new" / "f.bin").write_bytes(b"x")
+(tmp / "nib-update-file").write_bytes(b"x")
+ancient = time.time() - 2 * U.STALE_WORK_S
+for p in (old_dir, other, tmp / "nib-update-file"):
+    os.utime(p, (ancient, ancient))
+removed = U.sweep_stale(root=tmp)
+check("an old staged folder goes", not old_dir.exists() and removed == 1, removed)
+check("a recent one stays (a helper may be mid-swap)", new_dir.exists())
+check("nothing that isn't ours is touched", other.exists() and (tmp / "nib-update-file").exists())
+check("a temp folder that can't be read is not an error", U.sweep_stale(root=tmp / "missing") == 0)
+check("main sweeps after the single-instance check, off the UI thread",
+      re.search(r"acquire_single_instance\(\).*?Thread\(target=updater\.sweep_stale.*?daemon=True",
+                inspect.getsource(M.main), re.S) is not None)
 
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "update and restart behaves")
