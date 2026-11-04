@@ -60,6 +60,7 @@ CHOICES: dict[str, tuple[str, ...]] = {
     "personality": cfg_module._VALID_PERSONALITIES,
     "guard_auth": cfg_module._VALID_GUARD_AUTH,
     "guard_scene": cfg_module._VALID_GUARD_SCENES,
+    "chatter_level": cfg_module._VALID_CHATTER,
     "log_level": ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
 }
 
@@ -105,7 +106,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
-        "memory_enabled", "memory_routine_enabled",
+        "memory_enabled", "memory_routine_enabled", "chatter_level",
     )),
     ("Look and sound", (
         "sprite_scale", "costume", "skin", "shadow_enabled",
@@ -158,6 +159,7 @@ HELP: dict[str, str] = {
     "mood_half_life_h": "How long a good or bad turn takes to half fade.",
     "memory_enabled": "Count the days, pets, prompts and focus sessions you share. Counts only.",
     "memory_routine_enabled": "Learn roughly what time you usually arrive. An hourly tally.",
+    "chatter_level": "How often he says a line in a toast. Rare: at most 6 a day, 45 min apart.",
     "sprite_scale": "0 picks an integer scale from your monitor's DPI.",
     "shadow_enabled": "The soft contact shadow under his feet.",
     "ghost_mode": "Faded and click-through. Visible, and completely out of the way.",

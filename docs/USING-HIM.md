@@ -89,6 +89,51 @@ controls. **To stop it**, switch off `memory_enabled` (Settings → Personality)
 counted and no file is written. Switching it off does not delete what is already there; Forget
 does that.
 
+### He says things, rarely
+
+Now and then he says one short line in the toast above his head — `Morning. I kept the desk
+warm.` when you come in, `Oh, you're back.` after a break of ten minutes or more, `30 days
+together. That's something.` on a milestone, `Big week. You asked a lot of me.` on a Friday
+after one. After a heavy day he may mention it once the next morning, and once he has learned
+when you usually arrive he may notice that you're in early, or late — once a day each, and
+never as a question or a telling-off. Click the line to make it go away; he likes that.
+
+**How often** is `chatter_level` (Settings → Personality):
+
+| Level | Most in a day | At least this far apart |
+| --- | --- | --- |
+| `rare` (the default) | 6 | 45 minutes |
+| `normal` | 14 | 20 minutes |
+| `off` | none | — |
+
+A greeting when you come back may skip the gap — it's owed when you walk in — but it still
+counts toward the day's total. Nothing is said in the first minute after he starts, and never
+when it would be in the way: not over the screen guard or a fullscreen app, not during a focus
+session, not while the ask bubble or the tool wheel is open, not in ghost mode, not while he is
+asleep, cross, held or hidden, and never on top of a toast that is already up. A line he could
+not say then is simply not said. The count lives only in memory, so a restart starts the day's
+count again — after that quiet first minute.
+
+Measured over simulated ten-hour days (`tests/chatter_rate.py`): an ordinary day with a few
+breaks gets about **4** lines at `rare` (never more than 6); a day built to make him talk — back
+from a break every half hour, every remark due — gets exactly the cap, **6** at `rare` and
+**14** at `normal`, and **0** at `off`.
+
+**The lines are a table, not a model.** They come from `assets/nib_phrases.json`, picked at
+random without repeats. To add your own, put a `nib_phrases.json` next to `config.json`, in the
+same shape — one list per category, `{name}` for his name, `{days}` for the days he has seen
+you, `{pets}` for the pets so far:
+
+```json
+{"greeting_short": ["Back! I counted the pixels while you were gone."]}
+```
+
+Yours are added to the built-in ones, never replace them, and a file with a mistake in it is
+skipped rather than stopping him. The categories are `greeting_short`, `greeting_overnight`,
+`heavy_yesterday`, `early_today`, `late_today`, `milestone_days`, `focus_streak`, `big_week`,
+and a few for things still to come (`milestone_pets`, `tired`, `fond`, `bored`, `treat`,
+`treat_full`, `nap_wake`). Restart him to pick up a change to the file.
+
 ### The ask bubble
 
 ![Clicking Nib opens a prompt bubble above him with a typed prompt and "Enter to send"](../assets/media/images/features/01-ask.png)

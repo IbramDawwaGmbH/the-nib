@@ -128,6 +128,9 @@ DEFAULTS: dict[str, Any] = {
     #: The one part of that close to a time: a 24-slot tally of the hour he first saw you each
     #: day, so he can know when you usually arrive. Off drops the tally from the file.
     "memory_routine_enabled": True,
+    #: How often he says a line in a toast - see voice.py. "rare" is at most 6 a day, 45 minutes
+    #: apart; "normal" at most 14, 20 minutes apart; "off" never. Greetings skip the gap, not the cap.
+    "chatter_level": "rare",
     # Latches, so a once-a-day moment stays once a day across restarts. Written, not read by you.
     "last_seen_date": "",
     "last_clock_off_date": "",
@@ -270,6 +273,8 @@ _VALID_PERSONALITIES = ("balanced", "chill", "hyper", "sassy")
 _VALID_GUARD_AUTH = ("hello", "pin")
 #: What stands guard on the fog - see guard_overlay.build_scene.
 _VALID_GUARD_SCENES = ("both", "eyes", "nib")
+#: See LEVELS in voice.py, which is where the gaps and daily caps live.
+_VALID_CHATTER = ("off", "rare", "normal")
 _NULLABLE = ("last_x", "last_monitor")
 
 #: Free-form text settings, stored verbatim. ``workday_end`` is parsed (and rejected) by
@@ -341,6 +346,9 @@ def _coerce(key: str, value: Any) -> Any:
     if key == "guard_scene":
         text = str(value).lower().strip()
         return text if text in _VALID_GUARD_SCENES else default
+    if key == "chatter_level":
+        text = str(value).lower().strip()
+        return text if text in _VALID_CHATTER else default
     if key == "guard_pin_hash":
         # Never "None" or a number turned into text: a hash that looks set but is not would leave
         # the PIN path unusable while still counting as "a way back in".

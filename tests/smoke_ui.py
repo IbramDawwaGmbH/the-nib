@@ -639,6 +639,92 @@ check("...and the focus countdown", nib.tray._tray.toolTip().startswith("Pip - f
       nib.tray._tray.toolTip())
 nib.behavior.set_focus(False)
 
+print("\n--- the lines he says: when they are shown, and what a click does ---")
+if nib.config["ghost_mode"]:
+    nib._on_ghost_toggled(False)
+nib.toast.hide()
+nib.bubble.close_silently()
+nib.voice._launched -= 120.0  # past the launch quiet without waiting a minute for it
+blockers = {
+    "guard": nib._guard_busy(), "focus": nib.behavior.focus_active,
+    "paused": nib.behavior.paused, "bubble": nib.bubble.isVisible(),
+    "wheel": nib.tool_wheel.isVisible(), "snoozed": nib._snoozed,
+    "fullscreen": nib._hidden_by_fullscreen, "ghost": nib.config["ghost_mode"],
+    "away": nib.behavior.away, "state": nib.behavior.state.name,
+    "toast": nib.toast.isVisible(), "intro": nib._intro_step,
+}
+check("an ordinary moment does not block a line", not nib._voice_blocked(), str(blockers))
+nib.bubble.show()
+check("...the open bubble does", nib._voice_blocked())
+check("...so nothing is said over it", nib._say("greeting_short") == ""
+      and not nib.toast.isVisible())
+nib.bubble.close_silently()
+nib.bubble.hide()
+nib.behavior._event("greeted", gone_s=60.0, overnight=False, heavy=False)
+nib._tick()
+check("a wave for the kettle comes with no line", not nib.toast.isVisible())
+nib.behavior._event("greeted", gone_s=900.0, overnight=False, heavy=False)
+nib._tick()
+check("back after fifteen minutes: a greeting in the toast", nib.toast.isVisible()
+      and nib.toast._label.text() in nib.voice._bag._phrases["greeting_short"],
+      nib.toast._label.text())
+check("...and the event queue was drained", nib.behavior.take_events() == [])
+check("...and nothing is stacked on top of it", nib._say("greeting_overnight") == "")
+before = nib.mood.spirits
+check("the line can be clicked", nib.toast._on_click is not None)
+# A real press on the toast, so this goes through Toast.mousePressEvent and not just the callback.
+from PySide6.QtCore import QEvent, QPointF  # noqa: E402
+from PySide6.QtGui import QMouseEvent  # noqa: E402
+QApplication.sendEvent(nib.toast, QMouseEvent(QEvent.MouseButtonPress, QPointF(5, 5),
+                                              QPointF(5, 5), Qt.LeftButton, Qt.LeftButton,
+                                              Qt.NoModifier))
+check("...and clicking it closes it", not nib.toast.isVisible())
+check("...and lifts his mood", nib.mood.spirits > before,
+      f"{before:.3f} -> {nib.mood.spirits:.3f}")
+nib.toast.hide()
+
+# Each of the other things that must keep him quiet, one at a time. Plain attributes where the
+# real trigger needs a desktop (a fullscreen app, the snooze timer), so the check is about
+# _voice_blocked's list rather than about how each state is reached.
+check("back to an ordinary moment", not nib._voice_blocked(), str(blockers))
+for label, on, off in (
+    ("snoozed", lambda: setattr(nib, "_snoozed", True), lambda: setattr(nib, "_snoozed", False)),
+    ("behind a fullscreen app", lambda: setattr(nib, "_hidden_by_fullscreen", True),
+     lambda: setattr(nib, "_hidden_by_fullscreen", False)),
+    ("between the intro's tips", lambda: setattr(nib, "_intro_step", 2),
+     lambda: setattr(nib, "_intro_step", -1)),
+    ("in ghost mode", lambda: nib.config.__setitem__("ghost_mode", True),
+     lambda: nib.config.__setitem__("ghost_mode", False)),
+    ("in a focus session", lambda: nib.behavior.set_focus(True),
+     lambda: nib.behavior.set_focus(False)),
+    ("while you are away", lambda: nib.behavior.set_away(True),
+     lambda: nib.behavior.set_away(False)),
+):
+    on()
+    blocked = nib._voice_blocked()
+    said = nib._say("fond")
+    off()
+    check(f"...blocked {label}", blocked and said == "" and not nib.toast.isVisible())
+nib.behavior.take_events()  # the away round trip above greeted him; that is not under test here
+nib.toast.hide()
+
+# The whole way round, not an injected event: you leave, you come back fifteen minutes later,
+# Behavior's greeting raises the event, and the next tick turns it into a line.
+nib.voice._last = None
+nib.behavior.set_away(True)
+nib._tick()
+check("nothing is said as you leave", not nib.toast.isVisible())
+nib.behavior.set_away(False, gone_s=900.0)
+nib._tick()
+check("coming back after fifteen minutes is greeted with a line", nib.toast.isVisible()
+      and nib.toast._label.text() in nib.voice._bag._phrases["greeting_short"],
+      nib.toast._label.text())
+nib.toast.hide()
+nib.config["chatter_level"] = "off"
+check("with chatter_level off, nothing at all", nib._say("greeting_short") == ""
+      and not nib.toast.isVisible())
+nib.config["chatter_level"] = "rare"
+
 nib._on_quit()
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "ghost, history, settings, sound, tour OK")

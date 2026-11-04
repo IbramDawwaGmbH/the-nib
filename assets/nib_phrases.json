@@ -1,0 +1,125 @@
+{
+  "_comment": "The lines Nib says in a toast, now and then - at most 6 a day at chatter_level \"rare\", 14 at \"normal\", none at \"off\". One list per category; each list is a shuffle bag, so nothing repeats until every line in it has been shown. {name} is his name, {days} the days he has seen you, {pets} the pets so far. Add your own in a nib_phrases.json next to config.json - it is merged with this list, never replaces it. Keep them observations: no questions, no instructions, no guilt.",
+  "greeting_short": [
+    "Oh, you're back.",
+    "There you are.",
+    "Welcome back. Nothing exploded.",
+    "Back already. I'd only just sat down.",
+    "I held the fort. The fort was fine.",
+    "You're back. I may have waved at a cursor.",
+    "Ah, company."
+  ],
+  "greeting_overnight": [
+    "Morning. I kept the desk warm.",
+    "Good morning. {name}, reporting for duty.",
+    "Hello again. The night was very quiet.",
+    "You came back. I knew you would.",
+    "Morning! I've stretched. I'm ready.",
+    "A new day. Same desk. Excellent.",
+    "Welcome back. I saved you a spot."
+  ],
+  "heavy_yesterday": [
+    "Yesterday was a long one.",
+    "Big day yesterday. Today can be smaller.",
+    "That was a lot yesterday. Coffee's on me.",
+    "Yesterday went on a bit. We survived it.",
+    "After yesterday, a gentle start sounds right.",
+    "Yesterday was busy. I'm still a little dizzy."
+  ],
+  "early_today": [
+    "You're in early.",
+    "Early start. The pixels are barely awake.",
+    "Up before the usual. Impressive.",
+    "Early bird today.",
+    "Oh, early. I hadn't finished my stretch.",
+    "In early. I'll pretend I was already up."
+  ],
+  "late_today": [
+    "A slow start. Fair enough.",
+    "A later start today. Very civilised.",
+    "Later than usual. The desk didn't mind.",
+    "A gentle morning, then. Good.",
+    "Late start. More time for me to nap.",
+    "Not the usual hour. I like a change."
+  ],
+  "milestone_days": [
+    "{days} days together. That's something.",
+    "{days} days. I've been counting.",
+    "Day {days}. Still here, still small.",
+    "{days} days of this. Best job I've had.",
+    "That makes {days} days. Party hat on.",
+    "{days} days side by side. Well, side by taskbar."
+  ],
+  "milestone_pets": [
+    "{pets} pets. Not that I count.",
+    "That's {pets} pets. I've kept every one.",
+    "{pets} pets so far. A fine collection.",
+    "Pet number {pets}. A landmark.",
+    "{pets} pets. My fur is very well kept.",
+    "{pets} pets. I'm a lucky little guy."
+  ],
+  "focus_streak": [
+    "Three focus sessions today. Look at you.",
+    "That's three. A proper day's focus.",
+    "Three sessions done. I'm very proud.",
+    "Focus, focus, focus. Hat earned.",
+    "Three in a day. The party hat is out.",
+    "A third session. Some serious work today."
+  ],
+  "big_week": [
+    "Big week. You asked a lot of me.",
+    "Busy week, that one. I enjoyed it.",
+    "That was a week and a half.",
+    "A bigger week than last. Good work, us.",
+    "What a week. My little legs are tired.",
+    "Lots of asking this week. Lots of answers too."
+  ],
+  "tired": [
+    "I could do with a sit-down.",
+    "Running a bit low today.",
+    "A small rest would be lovely.",
+    "My batteries are blinking.",
+    "Slightly sleepy. Still on duty.",
+    "I'm fine. Just a bit droopy."
+  ],
+  "fond": [
+    "This is nice.",
+    "Good company today.",
+    "I like it here.",
+    "You're my favourite human on this desk.",
+    "All's well on the taskbar.",
+    "Happy little guy, reporting in."
+  ],
+  "bored": [
+    "Nothing's happening. I've checked twice.",
+    "It's very quiet down here.",
+    "I've counted the pixels. All present.",
+    "The taskbar and I have run out of things to say.",
+    "Not much going on. I'll make my own fun.",
+    "Quiet afternoon. I've tidied my feet."
+  ],
+  "treat": [
+    "Oh! For me!",
+    "A treat. You shouldn't have. You should, though.",
+    "Delicious. Every crumb.",
+    "Best snack all day.",
+    "Mm. That hit the spot.",
+    "Treat received. Mood improved."
+  ],
+  "treat_full": [
+    "Couldn't possibly. Well. Maybe later.",
+    "I'm full. Later, maybe.",
+    "One more and I'll roll off the taskbar.",
+    "Too many treats. Even for me.",
+    "I'm stuffed. Truly stuffed.",
+    "No room left. Lovely thought, though."
+  ],
+  "nap_wake": [
+    "I wasn't asleep. I was resting my eyes.",
+    "Oh! I'm up. I'm up.",
+    "Just a short nap. Very short.",
+    "You're back. I was guarding. With my eyes shut.",
+    "Mm. Morning. Or whenever it is.",
+    "Nap over. Fully charged."
+  ]
+}

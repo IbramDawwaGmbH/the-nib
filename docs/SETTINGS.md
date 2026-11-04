@@ -102,6 +102,7 @@ rather than being silently rewritten to a time you never chose.
 | `mood_half_life_h` | `6.0` | Hours for a good or bad turn to half fade |
 | `memory_enabled` | `true` | Counts the days, pets, prompts and focus sessions you share. Counts only, kept in `memory.json` next to `config.json` — see [Privacy](PRIVACY.md). Off: nothing is counted and no file is written; one already there is kept until you **Forget everything** |
 | `memory_routine_enabled` | `true` | Lets him learn roughly what time you usually arrive (an hourly tally, nothing else). Off drops the tally from `memory.json` |
+| `chatter_level` | `"rare"` | How often he says a line in a toast: `"rare"` is at most 6 a day, 45 min apart; `"normal"` at most 14, 20 min apart; `"off"` never. A greeting may skip the gap, never the daily cap. See [He says things, rarely](USING-HIM.md#he-says-things-rarely) |
 
 ### Appearance
 

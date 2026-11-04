@@ -26,11 +26,21 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   good-morning ends with a coffee, and once he knows you well the greeting hop is followed by
   heart eyes. Two new hidden latches in `config.json`: `last_milestone_days` and
   `last_focus_streak_date`.
+- **He says things, rarely.** One short line in the toast now and then — a greeting when you
+  come back after ten minutes or more, a word on a milestone, a focus streak or a big week, a
+  remark once a day on a heavy yesterday or an early or late start. At most 6 a day, 45 minutes
+  apart, by default; never in the first minute, and never over the bubble, the wheel, a focus
+  session, the guard, a fullscreen app or another toast. A new `chatter_level` setting on the
+  Personality tab: `rare`, `normal` (14 a day, 20 minutes apart) or `off`. The lines are a local
+  table, `assets/nib_phrases.json`; add your own in a `nib_phrases.json` next to `config.json`.
+  Clicking a line counts as noticing him.
 
 ### Changed
 
 - The tray tooltip's focus, microphone and pinned-window lines start with his name instead of a
   fixed "Nib", and so does the focus-complete notification.
+- The guard's phrase bag and phrase-file loader moved from `guard_scene.py` to a new Qt-free
+  `phrases.py`, shared with his new lines. Nothing changes for a custom `guard_phrases.json`.
 
 ## [1.2.0] - 2026-11-04
 

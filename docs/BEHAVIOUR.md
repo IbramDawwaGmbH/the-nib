@@ -369,6 +369,12 @@ A few things *read* it, and each adds a beat rather than a new behaviour: the
 [day milestone and focus streak](#moments--things-he-does-once) moments, and two touches on his
 greeting when you come back (below). With `memory_enabled` off none of them happen.
 
+**Some of them come with a line.** The greeting, a milestone, a focus streak and a big week can
+each be said out loud in the toast — one short sentence, at most 6 a day and 45 minutes apart
+at the default `chatter_level`, and never when it would be in the way. The line rides on the
+moment; it never makes one happen. See
+[He says things, rarely](USING-HIM.md#he-says-things-rarely).
+
 ---
 
 ## App personas
