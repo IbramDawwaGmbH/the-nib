@@ -60,6 +60,28 @@ a pinned window. **Settings → About him** says the same thing in a sentence. S
 what the tray tooltip, his toasts and the lines he says call him. It applies as soon as you click
 Apply — no restart. Window titles and error boxes still say Nib, because those are about the app.
 
+### What he remembers
+
+He keeps count of the time you spend together: the day you first ran him, how many days he has
+seen you since, and how many pets, prompts and finished focus sessions there have been — and how
+often he has been thrown, or landed hard. The same counts are kept day by day for the last
+week, along with how many minutes you were at the machine and how many it was busy — enough for
+him to know that yesterday was a long one. If `memory_routine_enabled` is on he also keeps a tally
+of which hour you first turn up each day, so he can learn that you are usually in around eight.
+Working past midnight is not an arrival: a day that begins while you are already there is tallied
+the first time you come back to it. That is all of it: **counts, never names, times or text**. [Privacy](PRIVACY.md) lists every key in the file.
+
+**Settings → About him** shows it in plain words — `Nib has known you 23 days (since 4 Nov
+2026).`, `412 pets · 87 prompts · 12 focus sessions`, `Usually sees you around 08:00.` — under the
+line about how he is right now.
+
+**To clear it**, press **Forget everything…** on that tab and confirm. It deletes `memory.json`
+and lets his mood start fresh, as if you had just met; today then counts as your first day.
+Your settings, his costume and your prompt history are not touched — those have their own
+controls. **To stop it**, switch off `memory_enabled` (Settings → Personality): nothing more is
+counted and no file is written. Switching it off does not delete what is already there; Forget
+does that.
+
 ### The ask bubble
 
 ![Clicking Nib opens a prompt bubble above him with a typed prompt and "Enter to send"](../assets/media/images/features/01-ask.png)

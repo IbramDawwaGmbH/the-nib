@@ -104,6 +104,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
+        "memory_enabled", "memory_routine_enabled",
     )),
     ("Look and sound", (
         "sprite_scale", "costume", "skin", "shadow_enabled",
@@ -154,6 +155,8 @@ HELP: dict[str, str] = {
     "personality": "A lens over the numbers on this page. Your own values are kept.",
     "mood_enabled": "Let a good or bad stretch carry over between sessions.",
     "mood_half_life_h": "How long a good or bad turn takes to half fade.",
+    "memory_enabled": "Count the days, pets, prompts and focus sessions you share. Counts only.",
+    "memory_routine_enabled": "Learn roughly what time you usually arrive. An hourly tally.",
     "sprite_scale": "0 picks an integer scale from your monitor's DPI.",
     "shadow_enabled": "The soft contact shadow under his feet.",
     "ghost_mode": "Faded and click-through. Visible, and completely out of the way.",
@@ -233,7 +236,7 @@ class SettingsWindow(QDialog):
         #: window outlives the moment it was opened in, and a stale "in good spirits" from an hour
         #: ago is worse than no line at all. None (the tests, mostly) leaves the tab saying so.
         self._status = status
-        #: Wiping what he remembers about you. Kept for the memory panel, which is not here yet.
+        #: Wiping what he remembers about you. None (the tests, mostly) leaves the button greyed.
         self._forget = forget
         self.setWindowTitle("Nib settings")
         self.setMinimumSize(520, 560)
@@ -353,17 +356,68 @@ class SettingsWindow(QDialog):
             "The same words are on the tray icon's tooltip. They change with how the day has "
             "gone - pet him, then come back to this tab."
         ))
+        self._memory_label = QLabel(self)
+        self._memory_label.setWordWrap(True)
+        self._memory_label.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        form.addRow("He remembers", self._memory_label)
+        self._forget_button = QPushButton("Forget everything…", self)
+        self._forget_button.clicked.connect(self._on_forget)
+        row = QHBoxLayout()
+        row.addWidget(self._forget_button)
+        row.addStretch(1)
+        form.addRow("", row)
+        form.addRow(self._hint(
+            "Counts only, kept on this machine in memory.json next to config.json: no app names, "
+            "no times, no text. Forgetting deletes that file and lets his mood start fresh. "
+            "Your settings, costume and prompt history are not touched."
+        ))
         return page
 
     def _refresh_about(self) -> None:
-        """Ask for a fresh status line. A failure blanks the line rather than the whole window."""
-        line = ""
+        """Ask for a fresh status. A failure blanks the tab's lines rather than the whole window.
+
+        ``memory`` and ``can_forget`` are read with defaults, so a status that only knows the mood
+        line - and a forget callback that is not there - leave the panel saying so, not broken.
+        """
+        status: dict = {}
         if self._status is not None:
             try:
-                line = str(self._status().get("line", ""))
+                status = dict(self._status())
             except Exception:
                 log.debug("could not read his status", exc_info=True)
+        line = str(status.get("line", "") or "")
         self._now_label.setText(line or "Nothing to say yet.")
+        memory = [str(entry) for entry in (status.get("memory") or [])]
+        self._memory_label.setText("\n".join(memory) or "Nothing yet - you have only just met.")
+        self._forget_button.setEnabled(
+            self._forget is not None and bool(status.get("can_forget", False))
+        )
+
+    def _on_forget(self) -> None:
+        """Ask, then wipe what he remembers. Worded like Clear prompt history, and as final."""
+        if self._forget is None:
+            return
+        answer = QMessageBox.question(
+            self, "Nib",
+            "Forget everything he remembers about you two?\n\n"
+            "The days, the counts and the usual time all go, and his mood starts fresh. "
+            "It is only stored on this machine, in memory.json. Your settings, costume and "
+            "prompt history are not touched.",
+            QMessageBox.Yes | QMessageBox.No,
+            # No by default: unlike a prompt list, this is weeks of counting that cannot be
+            # rebuilt, and an Enter pressed out of habit should not be what wipes it.
+            QMessageBox.No,
+        )
+        if answer != QMessageBox.Yes:
+            return
+        try:
+            self._forget()
+        except Exception:
+            log.warning("could not forget his memory", exc_info=True)
+            QMessageBox.warning(self, "Nib", "That didn't work - see nib.log for why.")
+            return
+        self._refresh_about()
+        QMessageBox.information(self, "Nib", "Forgotten.")
 
     def _hint(self, text: str) -> QLabel:
         label = QLabel(text, self)

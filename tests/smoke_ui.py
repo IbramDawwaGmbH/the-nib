@@ -459,7 +459,7 @@ nib.mood.nudge("petted")
 nib._update_presence()
 check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits",
       nib.tray._tray.toolTip())
-check("the status line says the same", nib._status_text() == {"line": "Nib is in good spirits."},
+check("the status line says the same", nib._status_text()["line"] == "Nib is in good spirits.",
       str(nib._status_text()))
 
 about = S.SettingsWindow(fresh_config("about"), costumes=[], skins=["default"],
@@ -508,6 +508,126 @@ check("a rename reaches the tooltip on Apply", nib.tray._tray.toolTip().startswi
 check("...and the About him line", nib._settings._now_label.text().startswith("Pip is "),
       nib._settings._now_label.text())
 nib._settings.close()
+
+# What he remembers, and forgetting it, through the real app. The memory file sits next to the
+# config he was given - here, the test scratch directory - and never in the user's real one.
+check("his memory lives next to the config he was given",
+      nib.memory.path == nib.config.path.parent / "memory.json", str(nib.memory.path))
+nib.memory.forget()          # a run before this one may have left a file in scratch
+nib._memory_day = ""
+# Present, whatever the machine's real idle time: a CI runner nobody has touched since boot would
+# otherwise read as away, and he only counts a day he has actually seen you on.
+nib.config["away_after_s"] = 0
+nib.behavior.set_away(False)
+nib._update_presence()
+check("the first poll of the day counts it as a day seen", nib.memory.days_seen == 1,
+      str(nib.memory.days_seen))
+nib.behavior.prompt_sent("hello")
+nib._flush_config()
+check("...and the flush writes memory.json", nib.memory.path.is_file())
+status = nib._status_text()
+check("About him gets his memory in words", any("1 prompt" in line for line in status["memory"]),
+      str(status))
+check("...and may forget it", status["can_forget"] is True)
+nib._on_settings()
+about_page = nib._settings
+about_page._tabs.setCurrentIndex(about_page._about_index)
+check("the panel lists it", "Pip has known you 1 day" in about_page._memory_label.text(),
+      about_page._memory_label.text())
+check("...with Forget everything enabled", about_page._forget_button.isEnabled())
+asked = []
+real_question, real_information = S.QMessageBox.question, S.QMessageBox.information
+S.QMessageBox.question = staticmethod(lambda *a, **k: (asked.append(a[2]), S.QMessageBox.No)[1])
+about_page._on_forget()
+check("Forget asks first", len(asked) == 1 and "memory.json" in asked[0], str(asked))
+check("...and No keeps everything", nib.memory.path.is_file() and nib.memory.days_seen == 1)
+S.QMessageBox.question = staticmethod(lambda *a, **k: S.QMessageBox.Yes)
+S.QMessageBox.information = staticmethod(lambda *a, **k: None)
+nib.mood.nudge("petted")
+about_page._on_forget()
+S.QMessageBox.question, S.QMessageBox.information = real_question, real_information
+check("Yes deletes memory.json", not nib.memory.path.exists())
+check("...and empties the panel", about_page._memory_label.text().startswith("Nothing yet"),
+      about_page._memory_label.text())
+check("...and greys the button out", not about_page._forget_button.isEnabled())
+check("...and lets his mood start fresh", nib.mood.spirits == 0.0, str(nib.mood.spirits))
+nib.config["memory_enabled"] = False
+nib._memory_day = ""
+nib._update_presence()
+nib.behavior.prompt_sent("again")
+nib._flush_config()
+check("with memory switched off no file is written", not nib.memory.path.exists())
+check("...and the panel says it is off", "switched off" in nib._status_text()["memory"][0],
+      str(nib._status_text()))
+nib.config["memory_enabled"] = True
+about_page.close()
+
+# The minute counters and the arrival tally, driven poll by poll. Each call is handed a fake gap
+# since the last poll by winding _memory_polled back; the WorldState is built by hand so the CPU
+# can be "busy" and midnight can be crossed without waiting for either.
+import world as W  # noqa: E402
+
+
+def poll(date_key, hour, *, gap_s, busy=False, away=False):
+    nib.behavior.set_away(away)
+    nib._memory_polled = time.monotonic() - gap_s
+    nib._update_memory(W.WorldState(
+        hour=hour, weekday=2, date_key=date_key, week_key="2026-W45", part_of_day=W.PART_DAY,
+        season=W.SEASON_AUTUMN, cpu_percent=90.0 if busy else 5.0, cpu_busy=busy))
+
+
+nib.memory.forget()
+nib._memory_day, nib._memory_was_present, nib._arrival_pending = "", None, ""
+nib._present_acc = nib._busy_acc = 0.0
+poll("2026-11-04", 9.25, gap_s=3600.0, busy=True)
+check("a poll after a long gap (the machine slept) adds at most a few seconds",
+      nib._present_acc == M.MEMORY_MAX_POLL_S and nib._busy_acc == M.MEMORY_MAX_POLL_S,
+      f"{nib._present_acc} {nib._busy_acc}")
+check("the first poll of a session is an arrival, tallied at its hour",
+      nib.memory.days_seen == 1 and nib.memory._arrival_hours[9] == 1,
+      str(nib.memory._arrival_hours))
+for _ in range(11):
+    poll("2026-11-04", 9.3, gap_s=5.0, busy=True)
+check("a minute of polls is one present minute and one busy minute",
+      nib.memory.day("2026-11-04").present_min == 1 and nib.memory.day("2026-11-04").busy_min == 1,
+      str(nib.memory.day("2026-11-04")))
+check("...recorded once, with the remainder carried", 0.0 <= nib._present_acc < 60.0,
+      str(nib._present_acc))
+for _ in range(12):
+    poll("2026-11-04", 9.4, gap_s=5.0, away=True)
+check("away, no present minutes", nib.memory.day("2026-11-04").present_min == 1,
+      str(nib.memory.day("2026-11-04")))
+check("...and no busy ones while the machine is idle", nib.memory.day("2026-11-04").busy_min == 1)
+poll("2026-11-04", 23.9, gap_s=0.7)
+poll("2026-11-05", 0.1, gap_s=0.7)
+check("midnight at the desk counts the new day", nib.memory.days_seen == 2,
+      str(nib.memory.days_seen))
+check("...but not as an arrival at midnight", nib.memory._arrival_hours[0] == 0,
+      str(nib.memory._arrival_hours))
+poll("2026-11-05", 1.0, gap_s=0.7, away=True)
+poll("2026-11-05", 8.6, gap_s=0.7)
+check("...the first time you come back that day is", nib.memory._arrival_hours[8] == 1,
+      str(nib.memory._arrival_hours))
+poll("2026-11-05", 12.0, gap_s=0.7, away=True)
+poll("2026-11-05", 13.0, gap_s=0.7)
+check("...and only that first time", sum(nib.memory._arrival_hours) == 2,
+      str(nib.memory._arrival_hours))
+nib._forget_memory()
+poll("2026-11-05", 15.0, gap_s=0.7)
+check("after Forget, today counts again as the day you met",
+      nib.memory.days_seen == 1 and nib.memory.first_met == "2026-11-05")
+check("...but forgetting at three is not arriving at three", not any(nib.memory._arrival_hours),
+      str(nib.memory._arrival_hours))
+nib.memory.forget()
+nib.config["away_after_s"] = cfg_module.DEFAULTS["away_after_s"]
+nib.behavior.set_away(False)
+window_no_forget = S.SettingsWindow(fresh_config("about-noforget"), costumes=[], skins=["default"],
+                                    status=lambda: {"line": "x", "memory": ["a"],
+                                                    "can_forget": True})
+check("with no forget callback the button stays greyed",
+      not window_no_forget._forget_button.isEnabled())
+window_no_forget.close()
+
 # The busier tooltips carry the new name too, not just the mood one.
 nib.behavior.set_focus(True)
 nib._update_presence()

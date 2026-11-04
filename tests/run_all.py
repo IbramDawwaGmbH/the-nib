@@ -31,6 +31,7 @@ SUITES = [
     ("smoke_attention", "being ignored: the three stages and everything that resets them"),
     ("smoke_pet", "petting, coming when called, and the personality presets"),
     ("smoke_mood", "the persistent mood: decay, headroom, hostile clocks, disk writes"),
+    ("smoke_memory", "what he remembers: counters, the 7-day window, bond, forget"),
     ("smoke_ui", "ghost mode, prompt history, the settings window, sound, the first-run tour"),
     ("smoke_costumes", "every costume on every frame"),
     ("smoke_dressing", "he dresses himself, and never over a costume you picked"),

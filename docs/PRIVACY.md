@@ -113,5 +113,14 @@ Worth being explicit, since he watches a few things in order to feel alive:
   treatment the foreground-app reaction already gets. Muting your microphone is the only thing this
   feature ever *changes*, and it happens only when you ask for it — the tray entry, the shortcut,
   or the toast — never on a timer and never as a side effect of anything he does on his own.
-- Everything he remembers — position, mode, costume, your prompts, how the day has gone — stays in
-  `%APPDATA%\NibMascot\config.json` on your machine.
+- **Everything he remembers stays on your machine.** Settings, position, costume, your prompts and
+  how the day has gone live in `%APPDATA%\NibMascot\config.json`. What he remembers *about you
+  two* lives next to it in `memory.json`: the day you first ran him, the date he last saw you, how
+  many days he has seen you, lifetime counts of pets, prompts, completed focus sessions, treats,
+  throws and hard landings, the same counts for the eight most recent days he has counts for
+  plus how many minutes the machine was busy and how many you were present on each, and — if
+  `memory_routine_enabled` is on — a 24-slot tally of which hour you first turned up each day.
+  Plus a format version number. **That is the whole file.** No app names, no times of anything, no text.
+  You can read it in **Settings → About him**, switch it off with `memory_enabled` (nothing is
+  counted and no file is written, and one already there is left as it was), and **Forget
+  everything** on that tab deletes it.
