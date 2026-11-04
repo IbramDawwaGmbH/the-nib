@@ -339,6 +339,7 @@ app = QApplication.instance() or QApplication([])
 
 import world as W  # noqa: E402
 from animator import SpriteSheet  # noqa: E402
+import behavior as MB  # noqa: E402
 from behavior import Behavior, State  # noqa: E402
 
 cfg, path = fresh("behavior", wander_enabled=False, antic_chance=0.0, play_with_windows=False,
@@ -407,6 +408,215 @@ check("a hard landing is counted", mem.day(day(4)).hurts == hurts + 1 and b.stat
       str(mem.day(day(4))))
 check("...in the lifetime total too", mem.totals["hurts"] == hurts + 1, str(mem.totals))
 check("...and none of it wrote a file on its own", not path.exists())
+
+print("\n--- a big week: this week's prompts against what is left of last week's ---")
+
+
+def friday(tag, this_week, last_week):
+    """A memory asked on Friday 6 Nov 2026. ``this_week`` is Mon 2..Fri 6, ``last_week`` the
+    Fri 30 Oct..Sun 1 Nov the eight-day window still holds; None means a day not recorded."""
+    cfg, path = fresh(tag)
+    m = Memory(path, cfg, FakeClock())
+    keys = ["2026-10-30", "2026-10-31", "2026-11-01"] + [day(n) for n in range(2, 7)]
+    for key, prompts in zip(keys, list(last_week) + list(this_week)):
+        if prompts is not None:
+            m.record("prompts", key, n=prompts) if prompts else m.record("present_min", key)
+    return m
+
+
+check("half as much again per day is a big week",
+      friday("bigwk", [15] * 5, [10, 10, 10]).big_week(day(6)))
+check("an ordinary week is not", not friday("normwk", [12] * 5, [10, 10, 10]).big_week(day(6)))
+check("...and it is a rate, not a sum: five days against three is not bigger for being longer",
+      not friday("sumwk", [8] * 5, [10, 10, 10]).big_week(day(6)))
+check("one day of last week is too little to compare against",
+      not friday("thinwk", [30] * 5, [10, None, None]).big_week(day(6)))
+check("nor is a last week of nothing",
+      not friday("zerowk", [30] * 5, [0, 0, 0]).big_week(day(6)))
+off = friday("offwk", [15] * 5, [10, 10, 10])
+off._config["memory_enabled"] = False
+check("with memory off there are no big weeks", not off.big_week(day(6)))
+
+print("\n--- he acts on it: milestones, the focus streak, and the greeting ---")
+CREATURE_DAY = day(10)
+
+
+def creature(tag, *, date=CREATURE_DAY, hour=14.0, part=W.PART_DAY, weekday=1, memory=None,
+             **overrides):
+    """A fresh Behavior with a memory of its own, standing still, on an ordinary afternoon.
+
+    The morning stretch is pre-spent and the season switched off, so the only moments that can
+    fire are the ones under test. A ``memory`` built elsewhere is re-pointed at this config, so
+    one switch turns both off. Returns (config, memory, behavior).
+    """
+    settings = dict(wander_enabled=False, antic_chance=0.0, play_with_windows=False,
+                    seasonal_enabled=False, last_seen_date=date)
+    settings.update(overrides)
+    cfg, path = fresh(f"creature_{tag}", **settings)
+    mem = memory if memory is not None else Memory(path, cfg, FakeClock())
+    mem._config = cfg
+    beh = Behavior(cfg, sheet, memory=mem)
+    beh.set_strip(1392, 0, 2560)
+    beh.place_at(1200)
+    beh.set_world(W.WorldState(hour=hour, weekday=weekday, date_key=date, week_key="2026-W46",
+                               part_of_day=part, season=W.SEASON_AUTUMN,
+                               cpu_percent=8.0, cpu_busy=False))
+    return cfg, mem, beh
+
+
+def seen_days(mem, n):
+    """``n`` consecutive days of first sightings, ending on CREATURE_DAY."""
+    from datetime import date, timedelta
+    last = date.fromisoformat(CREATURE_DAY)
+    for back in range(n - 1, -1, -1):
+        mem.first_sight((last - timedelta(days=back)).isoformat(), 9.0)
+
+
+cfg, mem, b = creature("milestone")
+seen_days(mem, 7)
+check("a week of days is seven days seen", mem.days_seen == 7, str(mem.days_seen))
+b._task_finished_cooldown_ms = 1000.0
+check("the party waits out the task-finished cooldown", b._pick_moment() is None)
+check("...without spending the latch while it waits", cfg["last_milestone_days"] == "")
+b._task_finished_cooldown_ms = 0.0
+moment = b._pick_moment()
+check("the seventh day gets the party", moment is not None and moment[0] == MB.TASK_FINISHED_ANIM,
+      str(moment))
+check("...in the party hat", moment is not None and moment[2] == "party", str(moment))
+check("...with a cheer", "cheer" in b.take_sounds())
+check("...and an event for the lines to come", b.take_events() == [("milestone", {"days": 7})])
+check("...and it is latched on the count", cfg["last_milestone_days"] == "7")
+check("...and charges the cooldown it waited on", b._task_finished_cooldown_ms > 0)
+b._task_finished_cooldown_ms = 0.0
+check("it does not fire twice", b._pick_moment() is None and not b.take_events())
+again = Behavior(cfg, sheet, memory=mem)
+again.set_world(b._world)
+check("...not even after a restart", again._pick_moment() is None)
+# Forget everything: the count starts again, and so must the latch, or the next 7th day would
+# find "7" already celebrated and get nothing.
+mem.forget()
+again.memory_forgotten()
+check("Forget clears the latches with the memory",
+      cfg["last_milestone_days"] == "" and cfg["last_focus_streak_date"] == "")
+seen_days(mem, 7)
+again._task_finished_cooldown_ms = 0.0
+again._reaction_cooldown_ms = 0.0
+moment = again._pick_moment()
+check("...so the 7th day after a wipe gets its party again",
+      moment is not None and moment[0] == MB.TASK_FINISHED_ANIM, str(moment))
+again.take_events()
+again.take_sounds()
+
+cfg, mem, b = creature("night", hour=0.1, part=W.PART_NIGHT)
+seen_days(mem, 7)
+check("a day that began at midnight waits for morning for its party",
+      b._pick_moment() is None and cfg["last_milestone_days"] == "")
+
+cfg, mem, b = creature("nomilestone")
+seen_days(mem, 6)
+check("day six is no milestone", b._pick_moment() is None and cfg["last_milestone_days"] == "")
+cfg, mem, b = creature("eight")
+seen_days(mem, 8)
+check("nor is day eight, which never had one", b._pick_moment() is None)
+
+cfg, mem, b = creature("milestone_off")
+seen_days(mem, 7)
+cfg["memory_enabled"] = False
+check("with memory off there are no milestones", b._pick_moment() is None)
+
+cfg, mem, b = creature("streak")
+mem.record("focus_done", CREATURE_DAY, n=2)
+check("two focus sessions are not a streak", b._pick_moment() is None)
+mem.record("focus_done", CREATURE_DAY)
+b._task_finished_cooldown_ms = 1000.0
+check("the third one's party waits for its own to finish",
+      b._pick_moment() is None and cfg["last_focus_streak_date"] == "")
+b._task_finished_cooldown_ms = 0.0
+moment = b._pick_moment()
+check("...then the streak gets one of its own",
+      moment is not None and moment[0] == MB.TASK_FINISHED_ANIM, str(moment))
+check("...with its event", b.take_events() == [("focus_streak", {"count": 3})])
+b._task_finished_cooldown_ms = 0.0
+check("...once a day", b._pick_moment() is None)
+mem.record("focus_done", CREATURE_DAY)
+check("...and a fourth session is not another streak", b._pick_moment() is None)
+cfg, mem, b = creature("streak4")
+mem.record("focus_done", CREATURE_DAY, n=4)
+check("four is not three, latch or no latch", b._pick_moment() is None)
+
+# The third session of the day run to its end: its own party first, and the streak's not stacked
+# straight on top of it.
+cfg, mem, b = creature("streak_live")
+mem.record("focus_done", CREATURE_DAY, n=2)
+b.set_focus(True)
+b._focus_remaining_ms = 50.0
+b.update(100.0, None)
+check("the third session ends in its own party",
+      b.state == State.ANTIC and b._antic == MB.TASK_FINISHED_ANIM
+      and mem.day(CREATURE_DAY).focus_done == 3, f"{b.state} {b._antic}")
+check("...and the streak is not stacked straight on top", b._pick_moment() is None)
+
+# The greeting.
+cfg, mem, b = creature("greet_heavy", date=day(8), hour=7.5, part=W.PART_MORNING,
+                       memory=week("greet_heavy", [10] * 6, 20))
+steps = b._greeting_for(20000.0)
+check("after a heavy day the overnight greeting ends with a coffee",
+      steps == list(MB.GREET_OVERNIGHT) + [MB.GREET_HEAVY_EXTRA], str(steps))
+check("...and says so in its event", b.take_events()
+      == [("greeted", {"gone_s": 20000.0, "overnight": True, "heavy": True})])
+b.set_world(W.WorldState(hour=14.0, weekday=6, date_key=day(8), week_key="2026-W45",
+                         part_of_day=W.PART_DAY, season=W.SEASON_AUTUMN,
+                         cpu_percent=8.0, cpu_busy=False))
+check("...but not in the afternoon", b._greeting_for(20000.0) == list(MB.GREET_OVERNIGHT))
+cfg, mem, b = creature("greet_light", date=day(8), hour=7.5, part=W.PART_MORNING,
+                       memory=week("greet_light", [10] * 6, 12))
+check("an ordinary yesterday gets the ordinary wake-up",
+      b._greeting_for(20000.0) == list(MB.GREET_OVERNIGHT))
+
+cfg, mem, b = creature("greet_bond")
+seen_days(mem, 30)
+for event, n in (("pets", 2000), ("prompts", 1000), ("focus_done", 200)):
+    mem.record(event, CREATURE_DAY, n=n)
+check("a month and a lot of pets is a close bond", mem.bond() >= MB.GREET_BOND_MIN,
+      f"{mem.bond():.3f}")
+check("close: the hop is followed by heart eyes",
+      b._greeting_for(1200.0) == [(MB.GREET_ANTIC, MB.GREET_MS), MB.GREET_BOND_EXTRA])
+check("...and so is the plain hop with no absence measured",
+      b._greeting_for(None)[-1] == MB.GREET_BOND_EXTRA)
+check("...but the wave stays a wave",
+      b._greeting_for(200.0) == [(MB.GREET_WAVE_ANTIC, MB.GREET_WAVE_MS)])
+b.take_events()
+b.set_away(True)
+b.set_away(False, 1200.0)
+check("coming back really plays it",
+      b._antic == MB.GREET_ANTIC and [step[0] for step in b._antic_queue] == ["heart_eyes"],
+      f"{b._antic} {b._antic_queue}")
+check("...and raises one greeted event", [kind for kind, _ in b.take_events()] == ["greeted"])
+cfg["memory_enabled"] = False
+check("with memory off, the hop is just the hop",
+      b._greeting_for(1200.0) == [(MB.GREET_ANTIC, MB.GREET_MS)])
+cfg, mem, b = creature("greet_new")
+check("on day one, the hop is just the hop",
+      b._greeting_for(1200.0) == [(MB.GREET_ANTIC, MB.GREET_MS)])
+
+# A big week, asked at the Friday flop.
+cfg, mem, b = creature("flop_big", date=day(6), hour=16.6, weekday=4,
+                       memory=friday("flop_big", [15] * 5, [10, 10, 10]))
+moment = b._pick_moment()
+check("the Friday flop still flops", moment is not None and moment[0] == "sit_dangle", str(moment))
+check("...and a big week is noted for the lines to come", b.take_events() == [("big_week", {})])
+cfg, mem, b = creature("flop_normal", date=day(6), hour=16.6, weekday=4,
+                       memory=friday("flop_normal", [12] * 5, [10, 10, 10]))
+b._pick_moment()
+check("an ordinary week is not", b.take_events() == [])
+
+cfg, mem, b = creature("queue")
+for n in range(20):
+    b._event("tick", n=n)
+events = b.take_events()
+check("the event queue keeps only the newest few",
+      len(events) == MB.MAX_PENDING_EVENTS and events[-1] == ("tick", {"n": 19}), str(events[:2]))
+check("...and is empty once drained", b.take_events() == [])
 
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "counters, window, bond, forget OK")

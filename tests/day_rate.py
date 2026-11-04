@@ -2,6 +2,12 @@
 
 Correctness tests say each one fires and does not repeat. They say nothing about rate, which is
 the difference between charming and irritating. This walks a simulated Friday minute by minute.
+
+The third run is the same quiet Wednesday with a long memory behind it - thirty days seen and a
+bond near the top - to show that what he remembers adds exactly one moment (the 30-day milestone)
+and changes the rate of nothing else. It exits non-zero if the milestone fires any other number of
+times, or if the other moments differ from the fresh-install run (a yawn and a coffee count as
+one kind: see below).
 """
 import os, sys
 from collections import Counter
@@ -17,16 +23,30 @@ app = QApplication([])
 import random
 import world as W
 from animator import SpriteSheet
-from behavior import Behavior
+from behavior import TASK_FINISHED_ANIM, Behavior
 from config import Config
+from memory import Memory
 
 SCRATCH = _scratch()
 
-def simulate(season, weekday, busy_from=None, busy_to=None, label=""):
+def long_memory(cfg):
+    """Thirty days seen, and enough pets, prompts and focus sessions for a bond of about 0.9."""
+    mem = Memory(None, cfg)
+    for back in range(29, -1, -1):
+        mem.first_sight(f"2026-07-{31 - back:02d}", 9.0)
+    for event, n in (("pets", 900), ("prompts", 400), ("focus_done", 80)):
+        mem.record(event, "2026-07-30", n=n)
+    return mem
+
+
+def simulate(season, weekday, busy_from=None, busy_to=None, label="", remembering=False):
     p = SCRATCH / "rate.json"; p.unlink(missing_ok=True)
     cfg = Config(p); cfg["workday_end"] = "16:00"
     sheet = SpriteSheet(SRC/"assets"/"nib_sheet.png", SRC/"assets"/"frames.json", 2)
-    b = Behavior(cfg, sheet)
+    mem = long_memory(cfg) if remembering else None
+    b = Behavior(cfg, sheet, memory=mem)
+    if mem is not None:
+        print(f"\n(memory: {mem.days_seen} days seen, bond {mem.bond():.2f} - {mem.bond_label()})")
     random.seed(20260730)
     fired = Counter()
     STEP_MS = 800.0          # one wander beat, i.e. how often _choose_next_action runs
@@ -44,7 +64,8 @@ def simulate(season, weekday, busy_from=None, busy_to=None, label=""):
             b._reaction_cooldown_ms = __import__("behavior").REACTION_COOLDOWN_MS
         # advance every cooldown by one beat, as update() would
         for attr in ("_reaction_cooldown_ms", "_hot_cooldown_ms",
-                     "_morning_cooldown_ms", "_seasonal_cooldown_ms"):
+                     "_morning_cooldown_ms", "_seasonal_cooldown_ms",
+                     "_task_finished_cooldown_ms"):
             setattr(b, attr, max(0.0, getattr(b, attr) - STEP_MS))
     total = sum(fired.values())
     print(f"\n{label}")
@@ -54,4 +75,27 @@ def simulate(season, weekday, busy_from=None, busy_to=None, label=""):
     return fired
 
 simulate(W.SEASON_SUMMER, 4, 10.0, 10.5, "A Friday in summer, machine pinned 10:00-10:30")
-simulate(W.SEASON_WINTER, 2, None, None, "A Wednesday in winter, machine quiet")
+fresh = simulate(W.SEASON_WINTER, 2, None, None, "A Wednesday in winter, machine quiet")
+known = simulate(W.SEASON_WINTER, 2, None, None,
+                 "The same Wednesday, thirty days and a bond near the top remembered", remembering=True)
+
+# The milestone is the same party as a finished task, so it shows up as task_finished: once. Its
+# duration is drawn from the shared random stream, which shifts every later draw by one - so the
+# morning moment's coin flip between a yawn and a coffee can land the other way. That is the same
+# morning moment as often, just a different one, so the two are compared as one.
+MORNING = ("yawn", "coffee")
+
+
+def by_kind(fired):
+    kinds = Counter()
+    for name, n in fired.items():
+        if name != TASK_FINISHED_ANIM:
+            kinds["yawn/coffee" if name in MORNING else name] += n
+    return kinds
+
+
+milestones = known[TASK_FINISHED_ANIM] - fresh[TASK_FINISHED_ANIM]
+others_same = by_kind(known) == by_kind(fresh)
+print(f"\n    30-day milestone fired {milestones} time(s) in the day (want 1); "
+      f"everything else {'unchanged' if others_same else 'CHANGED'}")
+sys.exit(0 if milestones == 1 and others_same else 1)

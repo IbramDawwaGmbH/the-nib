@@ -454,6 +454,30 @@ TASK_FINISHED_ANIM = "task_finished"
 #: at night it used to be cut off two frames short. _antic_settled lets a one-shot finish at any pace.
 TASK_FINISHED_MS = 2300.0
 
+# --- what he remembers, acted on ----------------------------------------------------------
+#
+# memory.py keeps the counts; these are the few places they change what he does. None of them is a
+# new animation and none of them says anything yet - the lines arrive with voice.py. They are here
+# so that a day like any other looks like any other, and a day that is not, does not.
+
+#: Days together worth a party: a week, a month, a hundred days, a year. Matched on the count of
+#: days he has actually seen you, not on the calendar since first_met - a fortnight's holiday does
+#: not make a month. Once each, ever: the latch is the count itself (last_milestone_days).
+MILESTONE_DAYS = (7, 30, 100, 365)
+#: The third focus session finished in one day earns the party again, once that day. Exactly the
+#: third, not "three or more": a fourth is not a new achievement, and the latch would stop it anyway.
+FOCUS_STREAK = 3
+#: After a heavy yesterday, the overnight greeting ends with a coffee. Same art as the morning
+#: coffee moment, so it reads as "you look like you need one" without a word.
+GREET_HEAVY_EXTRA: tuple[str, float] = ("coffee", 2600.0)
+#: Once he knows you well, the hop is followed by heart eyes. The same threshold at which
+#: memory._BOND_LABELS starts calling the bond "close", so the word and the greeting agree.
+GREET_BOND_MIN = 0.6
+GREET_BOND_EXTRA: tuple[str, float] = ("heart_eyes", 1400.0)
+#: Events waiting for the app to drain - see _event. The same cap as the sound queue, for the same
+#: reason: nothing drains it yet, and a forgotten queue must not grow for a whole session.
+MAX_PENDING_EVENTS = 8
+
 # --- dressing himself --------------------------------------------------------------------
 #
 # He owns fifty-odd costumes and, left alone, wears none of them. The fix is NOT to cycle them at
@@ -865,6 +889,11 @@ class Behavior:
         #: this module stays free of Qt and of the audio layer entirely: it says what happened,
         #: and something else decides whether that makes a noise.
         self._sounds: list[str] = []
+        #: Things worth a line, raised since the app last drained them - a greeting, a milestone.
+        #: The same queue-not-callback shape as the sounds, and for the same reason: this module
+        #: says what happened, and voice.py (with the chatter setting) decides whether he says
+        #: anything about it. Each entry is ``(kind, data)``.
+        self._events: list[tuple[str, dict]] = []
 
         self._pokes: deque[float] = deque()
         self._residual = 0.0
@@ -1267,6 +1296,37 @@ class Behavior:
             return []
         events, self._sounds = self._sounds, []
         return events
+
+    # --- events worth a line ----------------------------------------------------------
+
+    def _event(self, kind: str, **data) -> None:
+        """Note that something happened that he might say a line about.
+
+        Bounded like the sound queue, but it drops the *oldest* rather than the newest when full:
+        a greeting from an hour ago is the stalest thing in it, and if anything is to be said it
+        should be about now.
+        """
+        self._events.append((kind, dict(data)))
+        if len(self._events) > MAX_PENDING_EVENTS:
+            del self._events[:-MAX_PENDING_EVENTS]
+
+    def take_events(self) -> list[tuple[str, dict]]:
+        """Hand over every event since the last call, oldest first, and forget them."""
+        if not self._events:
+            return []
+        events, self._events = self._events, []
+        return events
+
+    def memory_forgotten(self) -> None:
+        """Forget everything was pressed: the celebrations he has had go with the memory.
+
+        The two latches live in the config, not in memory.json, so ``Memory.forget`` cannot reach
+        them. Left alone, the 7th day after a wipe would get no party whenever 7 was the last count
+        celebrated - the latch is the count, and the count starts again. The focus streak's goes
+        too, so three sessions after a mid-day wipe are a streak again, just as today's count says.
+        """
+        self._config["last_milestone_days"] = ""
+        self._config["last_focus_streak_date"] = ""
 
     # --- the personality preset ---------------------------------------------------
 
@@ -2142,15 +2202,42 @@ class Behavior:
             self._begin_sequence(self._greeting_for(gone_s))
 
     def _greeting_for(self, gone_s: float | None) -> list[tuple[str, float]]:
+        """The greeting for coming back after ``gone_s`` seconds, sized by the absence.
+
+        Two things he remembers can add one beat to the end of it - never replace it, so the
+        greeting you know is always there first:
+
+        * **A heavy yesterday** (``Memory.heavy_yesterday``): the overnight wake-up on a morning
+          after a long day ends with a coffee. Only overnight and only in the morning - a coffee
+          after lunch says nothing about yesterday.
+        * **A close bond** (``GREET_BOND_MIN``): the ordinary hop is followed by heart eyes. Not the
+          wave (a coffee break is not a reunion) and not the overnight one, which is long enough.
+
+        Raises a ``greeted`` event either way, for the lines that arrive with voice.py.
+        """
+        overnight = heavy = False
         if gone_s is None or GREET_HOP_AFTER_S <= gone_s < GREET_OVERNIGHT_AFTER_S:
-            return [(GREET_ANTIC, GREET_MS)]
-        if gone_s < GREET_HOP_AFTER_S:
-            return [(GREET_WAVE_ANTIC, GREET_WAVE_MS)]
-        # The overnight greeting already has the stretch in it, so it counts as today's first
-        # sight of you - otherwise the "first sight today" stretch follows straight after it.
-        if self._world is not None and self._world.hour >= NEW_DAY_HOUR:
-            self._latch("last_seen_date", self._world.date_key)
-        return list(GREET_OVERNIGHT)
+            steps = [(GREET_ANTIC, GREET_MS)]
+            if self.memory.bond() >= GREET_BOND_MIN:
+                steps.append(GREET_BOND_EXTRA)
+        elif gone_s < GREET_HOP_AFTER_S:
+            steps = [(GREET_WAVE_ANTIC, GREET_WAVE_MS)]
+        else:
+            overnight = True
+            # The overnight greeting already has the stretch in it, so it counts as today's first
+            # sight of you - otherwise the "first sight today" stretch follows straight after it.
+            if self._world is not None and self._world.hour >= NEW_DAY_HOUR:
+                self._latch("last_seen_date", self._world.date_key)
+            steps = list(GREET_OVERNIGHT)
+            heavy = (
+                self._world is not None
+                and self._world.part_of_day == PART_MORNING
+                and self.memory.heavy_yesterday(self._date_key())
+            )
+            if heavy:
+                steps.append(GREET_HEAVY_EXTRA)
+        self._event("greeted", gone_s=gone_s, overnight=overnight, heavy=heavy)
+        return steps
 
     @property
     def away(self) -> bool:
@@ -2484,6 +2571,12 @@ class Behavior:
                 and flop_from <= state.hour <= flop_from + WEEK_OVER_WINDOW_H
                 and self._latch("last_week_over_week", state.week_key)
             ):
+                # Riding on the flop's own latch and window, so it is asked once a week at the
+                # moment the week is over - not on a Monday about a week that has barely begun.
+                # Nothing to see: it is only something he might say (voice.py).
+                if self.memory.big_week(state.date_key):
+                    log.info("a big week - more asked of him than last week")
+                    self._event("big_week")
                 moment = self._moment("sit_dangle", 5000, 8000)
                 if moment is not None:
                     log.info("that is the week done")
@@ -2546,7 +2639,56 @@ class Behavior:
             if moment is not None:
                 self._seasonal_cooldown_ms = SEASONAL_COOLDOWN_MS
                 return moment
+
+        return self._remembered_moment(state)
+
+    def _remembered_moment(self, state: WorldState) -> tuple[str, float, str] | None:
+        """The two moments that come from what he remembers rather than from the clock.
+
+        * **A day milestone** - the day he has seen you for the 7th, 30th, 100th or 365th time.
+        * **A focus streak** - the third focus session finished today.
+
+        Both get the task-finished party: the same animation, hat and cheer as a build finishing,
+        because that is his one big celebration and these are the same kind of news. Last in
+        ``_pick_moment``, after everything with a window or a chance: these have neither, they wait
+        on a latch, so being pre-empted only delays them.
+
+        Both are **gated on the task-finished cooldown as well as charging it**. A focus session
+        already ends in that party, so the third one would otherwise get two back to back - the
+        session's own and then the streak's, the moment the first finished. Waiting out the
+        cooldown (three minutes at most) costs nothing, since the latch keeps the moment owed. The
+        latch is only spent once the cooldown has passed, which is why it is checked last.
+        """
+        memory = self.memory
+        if not memory.enabled or self._task_finished_cooldown_ms > 0:
+            return None
+        # Not in the small hours, for the same reason as the morning stretch: a machine left on at
+        # the desk past midnight counts a new day at the rollover, and a party at 00:01 for it
+        # would be for nobody. The latch keeps it owed until morning.
+        if state.hour < NEW_DAY_HOUR:
+            return None
+        days = memory.days_seen
+        if days in MILESTONE_DAYS and self._latch("last_milestone_days", str(days)):
+            log.info("%d days together - celebrating", days)
+            self._event("milestone", days=days)
+            return self._celebrate()
+        if (
+            memory.day(state.date_key).focus_done == FOCUS_STREAK
+            and self._latch("last_focus_streak_date", state.date_key)
+        ):
+            log.info("third focus session today - celebrating")
+            self._event("focus_streak", count=FOCUS_STREAK)
+            return self._celebrate()
         return None
+
+    def _celebrate(self) -> tuple[str, float, str] | None:
+        """The task-finished party as a moment: hat, cheer, and the cooldown charged."""
+        moment = self._moment(TASK_FINISHED_ANIM, TASK_FINISHED_MS, TASK_FINISHED_MS,
+                              costume="party")
+        if moment is not None:
+            self._task_finished_cooldown_ms = TASK_FINISHED_COOLDOWN_MS
+            self._sound("cheer")
+        return moment
 
     def _mood_weights(self) -> dict[str, float]:
         """Multipliers for the ambient pool.
@@ -2852,6 +2994,8 @@ class Behavior:
         if antics_on:
             moment = self._pick_moment()
             if moment is not None:
+                # needs.py (still to come) hears about this as a "world_event": something
+                # happened, so he is a little less bored. Nothing to tell it until it exists.
                 self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
                 self._begin_antic(*moment)
                 return

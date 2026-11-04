@@ -72,6 +72,11 @@ BUSY_MIN_PER_POINT = 10.0
 #: made. Two days of history is not a "usual".
 HEAVY_MIN_HISTORY = 3
 
+#: "A big week": this week's prompts per day at least this many times last week's, with at least
+#: this many recorded days on each side. See :meth:`Memory.big_week` for why last week is partial.
+BIG_WEEK_FACTOR = 1.5
+BIG_WEEK_MIN_DAYS = 2
+
 #: The bond: how well he knows you, 0..1. Each term saturates logarithmically at its own scale -
 #: ``k`` is the count at which that term is full - so the first weeks move it most and it never
 #: needs a counter to keep growing for ever. Days together weigh the most: turning up matters more
@@ -456,6 +461,41 @@ class Memory:
         if median <= 0:
             return False
         return self._load_of(before) >= HEAVY_FACTOR * median
+
+    def big_week(self, date_key: str) -> bool:
+        """Has this week asked more of him than last week did? Asked on a Friday evening.
+
+        Prompts per recorded day this week (Monday up to ``date_key``) against prompts per recorded
+        day of last week - **as much of last week as the window still holds**, which on a Friday is
+        only its Friday and weekend: the window is eight days, not fourteen, on purpose (see
+        ``MAX_DAYS``), and widening it to answer this one question would mean keeping a second
+        week of everything. So it is a lean judgement, and deliberately hard to trip: at least
+        ``BIG_WEEK_MIN_DAYS`` recorded days on each side, last week's rate above zero, and this
+        week's at least ``BIG_WEEK_FACTOR`` times it. Averages rather than sums, so five days
+        against three is not "bigger" just for being longer.
+        """
+        if not self.enabled:
+            return False
+        today = _parse_day(date_key)
+        if today is None:
+            return False
+        monday = today - timedelta(days=today.weekday())
+        this_week: list[int] = []
+        last_week: list[int] = []
+        for key, record in self._days.items():
+            when = _parse_day(key)
+            if when is None or when > today:
+                continue
+            if when >= monday:
+                this_week.append(record.prompts)
+            elif when >= monday - timedelta(days=7):
+                last_week.append(record.prompts)
+        if len(this_week) < BIG_WEEK_MIN_DAYS or len(last_week) < BIG_WEEK_MIN_DAYS:
+            return False
+        before = sum(last_week) / len(last_week)
+        if before <= 0:
+            return False
+        return sum(this_week) / len(this_week) >= BIG_WEEK_FACTOR * before
 
     def bond(self) -> float:
         """How well he knows you, 0..1. Grows with the counters and can never go down by itself.

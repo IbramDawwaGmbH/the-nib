@@ -612,7 +612,11 @@ poll("2026-11-05", 12.0, gap_s=0.7, away=True)
 poll("2026-11-05", 13.0, gap_s=0.7)
 check("...and only that first time", sum(nib.memory._arrival_hours) == 2,
       str(nib.memory._arrival_hours))
+nib.config["last_milestone_days"] = "7"
+nib.config["last_focus_streak_date"] = "2026-11-05"
 nib._forget_memory()
+check("Forget also clears the milestone and focus-streak latches",
+      nib.config["last_milestone_days"] == "" and nib.config["last_focus_streak_date"] == "")
 poll("2026-11-05", 15.0, gap_s=0.7)
 check("after Forget, today counts again as the day you met",
       nib.memory.days_seen == 1 and nib.memory.first_met == "2026-11-05")

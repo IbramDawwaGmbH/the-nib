@@ -20,6 +20,12 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   there deletes it. Two new settings on the Personality tab: `memory_enabled`, and
   `memory_routine_enabled` for the hourly tally of when you usually arrive.
   [Privacy](docs/PRIVACY.md) lists every key in the file.
+- **He acts on what he remembers.** A party — the task-finished celebration, hat and cheer — on
+  the 7th, 30th, 100th and 365th day he has seen you, and on your third finished focus session of
+  a day; each once, and a restart does not repeat it. After a heavy day his overnight
+  good-morning ends with a coffee, and once he knows you well the greeting hop is followed by
+  heart eyes. Two new hidden latches in `config.json`: `last_milestone_days` and
+  `last_focus_streak_date`.
 
 ### Changed
 

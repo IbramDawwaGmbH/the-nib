@@ -132,6 +132,10 @@ DEFAULTS: dict[str, Any] = {
     "last_seen_date": "",
     "last_clock_off_date": "",
     "last_week_over_week": "",
+    #: The same, for what he remembers: the last day-count he celebrated (so a restart on the
+    #: seventh day does not throw the party twice) and the last day of a focus streak.
+    "last_milestone_days": "",
+    "last_focus_streak_date": "",
     "roam_all_monitors": True,
     # Shortcuts
     "hotkey": "ctrl+alt+c",       # "" disables the global hotkey
@@ -275,6 +279,7 @@ _TEXT_KEYS = (
     "hotkey", "come_hotkey", "pocket_hotkey", "mic_toggle_hotkey", "quick_prompt",
     "last_prompt", "workday_end",
     "last_seen_date", "last_clock_off_date", "last_week_over_week",
+    "last_milestone_days", "last_focus_streak_date",
     # guard_pin_hash is verified (and rejected if malformed) by guard_auth.verify_pin; here it only
     # has to stay a string, since a non-string default would otherwise be stored verbatim.
     "guard_hotkey", "guard_pin_hash",
