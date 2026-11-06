@@ -194,7 +194,7 @@ check("petting begins", b.state is State.PET)
 hold(b, B.PET_DRAIN_MS * 2 + 200, resting_hand(b))
 check("...and forgives a poke as it goes", b.annoyance < before, f"{before} -> {b.annoyance}")
 
-print("\n--- and it is the only kindness the mood has ---")
+print("\n--- and it is the biggest kindness the mood has ---")
 _cfg, b = fresh("mood")
 start = b.mood.spirits
 hold(b, 1200, resting_hand(b))
@@ -203,6 +203,10 @@ _cfg, b3 = fresh("mood3")
 b3.prompt_sent("hello")
 check("...more than sending a prompt does", b.mood.spirits > b3.mood.spirits,
       f"pet {b.mood.spirits:+.3f} vs prompt {b3.mood.spirits:+.3f}")
+_cfg, b4 = fresh("mood4")
+b4.treat()
+check("...and more than a treat, the other kindness", b.mood.spirits > b4.mood.spirits > start,
+      f"pet {b.mood.spirits:+.3f} vs treat {b4.mood.spirits:+.3f}")
 
 _cfg, b2 = fresh("mood2")
 b2.bubble_dismissed()

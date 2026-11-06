@@ -19,7 +19,7 @@ of it, and he lands and gives his opinion. The choice is saved the moment you ma
 visible change waits for the hop, so it always applies — asleep, in your hand or hidden, it just
 goes straight on.
 
-They cost nothing at runtime. Costumes are **not** baked per-frame — that would mean 170 frames per
+They cost nothing at runtime. Costumes are **not** baked per-frame — that would mean 178 frames per
 hat. Instead every frame records **four anchor points**, and the costume is composited at the
 matching one the first time that frame is built and cached. So a hat sits correctly on a hop, a nap
 or a squat automatically, and flips with him when he walks left.
@@ -167,7 +167,7 @@ python tools/gen_demo_gif.py
 
 **The art contract**, enforced by `validate_sheet.py`:
 
-- 10×40 grid of 48×48 frames — 42 animation states, 170 distinct frames
+- 10×40 grid of 48×48 frames — 44 animation states, 178 distinct frames
 - Exactly seven body colours, and **alpha strictly 0 or 255** — no anti-aliasing anywhere
 - Every frame's soles rest on the same baseline row, so he does not jitter vertically between
   states. The mid-air hop frames are the only exemption, and they are checked to be *above* it
@@ -189,6 +189,15 @@ This was applied retroactively to the sleep Z's, the dance notes, the thought do
 the seeing-stars and the football, all of which had been invisible on a light taskbar since they
 were drawn. Nothing is lost on a dark taskbar: a 1px dark edge on a white note is invisible against
 black.
+
+**`eat` brings an arm across his front.** For a [treat](USING-HIM.md#treats) he holds a cream
+biscuit with brown chips up against his mouth, and his usual arm only reaches up and out: drawn
+the coffee's way, beside his face under the raised hand, the biscuit was nowhere near his mouth and
+read as a wave. So a forearm comes in across his body, bordered all round, and it is drawn *after*
+the anchors are measured: measured with it in place, the `neck` and `body` anchors moved two pixels
+right, which would have had a scarf jump sideways for the two frames it is there. A costume worn
+over his front — the scarf, the bow tie, the apron — still covers the biscuit on those two frames,
+as it covers his mouth on every frame that has one.
 
 Those rules are not pedantry. The hard-alpha rule is what makes the per-pixel click mask exact; the
 baseline rule is what keeps his feet welded to the taskbar; the anchors are what make costumes cost

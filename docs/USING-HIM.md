@@ -26,6 +26,7 @@ The launcher half: asking things, dropping things, and getting him out of the wa
 | **Shift+drop an image on him** | Reads its text locally and opens the bubble prefilled with it |
 | **Drop selected text on him** | Opens the bubble with the text prefilled |
 | **Come here** (tray) | He walks over to your pointer |
+| **Give a treat** (tray or wheel) | He eats a biscuit — three a day count; see [Treats](#treats) |
 | **Start focus** (tray) | He plants himself and holds the working pose for a set length, then celebrates |
 | **Measure** (tray) | Drag anywhere on screen for a live px/in/cm readout — click it to copy |
 | **Mute microphone** (tray) | Mutes or unmutes your default mic; bind `mic_toggle_hotkey` to do it from anywhere |
@@ -77,11 +78,12 @@ Apply — no restart. Window titles and error boxes still say Nib, because those
 ### What he remembers
 
 He keeps count of the time you spend together: the day you first ran him, how many days he has
-seen you since, and how many pets, prompts and finished focus sessions there have been — and how
-often he has been thrown, or landed hard. The same counts are kept day by day for the last
-week, along with how many minutes you were at the machine and how many it was busy — enough for
-him to know that yesterday was a long one. If `memory_routine_enabled` is on he also keeps a tally
-of which hour you first turn up each day, so he can learn that you are usually in around eight.
+seen you since, and how many pets, prompts, finished focus sessions and [treats](#treats) there
+have been — and how often he has been thrown, or landed hard. The same counts are kept day by day
+for the last week, along with how many minutes you were at the machine and how many it was busy —
+enough for him to know that yesterday was a long one. If `memory_routine_enabled` is on he also
+keeps a tally of which hour you first turn up each day, so he can learn that you are usually in
+around eight.
 Working past midnight is not an arrival: a day that begins while you are already there is tallied
 the first time you come back to it. That is all of it: **counts, never names, times or text**. [Privacy](PRIVACY.md) lists every key in the file.
 
@@ -105,16 +107,33 @@ controls. **To stop it**, switch off `memory_enabled` (Settings → Personality)
 counted and no file is written. Switching it off does not delete what is already there; Forget
 does that.
 
+### Treats
+
+**Give a treat** in the tray, or **Give him a treat** on the [tool wheel](#the-tool-wheel), and a
+biscuit lands beside him: he spots it, holds it up to his mouth, takes a bite, and is pleased with
+himself. It is the second kindness he has, after [petting](BEHAVIOUR.md#petting-him) — it lifts
+his mood a little less than a pet does (see [How the day went](BEHAVIOUR.md#how-the-day-went)),
+leaves him a little more rested and fonder of you, and is counted in **About him**. With sound on
+it goes *nom, nom*, and now and then he has [something to say](#he-says-things-rarely) about it.
+
+**Three a day count.** Offer a fourth and he is full: he sits down, politely, and it does nothing
+for his mood and is not counted. The count starts again the next day; with `memory_enabled` off it
+is still kept, but only until he is restarted. He never eats one on his own, and Do something
+never hands him one. He won't take one while he is in your hand, in the air, behind a fullscreen
+app or the guard, paused or cross — asleep after a sulk he grumbles at it exactly as he would at a
+click. If he is only [napping](BEHAVIOUR.md#the-nap), the biscuit wakes him, with no grumble, and
+he eats it; during **Hide for 10 minutes** it brings him back for it.
+
 ### He says things, rarely
 
 Now and then he says one short line in the toast above his head — `Morning. I kept the desk
 warm.` when you come in, `Oh, you're back.` after a break of ten minutes or more, `30 days
 together. That's something.` on a milestone, `Big week. You asked a lot of me.` on a Friday
-after one, or a word when he is tired in the evening, feeling fond, or bored. Woken from a
-[nap](BEHAVIOUR.md#the-nap), he may insist he was only resting his eyes. After a heavy
-day he may mention it once the next morning, and once he has learned
-when you usually arrive he may notice that you're in early, or late — once a day each, and
-never as a question or a telling-off. Click the line to make it go away; he likes that.
+after one, a word when he is tired in the evening, feeling fond, or bored, or over a
+[treat](#treats). Woken from a [nap](BEHAVIOUR.md#the-nap), he may insist he was only resting
+his eyes. After a heavy day he may mention it once the next morning, and once he has learned when
+you usually arrive he may notice that you're in early, or late — once a day each, and never as a
+question or a telling-off. Click the line to make it go away; he likes that.
 
 **How often** is `chatter_level` (Settings → Personality):
 
@@ -149,8 +168,8 @@ you, `{pets}` for the pets so far:
 Yours are added to the built-in ones, never replace them, and a file with a mistake in it is
 skipped rather than stopping him. The categories are `greeting_short`, `greeting_overnight`,
 `heavy_yesterday`, `early_today`, `late_today`, `milestone_days`, `focus_streak`, `big_week`,
-`tired`, `fond`, `bored`, and a few for things still to come (`milestone_pets`, `treat`,
-`treat_full`, `nap_wake`). Restart him to pick up a change to the file.
+`tired`, `fond`, `bored`, `nap_wake`, `treat`, `treat_full`, and one for a thing still to come
+(`milestone_pets`). Restart him to pick up a change to the file.
 
 ### The ask bubble
 
@@ -210,7 +229,7 @@ The ring, in order:
 | Group | Tools |
 | --- | --- |
 | **Tools** | Ask · Send again · Measure · Read text from an image · Focus · Pin the clipboard · Mute microphone · More… |
-| **Him** | Do something · Surprise costume · Wardrobe… · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
+| **Him** | Do something · Give him a treat · Surprise costume · Wardrobe… · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
 | **App** | Switch Chat/Cowork · Settings · Show tips · Send him home · Update and restart |
 
 It always opens at the start, with every tool from the first group on the arc. That's deliberate:
@@ -244,10 +263,10 @@ their own:
 
 Pausing gets nothing, because it freezes him on the spot, and neither does **Stop focus**: a session
 you end early earns nothing, by design. Ask, Send again, Read, starting a focus session, Pin the
-clipboard, Do something and Surprise costume already have reactions of their own — though a Read
-whose file picker you cancel leaves him as he was; Hide and Guard
-take him off screen, Update and restart says how it went, and More… and Wardrobe… open something
-else. Right-click him while he's asleep and the wheel still
+clipboard, Do something, a treat and Surprise costume already have reactions of their own — though
+a Read whose file picker you cancel leaves him as he was, and so does a treat he won't take; Hide
+and Guard take him off screen, Update and restart says how it went, and More… and Wardrobe… open
+something else. Right-click him while he's asleep and the wheel still
 opens — nothing on it needs him awake — but he grumbles the way a click would, and won't react to
 picks until he's up. If he is only [napping](BEHAVIOUR.md#the-nap), the right-click wakes him
 instead, with no grumble. Standing on a window he isn't held by the wheel, so he doesn't watch it or
@@ -756,12 +775,12 @@ did. Only being in your hand refuses outright.
 
 ## Sound
 
-Off by default. Eight short blips: opening the bubble, sending, a dismissed bubble, losing his
-temper, landing after a drop, being petted, dropping off, waking up.
+Off by default. Short blips for opening the bubble, sending, a dismissed bubble, losing his
+temper, landing after a drop, being petted, dropping off and waking up, plus the rarer ones below.
 
 **No audio ships in this repository.** Exactly like the sprites, the WAVs are *synthesised in code*
 from a handful of oscillators and envelopes — `tools/gen_sounds.py`, standard library only, about
-72 KB of 22kHz mono for the whole set:
+160 KB of 22kHz mono for the whole set:
 
 ```bash
 python tools/gen_sounds.py
@@ -776,7 +795,7 @@ beep; the pixel art is made of hard edges and so is this. The sweep direction do
 work: **send** is two notes up, **poke** is the same two notes down. Deliberately dull — a mascot
 whose noises are interesting is a mascot you mute within the hour.
 
-Fourteen of them. The involuntary four are each **two parts**, which is what makes them read as one
+Fifteen of them. The involuntary four are each **two parts**, which is what makes them read as one
 event happening *to* him rather than a beep: the sneeze is a rising breathy note then a burst of
 noise (pitched, it sounds like a bird), the trip is a downward slip then a small thud, the hiccup is
 short and pitched *up* because a hiccup is a catch rather than a note, and the spin is a whirr up
@@ -784,7 +803,8 @@ and back down. Two of them are deliberately celebratory, and deliberately differ
 other: **cheer**, for the CPU watcher's finished-task celebration, is a rising three-note major
 arpeggio with a flourish on the end; **focus_done**, for a completed focus session, is calmer — two
 soft notes a fifth apart, closer to a meditation timer's bell than a triumph — so the two
-accomplishments never sound like the same event even when they land back to back. Everything else
+accomplishments never sound like the same event even when they land back to back. **nom**, for a
+[treat](#treats), is two short, soft, low notes, the second lower than the first. Everything else
 here is quieter by design.
 
 The same event will not retrigger inside 140ms, because he can bounce three times in half a second
@@ -806,6 +826,7 @@ copy of it.
 - **Come here** — he walks over to your pointer. First on the menu, because this is the menu you
   open when you cannot find him
 - **Do something** — plays one of his rarer animations now, rather than whenever it is due
+- **Give a treat** — a biscuit, three a day; see [Treats](#treats)
 - **Wander** — turn strolling on/off; he still does in-place antics and reacts to you
 - **Pause / Resume** — freeze him where he stands
 - **Ghost mode** — faded and click-through; see [above](#getting-him-out-of-the-way)

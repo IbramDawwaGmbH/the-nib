@@ -64,7 +64,7 @@ NEED_NUDGES: dict[str, tuple[float, float, float]] = {
     "petted": (0.0, 0.06, -0.5),
     "prompt_sent": (0.0, 0.02, -0.5),
     "greeted": (0.0, 0.03, -0.3),        # you came back
-    "treated": (0.05, 0.08, -0.3),       # (the treat itself arrives later)
+    "treated": (0.05, 0.08, -0.3),       # a treat (Behavior.treat): at most three a day count
     "focus_done": (-0.05, 0.04, -0.3),   # a whole session, run to the end: pleasing, and tiring
     "thrown": (-0.02, 0.0, -0.2),
     "hurt": (-0.05, 0.0, 0.0),

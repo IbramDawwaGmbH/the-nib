@@ -33,6 +33,7 @@ class Tray(QObject):
     personality_chosen = Signal(str)
     surprise_requested = Signal()
     do_something_requested = Signal()
+    treat_requested = Signal()
     measure_requested = Signal()
     mic_toggle_requested = Signal()
     guard_requested = Signal()
@@ -72,12 +73,17 @@ class Tray(QObject):
         come.triggered.connect(self.come_here_requested.emit)
         menu.addAction(come)
 
-        # Next to it because they are the same kind of thing: the two entries that make him do
+        # Next to it because they are the same kind of thing: the entries that make him do
         # something now rather than whenever he gets round to it.
         do = QAction("Do something", menu)
         do.setToolTip("One of his rarer animations, now - a sneeze, a stumble, hiccups, a spin")
         do.triggered.connect(self.do_something_requested.emit)
         menu.addAction(do)
+
+        treat = QAction("Give a treat", menu)
+        treat.setToolTip("A biscuit. Three a day count - after that he is too full")
+        treat.triggered.connect(self.treat_requested.emit)
+        menu.addAction(treat)
 
         menu.addSeparator()
 

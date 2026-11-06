@@ -321,7 +321,8 @@ moved by the things you do to him and fading back to neutral on a half-life:
 
 | What you do | Which way |
 | --- | --- |
-| Pet him | **+0.22** — the big one, and the only kindness he has |
+| Pet him | **+0.22** — the big one |
+| [Give him a treat](USING-HIM.md#treats) | +0.12 — three a day; a fourth changes nothing |
 | Send a prompt | +0.10 |
 | Come back after being away | +0.05 |
 | Dismiss the bubble without sending | −0.09 |
@@ -387,8 +388,8 @@ by `needs.py` and written to `config.json` next to the mood:
 
 | Need | Goes up | Goes down |
 | --- | --- | --- |
-| **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
-| **Affection** — lonely to doted on | A pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), being set down gently (+0.018, at most every 30 seconds), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
+| **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank; a [treat](USING-HIM.md#treats) (+0.05) | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
+| **Affection** — lonely to doted on | A treat (+0.08), a pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), being set down gently (+0.018, at most every 30 seconds), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
 | **Boredom** — kept busy to bored stiff | **+0.1 an hour** while you are here and doing nothing with him | Anything you do with him knocks **0.5** off; something happening around him (a moment, an app reaction) 0.2; otherwise it fades on a 2-hour half-life |
 
 A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, about three hours at

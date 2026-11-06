@@ -338,6 +338,18 @@ def _icon_sparkle(p: QPainter) -> None:
     p.drawLine(QPointF(17, 5), QPointF(20, 5))
 
 
+def _icon_treat(p: QPainter) -> None:
+    # A round biscuit with a bite out of the top right and three chips - the one he eats.
+    rim = QRectF(4, 4, 16, 16)
+    biscuit = QPainterPath()
+    biscuit.arcMoveTo(rim, 80)
+    biscuit.arcTo(rim, 80, 290)                       # round to 10 degrees, leaving the bite
+    biscuit.quadTo(QPointF(14.5, 9.5), QPointF(13.4, 4.1))
+    p.drawPath(biscuit)
+    for x, y in ((9, 10.5), (13.5, 14.5), (8.5, 16)):
+        p.drawPoint(QPointF(x, y))
+
+
 def _icon_costume(p: QPainter) -> None:
     # A top hat - the costume that reads as "a costume" at 16px better than any other.
     p.drawLine(QPointF(3.5, 18), QPointF(20.5, 18))
@@ -478,6 +490,7 @@ ICONS = {
     "guard": _icon_guard,
     "wardrobe": _icon_wardrobe,
     "sparkle": _icon_sparkle,
+    "treat": _icon_treat,
     "costume": _icon_costume,
     "hide": _icon_hide,
     "wander": _icon_wander,

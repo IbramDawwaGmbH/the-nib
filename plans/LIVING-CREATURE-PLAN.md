@@ -1,5 +1,5 @@
-> **Status:** WP1–WP7 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
-> Continue from **WP8**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP1–WP8 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
+> Continue from **WP9**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP1 name + mood
 > - [x] WP2 memory + Forget
@@ -8,7 +8,7 @@
 > - [x] WP5 needs (energy, affection, boredom)
 > - [x] WP6 bond/gentle/play
 > - [x] WP7 nap
-> - [ ] WP8 treat
+> - [x] WP8 treat
 > - [ ] WP9 learned taste
 
 # Nib "living creature" — engineering spec for branch `feat/living-creature`

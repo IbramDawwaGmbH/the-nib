@@ -61,6 +61,15 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   the tray tooltip says `Nib — napping`. He has to be properly tired — under about 0.17 energy
   when you leave, since time away rests him — and never naps in a focus session or standing on a
   window. A new `nap_enabled` setting on the Personality tab.
+- **Give him a treat.** **Give a treat** in the tray, or **Give him a treat** on the tool wheel,
+  and a biscuit lands beside him: he picks it up, eats it (a new `eat` animation, four frames) and
+  goes *nom, nom* if sound is on (a new `nom` sound). It lifts his mood a little less than a pet,
+  rests him and makes him fonder, and counts in **About him**. Three a day count; after that he
+  is full and sits down politely, and it neither lifts his mood nor counts — with
+  `memory_enabled` off the count is still kept, until he is restarted. Not while he's in your
+  hand, in the air, behind a fullscreen app or the guard, paused or cross: asleep after a sulk he
+  grumbles at it as at a click, but a biscuit wakes him from a nap, and brings him back from
+  **Hide for 10 minutes**.
 
 ### Changed
 

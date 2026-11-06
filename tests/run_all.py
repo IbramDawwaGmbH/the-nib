@@ -34,6 +34,7 @@ SUITES = [
     ("smoke_memory", "what he remembers: counters, the 7-day window, bond, forget"),
     ("smoke_needs", "energy, affection and boredom: drift, nudges, the two moments, disk writes"),
     ("smoke_voice", "the lines he says: gap, daily cap, launch quiet, the phrase table"),
+    ("smoke_treat", "a treat: eating it, three a day, the sulk and the nap, the wheel and tray"),
     ("smoke_ui", "ghost mode, prompt history, the settings window, sound, the first-run tour"),
     ("smoke_costumes", "every costume on every frame"),
     ("smoke_dressing", "he dresses himself, and never over a costume you picked"),
