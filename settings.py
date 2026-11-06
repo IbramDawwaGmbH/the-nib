@@ -101,7 +101,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     )),
     ("World", (
         "world_enabled", "workday_end", "seasonal_enabled", "southern_seasons",
-        "cpu_reaction_enabled", "cpu_busy_percent", "persona_costumes",
+        "cpu_reaction_enabled", "cpu_busy_percent", "persona_costumes", "daily_costumes",
         "play_with_windows",
     )),
     ("Personality", (
@@ -137,6 +137,7 @@ HELP: dict[str, str] = {
     "pet_hold_ms": "How long the pointer must sit still on him first.",
     "prompt_reactions": "React to the shape of what you asked. Read from your own bubble only.",
     "calculator_enabled": "Answer a plain sum or unit conversion inline, never sent anywhere.",
+    "daily_costumes": "A costume for every date of the year, the same one each year. Yours wins.",
     "away_after_s": "Idle seconds before he sits down to wait. 0 disables the greeting too.",
     "focus_duration_min": "How long a session runs, started from the tray. Read once when you "
                           "start it - changing this mid-session only affects the next one.",

@@ -517,6 +517,9 @@ check("turning the ring keeps the slot, so the direction - and his eyes - stay p
 wheel.close()
 
 print("\n--- how main.py wires it ---")
+import datetime  # noqa: E402
+
+import costume_calendar  # noqa: E402
 import main as M  # noqa: E402
 
 src_ctx = inspect.getsource(M.NibApp._on_context_menu)
@@ -571,10 +574,16 @@ print("\n--- the wardrobe: the wheel again, with his costumes on it ---")
 _ring = M._wardrobe_ring(_dressing, "crown", ["cap", "nope", "cap", "crown"])
 _keys = [i.key for i in _ring]
 _owned = _dressing.available_costumes()
-check("your recents first, unknown ones dropped, repeats folded, then Take it off",
-      _keys[:3] == ["wear:cap", "wear:crown", "wear:"], _keys[:4])
+#: Today's costume of the day, if there is a calendar: one thumbnail between the recents and Take
+#: it off - the other 365 are the tray's.
+_today = [f"wear:{n}" for n in [costume_calendar.costume_for(datetime.date.today())]
+          if n and _dressing.has_costume(n)]
+check("your recents first, unknown ones dropped, repeats folded, today's, then Take it off",
+      _keys[:3 + len(_today)] == ["wear:cap", "wear:crown", *_today, "wear:"], _keys[:4])
+check("...and none of the rest of the calendar", sum(i.group == "Today" for i in _ring) == len(_today)
+      and not any(_dressing.is_daily_costume(k[5:]) for k in _keys[3 + len(_today):]))
 check("every key is a wear: key", all(k.startswith(M.WARDROBE_PREFIX) for k in _keys))
-check("every costume once, plus Take it off", len(_ring) == len(_owned) + 1
+check("every costume once, plus Take it off", len(_ring) == len(_owned) + len(_today) + 1
       and len(set(_keys)) == len(_keys), len(_ring))
 check("the one he is wearing has the ring",
       [i.key for i in _ring if i.state == "active"] == ["wear:crown"])
@@ -582,14 +591,14 @@ check("every costume carries its thumbnail",
       all(i.pixmap is not None and not i.pixmap.isNull() for i in _ring if i.key != "wear:"))
 check("the groups read Recent, then Wardrobe, then the categories in the sheet's order",
       list(dict.fromkeys(i.group for i in _ring))
-      == ["Recent", "Wardrobe", *_dressing.costume_categories()],
+      == ["Recent", *(["Today"] if _today else []), "Wardrobe", *_dressing.costume_categories()],
       list(dict.fromkeys(i.group for i in _ring)))
 check("labels are the tray's wording", next(i for i in _ring if i.key == "wear:tophat").label
       == "Tophat")
 _bare = M._wardrobe_ring(_dressing, "", [])
 check("bare-headed: no Take it off, and the ring starts on the first category",
-      "wear:" not in [i.key for i in _bare] and len(_bare) == len(_owned)
-      and _bare[0].group == next(iter(_dressing.costume_categories())))
+      "wear:" not in [i.key for i in _bare] and len(_bare) == len(_owned) + len(_today)
+      and _bare[len(_today)].group == next(iter(_dressing.costume_categories())))
 _many = M._wardrobe_ring(_dressing, "", list(_owned))
 check("no more than WARDROBE_RECENTS recents",
       sum(i.group == "Recent" for i in _many) == M.WARDROBE_RECENTS)

@@ -50,8 +50,11 @@ class Tray(QObject):
         costumes: dict[str, list[str]] | list[str] | None = None,
         skins: list[str] | None = None,
         personalities: list[str] | None = None,
+        costume_labels: dict[str, str] | None = None,
     ) -> None:
         super().__init__(parent)
+        #: name -> what the menu calls it, where that is not just the name tidied up: "14 · Pi Day".
+        self._costume_labels = dict(costume_labels or {})
         # Accepts either the grouped mapping the sheet now provides or a plain list, so a caller
         # (or a test) holding an older flat list still gets a working menu.
         if isinstance(costumes, dict):
@@ -241,12 +244,24 @@ class Tray(QObject):
             actions[first] = action
             submenu.addSeparator()
 
+        # A category with a slash nests: "Calendar/March" is the March submenu inside Calendar,
+        # which is how 366 costumes of the day fit without burying the hats.
+        parents: dict[str, QMenu] = {}
         for category, options in groups.items():
             if not options:
                 continue
-            target = submenu.addMenu(str(category)) if len(groups) > 1 else submenu
+            if len(groups) <= 1:
+                target = submenu
+            elif "/" in str(category):
+                outer, inner = str(category).split("/", 1)
+                if outer not in parents:
+                    parents[outer] = submenu.addMenu(outer)
+                target = parents[outer].addMenu(inner)
+            else:
+                target = submenu.addMenu(str(category))
             for option in options:
-                action = QAction(option.replace("_", " ").title(), target, checkable=True)
+                label = self._costume_labels.get(option) or option.replace("_", " ").title()
+                action = QAction(label, target, checkable=True)
                 action.triggered.connect(lambda _c=False, o=option: handler(o))
                 group.addAction(action)
                 target.addAction(action)

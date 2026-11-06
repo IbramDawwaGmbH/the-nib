@@ -29,6 +29,14 @@ MIRRORED_STATES: dict[str, str] = {"walk_left": "walk_right"}
 
 FALLBACK_STATE = "idle"
 
+#: The costume of the day lives in its own manifest and in one sheet per month beside it, so the
+#: 366 calendar costumes cost nothing until one is actually worn. See ``costume_calendar``.
+DAILY_MANIFEST = "daily_costumes.json"
+
+#: Decoded month sheets, shared by every ``SpriteSheet``. A costume change rebuilds the sheet, and
+#: re-decoding the month's PNG on every rebuild would be the one slow part of it.
+_EXTRA_SHEETS: dict[str, QImage] = {}
+
 #: Colour re-mappings for the body tones. Only the four body tones are swapped: the eye/outline
 #: black, the angry red and the light detail stay put, so expressions read the same on every skin.
 _BODY = (0xD9, 0x55, 0x2E)
@@ -148,9 +156,9 @@ class SpriteSheet:
         self._costume_sheet: QImage | None = None
         self._costume_items: dict[str, dict] = {}
         self._costume_cell = 0
-        #: costume index -> its lowest opaque row, so the floor check below is one scan
+        #: (sheet, column) -> its lowest opaque row, so the floor check below is one scan
         #: per costume rather than one per frame.
-        self._costume_lows: dict[int, int] = {}
+        self._costume_lows: dict[tuple[str, int], int] = {}
         #: costume name -> its trimmed cell, for the wardrobe. See ``costume_thumbnail``.
         self._thumbnails: dict[str, QPixmap] = {}
         self._load_costumes()
@@ -183,23 +191,64 @@ class SpriteSheet:
             log.warning("could not load costumes: %s", exc)
             self._costume_sheet = None
             self._costume_items = {}
+        self._load_daily_costumes()
+
+    def _load_daily_costumes(self) -> None:
+        """Add the calendar's costumes to the wardrobe - names only. Each one names the month sheet
+        it lives on, and that sheet is decoded the first time something actually draws from it.
+
+        A name the main sheet already uses is skipped rather than allowed to shadow it: the tray,
+        your saved choice and every moment costume refer to those by name.
+        """
+        manifest_path = self.sheet_path.parent / DAILY_MANIFEST
+        if not manifest_path.is_file() or not self._costume_cell:
+            return
+        try:
+            data = json.loads(manifest_path.read_text(encoding="utf-8"))
+            if int(data.get("cell", 0)) != self._costume_cell:
+                raise ValueError("daily costume cell does not match the costume sheet's")
+            for name, item in (data.get("items") or {}).items():
+                if name not in self._costume_items and item.get("sheet"):
+                    self._costume_items[name] = dict(item)
+        except (OSError, ValueError, TypeError, AttributeError) as exc:
+            log.warning("could not load the daily costumes: %s", exc)
+
+    def _sheet_of(self, item: dict) -> QImage | None:
+        """The image a costume's cells are cut from: the main costume sheet, or its month's."""
+        name = item.get("sheet")
+        if not name:
+            return self._costume_sheet
+        path = str(self.sheet_path.parent / str(name))
+        image = _EXTRA_SHEETS.get(path)
+        if image is None:
+            image = QImage(path)
+            if image.isNull():
+                log.warning("could not decode costume sheet %s", path)
+                return None
+            image = image.convertToFormat(QImage.Format_ARGB32)
+            _EXTRA_SHEETS[path] = image
+        return image
 
     def _costume_lowest(self, item: dict) -> int:
         """Lowest opaque row within a costume's own cell - across all its frames, so a moving
         costume is held at one height rather than bobbing as its frames change. Scanned once per
         cell, then cached."""
         cell = self._costume_cell
+        sheet = self._sheet_of(item)
         lowest = 0
+        if sheet is None:
+            return lowest
         for index in self._costume_cells(item):
-            cached = self._costume_lows.get(index)
+            key = (str(item.get("sheet") or ""), index)
+            cached = self._costume_lows.get(key)
             if cached is None:
-                piece = self._costume_sheet.copy(index * cell, 0, cell, cell)
+                piece = sheet.copy(index * cell, 0, cell, cell)
                 cached = 0
                 for y in range(cell - 1, -1, -1):
                     if any(piece.pixelColor(x, y).alpha() > 0 for x in range(cell)):
                         cached = y
                         break
-                self._costume_lows[index] = cached
+                self._costume_lows[key] = cached
             lowest = max(lowest, cached)
         return lowest
 
@@ -215,19 +264,59 @@ class SpriteSheet:
         return [int(item["index"])]
 
     def available_costumes(self) -> list[str]:
-        return list(self._costume_items)
+        """The wardrobe's own costumes - not the calendar's, which ``daily_costumes`` lists."""
+        return [name for name, item in self._costume_items.items() if not item.get("sheet")]
+
+    def daily_costumes(self) -> list[str]:
+        """The costumes of the day, in calendar order. Wearable like any other."""
+        return [name for name, item in self._costume_items.items() if item.get("sheet")]
+
+    def has_costume(self, name: str) -> bool:
+        """Whether ``name`` can be worn, from the wardrobe or the calendar."""
+        return name in self._costume_items
+
+    def costume_title(self, name: str) -> str:
+        """What to call a costume in a menu: the calendar's own title for a daily one ("Pi Day"),
+        otherwise the name tidied up, which is what the tray has always shown."""
+        item = self._costume_items.get(name) or {}
+        return str(item.get("title") or name.replace("_", " ").title())
 
     def costume_categories(self) -> dict[str, list[str]]:
         """Costume names grouped by their declared category, for a menu that has to hold fifty.
 
         Insertion-ordered both ways, so the sheet's own ordering is what the menu shows. A costume
         with no category lands under "Other" rather than vanishing - the same rule the settings
-        window applies to a setting nobody assigned to a tab.
+        window applies to a setting nobody assigned to a tab. The wardrobe's own costumes only; the
+        calendar's are filed by ``calendar_groups``.
         """
         grouped: dict[str, list[str]] = {}
         for name, item in self._costume_items.items():
-            grouped.setdefault(str(item.get("category") or "Other"), []).append(name)
+            if not item.get("sheet"):
+                grouped.setdefault(str(item.get("category") or "Other"), []).append(name)
         return grouped
+
+    def calendar_groups(self) -> dict[str, list[str]]:
+        """The costumes of the day by month, keyed "Calendar/March": the tray nests on the slash,
+        so 366 of them sit a submenu below the hats rather than burying them."""
+        grouped: dict[str, list[str]] = {}
+        for name, item in self._costume_items.items():
+            if item.get("sheet"):
+                grouped.setdefault(str(item.get("group") or "Calendar"), []).append(name)
+        return grouped
+
+    def costume_menu_labels(self) -> dict[str, str]:
+        """name -> menu label for the costumes of the day, "14 · Pi Day", so a month's submenu
+        reads as a calendar. The wardrobe's own costumes are not in it: the tray tidies those
+        names itself, as it always has."""
+        labels = {}
+        for name, item in self._costume_items.items():
+            if item.get("sheet") and item.get("date") and item.get("title"):
+                labels[name] = f"{int(str(item['date'])[-2:])} · {item['title']}"
+        return labels
+
+    def is_daily_costume(self, name: str) -> bool:
+        """Whether ``name`` is one of the calendar's, rather than the wardrobe's own."""
+        return bool((self._costume_items.get(name) or {}).get("sheet"))
 
     def costume_category(self, name: str) -> str:
         """The category costumes.json files ``name`` under - "Other" if it has none, "" if unknown."""
@@ -242,10 +331,11 @@ class SpriteSheet:
         if cached is not None:
             return cached
         item = self._costume_items.get(name)
-        if item is None or self._costume_sheet is None:
+        sheet = self._sheet_of(item) if item is not None else None
+        if sheet is None:
             return None
         cell = self._costume_cell
-        piece = QPixmap.fromImage(self._costume_sheet.copy(int(item["index"]) * cell, 0, cell, cell))
+        piece = QPixmap.fromImage(sheet.copy(int(item["index"]) * cell, 0, cell, cell))
         box = QRegion(piece.mask()).boundingRect()
         if box.isEmpty():
             return None
@@ -285,11 +375,12 @@ class SpriteSheet:
         darkens his head and never the air beside it; his alpha is untouched, and the click mask
         with it.
         """
-        if not self.costume or self._costume_sheet is None:
+        if not self.costume:
             return image
         item = self._costume_items.get(self.costume)
         anchors = self._anchors.get(sheet_index)
-        if not item or not anchors:
+        sheet = self._sheet_of(item) if item else None
+        if not item or not anchors or sheet is None:
             return image
         target = anchors.get(item.get("kind", "head"))
         anchor = item.get("anchor") or [0, 0]
@@ -300,7 +391,7 @@ class SpriteSheet:
         cell = self._costume_cell
         cells = self._costume_cells(item)
         column = cells[step % len(cells)]
-        piece = self._costume_sheet.copy(column * cell, 0, cell, cell)
+        piece = sheet.copy(column * cell, 0, cell, cell)
         x = int(target[0]) - int(anchor[0])
         y = int(target[1]) - int(anchor[1])
 
@@ -325,9 +416,9 @@ class SpriteSheet:
             return canvas
 
         painter = QPainter(image)
-        if item.get("shadow") and self._costume_sheet.height() >= 2 * cell:
+        if item.get("shadow") and sheet.height() >= 2 * cell:
             painter.setCompositionMode(QPainter.CompositionMode_SourceAtop)
-            painter.drawImage(x, y, self._costume_sheet.copy(column * cell, cell, cell, cell))
+            painter.drawImage(x, y, sheet.copy(column * cell, cell, cell, cell))
             painter.setCompositionMode(QPainter.CompositionMode_SourceOver)
         painter.drawImage(x, y, piece)
         painter.end()

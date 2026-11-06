@@ -102,6 +102,54 @@ reading glasses. Neither touches the three exceptions.
 random one on — never the one he's already wearing — and it counts as a choice, so it sticks, it
 outranks everything above except those three, and it lands in the wardrobe's recents.
 
+### The costume of the day
+
+On top of the fifty-three, he has a **calendar**: one costume for every date of the year, 366 of
+them with the twenty-ninth of February, and every one of them moves. A heart that beats on
+Valentine's Day, a pi hat on the fourteenth of March, a jack-o'-lantern that flickers on
+Halloween; the days between are themed on the season they fall in.
+
+It is the season rule made more specific, not a timer. The same date always gets the same
+costume, so it is still something you can reason about — "it's the fourteenth of March, so he's
+got the pi hat on" — and next year he wears it again. Movable feasts (Easter, Lunar New Year,
+Diwali, Eid, Thanksgiving) do not land on one date, so none of them is pinned to one.
+
+| | |
+| --- | --- |
+| **Where it sits** | Ahead of the season: with the calendar on, the date decides and the season is the fallback |
+| **Yours wins** | Exactly as before. Pick any costume and the calendar never touches it |
+| **Moments still win while they last** | A code editor still swaps today's costume for reading glasses, and back |
+| **The switch** | `daily_costumes` — off, he goes back to the season's. `auto_costumes` off takes both off |
+| **Wearing another day's** | **Costume → Calendar** in the tray: a submenu per month, each day by date and name. Picking one makes it yours, like any costume |
+| **The wardrobe** | Shows today's, under **Today**, and not the other 365 — a wheel you have to scroll a year through is not a wardrobe |
+
+They cost what the others cost — nothing per frame — and less to load. The art is on **one sheet
+per month** (`assets/daily/costumes-MM.png`) beside `assets/daily_costumes.json`, and a month's
+sheet is decoded the first time a costume from it is actually worn. So building him decodes no
+calendar at all, and a costume change inside the same month decodes nothing new.
+
+They are drawn as specs, one file per date, in `tools/daily_costumes/MM-DD.json` — the same
+character-grid patterns as the wardrobe's, with a date, a title and two to four frames. The brief
+for drawing one is [`tools/daily_costumes/AUTHORING.md`](../tools/daily_costumes/AUTHORING.md),
+and two tools hold them to every rule a costume has:
+
+```bash
+python tools/check_costume.py tools/daily_costumes/03-14.json --preview review.png
+```
+
+checks a spec without Qt — the size, the frames, the enclosed-hole rule, off his face, on his
+body, inside the frame — by dressing the real frames exactly as the runtime does, and renders a
+review sheet: the poses on a light and a dark taskbar, then its frames side by side.
+
+```bash
+python tools/gen_daily_costumes.py
+```
+
+checks all of them again and writes the twelve sheets and the manifest. It refuses to write
+anything if one fails or a date is missing: a hole in the calendar would leave him bare-headed one
+day a year for no visible reason. `tests/smoke_daily_costumes.py` then checks every one through
+the real runtime.
+
 ### Adding your own
 
 Add an entry to `COSTUMES` in `tools/gen_sprites.py`: a character-grid pattern, an anchor point,

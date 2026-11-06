@@ -12,6 +12,7 @@ chrome (the ask bubble, the toast) is scaled manually via ``ui_scale`` to compen
 from __future__ import annotations
 
 import ctypes
+import datetime
 import logging
 import logging.handlers
 import os
@@ -56,6 +57,7 @@ from PySide6.QtCore import QObject, QPoint, QRect, Qt, QTimer, Signal  # noqa: E
 from PySide6.QtGui import QAction, QActionGroup, QColor, QIcon, QPainter, QPixmap  # noqa: E402
 from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox  # noqa: E402
 
+import costume_calendar  # noqa: E402
 import ocr  # noqa: E402
 from animator import SpriteSheet, available_skins  # noqa: E402
 from behavior import PERSONALITIES, Behavior, State  # noqa: E402
@@ -214,16 +216,20 @@ def _wardrobe_ring(sheet: SpriteSheet, wearing: str, recents: list[str]) -> list
     """Every costume as a thumbnail: the ones you wore last first, then "Take it off" while he is
     wearing something, then the rest by category - the category is the group, so the idle label
     reads "Hats · scroll for more" as you scroll through. The one he is wearing has the ring."""
-    owned = sheet.available_costumes()
-    recent = [c for c in dict.fromkeys(recents) if c in owned][:WARDROBE_RECENTS]
+    recent = [c for c in dict.fromkeys(recents) if sheet.has_costume(c)][:WARDROBE_RECENTS]
 
     def item(name: str, group: str) -> WheelItem:
         # The tray's own wording for a costume, so both menus call it the same thing.
-        return WheelItem(WARDROBE_PREFIX + name, name.replace("_", " ").title(), "costume",
+        return WheelItem(WARDROBE_PREFIX + name, sheet.costume_title(name), "costume",
                          "active" if name == wearing else "", group=group,
                          pixmap=sheet.costume_thumbnail(name))
 
     ring = [item(n, "Recent") for n in recent]
+    # Of the 366 costumes of the day, only today's: the whole calendar is the tray's to show, and
+    # a wheel you have to scroll a year through is not a wardrobe.
+    today = costume_calendar.costume_for(datetime.date.today())
+    if today and sheet.has_costume(today) and today not in recent:
+        ring.append(item(today, "Today"))
     if wearing:
         ring.append(WheelItem(WARDROBE_PREFIX, "Take it off", "costume", group="Wardrobe"))
     for category, names in sheet.costume_categories().items():
@@ -304,9 +310,10 @@ class NibApp:
 
         self.tray = Tray(
             self._make_icon(),
-            costumes=self.sheet.costume_categories(),
+            costumes={**self.sheet.costume_categories(), **self.sheet.calendar_groups()},
             skins=available_skins(),
             personalities=list(PERSONALITIES),
+            costume_labels=self.sheet.costume_menu_labels(),
         )
         self._refresh_tray()
         self.tray.show()
@@ -1091,7 +1098,7 @@ class NibApp:
         wanted = self.behavior.persona_costume or self.behavior.auto_costume
         if wanted == self._persona_costume:
             return
-        if wanted and wanted not in self.sheet.available_costumes():
+        if wanted and not self.sheet.has_costume(wanted):
             return  # a sheet without that costume simply does not get the gag
         try:
             sheet = self._load_sheet(self.sheet.scale, wanted)
@@ -1959,7 +1966,7 @@ class NibApp:
         if self._settings is None:
             self._settings = SettingsWindow(
                 self.config,
-                costumes=self.sheet.available_costumes(),
+                costumes=self.sheet.available_costumes() + self.sheet.daily_costumes(),
                 skins=available_skins(),
                 status=self._status_text,
                 forget=self._forget_memory,

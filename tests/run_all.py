@@ -37,6 +37,7 @@ SUITES = [
     ("smoke_ui", "ghost mode, prompt history, the settings window, sound, the first-run tour"),
     ("smoke_costumes", "every costume on every frame"),
     ("smoke_dressing", "he dresses himself, and never over a costume you picked"),
+    ("smoke_daily_costumes", "the costume of the day: 366 of them, the calendar, lazy month sheets"),
     ("smoke_pocket", "the snippet billboard - grab, accumulate, take down, standing still"),
     ("smoke_calculator", "the inline calculator: safe parsing, unit conversion, never dispatched"),
     ("smoke_ruler", "the pixel ruler: mouse-only measuring, and freezing a reading correctly"),

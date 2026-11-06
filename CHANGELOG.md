@@ -6,6 +6,11 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 
 ### Added
 
+- **A costume for every day of the year.** 366 of them, February the 29th included, and every
+  one moves: he puts the date's on by himself, ahead of the season's, and wears the same one on
+  that date every year. Yours still wins. **Costume → Calendar** in the tray has them all, a
+  submenu per month; the wardrobe shows today's. A new setting, `daily_costumes` (World tab), turns
+  it off. See [The costume of the day](docs/ART.md#the-costume-of-the-day).
 - **He has a name**, and you can change it: `name`, first on Settings → Personality. It is what
   the tray tooltip, his toasts and his lines call him, and a rename applies on Apply with no
   restart. Window titles still say Nib — that's the app.

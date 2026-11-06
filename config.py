@@ -104,6 +104,10 @@ DEFAULTS: dict[str, Any] = {
     #: is a REASON to - a beanie all winter, a hard hat while the machine is pinned, a party hat
     #: for the knocking-off dance. Never overrides a costume you picked yourself.
     "auto_costumes": True,
+    #: ...and with this on, the reason is the date: a costume for every day of the year, the same
+    #: one on the same date every year - a heart on Valentine's Day, a pi hat on the fourteenth of
+    #: March. Off, he falls back to the season's. Part of auto_costumes, so off there is off here.
+    "daily_costumes": True,
     #: exe name -> animation state, merged over the built-in personas. Yours wins on a clash.
     "persona_apps": {},
     # Playing with what is around him: ducking behind the taskbar to peek, and heaving at the
