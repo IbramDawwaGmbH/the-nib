@@ -1,0 +1,33 @@
+{
+  "date": "12-28",
+  "name": "dealer_visor",
+  "title": "Card Playing Day",
+  "theme": "a card dealer's teal visor on a grey band, a white playing card tucked in with a red heart that flips to a charcoal spade",
+  "category": "Eyes",
+  "kind": "eyes",
+  "anchor": [
+    13,
+    6
+  ],
+  "layer": "over",
+  "pattern": [
+    "......................WWWW",
+    "......................WWWW",
+    "KKKKKKKKKKKKKKKKKKKKKKWRWR",
+    "...TTTTTTTTTTTTTTTTTTTWRRR",
+    "...TTTTTTTTTTTTTTTTTTTWWRW",
+    "...TTTTTTTTTTTTTTTTTTTT...",
+    ".........................."
+  ],
+  "frames": [
+    [
+      "......................WWWW",
+      "......................WWWW",
+      "KKKKKKKKKKKKKKKKKKKKKKWWAW",
+      "...TTTTTTTTTTTTTTTTTTTWAAA",
+      "...TTTTTTTTTTTTTTTTTTTWAAA",
+      "...TTTTTTTTTTTTTTTTTTTT...",
+      ".........................."
+    ]
+  ]
+}

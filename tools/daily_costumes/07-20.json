@@ -1,0 +1,57 @@
+{
+ "date": "07-20",
+ "name": "lunar_lander",
+ "title": "Space Exploration Day",
+ "theme": "a silver lunar lander with a gold foil base band, dark seams and four grey legs; a flame-orange thruster puff grows and fades as it lifts",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................",
+  ".....SSSSSSSS.....",
+  "....SSSSSSSSSS....",
+  "....SSSDDDDSSS....",
+  "....SSSDDDDSSS....",
+  "....SSSSSSSSSS....",
+  "..GGGGGGGGGGGGGG..",
+  "..GGGGDGGGGDGGGG..",
+  "..KK.KK.WW.KK.KK..",
+  ".KK..KK....KK..KK.",
+  "KK...KK....KK...KK",
+  "KKK.KKK....KKK.KKK"
+ ],
+ "frames": [
+  [
+   ".....SSSSSSSS.....",
+   "....SSSSSSSSSS....",
+   "....SSSDDDDSSS....",
+   "....SSSDDDDSSS....",
+   "....SSSSSSSSSS....",
+   "..GGGGGGGGGGGGGG..",
+   "..GGGGDGGGGDGGGG..",
+   "..KK.KKFWWFKK.KK..",
+   ".KK..KK.WW.KK..KK.",
+   "KK...KK.WW.KK...KK",
+   "KKK.KKK....KKK.KKK",
+   ".................."
+  ],
+  [
+   ".....SSSSSSSS.....",
+   "....SSSSSSSSSS....",
+   "....SSSDDDDSSS....",
+   "....SSSDDDDSSS....",
+   "....SSSSSSSSSS....",
+   "..GGGGGGGGGGGGGG..",
+   "..GGGGDGGGGDGGGG..",
+   "..KK.KK....KK.KK..",
+   ".KK..KK.WW.KK..KK.",
+   "KK...KK....KK...KK",
+   "KKK.KKK....KKK.KKK",
+   ".................."
+  ]
+ ]
+}

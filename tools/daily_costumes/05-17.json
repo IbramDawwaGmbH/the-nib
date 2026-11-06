@@ -1,0 +1,63 @@
+{
+ "date": "05-17",
+ "name": "radio_lanyard",
+ "title": "Telecommunication Day",
+ "theme": "a charcoal walkie-talkie on a lanyard with a silver antenna and a green indicator light that blinks; a signal dot pops up",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  8,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....A..SS....A....",
+  ".....A.SS...A.....",
+  "......AAAAAA......",
+  "......KKKNNK......",
+  "......KKKNNK......",
+  "......KKKKKK......",
+  "......KKKKKK......",
+  "......KSSSSK......",
+  "......KDDDDK......",
+  "......KSSSSK......"
+ ],
+ "frames": [
+  [
+   "....A..SS....A....",
+   ".....A.SS...A.....",
+   "......AAAAAA......",
+   "......KKKDDK......",
+   "......KKKDDK......",
+   "......KKKKKK......",
+   "......KKKKKK......",
+   "......KSSSSK......",
+   "......KDDDDK......",
+   "......KSSSSK......"
+  ],
+  [
+   "....A..SS.SS.A....",
+   ".....A.SS...A.....",
+   "......AAAAAA......",
+   "......KKKNNK......",
+   "......KKKNNK......",
+   "......KKKKKK......",
+   "......KKKKKK......",
+   "......KSSSSK......",
+   "......KDDDDK......",
+   "......KSSSSK......"
+  ],
+  [
+   "....A..SS..SSA....",
+   ".....A.SS...A.....",
+   "......AAAAAA......",
+   "......KKKDDK......",
+   "......KKKDDK......",
+   "......KKKKKK......",
+   "......KKKKKK......",
+   "......KSSSSK......",
+   "......KDDDDK......",
+   "......KSSSSK......"
+  ]
+ ]
+}

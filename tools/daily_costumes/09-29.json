@@ -1,0 +1,39 @@
+{
+ "date": "09-29",
+ "name": "heart_pendant",
+ "title": "World Heart Day",
+ "theme": "a gold chain with a red heart pendant that beats",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "G...................G",
+  ".GG...............GG.",
+  "...GGG.........GGG...",
+  "......GGG...GGG......",
+  ".......RWRGRRR.......",
+  ".......RRRRRRR.......",
+  ".......RRRRRRR.......",
+  "........RRRRR........",
+  ".........RRR.........",
+  "..........R.........."
+ ],
+ "frames": [
+  [
+   "G...................G",
+   ".GG...............GG.",
+   "...GGG.........GGG...",
+   "......GGG...GGG......",
+   "......RWWRGRRRR......",
+   "......RRRRRRRRR......",
+   "......RRRRRRRRR......",
+   ".......RRRRRRR.......",
+   "........RRRRR........",
+   ".........RRR........."
+  ]
+ ]
+}

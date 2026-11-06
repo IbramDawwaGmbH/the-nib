@@ -1,0 +1,63 @@
+{
+ "date": "09-01",
+ "name": "lunch_box",
+ "title": "Back to School",
+ "theme": "a blue lunchbox at his tummy with a silver clasp and white handle; the clasp pops, the lid lifts to show a green apple, and it shuts",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  9,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  "......WWWWWW......",
+  ".....WWDDDDWW.....",
+  ".BBBBBBBBBBBBBBBB.",
+  "BBBBBBBBBBBBBBBBBB",
+  "BBBBBBBSSSSBBBBBBB",
+  "DDDDDDDSSSSDDDDDDD",
+  "BBBBBBBSSSSBBBBBBB",
+  "BBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBBBBBBBBBBB",
+  ".BBBBBBBBBBBBBBBB."
+ ],
+ "frames": [
+  [
+   "......WWWWWW......",
+   ".....WWDDDDWW.....",
+   ".BBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   "DDDDDDDSSSSDDDDDDD",
+   "BBBBBBBSSSSBBBBBBB",
+   "BBBBBBBSSSSBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   ".BBBBBBBBBBBBBBBB."
+  ],
+  [
+   ".BBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   "DDDDDDDDDODDDDDDDD",
+   "DDDDDDDDNNNDDDDDDD",
+   "BBBBBBBNNNNNBBBBBB",
+   "BBBBBBBNNNNNBBBBBB",
+   "BBBBBBBBNNNBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   ".BBBBBBBBBBBBBBBB."
+  ],
+  [
+   "......WWWWWW......",
+   ".....WWDDDDWW.....",
+   ".BBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBB",
+   "BBBBBBBSSSSBBBBBBB",
+   "DDDDDDDSSSSDDDDDDD",
+   "BBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBB",
+   ".BBBBBBBBBBBBBBBB."
+  ]
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "date": "06-23",
+ "name": "blueprint_tube",
+ "title": "Women in Engineering Day",
+ "theme": "a rolled blue blueprint tucked under his arm across his chest, white paper end curling out at the right with dark line seams; the paper end unrolls a pixel and curls back",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  5,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "BBBBDBBBBBBBBDBBBBWWW.",
+  "BBBBDBBBBBBBBDBBBBWWWW",
+  "BBBBDBBBBBBBBDBBBBWDDW",
+  "BBBBDBBBBBBBBDBBBBWWWW",
+  "BBBBDBBBBBBBBDBBBB....",
+  "BBBBDBBBBBBBBDBBBB...."
+ ],
+ "frames": [
+  [
+   "BBBBDBBBBBBBBDBBBB....",
+   "BBBBDBBBBBBBBDBBBBWWWW",
+   "BBBBDBBBBBBBBDBBBBWDDW",
+   "BBBBDBBBBBBBBDBBBBWWWW",
+   "BBBBDBBBBBBBBDBBBBWWWW",
+   "BBBBDBBBBBBBBDBBBB...."
+  ]
+ ]
+}

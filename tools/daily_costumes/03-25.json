@@ -1,0 +1,79 @@
+{
+ "date": "03-25",
+ "name": "waffle_hat",
+ "title": "Waffle Day",
+ "theme": "a flat square waffle worn like a cap, gold with dark seams, topped with a symmetric cream dollop and a red berry; syrup runs down the corner and drips off, and the berry glints",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "......RRR.......",
+  "....WWRRRWW.....",
+  "....WWRRRWW.....",
+  "GGGDGGGDGGGDGGG.",
+  "GGGDGGGDGGGDGGG.",
+  "DDDDDDDDDDDDDDD.",
+  "GGGDGGGDGGGDGGG.",
+  "GGGDGGGDGGGDGGGO",
+  "DDDDDDDDDDDDDDDO",
+  "...............O",
+  "...............O",
+  "................",
+  "................",
+  "................"
+ ],
+ "frames": [
+  [
+   "......WRR.......",
+   "....WWRRRWW.....",
+   "....WWRRRWW.....",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGG.",
+   "DDDDDDDDDDDDDDD.",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGGO",
+   "DDDDDDDDDDDDDDDO",
+   "...............O",
+   "...............O",
+   "...............O",
+   "................",
+   "................"
+  ],
+  [
+   "......RRR.......",
+   "....WWRRRWW.....",
+   "....WWRRRWW.....",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGG.",
+   "DDDDDDDDDDDDDDD.",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGGO",
+   "DDDDDDDDDDDDDDDO",
+   "...............O",
+   "...............O",
+   "...............O",
+   "...............O",
+   "...............O"
+  ],
+  [
+   "......RRR.......",
+   "....WWRRRWW.....",
+   "....WWRRRWW.....",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGG.",
+   "DDDDDDDDDDDDDDD.",
+   "GGGDGGGDGGGDGGG.",
+   "GGGDGGGDGGGDGGGO",
+   "DDDDDDDDDDDDDDDO",
+   "...............O",
+   "...............O",
+   "................",
+   "................",
+   "...............O"
+  ]
+ ]
+}

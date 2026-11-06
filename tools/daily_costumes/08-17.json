@@ -1,0 +1,45 @@
+{
+  "date": "08-17",
+  "name": "blackberry_sprig",
+  "title": "Blackberry Season",
+  "theme": "a bramble sprig lying across his head: a green stem with three jagged leaves and two clusters of purple berries made of 2px dots with a dark seed seam; a white glint hops from berry to berry and the end leaf flutters",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    12,
+    7
+  ],
+  "layer": "over",
+  "pattern": [
+    "N.NN.N...N.NN.N.........",
+    "NNNNNN...NNNNNN...N.NN.N",
+    ".NNNN.....NNNN....NNNNNN",
+    "NNNNNWPPPNNNNNNPPPPNNNNN",
+    "NNNNPPDPPPNNNNPPDPPPNNNN",
+    "....PDDDDP....PDDDDP....",
+    "....PPDPPP....PPDPPP....",
+    ".....PPPP......PPPP....."
+  ],
+  "frames": [
+    [
+      "N.NN.N...N.NN.N...N.NN.N",
+      "NNNNNN...NNNNNN...NNNNNN",
+      ".NNNN.....NNNN.....NNNN.",
+      "NNNNNPPPPNNNNNNPWPPNNNNN",
+      "NNNNPPDPPPNNNNPPDPPPNNNN",
+      "....PDDDDP....PDDDDP....",
+      "....PPDPPP....PPDPPP....",
+      ".....PPPP......PPPP....."
+    ],
+    [
+      "N.NN.N...N.NN.N.........",
+      "NNNNNN...NNNNNN.........",
+      ".NNNN.....NNNN....N.NN.N",
+      "NNNNNPPPPNNNNNNPPWPNNNNN",
+      "NNNNPPDPPPNNNNPPDPPPNNNN",
+      "....PDDDDP....PDDDDP....",
+      "....PPDPPP....PPDPPP....",
+      ".....PPPP......PPPP....."
+    ]
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "date": "08-25",
+  "name": "tennis_visor",
+  "title": "Tennis Day",
+  "theme": "a white sun visor with a green stripe; the tennis ball bounces on top",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    16,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "................................",
+    "................................",
+    "................................",
+    "................................",
+    ".........NNN....................",
+    "........NWNNN...................",
+    "........NNWNN...................",
+    "........NNNWN...................",
+    ".........NNN....................",
+    "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+    "..NNNNNNNNNNNNNNNNNNNNNNNNNNNN..",
+    "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+    "..DDDDDDDDDDDDDDDDDDDDDDDDDDDD..",
+    "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW.."
+  ],
+  "frames": [
+    [
+      "................................",
+      "................................",
+      ".........NNN....................",
+      "........NWNNN...................",
+      "........NNWNN...................",
+      "........NNNWN...................",
+      ".........NNN....................",
+      "................................",
+      "................................",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..NNNNNNNNNNNNNNNNNNNNNNNNNNNN..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..DDDDDDDDDDDDDDDDDDDDDDDDDDDD..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW.."
+    ],
+    [
+      ".........NNN....................",
+      "........NWNNN...................",
+      "........NNWNN...................",
+      "........NNNWN...................",
+      ".........NNN....................",
+      "................................",
+      "................................",
+      "................................",
+      "................................",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..NNNNNNNNNNNNNNNNNNNNNNNNNNNN..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..DDDDDDDDDDDDDDDDDDDDDDDDDDDD..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW.."
+    ],
+    [
+      "................................",
+      "................................",
+      ".........NNN....................",
+      "........NNNWN...................",
+      "........NNWNN...................",
+      "........NWNNN...................",
+      ".........NNN....................",
+      "................................",
+      "................................",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..NNNNNNNNNNNNNNNNNNNNNNNNNNNN..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW..",
+      "..DDDDDDDDDDDDDDDDDDDDDDDDDDDD..",
+      "..WWWWWWWWWWWWWWWWWWWWWWWWWWWW.."
+    ]
+  ]
+}

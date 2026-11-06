@@ -1,0 +1,71 @@
+{
+ "date": "07-25",
+ "name": "carousel_canopy",
+ "title": "Carousel Day",
+ "theme": "a merry-go-round canopy with striped red and white roof, gold fringe, chasing pink fairy lights and a twinkling finial",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "............GG............",
+  "............RR............",
+  "..........WWRRRW..........",
+  "........RWWWRRRWWW........",
+  "......RRRWWWRRRWWWRR......",
+  "....WWRRRWWWRRRWWWRRRW....",
+  "...WWWRRRWWWRRRWWWRRRWW...",
+  ".RRWWWRRRWWWRRRWWWRRRWWWR.",
+  "RRRWWWRRRWWWRRRWWWRRRWWWRR",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "GGWGGGGMGGGGMGGGGMGGGGMGGG",
+  "GGGGGGGGGGGGGGGGGGGGGGGGGG"
+ ],
+ "frames": [
+  [
+   "............GG............",
+   "............RR............",
+   "..........WWRRRW..........",
+   "........RWWWRRRWWW........",
+   "......RRRWWWRRRWWWRR......",
+   "....WWRRRWWWRRRWWWRRRW....",
+   "...WWWRRRWWWRRRWWWRRRWW...",
+   ".RRWWWRRRWWWRRRWWWRRRWWWR.",
+   "RRRWWWRRRWWWRRRWWWRRRWWWRR",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "GGMGGGGWGGGGMGGGGMGGGGMGGG",
+   "GGGGGGGGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   "............GG............",
+   "............RR............",
+   "..........WWRRRW..........",
+   "........RWWWRRRWWW........",
+   "......RRRWWWRRRWWWRR......",
+   "....WWRRRWWWRRRWWWRRRW....",
+   "...WWWRRRWWWRRRWWWRRRWW...",
+   ".RRWWWRRRWWWRRRWWWRRRWWWR.",
+   "RRRWWWRRRWWWRRRWWWRRRWWWRR",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "GGMGGGGMGGGGWGGGGMGGGGMGGG",
+   "GGGGGGGGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   "............WW............",
+   "............RR............",
+   "..........WWRRRW..........",
+   "........RWWWRRRWWW........",
+   "......RRRWWWRRRWWWRR......",
+   "....WWRRRWWWRRRWWWRRRW....",
+   "...WWWRRRWWWRRRWWWRRRWW...",
+   ".RRWWWRRRWWWRRRWWWRRRWWWR.",
+   "RRRWWWRRRWWWRRRWWWRRRWWWRR",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "GGMGGGGMGGGGMGGGGWGGGGWGGG",
+   "GGGGGGGGGGGGGGGGGGGGGGGGGG"
+  ]
+ ]
+}

@@ -1,0 +1,54 @@
+{
+ "date": "09-22",
+ "name": "equinox_sunmoon",
+ "title": "Autumn Equinox",
+ "theme": "a charcoal headband with a gold sun rising on one side and a silver crescent moon on the other; ray ticks toggle and a star twinkles",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "....GG..............",
+  "....................",
+  "...GGGG......SSSS...",
+  "..GGGGGG.....SSS....",
+  "G.GGGGGG.G...SS.....",
+  "..GGGGGG.....SS.....",
+  "..GGGGGG.....SSS....",
+  "...GGGG......SSSS...",
+  "AAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "....GG..............",
+   ".G......G...........",
+   "...GGGG......SSSS...",
+   "..GGGGGG.....SSS....",
+   "..GGGGGG.....SS....W",
+   "..GGGGGG.....SS.....",
+   "..GGGGGG.....SSS....",
+   "...GGGG......SSSS...",
+   "AAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAA"
+  ],
+  [
+   "....GG..............",
+   ".G......G...........",
+   "...GGGG......SSSS...",
+   "..GGGGGG.....SSS...W",
+   "G.GGGGGG.G...SS.....",
+   "..GGGGGG.....SS.....",
+   "..GGGGGG.....SSS....",
+   "...GGGG......SSSS...",
+   "AAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

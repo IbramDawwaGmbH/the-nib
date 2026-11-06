@@ -1,0 +1,7659 @@
+{
+ "cell": 40,
+ "days": {
+  "01-01": "sparkler_tiara",
+  "01-02": "cyclops_visor",
+  "01-03": "counting_sheep",
+  "01-04": "braille_cell_beret",
+  "01-05": "birder_binoculars",
+  "01-06": "three_kings_crown",
+  "01-07": "icicle_fringe",
+  "01-08": "shower_cap",
+  "01-09": "static_hair",
+  "01-10": "potted_fern",
+  "01-11": "frost_goggles",
+  "01-12": "teapot_hat",
+  "01-13": "rubber_duck",
+  "01-14": "pet_jumper",
+  "01-15": "hat_stack",
+  "01-16": "dragon_crest",
+  "01-17": "idea_bulb",
+  "01-18": "snowball_splat",
+  "01-19": "popcorn_bucket",
+  "01-20": "penguin_tux",
+  "01-21": "squirrel_tail",
+  "01-22": "chili_garland",
+  "01-23": "pen_lanyard",
+  "01-24": "gold_star_sticker",
+  "01-25": "upside_specs",
+  "01-26": "ice_skates",
+  "01-27": "choc_cake_slice",
+  "01-28": "incognito_mask",
+  "01-29": "puzzle_specs",
+  "01-30": "croissant_beret",
+  "01-31": "backwards_cap",
+  "02-01": "dark_choc_bar",
+  "02-02": "groundhog_mound",
+  "02-03": "robin_perch",
+  "02-04": "lavender_posy",
+  "02-05": "weather_vane",
+  "02-06": "curling_stone",
+  "02-07": "element_tile",
+  "02-08": "diamond_kite",
+  "02-09": "pizza_slice",
+  "02-10": "brolly_hat",
+  "02-11": "atom_orbit",
+  "02-12": "loupe_lens",
+  "02-13": "mic_lanyard",
+  "02-14": "heart_boppers",
+  "02-15": "hippo_hood",
+  "02-16": "tinker_goggles",
+  "02-17": "gift_bow",
+  "02-18": "battery_cell",
+  "02-19": "snowboard_rack",
+  "02-20": "goldfish_bowl",
+  "02-21": "speech_bubble",
+  "02-22": "cog_thinking_cap",
+  "02-23": "tennis_sweatband",
+  "02-24": "fogged_specs",
+  "02-25": "clam_shell_hat",
+  "02-26": "beanstalk_climb",
+  "02-27": "polar_bear_hood",
+  "02-28": "tooth_fairy_cap",
+  "02-29": "leap_frog",
+  "03-01": "daffodil_bloom",
+  "03-02": "reading_specs",
+  "03-03": "rhino_horns",
+  "03-04": "marching_drum",
+  "03-05": "rain_gauge",
+  "03-06": "toothbrush_tilt",
+  "03-07": "cereal_bowl",
+  "03-08": "purple_rosette",
+  "03-09": "nest_eggs",
+  "03-10": "hot_air_balloon",
+  "03-11": "pipe_wrench",
+  "03-12": "sprout_pot",
+  "03-13": "gem_pendant",
+  "03-14": "pi_cone",
+  "03-15": "hip_basketball",
+  "03-16": "bamboo_stalk",
+  "03-17": "shamrock_bowler",
+  "03-18": "sorting_bin_hat",
+  "03-19": "hen_comb",
+  "03-20": "smiley_sun",
+  "03-21": "green_canopy",
+  "03-22": "big_drop",
+  "03-23": "storm_cloud",
+  "03-24": "test_tube_rack",
+  "03-25": "waffle_hat",
+  "03-26": "purple_hairbow",
+  "03-27": "theatre_mask",
+  "03-28": "dandelion_puff",
+  "03-29": "piano_scarf",
+  "03-30": "stethoscope",
+  "03-31": "crayon_hat",
+  "04-01": "fools_jester",
+  "04-02": "pbj_slice",
+  "04-03": "rainbow_arc",
+  "04-04": "rat_ears",
+  "04-05": "rainy_window_specs",
+  "04-06": "laurel_wreath",
+  "04-07": "yoga_mat_roll",
+  "04-08": "perch_bird",
+  "04-09": "unicorn_horn",
+  "04-10": "inkwell_quill",
+  "04-11": "pet_collar",
+  "04-12": "space_visor",
+  "04-13": "blossom_sprig",
+  "04-14": "sky_lenses",
+  "04-15": "paint_palette",
+  "04-16": "elephant_ears",
+  "04-17": "bat_wings",
+  "04-18": "turret_crown",
+  "04-19": "bike_bell",
+  "04-20": "frog_peepers",
+  "04-21": "origami_crane",
+  "04-22": "earth_globe",
+  "04-23": "open_book",
+  "04-24": "pig_ears",
+  "04-25": "penguin_perch",
+  "04-26": "pretzel_twist",
+  "04-27": "morse_lamp",
+  "04-28": "hivis_vest",
+  "04-29": "dance_ribbon",
+  "04-30": "porkpie_jazz",
+  "05-01": "maypole_ribbons",
+  "05-02": "tuna_tin",
+  "05-03": "press_lanyard",
+  "05-04": "fire_helmet",
+  "05-05": "soap_bar_slide",
+  "05-06": "glazed_donut",
+  "05-07": "finish_tape",
+  "05-08": "donkey_ears",
+  "05-09": "lost_sock",
+  "05-10": "rain_snail",
+  "05-11": "taco_shell",
+  "05-12": "nurse_cap",
+  "05-13": "citrus_garland",
+  "05-14": "chicken_wings",
+  "05-15": "paper_chain",
+  "05-16": "prism_ray",
+  "05-17": "radio_lanyard",
+  "05-18": "gilt_frames",
+  "05-19": "pinwheel",
+  "05-20": "bee_crown",
+  "05-21": "teacup_hat",
+  "05-22": "butterfly_mask",
+  "05-23": "turtle_shell",
+  "05-24": "x_marks_map",
+  "05-25": "flying_disc",
+  "05-26": "paper_plane",
+  "05-27": "sunscreen_bottle",
+  "05-28": "burger_hat",
+  "05-29": "summit_goggles",
+  "05-30": "watering_can",
+  "05-31": "macaron_stack",
+  "06-01": "spinning_top",
+  "06-02": "whistle_lanyard",
+  "06-03": "cycle_helmet",
+  "06-04": "cheese_wedge",
+  "06-05": "seedling_tuft",
+  "06-06": "lorgnette_handle",
+  "06-07": "double_scoop",
+  "06-08": "coral_crown",
+  "06-09": "strawberry_cap",
+  "06-10": "click_pen",
+  "06-11": "husk_cob",
+  "06-12": "red_rose_tuck",
+  "06-13": "measure_tape_scarf",
+  "06-14": "lemonade_apron",
+  "06-15": "camera_tripod",
+  "06-16": "kelp_fronds",
+  "06-17": "cactus_bloom",
+  "06-18": "maki_roll",
+  "06-19": "strawberry_moon",
+  "06-20": "lightning_rod",
+  "06-21": "lotus_bloom",
+  "06-22": "sloth_hug",
+  "06-23": "blueprint_tube",
+  "06-24": "gossamer_wings",
+  "06-25": "seafarer_cap",
+  "06-26": "canoe_vest",
+  "06-27": "visor_shades",
+  "06-28": "full_turn_specs",
+  "06-29": "tropic_lei",
+  "06-30": "asteroid_streak",
+  "07-01": "rubber_chicken",
+  "07-02": "flying_saucer",
+  "07-03": "straw_sunhat",
+  "07-04": "glow_stick_crown",
+  "07-05": "surf_wetsuit",
+  "07-06": "kiss_mark",
+  "07-07": "choco_coin",
+  "07-08": "big_sunflower",
+  "07-09": "cateye_specs",
+  "07-10": "pineapple_crest",
+  "07-11": "swim_ring",
+  "07-12": "odd_eye_specs",
+  "07-13": "fry_carton",
+  "07-14": "shark_fin",
+  "07-15": "garden_sprinkler",
+  "07-16": "snake_wrap",
+  "07-17": "smiley_badge",
+  "07-18": "shell_necklace",
+  "07-19": "snorkel_set",
+  "07-20": "lunar_lander",
+  "07-21": "ice_lolly",
+  "07-22": "approx_pi_cap",
+  "07-23": "soft_serve",
+  "07-24": "flight_goggles",
+  "07-25": "carousel_canopy",
+  "07-26": "firefly_jar",
+  "07-27": "monstera_leaf",
+  "07-28": "butterfly_wings",
+  "07-29": "tiger_ears",
+  "07-30": "friendship_beads",
+  "07-31": "toasted_mallow",
+  "08-01": "wheat_wreath",
+  "08-02": "wafer_sandwich",
+  "08-03": "melon_shades",
+  "08-04": "owl_perch",
+  "08-05": "oyster_pearl",
+  "08-06": "float_mug",
+  "08-07": "beacon_tower",
+  "08-08": "whisker_mask",
+  "08-09": "book_stack",
+  "08-10": "mane_crest",
+  "08-11": "beach_bucket",
+  "08-12": "perseid_streak",
+  "08-13": "lefty_wave",
+  "08-14": "lizard_lounge",
+  "08-15": "sleep_shade",
+  "08-16": "gag_arrow_band",
+  "08-17": "blackberry_sprig",
+  "08-18": "angler_bucket",
+  "08-19": "shutter_eyes",
+  "08-20": "radio_antenna",
+  "08-21": "pool_goggles",
+  "08-22": "pillow_coin",
+  "08-23": "weather_windsock",
+  "08-24": "waffle_iron",
+  "08-25": "tennis_visor",
+  "08-26": "floppy_hound",
+  "08-27": "porch_ukulele",
+  "08-28": "polka_bowtie",
+  "08-29": "storm_lantern",
+  "08-30": "beach_ball",
+  "08-31": "trail_pack",
+  "09-01": "lunch_box",
+  "09-02": "coconut_sipper",
+  "09-03": "skyscraper_spire",
+  "09-04": "pith_helmet",
+  "09-05": "pizza_cutter",
+  "09-06": "reading_lamp",
+  "09-07": "stopwatch_lanyard",
+  "09-08": "chalk_slate",
+  "09-09": "teddy_hug",
+  "09-10": "bright_idea_bulb",
+  "09-11": "acorn_cap",
+  "09-12": "handheld_console",
+  "09-13": "fortune_cookie_cap",
+  "09-14": "grape_bunch_hat",
+  "09-15": "felt_fedora",
+  "09-16": "ozone_visor",
+  "09-17": "apple_basket",
+  "09-18": "cheese_slice_drape",
+  "09-19": "eyepatch_hoop",
+  "09-20": "puddle_boat",
+  "09-21": "peace_dove",
+  "09-22": "equinox_sunmoon",
+  "09-23": "hedgehog_spines",
+  "09-24": "exclamation_bob",
+  "09-25": "lobster_claws",
+  "09-26": "letter_blocks",
+  "09-27": "tourist_camera",
+  "09-28": "alpine_feather_hat",
+  "09-29": "heart_pendant",
+  "09-30": "podcast_headset",
+  "10-01": "coffee_mug_hat",
+  "10-02": "toadstool_cap",
+  "10-03": "windup_key",
+  "10-04": "giraffe_ossicones",
+  "10-05": "ear_pencil",
+  "10-06": "straw_collar",
+  "10-07": "toy_rocket",
+  "10-08": "octopus_hat",
+  "10-09": "mail_satchel",
+  "10-10": "sunbreak_cloud",
+  "10-11": "smoke_alarm_hat",
+  "10-12": "rain_souwester",
+  "10-13": "upturned_collar",
+  "10-14": "cupcake_swirl",
+  "10-15": "soap_bubbles",
+  "10-16": "checked_bib",
+  "10-17": "owl_eyes",
+  "10-18": "knitted_mittens",
+  "10-19": "maple_pile",
+  "10-20": "foil_blanket",
+  "10-21": "red_apple",
+  "10-22": "goalie_mask",
+  "10-23": "lab_flask",
+  "10-24": "band_shako",
+  "10-25": "pasta_bowl",
+  "10-26": "pumpkin_ribs",
+  "10-27": "spider_thread",
+  "10-28": "film_reel",
+  "10-29": "roosting_bat",
+  "10-30": "mummy_wrap",
+  "10-31": "boo_ghost",
+  "11-01": "broccoli_floret",
+  "11-02": "marigold_garland",
+  "11-03": "jelly_dome",
+  "11-04": "lollipop_specs",
+  "11-05": "geese_flock",
+  "11-06": "brass_sax",
+  "11-07": "newspaper_fold_hat",
+  "11-08": "xray_plate",
+  "11-09": "cog_crown",
+  "11-10": "lab_goggles",
+  "11-11": "poppy_pin",
+  "11-12": "pinecone_topper",
+  "11-13": "hug_arms",
+  "11-14": "hot_water_bottle",
+  "11-15": "patch_quilt",
+  "11-16": "jigsaw_pair",
+  "11-17": "yarn_ball",
+  "11-18": "cocoa_mug",
+  "11-19": "plunger_hat",
+  "11-20": "balloon_bunch",
+  "11-21": "retro_tv",
+  "11-22": "deerstalker",
+  "11-23": "nautilus_shell",
+  "11-24": "dna_helix",
+  "11-25": "arrow_quiver",
+  "11-26": "piping_bag",
+  "11-27": "pincushion_hat",
+  "11-28": "red_planet",
+  "11-29": "bolo_tie",
+  "11-30": "tam_o_shanter",
+  "12-01": "awareness_ribbon",
+  "12-02": "toboggan_back",
+  "12-03": "antler_rack",
+  "12-04": "gingerbread_cookie",
+  "12-05": "volunteer_sash",
+  "12-06": "nicholas_mitre",
+  "12-07": "pilot_peak_cap",
+  "12-08": "snowman_hat",
+  "12-09": "cinnamon_swirl",
+  "12-10": "laureate_medal",
+  "12-11": "summit_peak",
+  "12-12": "poinsettia_bloom",
+  "12-13": "lucia_candle_crown",
+  "12-14": "stargazer_scope",
+  "12-15": "mistletoe_sprig",
+  "12-16": "jingle_collar",
+  "12-17": "biplane_topper",
+  "12-18": "gift_ribbon_sash",
+  "12-19": "evergreen_sprig",
+  "12-20": "choir_ruff",
+  "12-21": "crossword_specs",
+  "12-22": "longest_night_cap",
+  "12-23": "elf_bell_hat",
+  "12-24": "nightcap_tassel",
+  "12-25": "holly_wreath_crown",
+  "12-26": "candy_cane_specs",
+  "12-27": "fruitcake_loaf",
+  "12-28": "dealer_visor",
+  "12-29": "ticktock_clockface",
+  "12-30": "aurora_veil",
+  "12-31": "nye_fireworks"
+ },
+ "items": {
+  "sparkler_tiara": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-01",
+   "title": "New Year's Day",
+   "frames": [
+    0,
+    31,
+    32,
+    33
+   ],
+   "shadow": true
+  },
+  "cyclops_visor": {
+   "index": 1,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-02",
+   "title": "Science Fiction Day",
+   "frames": [
+    1,
+    34,
+    35,
+    36
+   ]
+  },
+  "counting_sheep": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    14,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-03",
+   "title": "Festival of Sleep",
+   "frames": [
+    2,
+    37,
+    38,
+    39
+   ],
+   "shadow": true
+  },
+  "braille_cell_beret": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-04",
+   "title": "World Braille Day",
+   "frames": [
+    3,
+    40,
+    41,
+    42
+   ],
+   "shadow": true
+  },
+  "birder_binoculars": {
+   "index": 4,
+   "kind": "neck",
+   "anchor": [
+    8,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-05",
+   "title": "National Bird Day",
+   "frames": [
+    4,
+    43,
+    44
+   ]
+  },
+  "three_kings_crown": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-06",
+   "title": "Epiphany",
+   "frames": [
+    5,
+    45,
+    46
+   ],
+   "shadow": true
+  },
+  "icicle_fringe": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    14,
+    2
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-07",
+   "title": "Icicle Morning",
+   "frames": [
+    6,
+    47,
+    48
+   ],
+   "shadow": true
+  },
+  "shower_cap": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    18,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-08",
+   "title": "Bubble Bath Day",
+   "frames": [
+    7,
+    49,
+    50
+   ],
+   "shadow": true
+  },
+  "static_hair": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-09",
+   "title": "Static Electricity Day",
+   "frames": [
+    8,
+    51,
+    52,
+    53
+   ],
+   "shadow": true
+  },
+  "potted_fern": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-10",
+   "title": "Houseplant Appreciation",
+   "frames": [
+    9,
+    54,
+    55
+   ],
+   "shadow": true
+  },
+  "frost_goggles": {
+   "index": 10,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-11",
+   "title": "Frosty Morning",
+   "frames": [
+    10,
+    56,
+    57
+   ]
+  },
+  "teapot_hat": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-12",
+   "title": "Hot Tea Day",
+   "frames": [
+    11,
+    58,
+    59
+   ],
+   "shadow": true
+  },
+  "rubber_duck": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    8,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-13",
+   "title": "Rubber Ducky Day",
+   "frames": [
+    12,
+    60,
+    61
+   ],
+   "shadow": true
+  },
+  "pet_jumper": {
+   "index": 13,
+   "kind": "body",
+   "anchor": [
+    13,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-14",
+   "title": "Dress Up Your Pet Day",
+   "frames": [
+    13,
+    62,
+    63
+   ]
+  },
+  "hat_stack": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-15",
+   "title": "National Hat Day",
+   "frames": [
+    14,
+    64,
+    65
+   ],
+   "shadow": true
+  },
+  "dragon_crest": {
+   "index": 15,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-16",
+   "title": "Appreciate a Dragon Day",
+   "frames": [
+    15,
+    66,
+    67,
+    68
+   ],
+   "shadow": true
+  },
+  "idea_bulb": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-17",
+   "title": "Kid Inventors' Day",
+   "frames": [
+    16,
+    69,
+    70
+   ],
+   "shadow": true
+  },
+  "snowball_splat": {
+   "index": 17,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-18",
+   "title": "Snowball Fight",
+   "frames": [
+    17,
+    71,
+    72
+   ]
+  },
+  "popcorn_bucket": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-19",
+   "title": "Popcorn Day",
+   "frames": [
+    18,
+    73,
+    74
+   ],
+   "shadow": true
+  },
+  "penguin_tux": {
+   "index": 19,
+   "kind": "body",
+   "anchor": [
+    12,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-20",
+   "title": "Penguin Awareness Day",
+   "frames": [
+    19,
+    75
+   ]
+  },
+  "squirrel_tail": {
+   "index": 20,
+   "kind": "body",
+   "anchor": [
+    5,
+    29
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-21",
+   "title": "Squirrel Appreciation Day",
+   "frames": [
+    20,
+    76,
+    77
+   ]
+  },
+  "chili_garland": {
+   "index": 21,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-22",
+   "title": "Hot Sauce Day",
+   "frames": [
+    21,
+    78,
+    79
+   ]
+  },
+  "pen_lanyard": {
+   "index": 22,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-23",
+   "title": "Handwriting Day",
+   "frames": [
+    22,
+    80,
+    81
+   ]
+  },
+  "gold_star_sticker": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-24",
+   "title": "Compliment Day",
+   "frames": [
+    23,
+    82,
+    83
+   ],
+   "shadow": true
+  },
+  "upside_specs": {
+   "index": 24,
+   "kind": "eyes",
+   "anchor": [
+    10,
+    4
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-25",
+   "title": "Opposite Day",
+   "frames": [
+    24,
+    84,
+    85,
+    86
+   ]
+  },
+  "ice_skates": {
+   "index": 25,
+   "kind": "body",
+   "anchor": [
+    14,
+    1
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-26",
+   "title": "Powder Day",
+   "frames": [
+    25,
+    87,
+    88
+   ]
+  },
+  "choc_cake_slice": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    9,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-27",
+   "title": "Chocolate Cake Day",
+   "frames": [
+    26,
+    89,
+    90
+   ],
+   "shadow": true
+  },
+  "incognito_mask": {
+   "index": 27,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-28",
+   "title": "Data Privacy Day",
+   "frames": [
+    27,
+    91,
+    92
+   ]
+  },
+  "puzzle_specs": {
+   "index": 28,
+   "kind": "eyes",
+   "anchor": [
+    10,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-29",
+   "title": "Puzzle Day",
+   "frames": [
+    28,
+    93,
+    94,
+    95
+   ]
+  },
+  "croissant_beret": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-30",
+   "title": "Croissant Day",
+   "frames": [
+    29,
+    96,
+    97
+   ],
+   "shadow": true
+  },
+  "backwards_cap": {
+   "index": 30,
+   "kind": "head",
+   "anchor": [
+    11,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/January",
+   "sheet": "daily/costumes-01.png",
+   "date": "01-31",
+   "title": "Backward Day",
+   "frames": [
+    30,
+    98,
+    99
+   ],
+   "shadow": true
+  },
+  "dark_choc_bar": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    12,
+    7
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-01",
+   "title": "Dark Chocolate Day",
+   "frames": [
+    0,
+    29,
+    30,
+    31
+   ],
+   "shadow": true
+  },
+  "groundhog_mound": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-02",
+   "title": "Groundhog Day",
+   "frames": [
+    1,
+    32,
+    33,
+    34
+   ],
+   "shadow": true
+  },
+  "robin_perch": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    8,
+    8
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-03",
+   "title": "Feed the Birds Day",
+   "frames": [
+    2,
+    35,
+    36
+   ],
+   "shadow": true
+  },
+  "lavender_posy": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-04",
+   "title": "World Cancer Day",
+   "frames": [
+    3,
+    37,
+    38
+   ],
+   "shadow": true
+  },
+  "weather_vane": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-05",
+   "title": "Weatherperson's Day",
+   "frames": [
+    4,
+    39,
+    40,
+    41
+   ],
+   "shadow": true
+  },
+  "curling_stone": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    11,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-06",
+   "title": "Curling Day",
+   "frames": [
+    5,
+    42,
+    43,
+    44
+   ],
+   "shadow": true
+  },
+  "element_tile": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-07",
+   "title": "Periodic Table Day",
+   "frames": [
+    6,
+    45,
+    46
+   ],
+   "shadow": true
+  },
+  "diamond_kite": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    14,
+    14
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-08",
+   "title": "Kite Flying Day",
+   "frames": [
+    7,
+    47,
+    48
+   ]
+  },
+  "pizza_slice": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    9,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-09",
+   "title": "Pizza Day",
+   "frames": [
+    8,
+    49,
+    50,
+    51
+   ],
+   "shadow": true
+  },
+  "brolly_hat": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    14,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-10",
+   "title": "Umbrella Day",
+   "frames": [
+    9,
+    52,
+    53
+   ],
+   "shadow": true
+  },
+  "atom_orbit": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    10,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-11",
+   "title": "Women and Girls in Science Day",
+   "frames": [
+    10,
+    54,
+    55,
+    56
+   ],
+   "shadow": true
+  },
+  "loupe_lens": {
+   "index": 11,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-12",
+   "title": "Darwin Day",
+   "frames": [
+    11,
+    57
+   ]
+  },
+  "mic_lanyard": {
+   "index": 12,
+   "kind": "neck",
+   "anchor": [
+    7,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-13",
+   "title": "World Radio Day",
+   "frames": [
+    12,
+    58,
+    59
+   ]
+  },
+  "heart_boppers": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    14,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-14",
+   "title": "Valentine's Day",
+   "frames": [
+    13,
+    60,
+    61,
+    62
+   ],
+   "shadow": true
+  },
+  "hippo_hood": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    14,
+    6
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-15",
+   "title": "World Hippo Day",
+   "frames": [
+    14,
+    63,
+    64
+   ],
+   "shadow": true
+  },
+  "tinker_goggles": {
+   "index": 15,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-16",
+   "title": "Innovation Day",
+   "frames": [
+    15,
+    65,
+    66
+   ]
+  },
+  "gift_bow": {
+   "index": 16,
+   "kind": "neck",
+   "anchor": [
+    9,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-17",
+   "title": "Random Acts of Kindness Day",
+   "frames": [
+    16,
+    67,
+    68
+   ]
+  },
+  "battery_cell": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    12,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-18",
+   "title": "Battery Day",
+   "frames": [
+    17,
+    69,
+    70
+   ],
+   "shadow": true
+  },
+  "snowboard_rack": {
+   "index": 18,
+   "kind": "body",
+   "anchor": [
+    24,
+    33
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-19",
+   "title": "Snowboard Day",
+   "frames": [
+    18,
+    71,
+    72
+   ]
+  },
+  "goldfish_bowl": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-20",
+   "title": "Love Your Pet Day",
+   "frames": [
+    19,
+    73,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "speech_bubble": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    12,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-21",
+   "title": "Mother Language Day",
+   "frames": [
+    20,
+    76,
+    77
+   ],
+   "shadow": true
+  },
+  "cog_thinking_cap": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-22",
+   "title": "Thinking Cap Day",
+   "frames": [
+    21,
+    78,
+    79,
+    80
+   ],
+   "shadow": true
+  },
+  "tennis_sweatband": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    13,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-23",
+   "title": "Play Tennis Day",
+   "frames": [
+    22,
+    81,
+    82,
+    83
+   ],
+   "shadow": true
+  },
+  "fogged_specs": {
+   "index": 23,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-24",
+   "title": "Foggy Glasses Day",
+   "frames": [
+    23,
+    84,
+    85
+   ]
+  },
+  "clam_shell_hat": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-25",
+   "title": "Clam Chowder Day",
+   "frames": [
+    24,
+    86,
+    87
+   ],
+   "shadow": true
+  },
+  "beanstalk_climb": {
+   "index": 25,
+   "kind": "body",
+   "anchor": [
+    5,
+    27
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-26",
+   "title": "Tell a Fairy Tale Day",
+   "frames": [
+    25,
+    88,
+    89,
+    90
+   ]
+  },
+  "polar_bear_hood": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    14,
+    5
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-27",
+   "title": "International Polar Bear Day",
+   "frames": [
+    26,
+    91,
+    92
+   ],
+   "shadow": true
+  },
+  "tooth_fairy_cap": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    7,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-28",
+   "title": "Tooth Fairy Day",
+   "frames": [
+    27,
+    93,
+    94
+   ],
+   "shadow": true
+  },
+  "leap_frog": {
+   "index": 28,
+   "kind": "head",
+   "anchor": [
+    8,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/February",
+   "sheet": "daily/costumes-02.png",
+   "date": "02-29",
+   "title": "Leap Day",
+   "frames": [
+    28,
+    95,
+    96,
+    97
+   ],
+   "shadow": true
+  },
+  "daffodil_bloom": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    9,
+    14
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-01",
+   "title": "St David's Day",
+   "frames": [
+    0,
+    31,
+    32,
+    33
+   ],
+   "shadow": true
+  },
+  "reading_specs": {
+   "index": 1,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-02",
+   "title": "Reading Day",
+   "frames": [
+    1,
+    34,
+    35,
+    36
+   ]
+  },
+  "rhino_horns": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-03",
+   "title": "World Wildlife Day",
+   "frames": [
+    2,
+    37
+   ],
+   "shadow": true
+  },
+  "marching_drum": {
+   "index": 3,
+   "kind": "body",
+   "anchor": [
+    13,
+    9
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-04",
+   "title": "March Forth",
+   "frames": [
+    3,
+    38,
+    39
+   ]
+  },
+  "rain_gauge": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    6,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-05",
+   "title": "Spring Showers",
+   "frames": [
+    4,
+    40,
+    41,
+    42
+   ],
+   "shadow": true
+  },
+  "toothbrush_tilt": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    16,
+    8
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-06",
+   "title": "Dentist's Day",
+   "frames": [
+    5,
+    43,
+    44
+   ],
+   "shadow": true
+  },
+  "cereal_bowl": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    12,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-07",
+   "title": "Cereal Day",
+   "frames": [
+    6,
+    45,
+    46,
+    47
+   ],
+   "shadow": true
+  },
+  "purple_rosette": {
+   "index": 7,
+   "kind": "neck",
+   "anchor": [
+    7,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-08",
+   "title": "Women's Day",
+   "frames": [
+    7,
+    48,
+    49,
+    50
+   ]
+  },
+  "nest_eggs": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-09",
+   "title": "Birdwatching",
+   "frames": [
+    8,
+    51,
+    52,
+    53
+   ],
+   "shadow": true
+  },
+  "hot_air_balloon": {
+   "index": 9,
+   "kind": "body",
+   "anchor": [
+    1,
+    29
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-10",
+   "title": "Up in the Air Day",
+   "frames": [
+    9,
+    54,
+    55
+   ]
+  },
+  "pipe_wrench": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    14,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-11",
+   "title": "World Plumbing Day",
+   "frames": [
+    10,
+    56,
+    57
+   ],
+   "shadow": true
+  },
+  "sprout_pot": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    10,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-12",
+   "title": "Plant a Flower Day",
+   "frames": [
+    11,
+    58,
+    59,
+    60
+   ],
+   "shadow": true
+  },
+  "gem_pendant": {
+   "index": 12,
+   "kind": "neck",
+   "anchor": [
+    8,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-13",
+   "title": "Jewel Day",
+   "frames": [
+    12,
+    61,
+    62,
+    63
+   ]
+  },
+  "pi_cone": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-14",
+   "title": "Pi Day",
+   "frames": [
+    13,
+    64,
+    65,
+    66
+   ],
+   "shadow": true
+  },
+  "hip_basketball": {
+   "index": 14,
+   "kind": "body",
+   "anchor": [
+    2,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-15",
+   "title": "Hoops Season",
+   "frames": [
+    14,
+    67,
+    68,
+    69
+   ]
+  },
+  "bamboo_stalk": {
+   "index": 15,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-16",
+   "title": "Panda Day",
+   "frames": [
+    15,
+    70,
+    71
+   ],
+   "shadow": true
+  },
+  "shamrock_bowler": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-17",
+   "title": "St Patrick's Day",
+   "frames": [
+    16,
+    72,
+    73,
+    74
+   ],
+   "shadow": true
+  },
+  "sorting_bin_hat": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    10,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-18",
+   "title": "Global Recycling Day",
+   "frames": [
+    17,
+    75,
+    76,
+    77
+   ],
+   "shadow": true
+  },
+  "hen_comb": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    14,
+    8
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-19",
+   "title": "Poultry Day",
+   "frames": [
+    18,
+    78,
+    79,
+    80
+   ],
+   "shadow": true
+  },
+  "smiley_sun": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-20",
+   "title": "Day of Happiness",
+   "frames": [
+    19,
+    81,
+    82,
+    83
+   ],
+   "shadow": true
+  },
+  "green_canopy": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    15,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-21",
+   "title": "Day of Forests",
+   "frames": [
+    20,
+    84,
+    85
+   ],
+   "shadow": true
+  },
+  "big_drop": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-22",
+   "title": "World Water Day",
+   "frames": [
+    21,
+    86,
+    87,
+    88
+   ],
+   "shadow": true
+  },
+  "storm_cloud": {
+   "index": 22,
+   "kind": "body",
+   "anchor": [
+    20,
+    38
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-23",
+   "title": "Weather Day",
+   "frames": [
+    22,
+    89,
+    90,
+    91
+   ]
+  },
+  "test_tube_rack": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-24",
+   "title": "Lab Day",
+   "frames": [
+    23,
+    92,
+    93
+   ],
+   "shadow": true
+  },
+  "waffle_hat": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    8,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-25",
+   "title": "Waffle Day",
+   "frames": [
+    24,
+    94,
+    95,
+    96
+   ],
+   "shadow": true
+  },
+  "purple_hairbow": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    12,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-26",
+   "title": "Purple Day",
+   "frames": [
+    25,
+    97
+   ],
+   "shadow": true
+  },
+  "theatre_mask": {
+   "index": 26,
+   "kind": "eyes",
+   "anchor": [
+    15,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-27",
+   "title": "World Theatre Day",
+   "frames": [
+    26,
+    98,
+    99,
+    100
+   ]
+  },
+  "dandelion_puff": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    5,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-28",
+   "title": "Dandelion Day",
+   "frames": [
+    27,
+    101,
+    102,
+    103
+   ],
+   "shadow": true
+  },
+  "piano_scarf": {
+   "index": 28,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-29",
+   "title": "Piano Day",
+   "frames": [
+    28,
+    104,
+    105,
+    106
+   ]
+  },
+  "stethoscope": {
+   "index": 29,
+   "kind": "neck",
+   "anchor": [
+    9,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-30",
+   "title": "Doctors' Day",
+   "frames": [
+    29,
+    107,
+    108,
+    109
+   ]
+  },
+  "crayon_hat": {
+   "index": 30,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/March",
+   "sheet": "daily/costumes-03.png",
+   "date": "03-31",
+   "title": "Crayon Day",
+   "frames": [
+    30,
+    110,
+    111,
+    112
+   ],
+   "shadow": true
+  },
+  "fools_jester": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    14,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-01",
+   "title": "April Fools' Day",
+   "frames": [
+    0,
+    30,
+    31
+   ],
+   "shadow": true
+  },
+  "pbj_slice": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    14,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-02",
+   "title": "Peanut Butter & Jelly Day",
+   "frames": [
+    1,
+    32,
+    33,
+    34
+   ],
+   "shadow": true
+  },
+  "rainbow_arc": {
+   "index": 2,
+   "kind": "body",
+   "anchor": [
+    19,
+    31
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-03",
+   "title": "Find a Rainbow Day",
+   "frames": [
+    2,
+    35,
+    36,
+    37
+   ]
+  },
+  "rat_ears": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    14,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-04",
+   "title": "World Rat Day",
+   "frames": [
+    3,
+    38
+   ],
+   "shadow": true
+  },
+  "rainy_window_specs": {
+   "index": 4,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-05",
+   "title": "April Showers Day",
+   "frames": [
+    4,
+    39,
+    40,
+    41
+   ]
+  },
+  "laurel_wreath": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    14,
+    5
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-06",
+   "title": "Day of Sport & Peace",
+   "frames": [
+    5,
+    42
+   ],
+   "shadow": true
+  },
+  "yoga_mat_roll": {
+   "index": 6,
+   "kind": "body",
+   "anchor": [
+    12,
+    9
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-07",
+   "title": "World Health Day",
+   "frames": [
+    6,
+    43
+   ]
+  },
+  "perch_bird": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    8,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-08",
+   "title": "Draw a Bird Day",
+   "frames": [
+    7,
+    44,
+    45,
+    46
+   ],
+   "shadow": true
+  },
+  "unicorn_horn": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-09",
+   "title": "Unicorn Day",
+   "frames": [
+    8,
+    47,
+    48,
+    49
+   ],
+   "shadow": true
+  },
+  "inkwell_quill": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    6,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-10",
+   "title": "Young Writer Day",
+   "frames": [
+    9,
+    50,
+    51
+   ],
+   "shadow": true
+  },
+  "pet_collar": {
+   "index": 10,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-11",
+   "title": "National Pet Day",
+   "frames": [
+    10,
+    52,
+    53,
+    54
+   ]
+  },
+  "space_visor": {
+   "index": 11,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    4
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-12",
+   "title": "Human Space Flight Day",
+   "frames": [
+    11,
+    55,
+    56,
+    57
+   ]
+  },
+  "blossom_sprig": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    12,
+    7
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-13",
+   "title": "Spring Blossom Day",
+   "frames": [
+    12,
+    58,
+    59
+   ],
+   "shadow": true
+  },
+  "sky_lenses": {
+   "index": 13,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-14",
+   "title": "Look Up at the Sky Day",
+   "frames": [
+    13,
+    60,
+    61
+   ]
+  },
+  "paint_palette": {
+   "index": 14,
+   "kind": "body",
+   "anchor": [
+    11,
+    7
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-15",
+   "title": "World Art Day",
+   "frames": [
+    14,
+    62,
+    63
+   ]
+  },
+  "elephant_ears": {
+   "index": 15,
+   "kind": "head",
+   "anchor": [
+    20,
+    6
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-16",
+   "title": "Save the Elephant Day",
+   "frames": [
+    15,
+    64,
+    65
+   ],
+   "shadow": true
+  },
+  "bat_wings": {
+   "index": 16,
+   "kind": "body",
+   "anchor": [
+    19,
+    19
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-17",
+   "title": "Bat Appreciation Day",
+   "frames": [
+    16,
+    66,
+    67,
+    68
+   ]
+  },
+  "turret_crown": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    11,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-18",
+   "title": "World Heritage Day",
+   "frames": [
+    17,
+    69,
+    70
+   ],
+   "shadow": true
+  },
+  "bike_bell": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    13,
+    6
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-19",
+   "title": "Bicycle Day",
+   "frames": [
+    18,
+    71,
+    72
+   ],
+   "shadow": true
+  },
+  "frog_peepers": {
+   "index": 19,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-20",
+   "title": "Spring Frog Day",
+   "frames": [
+    19,
+    73
+   ]
+  },
+  "origami_crane": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    11,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-21",
+   "title": "Creativity Day",
+   "frames": [
+    20,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "earth_globe": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-22",
+   "title": "Earth Day",
+   "frames": [
+    21,
+    76,
+    77,
+    78
+   ],
+   "shadow": true
+  },
+  "open_book": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    13,
+    8
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-23",
+   "title": "World Book Day",
+   "frames": [
+    22,
+    79,
+    80,
+    81
+   ],
+   "shadow": true
+  },
+  "pig_ears": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    12,
+    7
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-24",
+   "title": "Pigs in a Blanket Day",
+   "frames": [
+    23,
+    82,
+    83,
+    84
+   ],
+   "shadow": true
+  },
+  "penguin_perch": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-25",
+   "title": "World Penguin Day",
+   "frames": [
+    24,
+    85,
+    86,
+    87
+   ],
+   "shadow": true
+  },
+  "pretzel_twist": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    12,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-26",
+   "title": "Pretzel Day",
+   "frames": [
+    25,
+    88,
+    89,
+    90
+   ],
+   "shadow": true
+  },
+  "morse_lamp": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-27",
+   "title": "Morse Code Day",
+   "frames": [
+    26,
+    91,
+    92,
+    93
+   ],
+   "shadow": true
+  },
+  "hivis_vest": {
+   "index": 27,
+   "kind": "body",
+   "anchor": [
+    12,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-28",
+   "title": "Safety at Work Day",
+   "frames": [
+    27,
+    94,
+    95,
+    96
+   ]
+  },
+  "dance_ribbon": {
+   "index": 28,
+   "kind": "neck",
+   "anchor": [
+    4,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-29",
+   "title": "International Dance Day",
+   "frames": [
+    28,
+    97,
+    98,
+    99
+   ]
+  },
+  "porkpie_jazz": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/April",
+   "sheet": "daily/costumes-04.png",
+   "date": "04-30",
+   "title": "International Jazz Day",
+   "frames": [
+    29,
+    100,
+    101,
+    102
+   ],
+   "shadow": true
+  },
+  "maypole_ribbons": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-01",
+   "title": "May Day",
+   "frames": [
+    0,
+    31,
+    32,
+    33
+   ],
+   "shadow": true
+  },
+  "tuna_tin": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-02",
+   "title": "World Tuna Day",
+   "frames": [
+    1,
+    34,
+    35
+   ],
+   "shadow": true
+  },
+  "press_lanyard": {
+   "index": 2,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-03",
+   "title": "World Press Freedom Day",
+   "frames": [
+    2,
+    36,
+    37
+   ]
+  },
+  "fire_helmet": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    15,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-04",
+   "title": "Firefighters' Day",
+   "frames": [
+    3,
+    38,
+    39,
+    40
+   ],
+   "shadow": true
+  },
+  "soap_bar_slide": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-05",
+   "title": "Hand Hygiene Day",
+   "frames": [
+    4,
+    41,
+    42
+   ],
+   "shadow": true
+  },
+  "glazed_donut": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    12,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-06",
+   "title": "No Diet Day",
+   "frames": [
+    5,
+    43,
+    44
+   ],
+   "shadow": true
+  },
+  "finish_tape": {
+   "index": 6,
+   "kind": "body",
+   "anchor": [
+    15,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-07",
+   "title": "World Athletics Day",
+   "frames": [
+    6,
+    45,
+    46,
+    47
+   ]
+  },
+  "donkey_ears": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    17,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-08",
+   "title": "World Donkey Day",
+   "frames": [
+    7,
+    48,
+    49,
+    50
+   ],
+   "shadow": true
+  },
+  "lost_sock": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    10,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-09",
+   "title": "Lost Sock Memorial Day",
+   "frames": [
+    8,
+    51,
+    52,
+    53
+   ],
+   "shadow": true
+  },
+  "rain_snail": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    10,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-10",
+   "title": "Snail Weather",
+   "frames": [
+    9,
+    54,
+    55,
+    56
+   ],
+   "shadow": true
+  },
+  "taco_shell": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    12,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-11",
+   "title": "Eat What You Want Day",
+   "frames": [
+    10,
+    57,
+    58
+   ],
+   "shadow": true
+  },
+  "nurse_cap": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    10,
+    7
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-12",
+   "title": "Nurses Day",
+   "frames": [
+    11,
+    59,
+    60,
+    61
+   ],
+   "shadow": true
+  },
+  "citrus_garland": {
+   "index": 12,
+   "kind": "neck",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-13",
+   "title": "World Cocktail Day",
+   "frames": [
+    12,
+    62,
+    63,
+    64
+   ]
+  },
+  "chicken_wings": {
+   "index": 13,
+   "kind": "body",
+   "anchor": [
+    19,
+    26
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-14",
+   "title": "Dance Like a Chicken Day",
+   "frames": [
+    13,
+    65,
+    66
+   ]
+  },
+  "paper_chain": {
+   "index": 14,
+   "kind": "neck",
+   "anchor": [
+    13,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-15",
+   "title": "Day of Families",
+   "frames": [
+    14,
+    67,
+    68,
+    69
+   ]
+  },
+  "prism_ray": {
+   "index": 15,
+   "kind": "head",
+   "anchor": [
+    13,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-16",
+   "title": "Day of Light",
+   "frames": [
+    15,
+    70,
+    71
+   ],
+   "shadow": true
+  },
+  "radio_lanyard": {
+   "index": 16,
+   "kind": "neck",
+   "anchor": [
+    9,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-17",
+   "title": "Telecommunication Day",
+   "frames": [
+    16,
+    72,
+    73,
+    74
+   ]
+  },
+  "gilt_frames": {
+   "index": 17,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-18",
+   "title": "Museum Day",
+   "frames": [
+    17,
+    75,
+    76,
+    77
+   ]
+  },
+  "pinwheel": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    6,
+    14
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-19",
+   "title": "Pinwheel Day",
+   "frames": [
+    18,
+    78,
+    79,
+    80
+   ],
+   "shadow": true
+  },
+  "bee_crown": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    13,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-20",
+   "title": "World Bee Day",
+   "frames": [
+    19,
+    81,
+    82,
+    83
+   ],
+   "shadow": true
+  },
+  "teacup_hat": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-21",
+   "title": "International Tea Day",
+   "frames": [
+    20,
+    84,
+    85,
+    86
+   ],
+   "shadow": true
+  },
+  "butterfly_mask": {
+   "index": 21,
+   "kind": "eyes",
+   "anchor": [
+    19,
+    5
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-22",
+   "title": "Biodiversity Day",
+   "frames": [
+    21,
+    87,
+    88,
+    89
+   ]
+  },
+  "turtle_shell": {
+   "index": 22,
+   "kind": "body",
+   "anchor": [
+    21,
+    23
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-23",
+   "title": "World Turtle Day",
+   "frames": [
+    22,
+    90,
+    91,
+    92
+   ]
+  },
+  "x_marks_map": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-24",
+   "title": "Scavenger Hunt Day",
+   "frames": [
+    23,
+    93,
+    94,
+    95
+   ],
+   "shadow": true
+  },
+  "flying_disc": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    13,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-25",
+   "title": "Flying Disc Day",
+   "frames": [
+    24,
+    96,
+    97
+   ]
+  },
+  "paper_plane": {
+   "index": 25,
+   "kind": "body",
+   "anchor": [
+    5,
+    32
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-26",
+   "title": "Paper Airplane Day",
+   "frames": [
+    25,
+    98,
+    99,
+    100
+   ]
+  },
+  "sunscreen_bottle": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    12,
+    8
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-27",
+   "title": "Sunscreen Day",
+   "frames": [
+    26,
+    101,
+    102
+   ],
+   "shadow": true
+  },
+  "burger_hat": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-28",
+   "title": "Hamburger Day",
+   "frames": [
+    27,
+    103,
+    104,
+    105
+   ],
+   "shadow": true
+  },
+  "summit_goggles": {
+   "index": 28,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-29",
+   "title": "Everest Day",
+   "frames": [
+    28,
+    106,
+    107,
+    108
+   ]
+  },
+  "watering_can": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    8,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-30",
+   "title": "Water a Flower Day",
+   "frames": [
+    29,
+    109,
+    110
+   ],
+   "shadow": true
+  },
+  "macaron_stack": {
+   "index": 30,
+   "kind": "head",
+   "anchor": [
+    9,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/May",
+   "sheet": "daily/costumes-05.png",
+   "date": "05-31",
+   "title": "Macaron Day",
+   "frames": [
+    30,
+    111,
+    112,
+    113
+   ],
+   "shadow": true
+  },
+  "spinning_top": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    9,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-01",
+   "title": "Children's Day",
+   "frames": [
+    0,
+    30,
+    31,
+    32
+   ],
+   "shadow": true
+  },
+  "whistle_lanyard": {
+   "index": 1,
+   "kind": "neck",
+   "anchor": [
+    7,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-02",
+   "title": "Lifeguard on Duty",
+   "frames": [
+    1,
+    33,
+    34
+   ]
+  },
+  "cycle_helmet": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    14,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-03",
+   "title": "World Bicycle Day",
+   "frames": [
+    2,
+    35
+   ],
+   "shadow": true
+  },
+  "cheese_wedge": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-04",
+   "title": "Cheese Day",
+   "frames": [
+    3,
+    36,
+    37
+   ],
+   "shadow": true
+  },
+  "seedling_tuft": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    8,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-05",
+   "title": "World Environment Day",
+   "frames": [
+    4,
+    38,
+    39
+   ],
+   "shadow": true
+  },
+  "lorgnette_handle": {
+   "index": 5,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-06",
+   "title": "National Eyewear Day",
+   "frames": [
+    5,
+    40,
+    41
+   ]
+  },
+  "double_scoop": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-07",
+   "title": "Ice Cream Scoop Day",
+   "frames": [
+    6,
+    42,
+    43
+   ],
+   "shadow": true
+  },
+  "coral_crown": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-08",
+   "title": "World Oceans Day",
+   "frames": [
+    7,
+    44,
+    45
+   ],
+   "shadow": true
+  },
+  "strawberry_cap": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    9,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-09",
+   "title": "Strawberry Season",
+   "frames": [
+    8,
+    46
+   ],
+   "shadow": true
+  },
+  "click_pen": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    15,
+    6
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-10",
+   "title": "Ballpoint Pen Day",
+   "frames": [
+    9,
+    47
+   ],
+   "shadow": true
+  },
+  "husk_cob": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-11",
+   "title": "Corn on the Cob Day",
+   "frames": [
+    10,
+    48,
+    49
+   ],
+   "shadow": true
+  },
+  "red_rose_tuck": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    5,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-12",
+   "title": "Red Rose Day",
+   "frames": [
+    11,
+    50
+   ],
+   "shadow": true
+  },
+  "measure_tape_scarf": {
+   "index": 12,
+   "kind": "neck",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-13",
+   "title": "Sewing Machine Day",
+   "frames": [
+    12,
+    51,
+    52
+   ]
+  },
+  "lemonade_apron": {
+   "index": 13,
+   "kind": "body",
+   "anchor": [
+    14,
+    7
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-14",
+   "title": "Lemonade Stand",
+   "frames": [
+    13,
+    53,
+    54
+   ]
+  },
+  "camera_tripod": {
+   "index": 14,
+   "kind": "body",
+   "anchor": [
+    23,
+    19
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-15",
+   "title": "Nature Photography Day",
+   "frames": [
+    14,
+    55,
+    56
+   ]
+  },
+  "kelp_fronds": {
+   "index": 15,
+   "kind": "body",
+   "anchor": [
+    12,
+    36
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-16",
+   "title": "World Sea Turtle Day",
+   "frames": [
+    15,
+    57,
+    58,
+    59
+   ]
+  },
+  "cactus_bloom": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-17",
+   "title": "Desert Bloom",
+   "frames": [
+    16,
+    60,
+    61
+   ],
+   "shadow": true
+  },
+  "maki_roll": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    11,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-18",
+   "title": "International Sushi Day",
+   "frames": [
+    17,
+    62,
+    63
+   ],
+   "shadow": true
+  },
+  "strawberry_moon": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-19",
+   "title": "Strawberry Moon",
+   "frames": [
+    18,
+    64,
+    65
+   ],
+   "shadow": true
+  },
+  "lightning_rod": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    4,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-20",
+   "title": "Summer Storm",
+   "frames": [
+    19,
+    66,
+    67
+   ],
+   "shadow": true
+  },
+  "lotus_bloom": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-21",
+   "title": "Yoga Day",
+   "frames": [
+    20,
+    68,
+    69
+   ],
+   "shadow": true
+  },
+  "sloth_hug": {
+   "index": 21,
+   "kind": "body",
+   "anchor": [
+    1,
+    27
+   ],
+   "layer": "over",
+   "category": "Behind",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-22",
+   "title": "World Rainforest Day",
+   "frames": [
+    21,
+    70,
+    71
+   ]
+  },
+  "blueprint_tube": {
+   "index": 22,
+   "kind": "body",
+   "anchor": [
+    6,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-23",
+   "title": "Women in Engineering Day",
+   "frames": [
+    22,
+    72
+   ]
+  },
+  "gossamer_wings": {
+   "index": 23,
+   "kind": "body",
+   "anchor": [
+    19,
+    28
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-24",
+   "title": "Fairy Day",
+   "frames": [
+    23,
+    73,
+    74
+   ]
+  },
+  "seafarer_cap": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    15,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-25",
+   "title": "Day of the Seafarer",
+   "frames": [
+    24,
+    75,
+    76
+   ],
+   "shadow": true
+  },
+  "canoe_vest": {
+   "index": 25,
+   "kind": "body",
+   "anchor": [
+    10,
+    8
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-26",
+   "title": "Canoe Day",
+   "frames": [
+    25,
+    77,
+    78,
+    79
+   ]
+  },
+  "visor_shades": {
+   "index": 26,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-27",
+   "title": "National Sunglasses Day",
+   "frames": [
+    26,
+    80,
+    81
+   ]
+  },
+  "full_turn_specs": {
+   "index": 27,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-28",
+   "title": "Tau Day",
+   "frames": [
+    27,
+    82,
+    83,
+    84
+   ]
+  },
+  "tropic_lei": {
+   "index": 28,
+   "kind": "neck",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-29",
+   "title": "Day of the Tropics",
+   "frames": [
+    28,
+    85,
+    86
+   ]
+  },
+  "asteroid_streak": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    15,
+    8
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/June",
+   "sheet": "daily/costumes-06.png",
+   "date": "06-30",
+   "title": "Asteroid Day",
+   "frames": [
+    29,
+    87,
+    88
+   ],
+   "shadow": true
+  },
+  "rubber_chicken": {
+   "index": 0,
+   "kind": "neck",
+   "anchor": [
+    23,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-01",
+   "title": "International Joke Day",
+   "frames": [
+    0,
+    31,
+    32
+   ]
+  },
+  "flying_saucer": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    15,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-02",
+   "title": "World UFO Day",
+   "frames": [
+    1,
+    33,
+    34,
+    35
+   ]
+  },
+  "straw_sunhat": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    16,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-03",
+   "title": "Beach Day",
+   "frames": [
+    2,
+    36,
+    37
+   ],
+   "shadow": true
+  },
+  "glow_stick_crown": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    14,
+    4
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-04",
+   "title": "Summer Night",
+   "frames": [
+    3,
+    38,
+    39,
+    40
+   ],
+   "shadow": true
+  },
+  "surf_wetsuit": {
+   "index": 4,
+   "kind": "body",
+   "anchor": [
+    13,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-05",
+   "title": "Surf's Up",
+   "frames": [
+    4,
+    41
+   ]
+  },
+  "kiss_mark": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    12,
+    5
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-06",
+   "title": "Kissing Day",
+   "frames": [
+    5,
+    42,
+    43
+   ],
+   "shadow": true
+  },
+  "choco_coin": {
+   "index": 6,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-07",
+   "title": "World Chocolate Day",
+   "frames": [
+    6,
+    44,
+    45
+   ]
+  },
+  "big_sunflower": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-08",
+   "title": "Sunflower Season",
+   "frames": [
+    7,
+    46,
+    47
+   ],
+   "shadow": true
+  },
+  "cateye_specs": {
+   "index": 8,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-09",
+   "title": "Fashion Day",
+   "frames": [
+    8,
+    48
+   ]
+  },
+  "pineapple_crest": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-10",
+   "title": "Pina Colada Day",
+   "frames": [
+    9,
+    49,
+    50
+   ],
+   "shadow": true
+  },
+  "swim_ring": {
+   "index": 10,
+   "kind": "neck",
+   "anchor": [
+    14,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-11",
+   "title": "Pool Day",
+   "frames": [
+    10,
+    51,
+    52
+   ]
+  },
+  "odd_eye_specs": {
+   "index": 11,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-12",
+   "title": "Different Colored Eyes Day",
+   "frames": [
+    11,
+    53,
+    54,
+    55
+   ]
+  },
+  "fry_carton": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-13",
+   "title": "French Fry Day",
+   "frames": [
+    12,
+    56,
+    57
+   ],
+   "shadow": true
+  },
+  "shark_fin": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    7,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-14",
+   "title": "Shark Awareness Day",
+   "frames": [
+    13,
+    58,
+    59
+   ],
+   "shadow": true
+  },
+  "garden_sprinkler": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-15",
+   "title": "Sprinkler Day",
+   "frames": [
+    14,
+    60,
+    61,
+    62
+   ],
+   "shadow": true
+  },
+  "snake_wrap": {
+   "index": 15,
+   "kind": "neck",
+   "anchor": [
+    13,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-16",
+   "title": "World Snake Day",
+   "frames": [
+    15,
+    63,
+    64
+   ]
+  },
+  "smiley_badge": {
+   "index": 16,
+   "kind": "neck",
+   "anchor": [
+    5,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-17",
+   "title": "World Emoji Day",
+   "frames": [
+    16,
+    65,
+    66
+   ]
+  },
+  "shell_necklace": {
+   "index": 17,
+   "kind": "neck",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-18",
+   "title": "Seashell Day",
+   "frames": [
+    17,
+    67
+   ]
+  },
+  "snorkel_set": {
+   "index": 18,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    9
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-19",
+   "title": "Snorkel Day",
+   "frames": [
+    18,
+    68,
+    69
+   ]
+  },
+  "lunar_lander": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-20",
+   "title": "Space Exploration Day",
+   "frames": [
+    19,
+    70,
+    71
+   ],
+   "shadow": true
+  },
+  "ice_lolly": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-21",
+   "title": "Ice Lolly Day",
+   "frames": [
+    20,
+    72,
+    73
+   ],
+   "shadow": true
+  },
+  "approx_pi_cap": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    12,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-22",
+   "title": "Pi Approximation Day",
+   "frames": [
+    21,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "soft_serve": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-23",
+   "title": "Vanilla Ice Cream Day",
+   "frames": [
+    22,
+    76,
+    77
+   ],
+   "shadow": true
+  },
+  "flight_goggles": {
+   "index": 23,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-24",
+   "title": "Aviation Pioneers Day",
+   "frames": [
+    23,
+    78
+   ]
+  },
+  "carousel_canopy": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-25",
+   "title": "Carousel Day",
+   "frames": [
+    24,
+    79,
+    80,
+    81
+   ],
+   "shadow": true
+  },
+  "firefly_jar": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-26",
+   "title": "Firefly Night",
+   "frames": [
+    25,
+    82,
+    83,
+    84
+   ],
+   "shadow": true
+  },
+  "monstera_leaf": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    12,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-27",
+   "title": "Houseplant Walk Day",
+   "frames": [
+    26,
+    85,
+    86
+   ],
+   "shadow": true
+  },
+  "butterfly_wings": {
+   "index": 27,
+   "kind": "body",
+   "anchor": [
+    19,
+    24
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-28",
+   "title": "Nature Conservation Day",
+   "frames": [
+    27,
+    87,
+    88,
+    89
+   ]
+  },
+  "tiger_ears": {
+   "index": 28,
+   "kind": "head",
+   "anchor": [
+    13,
+    7
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-29",
+   "title": "International Tiger Day",
+   "frames": [
+    28,
+    90
+   ],
+   "shadow": true
+  },
+  "friendship_beads": {
+   "index": 29,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-30",
+   "title": "Day of Friendship",
+   "frames": [
+    29,
+    91,
+    92
+   ]
+  },
+  "toasted_mallow": {
+   "index": 30,
+   "kind": "head",
+   "anchor": [
+    5,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/July",
+   "sheet": "daily/costumes-07.png",
+   "date": "07-31",
+   "title": "Campfire Night",
+   "frames": [
+    30,
+    93,
+    94,
+    95
+   ],
+   "shadow": true
+  },
+  "wheat_wreath": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-01",
+   "title": "Lammas Harvest",
+   "frames": [
+    0,
+    31,
+    32,
+    33
+   ],
+   "shadow": true
+  },
+  "wafer_sandwich": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-02",
+   "title": "Ice Cream Sandwich Day",
+   "frames": [
+    1,
+    34,
+    35
+   ],
+   "shadow": true
+  },
+  "melon_shades": {
+   "index": 2,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-03",
+   "title": "Watermelon Day",
+   "frames": [
+    2,
+    36,
+    37
+   ]
+  },
+  "owl_perch": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-04",
+   "title": "Owl Awareness Day",
+   "frames": [
+    3,
+    38,
+    39,
+    40
+   ],
+   "shadow": true
+  },
+  "oyster_pearl": {
+   "index": 4,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-05",
+   "title": "Oyster Day",
+   "frames": [
+    4,
+    41,
+    42,
+    43
+   ]
+  },
+  "float_mug": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-06",
+   "title": "Root Beer Float Day",
+   "frames": [
+    5,
+    44,
+    45,
+    46
+   ],
+   "shadow": true
+  },
+  "beacon_tower": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    8,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-07",
+   "title": "Lighthouse Day",
+   "frames": [
+    6,
+    47,
+    48
+   ],
+   "shadow": true
+  },
+  "whisker_mask": {
+   "index": 7,
+   "kind": "eyes",
+   "anchor": [
+    15,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-08",
+   "title": "International Cat Day",
+   "frames": [
+    7,
+    49,
+    50
+   ]
+  },
+  "book_stack": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    11,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-09",
+   "title": "Book Lovers Day",
+   "frames": [
+    8,
+    51,
+    52
+   ],
+   "shadow": true
+  },
+  "mane_crest": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    16,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-10",
+   "title": "World Lion Day",
+   "frames": [
+    9,
+    53,
+    54,
+    55
+   ],
+   "shadow": true
+  },
+  "beach_bucket": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    9,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-11",
+   "title": "Play in the Sand Day",
+   "frames": [
+    10,
+    56,
+    57
+   ],
+   "shadow": true
+  },
+  "perseid_streak": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    15,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-12",
+   "title": "Perseid Meteor Night",
+   "frames": [
+    11,
+    58,
+    59,
+    60
+   ],
+   "shadow": true
+  },
+  "lefty_wave": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    11,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-13",
+   "title": "Left-Handers Day",
+   "frames": [
+    12,
+    61,
+    62,
+    63
+   ],
+   "shadow": true
+  },
+  "lizard_lounge": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    14,
+    7
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-14",
+   "title": "World Lizard Day",
+   "frames": [
+    13,
+    64,
+    65,
+    66
+   ],
+   "shadow": true
+  },
+  "sleep_shade": {
+   "index": 14,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    6
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-15",
+   "title": "National Relaxation Day",
+   "frames": [
+    14,
+    67,
+    68,
+    69
+   ]
+  },
+  "gag_arrow_band": {
+   "index": 15,
+   "kind": "head",
+   "anchor": [
+    14,
+    6
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-16",
+   "title": "Tell a Joke Day",
+   "frames": [
+    15,
+    70
+   ],
+   "shadow": true
+  },
+  "blackberry_sprig": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    13,
+    8
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-17",
+   "title": "Blackberry Season",
+   "frames": [
+    16,
+    71,
+    72
+   ],
+   "shadow": true
+  },
+  "angler_bucket": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    15,
+    8
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-18",
+   "title": "Gone Fishing",
+   "frames": [
+    17,
+    73,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "shutter_eyes": {
+   "index": 18,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-19",
+   "title": "World Photography Day",
+   "frames": [
+    18,
+    76,
+    77,
+    78
+   ]
+  },
+  "radio_antenna": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-20",
+   "title": "National Radio Day",
+   "frames": [
+    19,
+    79,
+    80,
+    81
+   ],
+   "shadow": true
+  },
+  "pool_goggles": {
+   "index": 20,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-21",
+   "title": "Swim Goggles Day",
+   "frames": [
+    20,
+    82,
+    83,
+    84
+   ]
+  },
+  "pillow_coin": {
+   "index": 21,
+   "kind": "body",
+   "anchor": [
+    10,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-22",
+   "title": "Under the Pillow",
+   "frames": [
+    21,
+    85,
+    86
+   ]
+  },
+  "weather_windsock": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    9,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-23",
+   "title": "Ride the Wind Day",
+   "frames": [
+    22,
+    87,
+    88,
+    89
+   ],
+   "shadow": true
+  },
+  "waffle_iron": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-24",
+   "title": "National Waffle Day",
+   "frames": [
+    23,
+    90,
+    91
+   ],
+   "shadow": true
+  },
+  "tennis_visor": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    17,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-25",
+   "title": "Tennis Day",
+   "frames": [
+    24,
+    92,
+    93,
+    94
+   ],
+   "shadow": true
+  },
+  "floppy_hound": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    18,
+    4
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-26",
+   "title": "National Dog Day",
+   "frames": [
+    25,
+    95,
+    96,
+    97
+   ],
+   "shadow": true
+  },
+  "porch_ukulele": {
+   "index": 26,
+   "kind": "body",
+   "anchor": [
+    14,
+    12
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-27",
+   "title": "Ukulele Summer",
+   "frames": [
+    26,
+    98,
+    99,
+    100
+   ]
+  },
+  "polka_bowtie": {
+   "index": 27,
+   "kind": "neck",
+   "anchor": [
+    10,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-28",
+   "title": "National Bow Tie Day",
+   "frames": [
+    27,
+    101,
+    102,
+    103
+   ]
+  },
+  "storm_lantern": {
+   "index": 28,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-29",
+   "title": "Stormy Night",
+   "frames": [
+    28,
+    104,
+    105
+   ],
+   "shadow": true
+  },
+  "beach_ball": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-30",
+   "title": "National Beach Day",
+   "frames": [
+    29,
+    106,
+    107
+   ],
+   "shadow": true
+  },
+  "trail_pack": {
+   "index": 30,
+   "kind": "body",
+   "anchor": [
+    18,
+    29
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/August",
+   "sheet": "daily/costumes-08.png",
+   "date": "08-31",
+   "title": "Eat Outside Day",
+   "frames": [
+    30,
+    108,
+    109,
+    110
+   ]
+  },
+  "lunch_box": {
+   "index": 0,
+   "kind": "body",
+   "anchor": [
+    10,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-01",
+   "title": "Back to School",
+   "frames": [
+    0,
+    30,
+    31,
+    32
+   ]
+  },
+  "coconut_sipper": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-02",
+   "title": "World Coconut Day",
+   "frames": [
+    1,
+    33,
+    34
+   ],
+   "shadow": true
+  },
+  "skyscraper_spire": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-03",
+   "title": "Skyscraper Day",
+   "frames": [
+    2,
+    35,
+    36,
+    37
+   ],
+   "shadow": true
+  },
+  "pith_helmet": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    14,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-04",
+   "title": "Wildlife Day",
+   "frames": [
+    3,
+    38,
+    39
+   ],
+   "shadow": true
+  },
+  "pizza_cutter": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    13,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-05",
+   "title": "Cheese Pizza Day",
+   "frames": [
+    4,
+    40,
+    41,
+    42
+   ],
+   "shadow": true
+  },
+  "reading_lamp": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-06",
+   "title": "Read a Book Day",
+   "frames": [
+    5,
+    43
+   ],
+   "shadow": true
+  },
+  "stopwatch_lanyard": {
+   "index": 6,
+   "kind": "neck",
+   "anchor": [
+    8,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-07",
+   "title": "Marathon Season",
+   "frames": [
+    6,
+    44,
+    45,
+    46
+   ]
+  },
+  "chalk_slate": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    10,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-08",
+   "title": "Literacy Day",
+   "frames": [
+    7,
+    47,
+    48,
+    49
+   ],
+   "shadow": true
+  },
+  "teddy_hug": {
+   "index": 8,
+   "kind": "body",
+   "anchor": [
+    8,
+    8
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-09",
+   "title": "Teddy Bear Day",
+   "frames": [
+    8,
+    50,
+    51
+   ]
+  },
+  "bright_idea_bulb": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    10,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-10",
+   "title": "Swap Ideas Day",
+   "frames": [
+    9,
+    52,
+    53
+   ],
+   "shadow": true
+  },
+  "acorn_cap": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-11",
+   "title": "Acorn Season",
+   "frames": [
+    10,
+    54
+   ],
+   "shadow": true
+  },
+  "handheld_console": {
+   "index": 11,
+   "kind": "body",
+   "anchor": [
+    11,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-12",
+   "title": "Video Games Day",
+   "frames": [
+    11,
+    55,
+    56,
+    57
+   ]
+  },
+  "fortune_cookie_cap": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-13",
+   "title": "Fortune Cookie Day",
+   "frames": [
+    12,
+    58,
+    59
+   ],
+   "shadow": true
+  },
+  "grape_bunch_hat": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-14",
+   "title": "Grape Harvest",
+   "frames": [
+    13,
+    60,
+    61
+   ],
+   "shadow": true
+  },
+  "felt_fedora": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    14,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-15",
+   "title": "Felt Hat Day",
+   "frames": [
+    14,
+    62
+   ],
+   "shadow": true
+  },
+  "ozone_visor": {
+   "index": 15,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-16",
+   "title": "Ozone Layer Day",
+   "frames": [
+    15,
+    63,
+    64
+   ]
+  },
+  "apple_basket": {
+   "index": 16,
+   "kind": "body",
+   "anchor": [
+    17,
+    30
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-17",
+   "title": "Apple Harvest",
+   "frames": [
+    16,
+    65,
+    66,
+    67
+   ]
+  },
+  "cheese_slice_drape": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    12,
+    4
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-18",
+   "title": "Cheeseburger Day",
+   "frames": [
+    17,
+    68,
+    69
+   ],
+   "shadow": true
+  },
+  "eyepatch_hoop": {
+   "index": 18,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    5
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-19",
+   "title": "Talk Like a Pirate Day",
+   "frames": [
+    18,
+    70,
+    71
+   ]
+  },
+  "puddle_boat": {
+   "index": 19,
+   "kind": "head",
+   "anchor": [
+    12,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-20",
+   "title": "Paper Boat Day",
+   "frames": [
+    19,
+    72,
+    73
+   ],
+   "shadow": true
+  },
+  "peace_dove": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    11,
+    6
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-21",
+   "title": "International Day of Peace",
+   "frames": [
+    20,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "equinox_sunmoon": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-22",
+   "title": "Autumn Equinox",
+   "frames": [
+    21,
+    76,
+    77
+   ],
+   "shadow": true
+  },
+  "hedgehog_spines": {
+   "index": 22,
+   "kind": "body",
+   "anchor": [
+    19,
+    29
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-23",
+   "title": "Hedgehog Season",
+   "frames": [
+    22,
+    78,
+    79
+   ]
+  },
+  "exclamation_bob": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    4,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-24",
+   "title": "Punctuation Day",
+   "frames": [
+    23,
+    80,
+    81
+   ],
+   "shadow": true
+  },
+  "lobster_claws": {
+   "index": 24,
+   "kind": "body",
+   "anchor": [
+    19,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-25",
+   "title": "Lobster Day",
+   "frames": [
+    24,
+    82,
+    83,
+    84
+   ]
+  },
+  "letter_blocks": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    9,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-26",
+   "title": "Day of Languages",
+   "frames": [
+    25,
+    85,
+    86
+   ],
+   "shadow": true
+  },
+  "tourist_camera": {
+   "index": 26,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-27",
+   "title": "World Tourism Day",
+   "frames": [
+    26,
+    87,
+    88
+   ]
+  },
+  "alpine_feather_hat": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-28",
+   "title": "Alpine Feather Hat",
+   "frames": [
+    27,
+    89,
+    90
+   ],
+   "shadow": true
+  },
+  "heart_pendant": {
+   "index": 28,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-29",
+   "title": "World Heart Day",
+   "frames": [
+    28,
+    91
+   ]
+  },
+  "podcast_headset": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    17,
+    5
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/September",
+   "sheet": "daily/costumes-09.png",
+   "date": "09-30",
+   "title": "International Podcast Day",
+   "frames": [
+    29,
+    92,
+    93
+   ],
+   "shadow": true
+  },
+  "coffee_mug_hat": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    8,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-01",
+   "title": "Coffee Day",
+   "frames": [
+    0,
+    31,
+    32
+   ],
+   "shadow": true
+  },
+  "toadstool_cap": {
+   "index": 1,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-02",
+   "title": "Mushroom Season",
+   "frames": [
+    1,
+    33
+   ],
+   "shadow": true
+  },
+  "windup_key": {
+   "index": 2,
+   "kind": "body",
+   "anchor": [
+    7,
+    35
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-03",
+   "title": "Wind-Up Day",
+   "frames": [
+    2,
+    34,
+    35,
+    36
+   ]
+  },
+  "giraffe_ossicones": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    13,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-04",
+   "title": "World Animal Day",
+   "frames": [
+    3,
+    37
+   ],
+   "shadow": true
+  },
+  "ear_pencil": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    12,
+    4
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-05",
+   "title": "World Teachers' Day",
+   "frames": [
+    4,
+    38
+   ],
+   "shadow": true
+  },
+  "straw_collar": {
+   "index": 5,
+   "kind": "neck",
+   "anchor": [
+    13,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-06",
+   "title": "Scarecrow Season",
+   "frames": [
+    5,
+    39,
+    40
+   ]
+  },
+  "toy_rocket": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-07",
+   "title": "World Space Week",
+   "frames": [
+    6,
+    41,
+    42
+   ],
+   "shadow": true
+  },
+  "octopus_hat": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-08",
+   "title": "World Octopus Day",
+   "frames": [
+    7,
+    43,
+    44,
+    45
+   ],
+   "shadow": true
+  },
+  "mail_satchel": {
+   "index": 8,
+   "kind": "body",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-09",
+   "title": "World Post Day",
+   "frames": [
+    8,
+    46,
+    47
+   ]
+  },
+  "sunbreak_cloud": {
+   "index": 9,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-10",
+   "title": "Mental Health Day",
+   "frames": [
+    9,
+    48,
+    49,
+    50
+   ],
+   "shadow": true
+  },
+  "smoke_alarm_hat": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    15,
+    6
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-11",
+   "title": "Fire Prevention Week",
+   "frames": [
+    10,
+    51,
+    52
+   ],
+   "shadow": true
+  },
+  "rain_souwester": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    13,
+    7
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-12",
+   "title": "Autumn Downpour",
+   "frames": [
+    11,
+    53,
+    54,
+    55
+   ],
+   "shadow": true
+  },
+  "upturned_collar": {
+   "index": 12,
+   "kind": "neck",
+   "anchor": [
+    15,
+    2
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-13",
+   "title": "Mystery Night",
+   "frames": [
+    12,
+    56
+   ]
+  },
+  "cupcake_swirl": {
+   "index": 13,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-14",
+   "title": "Dessert Day",
+   "frames": [
+    13,
+    57
+   ],
+   "shadow": true
+  },
+  "soap_bubbles": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    11,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-15",
+   "title": "Handwashing Day",
+   "frames": [
+    14,
+    58,
+    59,
+    60
+   ],
+   "shadow": true
+  },
+  "checked_bib": {
+   "index": 15,
+   "kind": "neck",
+   "anchor": [
+    9,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-16",
+   "title": "World Food Day",
+   "frames": [
+    15,
+    61,
+    62
+   ]
+  },
+  "owl_eyes": {
+   "index": 16,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    4
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-17",
+   "title": "Owl Night",
+   "frames": [
+    16,
+    63,
+    64,
+    65
+   ]
+  },
+  "knitted_mittens": {
+   "index": 17,
+   "kind": "neck",
+   "anchor": [
+    16,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-18",
+   "title": "Mitten Weather",
+   "frames": [
+    17,
+    66,
+    67
+   ]
+  },
+  "maple_pile": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-19",
+   "title": "Falling Leaves",
+   "frames": [
+    18,
+    68,
+    69,
+    70
+   ],
+   "shadow": true
+  },
+  "foil_blanket": {
+   "index": 19,
+   "kind": "body",
+   "anchor": [
+    16,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-20",
+   "title": "Marathon Day",
+   "frames": [
+    19,
+    71,
+    72,
+    73
+   ]
+  },
+  "red_apple": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    8,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-21",
+   "title": "Apple Day",
+   "frames": [
+    20,
+    74,
+    75
+   ],
+   "shadow": true
+  },
+  "goalie_mask": {
+   "index": 21,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-22",
+   "title": "Hockey Night",
+   "frames": [
+    21,
+    76
+   ]
+  },
+  "lab_flask": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-23",
+   "title": "Mole Day",
+   "frames": [
+    22,
+    77,
+    78,
+    79
+   ],
+   "shadow": true
+  },
+  "band_shako": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-24",
+   "title": "Marching Band Day",
+   "frames": [
+    23,
+    80,
+    81,
+    82
+   ],
+   "shadow": true
+  },
+  "pasta_bowl": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-25",
+   "title": "World Pasta Day",
+   "frames": [
+    24,
+    83,
+    84
+   ],
+   "shadow": true
+  },
+  "pumpkin_ribs": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-26",
+   "title": "Pumpkin Day",
+   "frames": [
+    25,
+    85,
+    86
+   ],
+   "shadow": true
+  },
+  "spider_thread": {
+   "index": 26,
+   "kind": "neck",
+   "anchor": [
+    4,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-27",
+   "title": "Spooky Spider",
+   "frames": [
+    26,
+    87,
+    88,
+    89
+   ]
+  },
+  "film_reel": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    7,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-28",
+   "title": "Animation Day",
+   "frames": [
+    27,
+    90,
+    91,
+    92
+   ],
+   "shadow": true
+  },
+  "roosting_bat": {
+   "index": 28,
+   "kind": "head",
+   "anchor": [
+    11,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-29",
+   "title": "Bat Night",
+   "frames": [
+    28,
+    93,
+    94
+   ],
+   "shadow": true
+  },
+  "mummy_wrap": {
+   "index": 29,
+   "kind": "eyes",
+   "anchor": [
+    16,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-30",
+   "title": "Mummy Wrap",
+   "frames": [
+    29,
+    95,
+    96
+   ]
+  },
+  "boo_ghost": {
+   "index": 30,
+   "kind": "body",
+   "anchor": [
+    3,
+    31
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/October",
+   "sheet": "daily/costumes-10.png",
+   "date": "10-31",
+   "title": "Halloween",
+   "frames": [
+    30,
+    97,
+    98,
+    99
+   ]
+  },
+  "broccoli_floret": {
+   "index": 0,
+   "kind": "head",
+   "anchor": [
+    9,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-01",
+   "title": "World Vegan Day",
+   "frames": [
+    0,
+    30
+   ],
+   "shadow": true
+  },
+  "marigold_garland": {
+   "index": 1,
+   "kind": "neck",
+   "anchor": [
+    16,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-02",
+   "title": "Marigold Day",
+   "frames": [
+    1,
+    31,
+    32,
+    33
+   ]
+  },
+  "jelly_dome": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    13,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-03",
+   "title": "World Jellyfish Day",
+   "frames": [
+    2,
+    34,
+    35
+   ],
+   "shadow": true
+  },
+  "lollipop_specs": {
+   "index": 3,
+   "kind": "eyes",
+   "anchor": [
+    13,
+    3
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-04",
+   "title": "Candy Day",
+   "frames": [
+    3,
+    36,
+    37,
+    38
+   ]
+  },
+  "geese_flock": {
+   "index": 4,
+   "kind": "head",
+   "anchor": [
+    14,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-05",
+   "title": "Migration Watch",
+   "frames": [
+    4,
+    39,
+    40
+   ]
+  },
+  "brass_sax": {
+   "index": 5,
+   "kind": "body",
+   "anchor": [
+    10,
+    8
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-06",
+   "title": "Saxophone Day",
+   "frames": [
+    5,
+    41,
+    42,
+    43
+   ]
+  },
+  "newspaper_fold_hat": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    14,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-07",
+   "title": "Drizzly Day",
+   "frames": [
+    6,
+    44,
+    45
+   ],
+   "shadow": true
+  },
+  "xray_plate": {
+   "index": 7,
+   "kind": "body",
+   "anchor": [
+    9,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-08",
+   "title": "Radiology Day",
+   "frames": [
+    7,
+    46,
+    47
+   ]
+  },
+  "cog_crown": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-09",
+   "title": "Inventors Day",
+   "frames": [
+    8,
+    48,
+    49,
+    50
+   ],
+   "shadow": true
+  },
+  "lab_goggles": {
+   "index": 9,
+   "kind": "eyes",
+   "anchor": [
+    12,
+    1
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-10",
+   "title": "World Science Day",
+   "frames": [
+    9,
+    51,
+    52
+   ]
+  },
+  "poppy_pin": {
+   "index": 10,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-11",
+   "title": "Remembrance Day",
+   "frames": [
+    10,
+    53
+   ]
+  },
+  "pinecone_topper": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    7,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-12",
+   "title": "Pinecone Season",
+   "frames": [
+    11,
+    54,
+    55
+   ],
+   "shadow": true
+  },
+  "hug_arms": {
+   "index": 12,
+   "kind": "body",
+   "anchor": [
+    16,
+    8
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-13",
+   "title": "World Kindness Day",
+   "frames": [
+    12,
+    56
+   ]
+  },
+  "hot_water_bottle": {
+   "index": 13,
+   "kind": "body",
+   "anchor": [
+    8,
+    11
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-14",
+   "title": "Cosy Night",
+   "frames": [
+    13,
+    57,
+    58
+   ]
+  },
+  "patch_quilt": {
+   "index": 14,
+   "kind": "body",
+   "anchor": [
+    16,
+    6
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-15",
+   "title": "Hibernation Day",
+   "frames": [
+    14,
+    59
+   ]
+  },
+  "jigsaw_pair": {
+   "index": 15,
+   "kind": "neck",
+   "anchor": [
+    11,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-16",
+   "title": "Day for Tolerance",
+   "frames": [
+    15,
+    60,
+    61
+   ]
+  },
+  "yarn_ball": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-17",
+   "title": "Knitting Day",
+   "frames": [
+    16,
+    62,
+    63
+   ],
+   "shadow": true
+  },
+  "cocoa_mug": {
+   "index": 17,
+   "kind": "head",
+   "anchor": [
+    8,
+    13
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-18",
+   "title": "Hot Cocoa Day",
+   "frames": [
+    17,
+    64,
+    65,
+    66
+   ],
+   "shadow": true
+  },
+  "plunger_hat": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-19",
+   "title": "World Toilet Day",
+   "frames": [
+    18,
+    67,
+    68
+   ],
+   "shadow": true
+  },
+  "balloon_bunch": {
+   "index": 19,
+   "kind": "body",
+   "anchor": [
+    14,
+    34
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-20",
+   "title": "World Children's Day",
+   "frames": [
+    19,
+    69,
+    70,
+    71
+   ]
+  },
+  "retro_tv": {
+   "index": 20,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-21",
+   "title": "World Television Day",
+   "frames": [
+    20,
+    72,
+    73,
+    74
+   ],
+   "shadow": true
+  },
+  "deerstalker": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    15,
+    9
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-22",
+   "title": "Detective Day",
+   "frames": [
+    21,
+    75
+   ],
+   "shadow": true
+  },
+  "nautilus_shell": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-23",
+   "title": "Fibonacci Day",
+   "frames": [
+    22,
+    76,
+    77,
+    78
+   ],
+   "shadow": true
+  },
+  "dna_helix": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-24",
+   "title": "Evolution Day",
+   "frames": [
+    23,
+    79,
+    80,
+    81
+   ],
+   "shadow": true
+  },
+  "arrow_quiver": {
+   "index": 24,
+   "kind": "body",
+   "anchor": [
+    1,
+    17
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-25",
+   "title": "Archery Day",
+   "frames": [
+    24,
+    82,
+    83
+   ]
+  },
+  "piping_bag": {
+   "index": 25,
+   "kind": "head",
+   "anchor": [
+    7,
+    13
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-26",
+   "title": "Cake Day",
+   "frames": [
+    25,
+    84,
+    85
+   ],
+   "shadow": true
+  },
+  "pincushion_hat": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    10,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-27",
+   "title": "Pins and Needles Day",
+   "frames": [
+    26,
+    86,
+    87
+   ],
+   "shadow": true
+  },
+  "red_planet": {
+   "index": 27,
+   "kind": "head",
+   "anchor": [
+    11,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-28",
+   "title": "Red Planet Day",
+   "frames": [
+    27,
+    88,
+    89,
+    90
+   ],
+   "shadow": true
+  },
+  "bolo_tie": {
+   "index": 28,
+   "kind": "neck",
+   "anchor": [
+    5,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-29",
+   "title": "Square Dance Day",
+   "frames": [
+    28,
+    91,
+    92
+   ]
+  },
+  "tam_o_shanter": {
+   "index": 29,
+   "kind": "head",
+   "anchor": [
+    14,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/November",
+   "sheet": "daily/costumes-11.png",
+   "date": "11-30",
+   "title": "St Andrew's Day",
+   "frames": [
+    29,
+    93
+   ],
+   "shadow": true
+  },
+  "awareness_ribbon": {
+   "index": 0,
+   "kind": "neck",
+   "anchor": [
+    7,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-01",
+   "title": "World AIDS Day",
+   "frames": [
+    0,
+    31,
+    32,
+    33
+   ]
+  },
+  "toboggan_back": {
+   "index": 1,
+   "kind": "body",
+   "anchor": [
+    1,
+    22
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-02",
+   "title": "Sledding Day",
+   "frames": [
+    1,
+    34,
+    35
+   ]
+  },
+  "antler_rack": {
+   "index": 2,
+   "kind": "head",
+   "anchor": [
+    15,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-03",
+   "title": "Reindeer Antlers",
+   "frames": [
+    2,
+    36
+   ],
+   "shadow": true
+  },
+  "gingerbread_cookie": {
+   "index": 3,
+   "kind": "head",
+   "anchor": [
+    11,
+    7
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-04",
+   "title": "Cookie Day",
+   "frames": [
+    3,
+    37,
+    38,
+    39
+   ],
+   "shadow": true
+  },
+  "volunteer_sash": {
+   "index": 4,
+   "kind": "body",
+   "anchor": [
+    13,
+    8
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-05",
+   "title": "Volunteer Day",
+   "frames": [
+    4,
+    40
+   ]
+  },
+  "nicholas_mitre": {
+   "index": 5,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-06",
+   "title": "St Nicholas Day",
+   "frames": [
+    5,
+    41
+   ],
+   "shadow": true
+  },
+  "pilot_peak_cap": {
+   "index": 6,
+   "kind": "head",
+   "anchor": [
+    12,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-07",
+   "title": "Civil Aviation Day",
+   "frames": [
+    6,
+    42,
+    43
+   ],
+   "shadow": true
+  },
+  "snowman_hat": {
+   "index": 7,
+   "kind": "head",
+   "anchor": [
+    6,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-08",
+   "title": "Build a Snowman",
+   "frames": [
+    7,
+    44
+   ],
+   "shadow": true
+  },
+  "cinnamon_swirl": {
+   "index": 8,
+   "kind": "head",
+   "anchor": [
+    10,
+    11
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-09",
+   "title": "Pastry Day",
+   "frames": [
+    8,
+    45,
+    46
+   ],
+   "shadow": true
+  },
+  "laureate_medal": {
+   "index": 9,
+   "kind": "neck",
+   "anchor": [
+    6,
+    1
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-10",
+   "title": "Nobel Prize Day",
+   "frames": [
+    9,
+    47,
+    48,
+    49
+   ]
+  },
+  "summit_peak": {
+   "index": 10,
+   "kind": "head",
+   "anchor": [
+    12,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-11",
+   "title": "Mountain Day",
+   "frames": [
+    10,
+    50
+   ],
+   "shadow": true
+  },
+  "poinsettia_bloom": {
+   "index": 11,
+   "kind": "head",
+   "anchor": [
+    5,
+    9
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-12",
+   "title": "Poinsettia Day",
+   "frames": [
+    11,
+    51,
+    52
+   ],
+   "shadow": true
+  },
+  "lucia_candle_crown": {
+   "index": 12,
+   "kind": "head",
+   "anchor": [
+    12,
+    11
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-13",
+   "title": "St Lucia Day",
+   "frames": [
+    12,
+    53,
+    54
+   ],
+   "shadow": true
+  },
+  "stargazer_scope": {
+   "index": 13,
+   "kind": "eyes",
+   "anchor": [
+    1,
+    10
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-14",
+   "title": "Meteor Shower Night",
+   "frames": [
+    13,
+    55,
+    56,
+    57
+   ]
+  },
+  "mistletoe_sprig": {
+   "index": 14,
+   "kind": "head",
+   "anchor": [
+    10,
+    10
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-15",
+   "title": "Mistletoe Day",
+   "frames": [
+    14,
+    58,
+    59
+   ],
+   "shadow": true
+  },
+  "jingle_collar": {
+   "index": 15,
+   "kind": "neck",
+   "anchor": [
+    12,
+    2
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-16",
+   "title": "Jingle Bells",
+   "frames": [
+    15,
+    60,
+    61
+   ]
+  },
+  "biplane_topper": {
+   "index": 16,
+   "kind": "head",
+   "anchor": [
+    13,
+    8
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-17",
+   "title": "Wright Brothers Day",
+   "frames": [
+    16,
+    62,
+    63,
+    64
+   ],
+   "shadow": true
+  },
+  "gift_ribbon_sash": {
+   "index": 17,
+   "kind": "body",
+   "anchor": [
+    13,
+    5
+   ],
+   "layer": "over",
+   "category": "Body",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-18",
+   "title": "Gift Wrap Day",
+   "frames": [
+    17,
+    65
+   ]
+  },
+  "evergreen_sprig": {
+   "index": 18,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-19",
+   "title": "Look for an Evergreen Day",
+   "frames": [
+    18,
+    66,
+    67
+   ],
+   "shadow": true
+  },
+  "choir_ruff": {
+   "index": 19,
+   "kind": "neck",
+   "anchor": [
+    17,
+    8
+   ],
+   "layer": "over",
+   "category": "Neck",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-20",
+   "title": "Go Caroling Day",
+   "frames": [
+    19,
+    68,
+    69
+   ]
+  },
+  "crossword_specs": {
+   "index": 20,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    2
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-21",
+   "title": "Crossword Puzzle Day",
+   "frames": [
+    20,
+    70
+   ]
+  },
+  "longest_night_cap": {
+   "index": 21,
+   "kind": "head",
+   "anchor": [
+    13,
+    10
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-22",
+   "title": "Longest Night",
+   "frames": [
+    21,
+    71,
+    72
+   ],
+   "shadow": true
+  },
+  "elf_bell_hat": {
+   "index": 22,
+   "kind": "head",
+   "anchor": [
+    10,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-23",
+   "title": "Elf Hat",
+   "frames": [
+    22,
+    73,
+    74
+   ],
+   "shadow": true
+  },
+  "nightcap_tassel": {
+   "index": 23,
+   "kind": "head",
+   "anchor": [
+    15,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-24",
+   "title": "Christmas Eve",
+   "frames": [
+    23,
+    75
+   ],
+   "shadow": true
+  },
+  "holly_wreath_crown": {
+   "index": 24,
+   "kind": "head",
+   "anchor": [
+    14,
+    7
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-25",
+   "title": "Christmas Day",
+   "frames": [
+    24,
+    76,
+    77,
+    78
+   ],
+   "shadow": true
+  },
+  "candy_cane_specs": {
+   "index": 25,
+   "kind": "eyes",
+   "anchor": [
+    11,
+    5
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-26",
+   "title": "Candy Cane Day",
+   "frames": [
+    25,
+    79,
+    80
+   ]
+  },
+  "fruitcake_loaf": {
+   "index": 26,
+   "kind": "head",
+   "anchor": [
+    11,
+    7
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-27",
+   "title": "Fruitcake Day",
+   "frames": [
+    26,
+    81
+   ],
+   "shadow": true
+  },
+  "dealer_visor": {
+   "index": 27,
+   "kind": "eyes",
+   "anchor": [
+    14,
+    7
+   ],
+   "layer": "over",
+   "category": "Eyes",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-28",
+   "title": "Card Playing Day",
+   "frames": [
+    27,
+    82
+   ]
+  },
+  "ticktock_clockface": {
+   "index": 28,
+   "kind": "head",
+   "anchor": [
+    9,
+    12
+   ],
+   "layer": "over",
+   "category": "Hats",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-29",
+   "title": "Tick Tock Day",
+   "frames": [
+    28,
+    83,
+    84,
+    85
+   ],
+   "shadow": true
+  },
+  "aurora_veil": {
+   "index": 29,
+   "kind": "body",
+   "anchor": [
+    20,
+    34
+   ],
+   "layer": "behind",
+   "category": "Behind",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-30",
+   "title": "Polar Night",
+   "frames": [
+    29,
+    86,
+    87,
+    88
+   ]
+  },
+  "nye_fireworks": {
+   "index": 30,
+   "kind": "head",
+   "anchor": [
+    13,
+    12
+   ],
+   "layer": "over",
+   "category": "Head",
+   "group": "Calendar/December",
+   "sheet": "daily/costumes-12.png",
+   "date": "12-31",
+   "title": "New Year's Eve",
+   "frames": [
+    30,
+    89,
+    90,
+    91
+   ],
+   "shadow": true
+  }
+ }
+}

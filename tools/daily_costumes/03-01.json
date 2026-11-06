@@ -1,0 +1,79 @@
+{
+ "date": "03-01",
+ "name": "daffodil_bloom",
+ "title": "St David's Day",
+ "theme": "a big gold daffodil with a flame trumpet on a green stalk and leaf; the bloom nods side to side",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......GGG.......",
+  "......GGGGG......",
+  "..GGG.GGGGG.GGG..",
+  ".GGGGGFFFFFGGGGG.",
+  ".GGGGGFFFFFGGGGG.",
+  "..GGGGFFDFFGGGG..",
+  "..GGGGFFFFFGGGG..",
+  ".GGGGGFFFFFGGGGG.",
+  ".GGGGGGGGGGGGGGG.",
+  "..GGG.GGGGG.GGG..",
+  ".......GGG.......",
+  "........NN.NN....",
+  "........NNNN.....",
+  "........NN......."
+ ],
+ "frames": [
+  [
+   "......GGG........",
+   ".....GGGGG.......",
+   ".GGG.GGGGG.GGG...",
+   "GGGGGFFFFFGGGGG..",
+   "GGGGGFFFFFGGGGG..",
+   ".GGGGFFDFFGGGG...",
+   ".GGGGFFFFFGGGG...",
+   "GGGGGFFFFFGGGGG..",
+   "GGGGGGGGGGGGGGG..",
+   ".GGG.GGGGG.GGG...",
+   "......GGG........",
+   "........NN.NN....",
+   "........NNNN.....",
+   "........NN......."
+  ],
+  [
+   ".......GGG.......",
+   "......GGGGG......",
+   "..GGG.GGGGG.GGG..",
+   ".GGGGGFFFFFGGGGG.",
+   ".GGGGGFFFFFGGGGG.",
+   "..GGGGFFDFFGGGG..",
+   "..GGGGFFFFFGGGG..",
+   ".GGGGGFFFFFGGGGG.",
+   ".GGGGGGGGGGGGGGG.",
+   "..GGG.GGGGG.GGG..",
+   ".......GGG.......",
+   "........NN..N....",
+   "........NNNNN....",
+   "........NN......."
+  ],
+  [
+   "........GGG......",
+   ".......GGGGG.....",
+   "...GGG.GGGGG.GGG.",
+   "..GGGGGFFFFFGGGGG",
+   "..GGGGGFFFFFGGGGG",
+   "...GGGGFFDFFGGGG.",
+   "...GGGGFFFFFGGGG.",
+   "..GGGGGFFFFFGGGGG",
+   "..GGGGGGGGGGGGGGG",
+   "...GGG.GGGGG.GGG.",
+   "........GGG......",
+   "........NN..N....",
+   "........NNNNN....",
+   "........NN......."
+  ]
+ ]
+}

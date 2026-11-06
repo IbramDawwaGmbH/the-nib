@@ -1,0 +1,55 @@
+{
+  "date": "08-28",
+  "name": "polka_bowtie",
+  "title": "National Bow Tie Day",
+  "theme": "an oversized red polka-dot bow tie; the loops wiggle",
+  "category": "Neck",
+  "kind": "neck",
+  "anchor": [
+    9,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    "...................",
+    "RRRR...........RRRR",
+    "RRRRRR..DDD..RRRRRR",
+    "RWWRRRRRDDDRRRRRWWR",
+    "RWWRRRRRDDDRRRRRWWR",
+    "RRRRRR..DDD..RRRRRR",
+    "RRRR...........RRRR",
+    "..................."
+  ],
+  "frames": [
+    [
+      "RRRR...............",
+      "RRRRRR.........RRRR",
+      "RWWRRRRRDDD..RRRRRR",
+      "RWWRRRRRDDDRRRRRWWR",
+      "RRRRRR..DDDRRRRRWWR",
+      "RRRR....DDD..RRRRRR",
+      "...............RRRR",
+      "..................."
+    ],
+    [
+      "...............RRRR",
+      "RRRR.........RRRRRR",
+      "RRRRRR..DDDRRRRRWWR",
+      "RWWRRRRRDDDRRRRRWWR",
+      "RWWRRRRRDDD..RRRRRR",
+      "RRRRRR..DDD....RRRR",
+      "RRRR...............",
+      "..................."
+    ],
+    [
+      "...................",
+      "RRRR...........RRRR",
+      "RRRRRR..DDD..RRRRRR",
+      "RWWRRRRRDDR.RRRRWWR",
+      "RWWRRRRRDDR.RRRRWWR",
+      "RRRRRR..DDD..RRRRRR",
+      "RRRR...........RRRR",
+      "..................."
+    ]
+  ]
+}

@@ -1,0 +1,51 @@
+{
+ "date": "12-12",
+ "name": "poinsettia_bloom",
+ "title": "Poinsettia Day",
+ "theme": "a big red poinsettia worn on the side of his head: six pointed petals round golden centre dots, two green leaf tips; the centre twinkles and a petal droops",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  4,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......RR.......",
+  "......RRRR......",
+  ".....RRRRRR.....",
+  "..RRRRRRRRRRRR..",
+  "RRRRRRGGGRRRRRRR",
+  "..RRRRRRRRRRRR..",
+  "....RRR..RRR....",
+  "...RRR....RRR...",
+  "NNNRR......RR...",
+  ".NN............."
+ ],
+ "frames": [
+  [
+   ".......RR.......",
+   "......RRRR......",
+   ".....RRRRRR.....",
+   "..RRRRRRRRRRRR..",
+   "RRRRRRGWGRRRRRRR",
+   "..RRRRRRRRRRRR..",
+   "....RRR..RRR....",
+   "...RRR....RRR...",
+   "NNNRR......RR...",
+   ".NN............."
+  ],
+  [
+   ".......RR.......",
+   "......RRRR......",
+   ".....RRRRRR.....",
+   "..RRRRRRRRRRRR..",
+   "RRRRRRWGGRRRRRRR",
+   "..RRRRRRRRRRRR..",
+   "....RRR..RRR....",
+   "...RRR....RRR...",
+   "NNNRR......R....",
+   ".NN.........R..."
+  ]
+ ]
+}

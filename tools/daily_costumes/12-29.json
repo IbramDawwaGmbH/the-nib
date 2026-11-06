@@ -1,0 +1,71 @@
+{
+  "date": "12-29",
+  "name": "ticktock_clockface",
+  "title": "Tick Tock Day",
+  "theme": "a round white clock face worn like an alarm clock, gold bells on top; the minute hand ticks round and the bells rock",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    8,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    ".GGG.WWWWWW.GGG.",
+    ".GGGWKKKKKKWGGG.",
+    ".GGGKWWAWWWKGGG.",
+    ".WKWWWWAWWWWWKW.",
+    "WKWWWWWAWAWWWWKW",
+    "WKWWWWWAAWWWWWKW",
+    "WKAWWWWAWWWWWAKW",
+    "WKWWWWWWWWWWWWKW",
+    ".WKWWWWWWWWWWKW.",
+    "..WKWWWAWWWWKW..",
+    "...WKKKKKKKKW...",
+    "...WWWWWWWWWW..."
+  ],
+  "frames": [
+    [
+      "GGG..WWWWWW..GGG",
+      "GGGWWKKKKKKWWGGG",
+      "GGGKKWWAWWWKKGGG",
+      ".WKWWWWWWWWWWKW.",
+      "WKWWWWWWWAWWWWKW",
+      "WKWWWWWWAWWWWWKW",
+      "WKAWWWWAAAAAWAKW",
+      "WKWWWWWWWWWWWWKW",
+      ".WKWWWWWWWWWWKW.",
+      "..WKWWWAWWWWKW..",
+      "...WKKKKKKKKW...",
+      "...WWWWWWWWWW..."
+    ],
+    [
+      ".GGG.WWWWWW.GGG.",
+      ".GGGWKKKKKKWGGG.",
+      ".GGGKWWAWWWKGGG.",
+      ".WKWWWWWWWWWWKW.",
+      "WKWWWWWWWAWWWWKW",
+      "WKWWWWWWAWWWWWKW",
+      "WKAWWWWAWWWWWAKW",
+      "WKWWWWWAWWWWWWKW",
+      ".WKWWWWAWWWWWKW.",
+      "..WKWWWAWWWWKW..",
+      "...WKKKKKKKKW...",
+      "...WWWWWWWWWW..."
+    ],
+    [
+      "GGG..WWWWWW..GGG",
+      "GGGWWKKKKKKWWGGG",
+      "GGGKKWWAWWWKKGGG",
+      ".WKWWWWWWWWWWKW.",
+      "WKWWWWWWWAWWWWKW",
+      "WKWWWWWWAWWWWWKW",
+      "WKAAAAAAWWWWWAKW",
+      "WKWWWWWWWWWWWWKW",
+      ".WKWWWWWWWWWWKW.",
+      "..WKWWWAWWWWKW..",
+      "...WKKKKKKKKW...",
+      "...WWWWWWWWWW..."
+    ]
+  ]
+}

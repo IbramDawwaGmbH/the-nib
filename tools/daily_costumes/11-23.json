@@ -1,0 +1,71 @@
+{
+ "date": "11-23",
+ "name": "nautilus_shell",
+ "title": "Fibonacci Day",
+ "theme": "a golden nautilus shell with one dark spiral line winding in from an opening at the bottom to the centre, and two white chamber highlights; a bright spark travels in along the spiral",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....GGGGGGGG.....",
+  "..GDDDDDDDDDDDDG..",
+  ".GGDGGGGWWGGGGDGG.",
+  "GGGDGGGGGGGGGGDGGG",
+  "GGGDGGDDDDDDGGDGGG",
+  "GGGDGGDDDGGDGGDGGG",
+  "GGGDGGGGGGGDGGDGGG",
+  "GGGDDDDDDDDDGGDGGG",
+  "GGGGGGGWWGGGGGDGGG",
+  ".GGGGGGGGGGGGGDGG.",
+  "..GGGGDDWWDDDDDG..",
+  "....GGGGGGGGGG...."
+ ],
+ "frames": [
+  [
+   ".....GGGGGGGG.....",
+   "..GDDDDDWWDDDDDG..",
+   ".GGDGGGGWWGGGGDGG.",
+   "GGGDGGGGGGGGGGDGGG",
+   "GGGDGGDDDDDDGGDGGG",
+   "GGGDGGDDDGGDGGDGGG",
+   "GGGDGGGGGGGDGGDGGG",
+   "GGGDDDDDDDDDGGDGGG",
+   "GGGGGGGWWGGGGGDGGG",
+   ".GGGGGGGGGGGGGDGG.",
+   "..GGGGDDDDDDDDDG..",
+   "....GGGGGGGGGG...."
+  ],
+  [
+   ".....GGGGGGGG.....",
+   "..GDDDDDDDDDDDDG..",
+   ".GGDGGGGWWGGGGDGG.",
+   "GGGDGGGGGGGGGGDGGG",
+   "GGGDGGDDDDDDGGDGGG",
+   "GGGDGGDDDGGDGGDGGG",
+   "GGGDGGGGGGGDGGDGGG",
+   "GGGDDDDDWWDDGGDGGG",
+   "GGGGGGGWWGGGGGDGGG",
+   ".GGGGGGGGGGGGGDGG.",
+   "..GGGGDDDDDDDDDG..",
+   "....GGGGGGGGGG...."
+  ],
+  [
+   ".....GGGGGGGG.....",
+   "..GDDDDDDDDDDDDG..",
+   ".GGDGGGGWWGGGGDGG.",
+   "GGGDGGGGGGGGGGDGGG",
+   "GGGDGGDDDDDDGGDGGG",
+   "GGGDGGDWWGGDGGDGGG",
+   "GGGDGGGGGGGDGGDGGG",
+   "GGGDDDDDDDDDGGDGGG",
+   "GGGGGGGWWGGGGGDGGG",
+   ".GGGGGGGGGGGGGDGG.",
+   "..GGGGDDDDDDDDDG..",
+   "....GGGGGGGGGG...."
+  ]
+ ]
+}

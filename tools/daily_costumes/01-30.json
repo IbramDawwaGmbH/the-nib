@@ -1,0 +1,57 @@
+{
+ "date": "01-30",
+ "name": "croissant_beret",
+ "title": "Croissant Day",
+ "theme": "a gold croissant crescent lying across his head like a beret with a flame-orange glaze; steam wisps rise",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  "......................",
+  "........W....W........",
+  "........W....W........",
+  ".....FFFFFFFFFFFF.....",
+  "...FFGGDGGGGGGDGGFF...",
+  "..FGGGGDGGGGGGDGGGGF..",
+  ".FGGGGGDGGGGGGDGGGGGF.",
+  ".GGGGGGDGGGGGGDGGGGGG.",
+  "FGGGGGGDGGGGGGDGGGGGGF",
+  "GGGGG............GGGGG",
+  "GGG................GGG"
+ ],
+ "frames": [
+  [
+   "......................",
+   ".........W..W.........",
+   ".........W..W.........",
+   "......................",
+   ".....FFFFFFFFFFFF.....",
+   "...FFGGDGGGGGGDGGFF...",
+   "..FGGGGDGGGGGGDGGGGF..",
+   ".FGGGGGDGGGGGGDGGGGGF.",
+   ".GGGGGGDGGGGGGDGGGGGG.",
+   "FGGGGGGDGGGGGGDGGGGGGF",
+   "GGGGG............GGGGG",
+   "GGG................GGG"
+  ],
+  [
+   "........W....W........",
+   "......................",
+   "......................",
+   "......................",
+   ".....FFFFFFFFFFFF.....",
+   "...FFGGDGGGGGGDGGFF...",
+   "..FGGGGDGGGGGGDGGGGF..",
+   ".FGGGGGDGGGGGGDGGGGGF.",
+   ".GGGGGGDGGGGGGDGGGGGG.",
+   "FGGGGGGDGGGGGGDGGGGGGF",
+   "GGGGG............GGGGG",
+   "GGG................GGG"
+  ]
+ ]
+}

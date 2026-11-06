@@ -1,0 +1,71 @@
+{
+ "date": "04-27",
+ "name": "morse_lamp",
+ "title": "Morse Code Day",
+ "theme": "a signal lamp on his head, silver drum on a charcoal base with a gold lamp face that flashes dot and dash",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  5,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....SSSS....",
+  "..SSSSSSSS..",
+  "..SSSGGSSS..",
+  "..SGGWWGGS..",
+  "..SGWWWWGS..",
+  "..SGWWWWGS..",
+  "..SGGWWGGS..",
+  "..SSSGGSSS..",
+  "..DDDDDDDD..",
+  ".AAAAAAAAAA.",
+  ".AAAAAAAAAA.",
+  ".AAAAAAAAAA."
+ ],
+ "frames": [
+  [
+   "....SSSS....",
+   "..SSSSSSSS..",
+   "..SSSGGSSS..",
+   "..SGGAAGGS..",
+   "..SGAAAAGS..",
+   "..SGAAAAGS..",
+   "..SGGAAGGS..",
+   "..SSSGGSSS..",
+   "..DDDDDDDD..",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA."
+  ],
+  [
+   "....SSSS....",
+   "..SSSSSSSS..",
+   "..SSSGGSSS..",
+   "..SGGWWGGS..",
+   "GGSGWWWWGSGG",
+   "GGSGWWWWGSGG",
+   "..SGGWWGGS..",
+   "..SSSGGSSS..",
+   "..DDDDDDDD..",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA."
+  ],
+  [
+   "....SSSS....",
+   "..SSSSSSSS..",
+   "..SSSGGSSS..",
+   "..SGGAAGGS..",
+   "..SGAGGAGS..",
+   "..SGAGGAGS..",
+   "..SGGAAGGS..",
+   "..SSSGGSSS..",
+   "..DDDDDDDD..",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA.",
+   ".AAAAAAAAAA."
+  ]
+ ]
+}

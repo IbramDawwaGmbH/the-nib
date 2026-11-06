@@ -1,0 +1,67 @@
+{
+ "date": "10-17",
+ "name": "owl_eyes",
+ "title": "Owl Night",
+ "theme": "big round gold owl glasses with feather tufts; the pupils glance side to side and the lids blink",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  3
+ ],
+ "layer": "over",
+ "pattern": [
+  "..K..............K..",
+  "..KK............KK..",
+  "..GGGGG......GGGGG..",
+  ".GGGGGGG....GGGGGGG.",
+  "GGGGGGGGG..GGGGGGGGG",
+  "GGGWAAAGG..GGGWAAAGG",
+  "GGGAAAAGGKKGGGAAAAGG",
+  "GGGAAAAGGKKGGGAAAAGG",
+  "GGGAAAAGG..GGGAAAAGG",
+  ".GGGGGGG....GGGGGGG.",
+  "..GGGGG......GGGGG.."
+ ],
+ "frames": [
+  [
+   "..K..............K..",
+   "..KK............KK..",
+   "..GGGGG......GGGGG..",
+   ".GGGGGGG....GGGGGGG.",
+   "GGGGGGGGG..GGGGGGGGG",
+   "GGWAAAGGG..GGWAAAGGG",
+   "GGAAAAGGGKKGGAAAAGGG",
+   "GGAAAAGGGKKGGAAAAGGG",
+   "GGAAAAGGG..GGAAAAGGG",
+   ".GGGGGGG....GGGGGGG.",
+   "..GGGGG......GGGGG.."
+  ],
+  [
+   "..K..............K..",
+   "..KK............KK..",
+   "..GGGGG......GGGGG..",
+   ".GGGGGGG....GGGGGGG.",
+   "GGGGGGGGG..GGGGGGGGG",
+   "GGGGWAAAG..GGGGWAAAG",
+   "GGGGAAAAGKKGGGGAAAAG",
+   "GGGGAAAAGKKGGGGAAAAG",
+   "GGGGAAAAG..GGGGAAAAG",
+   ".GGGGGGG....GGGGGGG.",
+   "..GGGGG......GGGGG.."
+  ],
+  [
+   "..K..............K..",
+   "..KK............KK..",
+   "..KKKKK......KKKKK..",
+   ".KKKKKKK....KKKKKKK.",
+   "KKKKKKKKK..KKKKKKKKK",
+   "KKKKKKKKK..KKKKKKKKK",
+   "GAAAAAAAGKKGAAAAAAAG",
+   "GGGGGGGGGKKGGGGGGGGG",
+   "GGGGGGGGG..GGGGGGGGG",
+   ".GGGGGGG....GGGGGGG.",
+   "..GGGGG......GGGGG.."
+  ]
+ ]
+}

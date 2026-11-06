@@ -1,0 +1,71 @@
+{
+ "date": "05-01",
+ "name": "maypole_ribbons",
+ "title": "May Day",
+ "theme": "a maypole on his head, brown pole with a green leaf tuft and four coloured ribbons that ripple round it",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......NNNNNN.......",
+  "......NNNNNNNN......",
+  "......NNNNNNNN......",
+  ".....RRGGODBBMM.....",
+  "....RRGG.OD.BBMM....",
+  "...RR.GG.OD.BB.MM...",
+  "..RR..GG.OD.BB..MM..",
+  ".RR..GG..OD..BB..MM.",
+  "RR..GG...OD...BB..MM",
+  "RR..GG...OD...BB..MM",
+  ".RR..GG..OD..BB..MM.",
+  ".RR..GG..OD..BB..MM."
+ ],
+ "frames": [
+  [
+   ".......NNNNNN.......",
+   "......NNNNNNNN......",
+   "......NNNNNNNN......",
+   ".....RRGGODBBMM.....",
+   "....RRGG.OD.BBMM....",
+   "...RR.GG.OD.BB.MM...",
+   "..RR..GG.OD.BB..MM..",
+   ".RR..GG..OD..BB..MM.",
+   "RR..GG...OD...BB..MM",
+   "RR..GG...OD...BB..MM",
+   "RR..GG...OD...BB..MM",
+   ".RR..GG..OD..BB..MM."
+  ],
+  [
+   ".......NNNNNN.......",
+   "......NNNNNNNN......",
+   "......NNNNNNNN......",
+   ".....RRGGODBBMM.....",
+   "....RRGG.OD.BBMM....",
+   "...RR.GG.OD.BB.MM...",
+   "..RR..GG.OD.BB..MM..",
+   ".RR..GG..OD..BB..MM.",
+   "RR..GG...OD...BB..MM",
+   ".RR..GG..OD..BB..MM.",
+   "RR..GG...OD...BB..MM",
+   "RR..GG...OD...BB..MM"
+  ],
+  [
+   ".......NNNNNN.......",
+   "......NNNNNNNN......",
+   "......NNNNNNNN......",
+   ".....RRGGODBBMM.....",
+   "....RRGG.OD.BBMM....",
+   "...RR.GG.OD.BB.MM...",
+   "..RR..GG.OD.BB..MM..",
+   ".RR..GG..OD..BB..MM.",
+   "RR..GG...OD...BB..MM",
+   ".RR..GG..OD..BB..MM.",
+   ".RR..GG..OD..BB..MM.",
+   "RR..GG...OD...BB..MM"
+  ]
+ ]
+}

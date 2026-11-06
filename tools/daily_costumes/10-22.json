@@ -1,0 +1,39 @@
+{
+ "date": "10-22",
+ "name": "goalie_mask",
+ "title": "Hockey Night",
+ "theme": "a white goalie mask with breathing holes and straps; a puck bounces off its chin",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "...BBBBBBBBBBBBBBBB...",
+  ".WWWWWWWWWWWWWWWWWWWW.",
+  ".WWWWWWWWWWWWWWWWWWWW.",
+  "KKWDWDWDWWWWWWDWDWDWKK",
+  "KKWWWWWWWWWWWWWWWWWWKK",
+  ".WWDWDWDWWWWWWDWDWDWW.",
+  ".WWWWWWWWWWWWWWWWWWWW.",
+  ".WWDWDWDWWWWWWDWDWDWW.",
+  "AAAWWWWWWWWWWWWWWWW...",
+  "AAA..WWWWWWWWWWWW....."
+ ],
+ "frames": [
+  [
+   "...BBBBBBBBBBBBBBBB...",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   "KKWDWDWDWWWWWWDWDWDWKK",
+   "KKWWWWWWWWWWWWWWWWWWKK",
+   ".WWDWDWDWWWWWWDWDWDWW.",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   ".AAAADWDWWWWWWDWDWDWW.",
+   ".AAAAWWWWWWWWWWWWWW...",
+   ".....WWWWWWWWWWWW....."
+  ]
+ ]
+}

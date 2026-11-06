@@ -1,0 +1,43 @@
+{
+ "date": "09-11",
+ "name": "acorn_cap",
+ "title": "Acorn Season",
+ "theme": "a big acorn on his head: brown scaled cup with a stalk over a gold nut with a white highlight; it tips and glints",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......OO......",
+  "......OO......",
+  "..OOOOOOOOOO..",
+  ".OOOOOOOOOOOO.",
+  "OOODOOOOOODOOO",
+  "OOOOOODDOOOOOO",
+  "OOOOOOOOOOOOOO",
+  ".GGGGGGGGGGGG.",
+  ".GWWGGGGGGGGG.",
+  "..GWWGGGGGGG..",
+  "...GGGGGGGG...",
+  ".....GGGG....."
+ ],
+ "frames": [
+  [
+   ".......OO.....",
+   ".......OO.....",
+   "...OOOOOOOOOO.",
+   "..OOOOOOOOOOOO",
+   "OOODOOOOOODOOO",
+   "OOOOOODDOOOOOO",
+   "OOOOOOOOOOOOOO",
+   ".GGGGGGGGGGGG.",
+   ".GWWWGGGGGGGG.",
+   "..GWWWGGGGGG..",
+   "...WGGGGGGG...",
+   ".....GGGG....."
+  ]
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "date": "01-16",
+ "name": "dragon_crest",
+ "title": "Appreciate a Dragon Day",
+ "theme": "a green scaly crest with five tapered gold spines; a flick ripples along them",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "............G...........",
+  ".......G...GG....G......",
+  "......GG...GG...GG......",
+  "...G..GG...GG...GG....G.",
+  "..GG..GG...GG...GG...GG.",
+  ".GG...GG...GG...GG...GG.",
+  ".GG...GG...GG...GG...GG.",
+  ".NNNNNNNNNNNNNNNNNNNNNN.",
+  "NNNNDNNNNDNNNNDNNNNDNNNN",
+  "NNDNNNNDNNNNDNNNNDNNNDNN",
+  ".NNNDNNNNDNNNNDNNNNDNNN."
+ ],
+ "frames": [
+  [
+   ".............G..........",
+   "........G...GG...G......",
+   ".......GG..GG...GG......",
+   "..G...GG...GG...GG....G.",
+   ".GG...GG...GG...GG...GG.",
+   ".GG...GG...GG...GG...GG.",
+   ".GG...GG...GG...GG...GG.",
+   ".NNNNNNNNNNNNNNNNNNNNNN.",
+   "NNNNDNNNNDNNNNDNNNNDNNNN",
+   "NNDNNNNDNNNNDNNNNDNNNDNN",
+   ".NNNDNNNNDNNNNDNNNNDNNN."
+  ],
+  [
+   "............G...........",
+   ".......G...GG.....G.....",
+   "......GG...GG....GG.....",
+   "..G...GG...GG...GG....G.",
+   ".GG...GG...GG...GG...GG.",
+   ".GG...GG...GG...GG...GG.",
+   ".GG...GG...GG...GG...GG.",
+   ".NNNNNNNNNNNNNNNNNNNNNN.",
+   "NNNNDNNNNDNNNNDNNNNDNNNN",
+   "NNDNNNNDNNNNDNNNNDNNNDNN",
+   ".NNNDNNNNDNNNNDNNNNDNNN."
+  ],
+  [
+   "............G...........",
+   ".......G...GG....G......",
+   "......GG...GG...GG......",
+   "..G...GG...GG...GG.....G",
+   ".GG...GG...GG...GG....GG",
+   ".GG...GG...GG...GG...GG.",
+   ".GG...GG...GG...GG...GG.",
+   ".NNNNNNNNNNNNNNNNNNNNNN.",
+   "NNNNDNNNNDNNNNDNNNNDNNNN",
+   "NNDNNNNDNNNNDNNNNDNNNDNN",
+   ".NNNDNNNNDNNNNDNNNNDNNN."
+  ]
+ ]
+}

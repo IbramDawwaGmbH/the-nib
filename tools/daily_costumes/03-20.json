@@ -1,0 +1,71 @@
+{
+ "date": "03-20",
+ "name": "smiley_sun",
+ "title": "Day of Happiness",
+ "theme": "a golden half-sun with a charcoal smiley face rising on his head, ringed by seven gold rays that twinkle long and short in turn",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "......GG...GG...GG......",
+  "......GG...GG...GG......",
+  "......GG........GG......",
+  ".........GGGGGG.........",
+  ".GG....GGGGGGGGGG....GG.",
+  "..GG..GGGGGGGGGGGG..GG..",
+  ".....GGGAAGGGGAAGGG.....",
+  "....GGGGAAGGGGAAGGGG....",
+  "GGG.GGGGGGGGGGGGGGGG.GGG",
+  "GGG.GGGGAAGGGGAAGGGG.GGG",
+  "....GGGGGGAAAAGGGGGG...."
+ ],
+ "frames": [
+  [
+   "...........GG...........",
+   "......GG...GG...GG......",
+   "......GG...GG...GG......",
+   "......GG........GG......",
+   "GG.......GGGGGG.......GG",
+   ".GG....GGGGGGGGGG....GG.",
+   "..GG..GGGGGGGGGGGG..GG..",
+   ".....GGGAAGGGGAAGGG.....",
+   "....GGGGAAGGGGAAGGGG....",
+   "GGG.GGGGGGGGGGGGGGGG.GGG",
+   "GGG.GGGGAAGGGGAAGGGG.GGG",
+   "....GGGGGGAAAAGGGGGG...."
+  ],
+  [
+   "...........GG...........",
+   "...........GG...........",
+   "......GG...GG...GG......",
+   "......GG........GG......",
+   "GG.......GGGGGG.......GG",
+   ".GG....GGGGGGGGGG....GG.",
+   "..GG..GGGGGGGGGGGG..GG..",
+   ".....GGGAAGGGGAAGGG.....",
+   "....GGGGAAGGGGAAGGGG....",
+   ".GG.GGGGGGGGGGGGGGGG.GG.",
+   ".GG.GGGAAAGGGGAAAGGG.GG.",
+   "....GGGGGGAAAAGGGGGG...."
+  ],
+  [
+   "........................",
+   "...........GG...........",
+   "......GG...GG...GG......",
+   "......GG........GG......",
+   ".........GGGGGG.........",
+   ".GG....GGGGGGGGGG....GG.",
+   "..GG..GGGGGGGGGGGG..GG..",
+   ".....GGGAAGGGGAAGGG.....",
+   "....GGGGAAGGGGAAGGGG....",
+   ".GG.GGGGGGGGGGGGGGGG.GG.",
+   ".GG.GGGGAAGGGGAAGGGG.GG.",
+   "....GGGGGGAAAAGGGGGG...."
+  ]
+ ]
+}

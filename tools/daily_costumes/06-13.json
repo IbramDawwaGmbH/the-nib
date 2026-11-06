@@ -1,0 +1,51 @@
+{
+ "date": "06-13",
+ "name": "measure_tape_scarf",
+ "title": "Sewing Machine Day",
+ "theme": "a tailor's tape measure draped round his neck like a scarf, gold with dark tick marks and silver tips; the tape feeds through and the right tail flaps",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  11,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "..GGGG............GGGG..",
+  "..GGGGGGGGGGGGGGGGGGGG..",
+  "GGGDGGDGGDGGDGGDGGDGGDGG",
+  "GG....GGGGGGGGGGGG....GG",
+  "GD....................DG",
+  "GG....................GG",
+  "GD....................DG",
+  "GG....................GG",
+  "SS....................SS",
+  "SS....................SS"
+ ],
+ "frames": [
+  [
+   "..GGGG............GGGG..",
+   "..GGGGGGGGGGGGGGGGGGGG..",
+   "GGGGDGGDGGDGGDGGDGGDGG.G",
+   "GG....GGGGGGGGGGGG.....G",
+   "GD.....................G",
+   "GG.....................G",
+   "GD.....................G",
+   "GG.....................G",
+   "SS....................SS",
+   "SS....................SS"
+  ],
+  [
+   "..GGGG............GGGG..",
+   "..GGGGGGGGGGGGGGGGGGGG..",
+   "GGGGGDGGDGGDGGDGGDGGDGGG",
+   "GG....GGGGGGGGGGGG....GG",
+   "GD....................DG",
+   "GG....................GG",
+   "GD....................DG",
+   "GG....................GG",
+   "SS....................SS",
+   "SS....................SS"
+  ]
+ ]
+}

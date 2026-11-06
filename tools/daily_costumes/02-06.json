@@ -1,0 +1,63 @@
+{
+ "date": "02-06",
+ "name": "curling_stone",
+ "title": "Curling Day",
+ "theme": "a grey curling stone with a silver band and a red handle with a gold grip that rotates",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  ".....RRRRRRRRGG.....",
+  ".....RRRRRRRRGG.....",
+  "....KKKKKKKKKKKK....",
+  "...KKKKKKKKKKKKKK...",
+  ".KKKKKKKKKKKKKKKKKK.",
+  "SSSSSSSSSSSSSSSSSSSS",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   ".....RRR............",
+   ".....RRRRRRR........",
+   "........RRRRRGG.....",
+   "....KKKKKKKKRGGK....",
+   "...KKKKKKKKKKKKKK...",
+   ".KKKKKKKKKKKKKKKKKK.",
+   "SSSSSSSSSSSSSSSSSSSS",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK"
+  ],
+  [
+   "....................",
+   "......RRRRRRRRGG....",
+   "......RRRRRRRRGG....",
+   "....KKKKKKKKKKKK....",
+   "...KKKKKKKKKKKKKK...",
+   ".KKKKKKKKKKKKKKKKKK.",
+   "SSSSSSSSSSSSSSSSSSSS",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK"
+  ],
+  [
+   "..........RRRGG.....",
+   ".......RRRRRRGG.....",
+   ".....RRR............",
+   "....KRRRKKKKKKKK....",
+   "...KKKKKKKKKKKKKK...",
+   ".KKKKKKKKKKKKKKKKKK.",
+   "SSSSSSSSSSSSSSSSSSSS",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK"
+  ]
+ ]
+}

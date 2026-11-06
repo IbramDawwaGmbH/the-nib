@@ -1,0 +1,63 @@
+{
+ "date": "05-13",
+ "name": "citrus_garland",
+ "title": "World Cocktail Day",
+ "theme": "a garland of gold lemon and green lime slices strung on a green cord round his neck; the slice centres twinkle",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  11,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "NNNN..............NNNN",
+  "GGGG..............GGGG",
+  "GWWG..............GWWG",
+  "GWWGNNNN......NNNNGWWG",
+  "GGGGNWWNN....NNWWNGGGG",
+  "....NWWNNGGGGNNWWN....",
+  "....NNNNNGWWGNNNNN....",
+  ".........GWWG.........",
+  ".........GGGG.........",
+  "......................"
+ ],
+ "frames": [
+  [
+   "NNNN..............NNNN",
+   "WWWG..............WWWG",
+   "WWWG..............WWWG",
+   "WWWGNNNN......NNNNWWWG",
+   "GGGGNWWNN....NNWWNGGGG",
+   "....NWWNNWWWGNNWWN....",
+   "....NNNNNWWWGNNNNN....",
+   ".........WWWG.........",
+   ".........GGGG.........",
+   "......................"
+  ],
+  [
+   "NNNN..............NNNN",
+   "GGGG..............GGGG",
+   "GWWG..............GWWG",
+   "GWWGNNNN......NNNNGWWG",
+   "GGGGNWWNN....NNWWNGGGG",
+   "....NWWNN....NNWWN....",
+   "....NNNNNGGGGNNNNN....",
+   "........NGWWGN........",
+   ".........GWWG.........",
+   ".........GGGG........."
+  ],
+  [
+   "NNNN..............NNNN",
+   "GGGG..............GGGG",
+   "GWWG..............GWWG",
+   "GWWGWWWN......WWWNGWWG",
+   "GGGGWWWNN....NWWWNGGGG",
+   "....WWWNNGGGGNWWWN....",
+   "....NNNNNGWWGNNNNN....",
+   ".........GWWG.........",
+   ".........GGGG.........",
+   "......................"
+  ]
+ ]
+}

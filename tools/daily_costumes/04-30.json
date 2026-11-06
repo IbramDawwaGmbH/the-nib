@@ -1,0 +1,71 @@
+{
+ "date": "04-30",
+ "name": "porkpie_jazz",
+ "title": "International Jazz Day",
+ "theme": "a short charcoal pork-pie hat with a gold band and a gold music note bobbing beside it",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........................",
+  ".........................",
+  ".........................",
+  "....AAAAAA....AAAAAA..GGG",
+  "....AAAAAAAAAAAAAAAA..G.G",
+  "....AAAAAAAAAAAAAAAA..G..",
+  "....AAAAAAAAAAAAAAAA..G..",
+  "....GGGGGGGGGGGGGGGG.GG..",
+  "....GGGGGGGGGGGGGGGG.GG..",
+  "....AAAAAAAAAAAAAAAA.....",
+  "AAAAAAAAAAAAAAAAAAAAAAAA.",
+  "AAAAAAAAAAAAAAAAAAAAAAAA."
+ ],
+ "frames": [
+  [
+   ".........................",
+   ".........................",
+   "......................GGG",
+   "....AAAAAA....AAAAAA..G.G",
+   "....AAAAAAAAAAAAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA.GG..",
+   "....GGGGGGGGGGGGGGGG.GG..",
+   "....GGGGGGGGGGGGGGGG.....",
+   "....AAAAAAAAAAAAAAAA.....",
+   "AAAAAAAAAAAAAAAAAAAAAAAA.",
+   "AAAAAAAAAAAAAAAAAAAAAAAA."
+  ],
+  [
+   ".........................",
+   "......................GGG",
+   "......................G.G",
+   "....AAAAAA....AAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA.GG..",
+   "....AAAAAAAAAAAAAAAA.GG..",
+   "....GGGGGGGGGGGGGGGG.....",
+   "....GGGGGGGGGGGGGGGG.....",
+   "....AAAAAAAAAAAAAAAA.....",
+   "AAAAAAAAAAAAAAAAAAAAAAAA.",
+   "AAAAAAAAAAAAAAAAAAAAAAAA."
+  ],
+  [
+   ".........................",
+   ".........................",
+   "......................GGG",
+   "....AAAAAA....AAAAAA..G.G",
+   "....AAAAAAAAAAAAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA..G..",
+   "....AAAAAAAAAAAAAAAA.GG..",
+   "....GGGGGGGGGGGGGGGG.GG..",
+   "....GGGGGGGGGGGGGGGG.....",
+   "....AAAAAAAAAAAAAAAA.....",
+   "AAAAAAAAAAAAAAAAAAAAAAA..",
+   ".AAAAAAAAAAAAAAAAAAAAAAA."
+  ]
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "date": "08-23",
+ "name": "weather_windsock",
+ "title": "Ride the Wind Day",
+ "theme": "a grey pole on his crown with a striped red and white windsock streaming to the right; the tail ripples",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................",
+  "KKRRRRWWWWRRRRWWWW",
+  "KKRRRRWWWWRRRRWWWW",
+  "KKRRRRWWWWRRRR....",
+  "KKRRRRWWWW........",
+  "KK................",
+  "KK................",
+  "KK................",
+  "KK................",
+  ".................."
+ ],
+ "frames": [
+  [
+   "..............WWWW",
+   "KKRRRRWWWWRRRRWWWW",
+   "KKRRRRWWWWRRRR....",
+   "KKRRRRWWWWRRRR....",
+   "KKRRRRWWWW........",
+   "KK................",
+   "KK................",
+   "KK................",
+   "KK................",
+   ".................."
+  ],
+  [
+   "..........RRRRWWWW",
+   "KKRRRRWWWWRRRRWWWW",
+   "KKRRRRWWWWRRRR....",
+   "KKRRRRWWWW........",
+   "KKRRRRWWWW........",
+   "KK................",
+   "KK................",
+   "KK................",
+   "KK................",
+   ".................."
+  ],
+  [
+   "..........RRRR....",
+   "KKRRRRWWWWRRRRWWWW",
+   "KKRRRRWWWWRRRRWWWW",
+   "KKRRRRWWWW........",
+   "KKRRRRWWWW........",
+   "KK................",
+   "KK................",
+   "KK................",
+   "KK................",
+   ".................."
+  ]
+ ]
+}

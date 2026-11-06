@@ -1,0 +1,60 @@
+{
+ "date": "10-09",
+ "name": "mail_satchel",
+ "title": "World Post Day",
+ "theme": "a postal satchel on a grey strap across his chest, a blue bag with a white envelope and red wax seal poking out; the letter rises and the buckle glints",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "K..........................",
+  "KK.........................",
+  ".KK........................",
+  "..KK..............WWWWWW...",
+  "...KK.............WWRWWW...",
+  "....KKK...........WWWWWW...",
+  ".....KKKKKK....BBBBBBBBBBBB",
+  ".......KKKSSKKKBBBBBBBBBBBB",
+  "...........KKKKDDDDDDDDDDDD",
+  "...............BBBBBSBBBBBB",
+  "...............BBBBBBBBBBBB",
+  "...............BBBBBBBBBBBB",
+  "...............BBBBBBBBBBBB"
+ ],
+ "frames": [
+  [
+   "K..........................",
+   "KK.........................",
+   ".KK...............WWWWWW...",
+   "..KK..............WWRWWW...",
+   "...KK.............WWWWWW...",
+   "....KKK...........WWWWWW...",
+   ".....KKKKKK....BBBBBBBBBBBB",
+   ".......KKKSSKKKBBBBBBBBBBBB",
+   "...........KKKKDDDDDDDDDDDD",
+   "...............BBBBBSBBBBBB",
+   "...............BBBBBBBBBBBB",
+   "...............BBBBBBBBBBBB",
+   "...............BBBBBBBBBBBB"
+  ],
+  [
+   "K..........................",
+   "KK.........................",
+   ".KK........................",
+   "..KK..............WWWWWW...",
+   "...KK.............WWRWWW...",
+   "....KKK...........WWWWWW...",
+   ".....KKKKKK....BBBBBBBBBBBB",
+   ".......KKKWSKKKBBBBBBBBBBBB",
+   "...........KKKKDDDDDDDDDDDD",
+   "...............BBBBBSBBBBBB",
+   "...............BBBBBBBBBBBB",
+   "...............BBBBBBBBBBBB",
+   "...............BBBBBBBBBBBB"
+  ]
+ ]
+}

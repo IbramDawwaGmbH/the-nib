@@ -1,0 +1,57 @@
+{
+ "date": "08-24",
+ "name": "waffle_iron",
+ "title": "National Waffle Day",
+ "theme": "a grey waffle iron worn like a cap with a dark hinge seam, silver handle and red ready light; the lid lifts to show a gold grid and steam",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  "....................",
+  "....................",
+  ".KKKKKKKKKKKKKKKKKK.",
+  "KKKDDKKDDKKDDKKDDKKK",
+  "KKKKKDDKKDDKKDDKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKRRKKKKKKKKKSSSSSSK",
+  "KKRRKKKKKKKKKSSSSSSK",
+  ".KKKKKKKKKKKKKKKKKK."
+ ],
+ "frames": [
+  [
+   "........WWWW........",
+   ".......WWWWWW.......",
+   ".KKKKKKKKKKKKKKKKKK.",
+   "KKKDDKKDDKKDDKKDDKKK",
+   "KKKKKDDKKDDKKDDKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   ".GDDGGDDGGDDGGDDGGD.",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKDDKKKKKKKKKSSSSSSK",
+   "KKDDKKKKKKKKKSSSSSSK",
+   ".KKKKKKKKKKKKKKKKKK."
+  ],
+  [
+   "....................",
+   "............WW......",
+   "............WW......",
+   ".KKKKKKKKKKKKKKKKKK.",
+   "KKKDDKKDDKKDDKKDDKKK",
+   "KKKKKDDKKDDKKDDKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKRRKKKKKKKKKSSSSSSK",
+   "KKRRKKKKKKKKKSSSSSSK",
+   ".KKKKKKKKKKKKKKKKKK."
+  ]
+ ]
+}

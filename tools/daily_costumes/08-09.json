@@ -1,0 +1,48 @@
+{
+  "date": "08-09",
+  "name": "book_stack",
+  "title": "Book Lovers Day",
+  "theme": "three closed books stacked flat, red, blue and green covers with white page edges and dark spine seams, a gold bookmark tail hanging off; the top book slides two pixels right and back while the bookmark swings",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    10,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    "RRRRRRRRRRRRRRRRRR..",
+    "RRDWWWWWWWWWWWWWWW..",
+    "RRRRRRRRRRRRRRRRRR..",
+    "BBBBBBBBBBBBBBBBBBBB",
+    "BBDWWWWWWWWWWWWGGWWW",
+    "BBBBBBBBBBBBBBBGGBBB",
+    "NNNNNNNNNNNNNNNGGNNN",
+    "NNDWWWWWWWWWWWWGGWWW",
+    "NNNNNNNNNNNNNNNNNNNN"
+  ],
+  "frames": [
+    [
+      "..RRRRRRRRRRRRRRRRRR",
+      "..RRDWWWWWWWWWWWWWWW",
+      "..RRRRRRRRRRRRRRRRRR",
+      "BBBBBBBBBBBBBBBBBBBB",
+      "BBDWWWWWWWWWWWWWGGWW",
+      "BBBBBBBBBBBBBBBBGGBB",
+      "NNNNNNNNNNNNNNNNGGNN",
+      "NNDWWWWWWWWWWWWWGGWW",
+      "NNNNNNNNNNNNNNNNGGNN"
+    ],
+    [
+      ".RRRRRRRRRRRRRRRRRR.",
+      ".RRDWWWWWWWWWWWWWWW.",
+      ".RRRRRRRRRRRRRRRRRR.",
+      "BBBBBBBBBBBBBBBBBBBB",
+      "BBDWWWWWWWWWWWGGWWWW",
+      "BBBBBBBBBBBBBBGGBBBB",
+      "NNNNNNNNNNNNNNGGNNNN",
+      "NNDWWWWWWWWWWWGGWWWW",
+      "NNNNNNNNNNNNNNNNNNNN"
+    ]
+  ]
+}

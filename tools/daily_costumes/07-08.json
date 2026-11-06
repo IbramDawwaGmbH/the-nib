@@ -1,0 +1,57 @@
+{
+ "date": "07-08",
+ "name": "big_sunflower",
+ "title": "Sunflower Season",
+ "theme": "a large sunflower bloom worn like a crown, nodding in the breeze with a wiggling leaf",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....GGG.GGG.GGG......",
+  ".....GGG.GGG.GGG......",
+  ".....GGG.GGG.GGG......",
+  ".GGG.GGG.GGG.GGG..GGG.",
+  "..GGGGGGAAAAAAGGGGGG..",
+  "....GGGAAAAAAAAGGG....",
+  ".......AAAAAAAA.......",
+  "....GGGAAAAAAAAGGG....",
+  "...GGGGAAAAAAAAGGGG...",
+  "........AAAAAA........",
+  "......NNNNNNNNNNNNNNN.",
+  "......NNNNNNNNNN......"
+ ],
+ "frames": [
+  [
+   ".....GGG.....GGG......",
+   ".....GGG.GGG.GGG......",
+   ".....GGG.GGG.GGG......",
+   ".GGG.GGG.GGG.GGG..GGG.",
+   "..GGGGGGAAAAAAGGGGGG..",
+   "....GGGAAAAAAAAGGG....",
+   ".......AAAAAAAA.......",
+   "....GGGAAAAAAAAGGG....",
+   "...GGGGAAAAAAAAGGGG...",
+   "........AAAAAA........",
+   "......NNNNNNNNNN...NN.",
+   "......NNNNNNNNNNNNNNN."
+  ],
+  [
+   ".........GGG..........",
+   ".....GGG.GGG.GGG......",
+   ".....GGG.GGG.GGG......",
+   ".GGG.GGG.GGG.GGG..GGG.",
+   "..GGGGGGAAAAAAGGGGGG..",
+   "....GGGAAAAAAAAGGG....",
+   ".......AAAAAAAA.......",
+   "....GGGAAAAAAAAGGG....",
+   "...GGGGAAAAAAAAGGGG...",
+   "........AAAAAA........",
+   "......NNNNNNNNNNNNNNN.",
+   "......NNNNNNNNNN......"
+  ]
+ ]
+}

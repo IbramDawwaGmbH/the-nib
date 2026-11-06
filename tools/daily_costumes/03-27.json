@@ -1,0 +1,71 @@
+{
+ "date": "03-27",
+ "name": "theatre_mask",
+ "title": "World Theatre Day",
+ "theme": "a gold theatre half-mask with upswept corners, a bridge notch, almond charcoal eye-holes and two purple ribbons; the ribbons flutter and he winks",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  14,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "..GG....................GG..",
+  "..GGGGGGGGGG....GGGGGGGGGG..",
+  "..GGGGGGGGGG....GGGGGGGGGG..",
+  "..GGGGGAAAGGGGGGGGAAAGGGGG..",
+  "..GGGGAAAAAGGGGGGAAAAAGGGG..",
+  "PPGGGGAAAAAGGGGGGAAAAAGGGGPP",
+  "PPGGGGGAAAGGGGGGGGAAAGGGGGPP",
+  "PP.GGGGGGGGGGGGGGGGGGGGGG.PP",
+  "PP...GGGGGGGGGGGGGGGGGG...PP",
+  "PP........................PP",
+  ".PP......................PP.",
+  "............................"
+ ],
+ "frames": [
+  [
+   "..GG....................GG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGAAAGGGGGGGGAAAGGGGG..",
+   "..GGGGAAAAAGGGGGGAAAAAGGGG..",
+   "PPGGGGAAAAAGGGGGGAAAAAGGGGPP",
+   "PPGGGGGAAAGGGGGGGGAAAGGGGGPP",
+   "PP.GGGGGGGGGGGGGGGGGGGGGG.PP",
+   "PP...GGGGGGGGGGGGGGGGGG...PP",
+   "PP.......................PP.",
+   "PP..........................",
+   ".PP........................."
+  ],
+  [
+   "..GG....................GG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGAAAGGGGGGGGGGGGGGGG..",
+   "..GGGGAAAAAGGGGGGGGGGGGGGG..",
+   "PPGGGGAAAAAGGGGGGAAAAAGGGGPP",
+   "PPGGGGGAAAGGGGGGGGAAAGGGGGPP",
+   "PP.GGGGGGGGGGGGGGGGGGGGGG.PP",
+   "PP...GGGGGGGGGGGGGGGGGG...PP",
+   "PP........................PP",
+   ".PP......................PP.",
+   "............................"
+  ],
+  [
+   "..GG....................GG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGGGGGG....GGGGGGGGGG..",
+   "..GGGGGAAAGGGGGGGGAAAGGGGG..",
+   "..GGGGAAAAAGGGGGGAAAAAGGGG..",
+   "PPGGGGAAAAAGGGGGGAAAAAGGGGPP",
+   "PPGGGGGAAAGGGGGGGGAAAGGGGGPP",
+   "PP.GGGGGGGGGGGGGGGGGGGGGG.PP",
+   "PP...GGGGGGGGGGGGGGGGGG...PP",
+   ".PP.......................PP",
+   "..........................PP",
+   ".........................PP."
+  ]
+ ]
+}

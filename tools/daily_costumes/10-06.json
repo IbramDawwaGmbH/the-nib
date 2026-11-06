@@ -1,0 +1,42 @@
+{
+ "date": "10-06",
+ "name": "straw_collar",
+ "title": "Scarecrow Season",
+ "theme": "a tuft of gold straw poking out round his neck like scarecrow stuffing, with a red cloth patch and dark stitch seams; single straws twitch out and a loose one drifts off to the right",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  12,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "..GG.....GG.....GG....GG........",
+  ".GGGGGGGGGGGGGGGGGGGGGGGG.......",
+  ".GGGGGGGGGGGGGDDRRDDGGGGG.......",
+  "GGGGGGGGGGGGGGRRRRRRGGGGGGGGGG..",
+  "GGGGGGGGGGGGGGRRRRRRGGGGG.GGGG..",
+  ".GGGGGGGGGGGGGDDRRDDGGGGG.......",
+  "....GG......GG.....GG..........."
+ ],
+ "frames": [
+  [
+   "...GG....GG....GG.....GG........",
+   ".GGGGGGGGGGGGGGGGGGGGGGGG.......",
+   ".GGGGGGGGGGGGGDDRRDDGGGGG...GGGG",
+   "GGGGGGGGGGGGGGRRRRRRGGGGGG..GGGG",
+   "GGGGGGGGGGGGGGRRRRRRGGGGG.......",
+   ".GGGGGGGGGGGGGDDRRDDGGGGG.......",
+   "....GG.......GG....GG..........."
+  ],
+  [
+   "..GG....GG......GG.....GG.......",
+   ".GGGGGGGGGGGGGGGGGGGGGGGG.......",
+   ".GGGGGGGGGGGGGDDRRDDGGGGG.......",
+   "GGGGGGGGGGGGGGRRRRRRGGGGGG......",
+   "GGGGGGGGGGGGGGRRRRRRGGGGG...GGGG",
+   ".GGGGGGGGGGGGGDDRRDDGGGGG...GGGG",
+   "...GG.......GG......GG.........."
+  ]
+ ]
+}

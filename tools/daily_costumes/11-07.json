@@ -1,0 +1,48 @@
+{
+ "date": "11-07",
+ "name": "newspaper_fold_hat",
+ "title": "Drizzly Day",
+ "theme": "a folded soggy newspaper hat: white with grey text-line seams and dark fold crease, sagging corners and two blue drips",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........WWDDWW..........",
+  "........WWWWDDWWWW........",
+  "......WWKKKWDDWKKKWW......",
+  "....WWWWWWWWDDWWWWWWWW....",
+  "WWWWWKKKKWWWDDWWWKKKKWWWWW",
+  "WWWWWWKKKKWWWWWWWWKKKKWWWW",
+  "BBDDDDDDDDDDDDDDDDDDDDDD..",
+  "BB.WWWWWWWWWWWWWWWWWWWW...",
+  "...WWWKKKWWWWWWWWKKKWWW..."
+ ],
+ "frames": [
+  [
+   "..........WWDDWW..........",
+   "........WWWWDDWWWW........",
+   "......WWKKKWDDWKKKWW......",
+   "....WWWWWWWWDDWWWWWWWW....",
+   "..WWWKKKKWWWDDWWWKKKKWWW..",
+   "WWWWWWKKKKWWWWWWWWKKKKWWWW",
+   "WWDDDDDDDDDDDDDDDDDDDDDDBB",
+   "BB.WWWWWWWWWWWWWWWWWWWW.BB",
+   "BB.WWWKKKWWWWWWWWKKKWWW..."
+  ],
+  [
+   "..........WWDDWW..........",
+   "........WWWWDDWWWW........",
+   "......WWKKKWDDWKKKWW......",
+   "....WWWWWWWWDDWWWWWWWW....",
+   "..WWWKKKKWWWDDWWWKKKKWWW..",
+   "..WWWWKKKKWWWWWWWWKKKKWW..",
+   "WWDDDDDDDDDDDDDDDDDDDDDDWW",
+   "WW.WWWWWWWWWWWWWWWWWWWW.BB",
+   "...WWWKKKWWWWWWWWKKKWWW.BB"
+  ]
+ ]
+}

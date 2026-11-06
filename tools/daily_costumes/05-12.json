@@ -1,0 +1,51 @@
+{
+ "date": "05-12",
+ "name": "nurse_cap",
+ "title": "Nurses Day",
+ "theme": "a classic white nurse cap with a dark band and a pink heart on the front that pulses",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "...WWWWWWWWWWWWWW...",
+  "..WWWWWWMWWMWWWWWW..",
+  ".WWWWWWWMMMMWWWWWWW.",
+  "WWWWWWWWMMMMWWWWWWWW",
+  "WWWWWWWWWMMWWWWWWWWW",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDD"
+ ],
+ "frames": [
+  [
+   "...WWWWWWMWMWWWWW...",
+   "..WWWWWWMMMMMWWWWW..",
+   ".WWWWWWWMMMMMWWWWWW.",
+   "WWWWWWWWWMMMWWWWWWWW",
+   "WWWWWWWWWWMWWWWWWWWW",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "DDDDDDDDDDDDDDDDDDDD"
+  ],
+  [
+   "...WWWWWWWWWWWWWW...",
+   "..WWWWWWMWWMWWWWWW..",
+   ".WWWWWWWMWMMWWWWWWW.",
+   "WWWWWWWWMMMMWWWWWWWW",
+   "WWWWWWWWWMMWWWWWWWWW",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "DDDDDDDDDDDDDDDDDDDD"
+  ],
+  [
+   "...WWWWWWWWWWWWWW...",
+   "..WWWWWWWWWWWWWWWW..",
+   ".WWWWWWWWMWMWWWWWWW.",
+   "WWWWWWWWWMMMWWWWWWWW",
+   "WWWWWWWWWWMWWWWWWWWW",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "DDDDDDDDDDDDDDDDDDDD"
+  ]
+ ]
+}

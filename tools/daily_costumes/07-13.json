@@ -1,0 +1,57 @@
+{
+  "date": "07-13",
+  "name": "fry_carton",
+  "title": "French Fry Day",
+  "theme": "head: a carton of fries; the fries bob and one leans",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    8,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "................",
+    "....GG....GG....",
+    ".GG.GG.GG.GG....",
+    ".GG.GG.GG.GG.GG.",
+    ".GGGGGGGGGGGGGG.",
+    ".GGGGGGGGGGGGGG.",
+    ".WWWWWWWWWWWWWW.",
+    ".WWWWWWWWWWWWWW.",
+    "..RRRRRRRRRRRR..",
+    "..RRRRRRRRRRRR..",
+    "...RRRRRRRRRR...",
+    "...RRRRRRRRRR..."
+  ],
+  "frames": [
+    [
+      "....GG....GG....",
+      "....GG....GG....",
+      "....GG....GG....",
+      ".GG.GG.GG.GG.GG.",
+      ".GGGGGGGGGGGGGG.",
+      ".GGGGGGGGGGGGGG.",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "..RRRRRRRRRRRR..",
+      "..RRRRRRRRRRRR..",
+      "...RRRRRRRRRR...",
+      "...RRRRRRRRRR..."
+    ],
+    [
+      "................",
+      ".GG....GG.......",
+      ".GG.GG.GG.GG....",
+      ".GG.GG.GG.GG.GG.",
+      ".GGGGGGGGGGGGGG.",
+      ".GGGGGGGGGGGGGG.",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "..RRRRRRRRRRRR..",
+      "..RRRRRRRRRRRR..",
+      "...RRRRRRRRRR...",
+      "...RRRRRRRRRR..."
+    ]
+  ]
+}

@@ -1,0 +1,37 @@
+{
+ "date": "12-05",
+ "name": "volunteer_sash",
+ "title": "Volunteer Day",
+ "theme": "a teal volunteer sash diagonally across his torso with a white edge stripe and a white heart badge at the shoulder that pulses",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  12,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "..TTTTT.................",
+  ".TTWTWTTTWW.............",
+  ".TWWWWWTTTTWW...........",
+  ".TTWWWTTTTTTTWW.........",
+  ".TTTWTTT..TTTTTWW.......",
+  ".TTTTTTT....TTTTTWW.....",
+  "..TTTTT.......TTTTTWW...",
+  "................TTTTTWW.",
+  "..................TTTTTW"
+ ],
+ "frames": [
+  [
+   "..TTTTT.................",
+   ".TTWWTWWTWW.............",
+   ".TWWWWWWTTTWW...........",
+   ".TTWWWWTTTTTTWW.........",
+   ".TTTWWTT..TTTTTWW.......",
+   ".TTTTTTT....TTTTTWW.....",
+   "..TTTTT.......TTTTTWW...",
+   "................TTTTTWW.",
+   "..................TTTTTW"
+  ]
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "date": "12-01",
+ "name": "awareness_ribbon",
+ "title": "World AIDS Day",
+ "theme": "a red awareness ribbon pendant under his chin, loop fixed, tails sway left and right",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  6,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "............",
+  "....RRRR....",
+  "...RRDDRR...",
+  "..RRDDDDRR..",
+  "..RRDDDDRR..",
+  "...RRDDRR...",
+  "....RRRR....",
+  "....RWWR....",
+  "...RR..RR...",
+  "..RR....RR.."
+ ],
+ "frames": [
+  [
+   "............",
+   "....RRRR....",
+   "...RRDDRR...",
+   "..RRDDDDRR..",
+   "..RRDDDDRR..",
+   "...RRDDRR...",
+   "....RRRR....",
+   "....RWWR....",
+   "...RR..RR...",
+   ".RR....RR..."
+  ],
+  [
+   "............",
+   "....RRRR....",
+   "...RRDDRR...",
+   "..RRDDDDRR..",
+   "..RRDDDDRR..",
+   "...RRDDRR...",
+   "....RRRR....",
+   "....RWWR....",
+   "...RR..RR...",
+   "...RR..RR..."
+  ],
+  [
+   "............",
+   "....RRRR....",
+   "...RRDDRR...",
+   "..RRDDDDRR..",
+   "..RRDDDDRR..",
+   "...RRDDRR...",
+   "....RRRR....",
+   "....RWWR....",
+   "...RR..RR...",
+   "...RR....RR."
+  ]
+ ]
+}

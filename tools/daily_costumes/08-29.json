@@ -1,0 +1,57 @@
+{
+ "date": "08-29",
+ "name": "storm_lantern",
+ "title": "Stormy Night",
+ "theme": "a grey hurricane lantern on his head with a dark cage seam, glass panel and a gold flame that flickers",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....KKKK....",
+  "...KKKKKK...",
+  "..KKKKKKKK..",
+  "KKDSSSSSSDKK",
+  "KKDSSSSSSDKK",
+  "KKDSSSSSSDKK",
+  "KKDSSGGSSDKK",
+  "KKDSGGGGSDKK",
+  "KKDSGGGGSDKK",
+  "KKDSSSSSSDKK",
+  ".KKKKKKKKKK.",
+  "KKKKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   "....KKKK....",
+   "...KKKKKK...",
+   "..KKKKKKKK..",
+   "KKDWWWWWWDKK",
+   "KKDWWGGWWDKK",
+   "KKDWWGGWWDKK",
+   "KKDWWGGWWDKK",
+   "KKDWWGGWWDKK",
+   "KKDWGGGGWDKK",
+   "KKDWWWWWWDKK",
+   ".KKKKKKKKKK.",
+   "KKKKKKKKKKKK"
+  ],
+  [
+   "....KKKK....",
+   "...KKKKKK...",
+   "..KKKKKKKK..",
+   "KKDSSSSSSDKK",
+   "KKDSSSSSSDKK",
+   "KKDSSGGSSDKK",
+   "KKDSSGGSSDKK",
+   "KKDSGGGGSDKK",
+   "KKDSGGGGSDKK",
+   "KKDSSSSSSDKK",
+   ".KKKKKKKKKK.",
+   "KKKKKKKKKKKK"
+  ]
+ ]
+}

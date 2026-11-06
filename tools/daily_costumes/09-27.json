@@ -1,0 +1,51 @@
+{
+ "date": "09-27",
+ "name": "tourist_camera",
+ "title": "World Tourism Day",
+ "theme": "a camera hanging on a neck strap; the flash window blinks and the lens glints",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "K...................K",
+  ".K.................K.",
+  "..K...............K..",
+  "...K.........R...K...",
+  "....KASSAAAAAAAAA....",
+  ".....ASSASSSSAAAA....",
+  ".....AAAASWTSAAAA....",
+  ".....AAAASTTSAAAA....",
+  ".....AAAASSSSAAAA....",
+  ".....AAAAAAAAAAAA...."
+ ],
+ "frames": [
+  [
+   "K...................K",
+   ".K.................K.",
+   "..K...............K..",
+   "...K.........R...K...",
+   "....KAWWAAAAAAAAA....",
+   ".....AWWASSSSAAAA....",
+   ".....AAAASTTSAAAA....",
+   ".....AAAASTTSAAAA....",
+   ".....AAAASSSSAAAA....",
+   ".....AAAAAAAAAAAA...."
+  ],
+  [
+   "K...................K",
+   ".K.................K.",
+   "..K...............K..",
+   "...K.........R...K...",
+   "....KASSAAAAAAAAA....",
+   ".....ASSASSSSAAAA....",
+   ".....AAAASTTSAAAA....",
+   ".....AAAASTWSAAAA....",
+   ".....AAAASSSSAAAA....",
+   ".....AAAAAAAAAAAA...."
+  ]
+ ]
+}

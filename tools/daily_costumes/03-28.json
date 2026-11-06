@@ -1,0 +1,79 @@
+{
+ "date": "03-28",
+ "name": "dandelion_puff",
+ "title": "Dandelion Day",
+ "theme": "a dandelion seed head on a green stalk, fluffy white with a grey heart; seeds blow off to the right",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  4,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  "...WWWW...........",
+  ".WWWWWWWW.........",
+  "WWWWWWWWWW.....W..",
+  "WWWKKKKWWW........",
+  "WWWKKKKWWW........",
+  "WWWKKKKWWW........",
+  "WWWKKKKWWW..W.....",
+  "WWWWWWWWWW........",
+  ".WWWWWWWW.........",
+  "...WWWW...........",
+  "....NN............",
+  "....NN............",
+  "....NN............",
+  "....NN............"
+ ],
+ "frames": [
+  [
+   "...WWWW...........",
+   ".WWWWWWWW........W",
+   "WWWWWWWWWW........",
+   "WWWKKKKWWW........",
+   "WWWKKKKWWW........",
+   "WWWKKKKWW..W..W...",
+   "WWWKKKKWWW........",
+   "WWWWWWWWWW........",
+   ".WWWWWWWW.........",
+   "...WWWW...........",
+   "....NN............",
+   "....NN............",
+   "....NN............",
+   "....NN............"
+  ],
+  [
+   "...WWWW...........",
+   ".WWWWWWWW.........",
+   "WWWWWWWWWW........",
+   "WWWKKKKWWW........",
+   "WWWKKKKWWW...W..W.",
+   "WWWKKKKWW.........",
+   "WWWKKKKWW..W......",
+   "WWWWWWWWWW........",
+   ".WWWWWWWW.........",
+   "...WWWW...........",
+   "....NN............",
+   "....NN............",
+   "....NN............",
+   "....NN............"
+  ],
+  [
+   "...WWWW...........",
+   ".WWWWWWWW.........",
+   "WWWWWWWWWW........",
+   "WWWKKKKWWW.....W..",
+   "WWWKKKKWW.........",
+   "WWWKKKKWW....W....",
+   "WWWKKKKWW.........",
+   "WWWWWWWWWW........",
+   ".WWWWWWWW.........",
+   "...WWWW...........",
+   "....NN............",
+   "....NN............",
+   "....NN............",
+   "....NN............"
+  ]
+ ]
+}

@@ -1,0 +1,49 @@
+{
+ "date": "12-06",
+ "name": "nicholas_mitre",
+ "title": "St Nicholas Day",
+ "theme": "a tall red bishop's mitre with a gold band and centre stripe and two lappet ribbons; the gold stripe gleams",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......RRRR......",
+  ".....RRGGRR.....",
+  ".....RRGGRR.....",
+  "....RRRGGRRR....",
+  "....RRRGGRRR....",
+  "...RRRRGGRRRR...",
+  "..RRRRRGGRRRRR..",
+  "..RRRRRGGRRRRR..",
+  ".RRRRRRGGRRRRRR.",
+  "RRRRRRRGGRRRRRRR",
+  "GGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGG",
+  "RR............RR",
+  "RR............RR",
+  "RR............RR"
+ ],
+ "frames": [
+  [
+   "......RRRR......",
+   ".....RRGGRR.....",
+   ".....RRGGRR.....",
+   "....RRRWGRRR....",
+   "....RRRWGRRR....",
+   "...RRRRGGRRRR...",
+   "..RRRRRGGRRRRR..",
+   "..RRRRRGGRRRRR..",
+   ".RRRRRRGGRRRRRR.",
+   "RRRRRRRGGRRRRRRR",
+   "GGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGG",
+   "RR............RR",
+   "RR............RR",
+   "RR............RR"
+  ]
+ ]
+}

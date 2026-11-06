@@ -1,0 +1,71 @@
+{
+ "date": "03-31",
+ "name": "crayon_hat",
+ "title": "Crayon Day",
+ "theme": "A giant blue crayon standing on his head: cone point with a white tip, a white paper wrapper and a wavy seam; it leans side to side.",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  5,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....WB........",
+  "....BBBB.......",
+  "...BBBBBB......",
+  "..BBBBBBBB.....",
+  "..BBBBBBBB.....",
+  "..BBBBBBBB.....",
+  "..WWWWWWWW.....",
+  "..WWWWWWWW.....",
+  "..DBDBDBDB.....",
+  "..BBBBBBBB.....",
+  "..BBBBBBBB.....",
+  "..BBBBBBBB....."
+ ],
+ "frames": [
+  [
+   ".......WB......",
+   "......BBBB.....",
+   ".....BBBBBB....",
+   "....BBBBBBBB...",
+   "...BBBBBBBB....",
+   "...BBBBBBBB....",
+   "...WWWWWWWW....",
+   "...WWWWWWWW....",
+   "..BDBDBDBD.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB....."
+  ],
+  [
+   ".....WB........",
+   "....BBBB.......",
+   "...BBBBBB......",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB.....",
+   "..WWWWWWWW.....",
+   "..WWWWWWWW.....",
+   "..BDBDBDBD.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB....."
+  ],
+  [
+   "...WB..........",
+   "..BBBB.........",
+   ".BBBBBB........",
+   "BBBBBBBB.......",
+   ".BBBBBBBB......",
+   ".BBBBBBBB......",
+   ".WWWWWWWW......",
+   ".WWWWWWWW......",
+   "..DBDBDBDB.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB.....",
+   "..BBBBBBBB....."
+  ]
+ ]
+}

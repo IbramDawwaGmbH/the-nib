@@ -1,0 +1,60 @@
+{
+ "date": "10-29",
+ "name": "roosting_bat",
+ "title": "Bat Night",
+ "theme": "a sleepy bat roosting upside down from a twig over his head; he sways, peeks one red eye and flicks an ear",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "OOOOOOOOOOOOOOOOOOOOOO",
+  "OOOOOOOOOOOOOOOOOOOOOO",
+  ".........ADDA.........",
+  "........AAAAAA........",
+  ".......AAAAAAAA.......",
+  "......ADAAAAAADA......",
+  "......AADAAAADAA......",
+  "......AAADAADAAA......",
+  ".......AAADDAAA.......",
+  "........AAAAAA........",
+  ".......AAKAAKAA.......",
+  "......AMAAAAAAMA......",
+  "......A........A......"
+ ],
+ "frames": [
+  [
+   "OOOOOOOOOOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOOOOOOOOOO",
+   ".........ADDA.........",
+   ".......AAAAAA.........",
+   "......AAAAAAAA........",
+   ".....ADAAAAAADA.......",
+   ".....AADAAAADAA.......",
+   ".....AAADAADAAA.......",
+   "......AAADDAAA........",
+   ".......AAAAAA.........",
+   "......AARAAKAA........",
+   ".....AMAAAAAAMA.......",
+   ".....A........A......."
+  ],
+  [
+   "OOOOOOOOOOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOOOOOOOOOO",
+   ".........ADDA.........",
+   ".........AAAAAA.......",
+   "........AAAAAAAA......",
+   ".......ADAAAAAADA.....",
+   ".......AADAAAADAA.....",
+   ".......AAADAADAAA.....",
+   "........AAADDAAA......",
+   ".........AAAAAA.......",
+   "........AAKAAKAAA.....",
+   ".......AMAAAAAAMA.....",
+   "......................"
+  ]
+ ]
+}

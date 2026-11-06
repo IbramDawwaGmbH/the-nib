@@ -1,0 +1,71 @@
+{
+ "date": "08-20",
+ "name": "radio_antenna",
+ "title": "National Radio Day",
+ "theme": "a little transistor radio on his head with a rippling signal",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..............S.......",
+  "..............S..W....",
+  "..............S..W....",
+  "..............S..W....",
+  "RRRRRRRRRRRRRRRR......",
+  "RKKKKKKRRRGGRRRR......",
+  "RDDDDDDRRRGGRRRR......",
+  "RKKKKKKRRRRRRRRR......",
+  "RDDDDDDRRRGGRRRR......",
+  "RKKKKKKRRRGGRRRR......",
+  "RRRRRRRRRRRRRRRR......",
+  "RRRRRRRRRRRRRRRR......"
+ ],
+ "frames": [
+  [
+   "..............S....W..",
+   "..............S..W.W..",
+   "..............S..W.W..",
+   "..............S..W.W..",
+   "RRRRRRRRRRRRRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRRRRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RRRRRRRRRRRRRRRR......",
+   "RRRRRRRRRRRRRRRR......"
+  ],
+  [
+   "...............S...W.W",
+   "...............S.W.W.W",
+   "..............SS.W.W.W",
+   "..............S..W.W.W",
+   "RRRRRRRRRRRRRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRRRRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RRRRRRRRRRRRRRRR......",
+   "RRRRRRRRRRRRRRRR......"
+  ],
+  [
+   "..............S.......",
+   "..............S.......",
+   "..............S.......",
+   "..............S.......",
+   "RRRRRRRRRRRRRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRRRRRRR......",
+   "RDDDDDDRRRGGRRRR......",
+   "RKKKKKKRRRGGRRRR......",
+   "RRRRRRRRRRRRRRRR......",
+   "RRRRRRRRRRRRRRRR......"
+  ]
+ ]
+}

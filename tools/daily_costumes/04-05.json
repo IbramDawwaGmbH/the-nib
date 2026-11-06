@@ -1,0 +1,55 @@
+{
+ "date": "04-05",
+ "name": "rainy_window_specs",
+ "title": "April Showers Day",
+ "theme": "big square grey spectacles with pale white rain-wet lenses; blue raindrop streaks run down and new ones form at the top",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "KKKKKKKKKK....KKKKKKKKKK",
+  "KWBW.....W....B.....WWWK",
+  "KWBW.....KKKKKB.....WWWK",
+  "KWBW.....BKKKKB.....WBWK",
+  "KWWW.....B....W.....WBWK",
+  "KWWW.....B....W.....WBWK",
+  "KWWW.....W....W.....WWWK",
+  "KKKKKKKKKK....KKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   "KKKKKKKKKK....KKKKKKKKKK",
+   "KWWW.....W....W.....WWWK",
+   "KWBW.....KKKKKB.....WWWK",
+   "KWBW.....KKKKKB.....WWWK",
+   "KWBW.....B....B.....WBWK",
+   "KWWW.....B....W.....WBWK",
+   "KWWW.....B....W.....WBWK",
+   "KKKKKKKKKK....KKKKKKKKKK"
+  ],
+  [
+   "KKKKKKKKKK....KKKKKKKKKK",
+   "KWWW.....B....W.....WBWK",
+   "KWWW.....BKKKKK.....WBWK",
+   "KWBW.....BKKKKB.....WBWK",
+   "KWBW.....W....B.....WWWK",
+   "KWBW.....W....B.....WWWK",
+   "KWWW.....W....W.....WWWK",
+   "KKKKKKKKKK....KKKKKKKKKK"
+  ],
+  [
+   "KKKKKKKKKK....KKKKKKKKKK",
+   "KWWW.....W....W.....WWWK",
+   "KWWW.....BKKKKK.....WBWK",
+   "KWWW.....BKKKKK.....WBWK",
+   "KWBW.....B....B.....WBWK",
+   "KWBW.....W....B.....WWWK",
+   "KWBW.....W....B.....WWWK",
+   "KKKKKKKKKK....KKKKKKKKKK"
+  ]
+ ]
+}

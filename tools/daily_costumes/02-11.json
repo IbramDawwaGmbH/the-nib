@@ -1,0 +1,63 @@
+{
+ "date": "02-11",
+ "name": "atom_orbit",
+ "title": "Women and Girls in Science Day",
+ "theme": "a single atom floating above his head, purple nucleus, two silver orbits (one wide, one tall) and two teal electrons circling the wide one; the nucleus pulses",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  9,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "........SSSS........",
+  "......SSSSSSSS......",
+  "..TTSSS......SSSTT..",
+  ".STT..S.PPPP.S..TTS.",
+  "S.......PPPP.......S",
+  "S.......PPPP.......S",
+  ".SS...S.PPPP.S...SS.",
+  "...SSSS......SSSS...",
+  "......SSSSSSSS......",
+  "........SSSS........"
+ ],
+ "frames": [
+  [
+   "........SSSS........",
+   "......SSSSSSSS......",
+   "...SSSS......SSSTT..",
+   ".SS...S.PPPP.S..TTS.",
+   "S.......PPPP.......S",
+   "S.......PPPP.......S",
+   ".SS...S.PPPP.S..TTS.",
+   "...SSSS......SSSTT..",
+   "......SSSSSSSS......",
+   "........SSSS........"
+  ],
+  [
+   "........SSSS........",
+   "......SSSSSSSS......",
+   "...SSSS......SSSS...",
+   ".SS...S.PPPP.S...SS.",
+   "S.......PPPP.......S",
+   "S.......PPPP.......S",
+   ".STT..S.PPPP.S..TTS.",
+   "..TTSSS......SSSTT..",
+   "......SSSSSSSS......",
+   "........SSSS........"
+  ],
+  [
+   "........SSSS........",
+   "......SSSSSSSS......",
+   "..TTSSSPPPPPPSSSS...",
+   ".STT..SPPPPPPS...SS.",
+   "S......PPPPPP......S",
+   "S......PPPPPP......S",
+   ".STT..SPPPPPPS...SS.",
+   "..TTSSSPPPPPPSSSS...",
+   "......SSSSSSSS......",
+   "........SSSS........"
+  ]
+ ]
+}

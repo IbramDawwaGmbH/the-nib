@@ -1,0 +1,45 @@
+{
+ "date": "03-06",
+ "name": "toothbrush_tilt",
+ "title": "Dentist's Day",
+ "theme": "a blue toothbrush lying across his head, white bristle block with a teal paste stripe; it scrubs left and right with white sparkles over the bristles",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  15,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "...WW.........................",
+  "..............................",
+  "...TTTTTT.....................",
+  "..WWWWWWWW....................",
+  "..WWWWWWWWBBBBBDDBBBBDDBBBB...",
+  "..WWWWWWWWBBBBBDDBBBBDDBBBBB..",
+  "..WWWWWWWWBBBBBDDBBBBDDBBBBB..",
+  ".............................."
+ ],
+ "frames": [
+  [
+   ".....WW.......................",
+   "WW............................",
+   ".TTTTTT.......................",
+   "WWWWWWWW......................",
+   "WWWWWWWWBBBBBDDBBBBDDBBBB.....",
+   "WWWWWWWWBBBBBDDBBBBDDBBBBB....",
+   "WWWWWWWWBBBBBDDBBBBDDBBBBB....",
+   ".............................."
+  ],
+  [
+   "..WW..........................",
+   ".......WW.....................",
+   ".....TTTTTT...................",
+   "....WWWWWWWW..................",
+   "....WWWWWWWWBBBBBDDBBBBDDBBBB.",
+   "....WWWWWWWWBBBBBDDBBBBDDBBBBB",
+   "....WWWWWWWWBBBBBDDBBBBDDBBBBB",
+   ".............................."
+  ]
+ ]
+}

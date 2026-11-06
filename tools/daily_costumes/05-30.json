@@ -1,0 +1,60 @@
+{
+ "date": "05-30",
+ "name": "watering_can",
+ "title": "Water a Flower Day",
+ "theme": "a teal watering can tipped on his head, dark band, angled spout with a rose and an arched handle; water drops fall off the rose",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "...............TTTTT.....",
+  "..TTTTTTTTT....TTTTT.....",
+  "..TT.....TT.....TTT.B....",
+  "..TT...........TTT.......",
+  "TTTTTTTTTTTTTTTTT....B...",
+  "TTTTTTTTTTTTTTTT.........",
+  "TTTTTTTTTTTTTTT..........",
+  "DDDDDDDDDDDDDD...........",
+  "TTTTTTTTTTTTTT.........B.",
+  "TTTTTTTTTTTTTT...........",
+  "TTTTTTTTTTTTTT.........B.",
+  ".........................",
+  "........................."
+ ],
+ "frames": [
+  [
+   "...............TTTTT.....",
+   "..TTTTTTTTT....TTTTT.....",
+   "..TT.....TT.....TTT......",
+   "..TT...........TTT.......",
+   "TTTTTTTTTTTTTTTTT....B...",
+   "TTTTTTTTTTTTTTTT.........",
+   "TTTTTTTTTTTTTTT.......B..",
+   "DDDDDDDDDDDDDD...........",
+   "TTTTTTTTTTTTTT...........",
+   "TTTTTTTTTTTTTT...........",
+   "TTTTTTTTTTTTTT.........B.",
+   ".........................",
+   "........................B"
+  ],
+  [
+   "...............TTTTT.....",
+   "..TTTTTTTTT....TTTTT.....",
+   "..TT.....TT.....TTT.B....",
+   "..TT...........TTT.......",
+   "TTTTTTTTTTTTTTTTT........",
+   "TTTTTTTTTTTTTTTT.........",
+   "TTTTTTTTTTTTTTT.......B..",
+   "DDDDDDDDDDDDDD...........",
+   "TTTTTTTTTTTTTT.........B.",
+   "TTTTTTTTTTTTTT...........",
+   "TTTTTTTTTTTTTT...........",
+   ".........................",
+   "........................B"
+  ]
+ ]
+}

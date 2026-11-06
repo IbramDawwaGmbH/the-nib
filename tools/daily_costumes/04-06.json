@@ -1,0 +1,33 @@
+{
+ "date": "04-06",
+ "name": "laurel_wreath",
+ "title": "Day of Sport & Peace",
+ "theme": "a green laurel wreath round his crown, open at the front, tied with gold; the leaf pairs lift and settle in turn",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........NN..NN..........",
+  "....NN.NN.NN..NN.NN.NN....",
+  "....NN.NN.NN..NN.NN.NN.NN.",
+  ".NN.NNNDNNDNNNDNNDNNNN.NN.",
+  ".NNNDNNNNNNNNNNNNNNNDNNDN.",
+  "GGNNNN..............NNNNGG",
+  "GG......................GG"
+ ],
+ "frames": [
+  [
+   ".......NN........NN.......",
+   ".......NN.NN..NN.NN....NN.",
+   ".NN.NN.NN.NN..NN.NN.NN.NN.",
+   ".NN.NNNDNNDNNNDNNDNNNN.NN.",
+   ".NNNDNNNNNNNNNNNNNNNDNNDN.",
+   "GGNNNN..............NNNNGG",
+   "GG......................GG"
+  ]
+ ]
+}

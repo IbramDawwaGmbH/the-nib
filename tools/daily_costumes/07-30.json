@@ -1,0 +1,42 @@
+{
+ "date": "07-30",
+ "name": "friendship_beads",
+ "title": "Day of Friendship",
+ "theme": "a beaded friendship necklace with a pink heart in the middle; a white shimmer runs bead to bead and the heart pulses",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "WWPP..............PPBB",
+  "WWPPNN..........NNPPBB",
+  "KKKKNNGGBBPPBBGGNNKKKK",
+  "....KKGGBBPPBBGGKK....",
+  ".....KKKKKMKMKKKK.....",
+  "..........MMM.........",
+  "...........M.........."
+ ],
+ "frames": [
+  [
+   "BBPP..............PPBB",
+   "BBPPNN..........NNPPBB",
+   "KKKKNNWWBBPPBBGGNNKKKK",
+   "....KKWWBBPPBBGGKK....",
+   ".....KKKKMMMMMKKK.....",
+   "..........MMM.........",
+   "...........M.........."
+  ],
+  [
+   "BBPP..............PPBB",
+   "BBPPNN..........NNPPBB",
+   "KKKKNNGGBBPPBBWWNNKKKK",
+   "....KKGGBBPPBBWWKK....",
+   ".....KKKKKMKMKKKK.....",
+   "..........MMM.........",
+   "...........M.........."
+  ]
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "date": "09-15",
+ "name": "felt_fedora",
+ "title": "Felt Hat Day",
+ "theme": "a charcoal felt fedora with a grey band and a red feather",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "......AAAAAA..AAAAAA......",
+  ".....AAAWAAAAAAAAAAAA.....",
+  ".....AAAAAAAAAAAAAAAA.....",
+  ".....AAAAAAAAAAAAAAAA.....",
+  ".....ARRAAAAAAAAAAAAA.....",
+  ".....ARRAAAAAAAAAAAAA.....",
+  ".....KRRKKKKKKKKKKKKK.....",
+  ".....KRRKKKKKKKKKKKKK.....",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "......AAAAAA..AAAAAA......",
+   ".....AAAAAWAAAAAAAAAA.....",
+   ".....AAAAAAAAAAAAAAAA.....",
+   ".....AAAAAAAAAAAAAAAA.....",
+   ".....AARRAAAAAAAAAAAA.....",
+   ".....AARRAAAAAAAAAAAA.....",
+   ".....KRRKKKKKKKKKKKKK.....",
+   ".....KRRKKKKKKKKKKKKK.....",
+   "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

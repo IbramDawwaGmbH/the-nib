@@ -1,0 +1,57 @@
+{
+ "date": "12-19",
+ "name": "evergreen_sprig",
+ "title": "Look for an Evergreen Day",
+ "theme": "a small fir tree worn as a hat with three stepped tiers, a brown trunk and twinkling red, gold and blue lights",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........NN........",
+  ".......NNNN.......",
+  "......NNWNNN......",
+  ".......NNNN.......",
+  ".....NNNNGNNN.....",
+  "...NNNBNNNNNNNN...",
+  ".....NNNNNNNN.....",
+  "...NNNNNNNNRNNN...",
+  ".NNNGNNNNNNNNNNNN.",
+  "NNNNNNNNNNNNNNNNNN",
+  "........OO........",
+  "........OO........"
+ ],
+ "frames": [
+  [
+   "........NN........",
+   ".......NNNN.......",
+   "......NNRNNN......",
+   ".......NNNN.......",
+   ".....NNNNWNNN.....",
+   "...NNNBNNNNNNNN...",
+   ".....NNNNNNNN.....",
+   "...NNNNNNNNWNNN...",
+   ".NNNGNNNNNNNNNNNN.",
+   "NNNNNNNNNNNNNNNNNN",
+   "........OO........",
+   "........OO........"
+  ],
+  [
+   "........NN........",
+   ".......NNNN.......",
+   "......NNRNNN......",
+   ".......NNNN.......",
+   ".....NNNNGNNN.....",
+   "...NNNWNNNNNNNN...",
+   ".....NNNNNNNN.....",
+   "...NNNNNNNNRNNN...",
+   ".NNNWNNNNNNNNNNNN.",
+   "NNNNNNNNNNNNNNNNNN",
+   "........OO........",
+   "........OO........"
+  ]
+ ]
+}

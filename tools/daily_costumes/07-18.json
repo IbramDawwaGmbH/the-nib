@@ -1,0 +1,33 @@
+{
+  "date": "07-18",
+  "name": "shell_necklace",
+  "title": "Seashell Day",
+  "theme": "neck: a cord of five seashells, the teal one sparkles",
+  "category": "Neck",
+  "kind": "neck",
+  "anchor": [
+    11,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    "OO..................OO",
+    ".OOO..............OOO.",
+    "..OOOOOOOOOOOOOOOOOO..",
+    "...WWMM...TT...MMWW...",
+    "..WWWMMM.TTTT.MMMWWW..",
+    "..WWWMMM.TTTT.MMMWWW..",
+    ".........TTTT........."
+  ],
+  "frames": [
+    [
+      "OO..................OO",
+      ".OOO..............OOO.",
+      "..OOOOOOOOOOOOOOOOOO..",
+      "....WWMM...TT...MMWW..",
+      "...WWWMMM.TTWT.MMMWWW.",
+      "...WWWMMM.TTTT.MMMWWW.",
+      "..........TTTT........"
+    ]
+  ]
+}

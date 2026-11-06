@@ -1,0 +1,42 @@
+{
+ "date": "01-11",
+ "name": "frost_goggles",
+ "title": "Frosty Morning",
+ "theme": "Round silver goggles with solid white frosted lenses over both eyes; a teal glint slides diagonally across each lens in turn",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "...SSSSS........SSSSS...",
+  "..SSSSSSS......SSSSSSS..",
+  "..SSTWWSSSSSSSSSSWWWSS..",
+  "SSSSWTWSSSSSSSSSSWWWSSSS",
+  "..SSWWTSS......SSWWWSS..",
+  "..SSSSSSS......SSSSSSS..",
+  "...SSSSS........SSSSS..."
+ ],
+ "frames": [
+  [
+   "...SSSSS........SSSSS...",
+   "..SSSSSSS......SSSSSSS..",
+   "..SSWWWSSSSSSSSSSTWWSS..",
+   "SSSSWWWSSSSSSSSSSWTWSSSS",
+   "..SSWWWSS......SSWWTSS..",
+   "..SSSSSSS......SSSSSSS..",
+   "...SSSSS........SSSSS..."
+  ],
+  [
+   "...SSSSS........SSSSS...",
+   "..SSSSSSS......SSSSSSS..",
+   "..SSWWWSSSSSSSSSSWWWSS..",
+   "SSSSWWWSSSSSSSSSSWWWSSSS",
+   "..SSWWWSS......SSWWWSS..",
+   "..SSSSSSS......SSSSSSS..",
+   "...SSSSS........SSSSS..."
+  ]
+ ]
+}

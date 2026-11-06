@@ -1,0 +1,45 @@
+{
+ "date": "05-27",
+ "name": "sunscreen_bottle",
+ "title": "Sunscreen Day",
+ "theme": "a white sunscreen bottle lying on his head with a blue flip cap at the right and a gold sun mark on the label; the cap flips open and a white blob squeezes out and drips",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "WWWWWWWWWWWWWWWW......",
+  "WWWWWWWWWWWWWWWWWW....",
+  "WWWWWWWGGWWWWWWWWWBBBB",
+  "WWWWWWGGGGWWWWWWWWBBBB",
+  "WWWWWWGGGGWWWWWWWWBBBB",
+  "WWWWWWWGGWWWWWWWWWBBBB",
+  "WWWWWWWWWWWWWWWWWW....",
+  "WWWWWWWWWWWWWWWW......"
+ ],
+ "frames": [
+  [
+   "WWWWWWWWWWWWWWWW...BBB",
+   "WWWWWWWWWWWWWWWWWW.BBB",
+   "WWWWWWWGGWWWWWWWWW...B",
+   "WWWWWWGGGGWWWWWWWWWWWW",
+   "WWWWWWGGGGWWWWWWWWWWWW",
+   "WWWWWWWGGWWWWWWWWW....",
+   "WWWWWWWWWWWWWWWWWW....",
+   "WWWWWWWWWWWWWWWW......"
+  ],
+  [
+   "WWWWWWWWWWWWWWWW...BBB",
+   "WWWWWWWWWWWWWWWWWW.BBB",
+   "WWWWWWWGGWWWWWWWWW...B",
+   "WWWWWWGGGGWWWWWWWWWWWW",
+   "WWWWWWGGGGWWWWWWWWWWWW",
+   "WWWWWWWGGWWWWWWWWW....",
+   "WWWWWWWWWWWWWWWWWW..WW",
+   "WWWWWWWWWWWWWWWW....WW"
+  ]
+ ]
+}

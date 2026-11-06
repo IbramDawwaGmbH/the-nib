@@ -1,0 +1,54 @@
+{
+ "date": "09-18",
+ "name": "cheese_slice_drape",
+ "title": "Cheeseburger Day",
+ "theme": "a square gold cheese slice draped over his head with corners drooping down the sides, dark fold seams and two drips",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  3
+ ],
+ "layer": "over",
+ "pattern": [
+  "GGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGDDGGGGGGGGGGDDGGGG",
+  "GGGG...GG.....GG..GGGG",
+  "GGG....GG.....GG...GGG",
+  "GG..................GG",
+  "GG..................GG",
+  "......................",
+  "......................",
+  "......................"
+ ],
+ "frames": [
+  [
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGDDGGGGGGGGGGDDGGGG",
+   "GGGG...GG.....GG..GGGG",
+   "GGG....GG.....GG...GGG",
+   "GG............GG....GG",
+   "GG..................GG",
+   "GG..................GG",
+   "......................",
+   "......................"
+  ],
+  [
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGDDGGGGGGGGGGDDGGGG",
+   "GGGG...GG.....GG..GGGG",
+   "GGG....GG..........GGG",
+   "GG..................GG",
+   "GG............GG....GG",
+   "GG............GG....GG",
+   "......................",
+   "......................"
+  ]
+ ]
+}

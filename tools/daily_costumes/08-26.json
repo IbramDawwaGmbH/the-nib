@@ -1,0 +1,79 @@
+{
+ "date": "08-26",
+ "name": "floppy_hound",
+ "title": "National Dog Day",
+ "theme": "floppy brown dog ears on a headband with a nose bump; the ears flop",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  17,
+  3
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................................",
+  "..................................",
+  ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+  ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  "OOOOOMM....................MMOOOOO",
+  ".OOOMM......................MMOOO.",
+  "..OMM........................MMO.."
+ ],
+ "frames": [
+  [
+   "..................................",
+   "..................................",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   ".OOOMM.....................MMOOOOO",
+   "..OMM.......................MMOOO.",
+   ".............................MMO.."
+  ],
+  [
+   "..................................",
+   "..................................",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM.....................MMOOO.",
+   ".OOOMM.......................MMO..",
+   "..OMM............................."
+  ],
+  [
+   "..................................",
+   "..................................",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   ".AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   "OOOOOMM....................MMOOOOO",
+   ".OOOMM......................MMOOO.",
+   "..OMM........................MMO..",
+   ".................................."
+  ]
+ ]
+}

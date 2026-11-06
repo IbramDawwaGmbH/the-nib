@@ -1,0 +1,57 @@
+{
+ "date": "04-16",
+ "name": "elephant_ears",
+ "title": "Save the Elephant Day",
+ "theme": "a grey band with two big floppy elephant ears fanning out beside his head, pink inside; the ears flap out and in",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  19,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "......KKKKKK..............KKKKKK......",
+  "...KKKKKKKKK..............KKKKKKKKK...",
+  ".KKMMMMMMMKK..............KKMMMMMMMKK.",
+  ".KKMMMMMMMKK..............KKMMMMMMMKK.",
+  ".KKMMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMMKK.",
+  ".KKMMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMMKK.",
+  ".KKMMMMMMMKK..............KKMMMMMMMKK.",
+  "..KKMMMMMMKK..............KKMMMMMMKK..",
+  "...KKMMMMKK................KKMMMMKK...",
+  ".....KKKKK..................KKKKK.....",
+  ".......KK....................KK.......",
+  "......................................"
+ ],
+ "frames": [
+  [
+   "......KKKKKK..............KKKKKK......",
+   "..KKKKKKKKKK..............KKKKKKKKKK..",
+   "KKMMMMMMMMKK..............KKMMMMMMMMKK",
+   "KKMMMMMMMMKK..............KKMMMMMMMMKK",
+   "KKMMMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMMMKK",
+   "KKMMMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMMMKK",
+   "KKMMMMMMMMKK..............KKMMMMMMMMKK",
+   ".KKMMMMMMMKK..............KKMMMMMMMKK.",
+   "..KKMMMMMKK................KKMMMMMKK..",
+   ".....KKKKK..................KKKKK.....",
+   ".......KK....................KK.......",
+   "......................................"
+  ],
+  [
+   "......KKKKKK..............KKKKKK......",
+   "....KKKKKKKK..............KKKKKKKK....",
+   "..KKMMMMMMKK..............KKMMMMMMKK..",
+   "..KKMMMMMMKK..............KKMMMMMMKK..",
+   "..KKMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMKK..",
+   "..KKMMMMMMKKKKKKKKKKKKKKKKKKMMMMMMKK..",
+   "..KKMMMMMMKK..............KKMMMMMMKK..",
+   "...KKMMMMMKK..............KKMMMMMKK...",
+   "....KKMMMKK................KKMMMKK....",
+   ".....KKKKK..................KKKKK.....",
+   ".......KK....................KK.......",
+   "......................................"
+  ]
+ ]
+}

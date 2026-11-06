@@ -1,0 +1,71 @@
+{
+ "date": "03-19",
+ "name": "hen_comb",
+ "title": "Poultry Day",
+ "theme": "a rooster's red comb of three rounded bumps on a dark headband with a teardrop red wattle hanging at each cheek; the wattles swing and the comb's tip tips left, centre, right",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "............RR............",
+  ".......RR..RRRR..RR.......",
+  "......RRRR.RRRR.RRRR......",
+  "......RRRRRRRRRRRRRR......",
+  "......RRRRRRRRRRRRRR......",
+  "......RRRRRRRRRRRRRR......",
+  "......RRRRRRRRRRRRRR......",
+  ".DDDDDDDDDDDDDDDDDDDDDDDD.",
+  "...RR................RR...",
+  "...RR................RR...",
+  "....RR..............RR....",
+  ".....R..............R....."
+ ],
+ "frames": [
+  [
+   "...........RR.............",
+   ".......RR..RRRR..RR.......",
+   "......RRRR.RRRR.RRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   ".DDDDDDDDDDDDDDDDDDDDDDDD.",
+   "....RR..............RR....",
+   "....RR..............RR....",
+   ".....RR............RR.....",
+   "......R............R......"
+  ],
+  [
+   "............RR............",
+   ".......RR..RRRR..RR.......",
+   "......RRRR.RRRR.RRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   ".DDDDDDDDDDDDDDDDDDDDDDDD.",
+   "..RR..................RR..",
+   "..RR..................RR..",
+   "...RR................RR...",
+   "....R................R...."
+  ],
+  [
+   ".............RR...........",
+   ".......RR..RRRR..RR.......",
+   "......RRRR.RRRR.RRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   "......RRRRRRRRRRRRRR......",
+   ".DDDDDDDDDDDDDDDDDDDDDDDD.",
+   "...RR................RR...",
+   "...RR................RR...",
+   "....RR..............RR....",
+   ".....R..............R....."
+  ]
+ ]
+}

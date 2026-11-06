@@ -1,0 +1,39 @@
+{
+ "date": "10-13",
+ "name": "upturned_collar",
+ "title": "Mystery Night",
+ "theme": "a charcoal trench-coat collar turned up round his neck, one lapel crossing over the other, with dark seams and a grey belt knot; the collar tips flap in turn and the belt tail swings",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  14,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "..AAAA......................",
+  ".AAAAAA.....................",
+  "AAAAAAAA..............AAAA..",
+  "AAAAAAAAAA......AAAAAAAAAAAA",
+  "AAADAAAAAAAAAA..AAAAAADAAAAA",
+  "AAAADAAAAAAAAAAAAAAAADAAAAAA",
+  "AAAAADAAAAAAKKKKAAAADAAAAAAA",
+  "AAAAAAADAAAAAKKKKAADAAAAAAAA",
+  "...........KK...............",
+  "...........KK..............."
+ ],
+ "frames": [
+  [
+   "......................AAAA..",
+   ".....................AAAAAA.",
+   ".AAAA..............AAAAAAAAA",
+   "AAAAAAAAAA......AAAAAAAAAAAA",
+   "AAADAAAAAAAAAA..AAAAAADAAAAA",
+   "AAAADAAAAAAAAAAAAAAAADAAAAAA",
+   "AAAAADAAAAAAKKKKAAAADAAAAAAA",
+   "AAAAAAADAAAAAKKKKAADAAAAAAAA",
+   "...............KK...........",
+   "...............KK..........."
+  ]
+ ]
+}

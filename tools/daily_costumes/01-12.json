@@ -1,0 +1,54 @@
+{
+ "date": "01-12",
+ "name": "teapot_hat",
+ "title": "Hot Tea Day",
+ "theme": "a round blue teapot with a dark seam band, handle, spout and gold knob, steam puffing from the spout",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "...........GG.............",
+  "...........GG.......WW....",
+  "........BBBBBBBB....WW....",
+  "......BBBBBBBBBBBB..BB....",
+  ".BBBBBBBBBBBBBBBBBB.BB....",
+  "BB...BBBBBBBBBBBBBB.BB....",
+  "BB...DDDDDDDDDDDDDDBBB....",
+  "BB...BBBBBBBBBBBBBBBBB....",
+  "BB...BBBBBBBBBBBBBBBBB....",
+  ".BBB..BBBBBBBBBBBB........",
+  ".......BBBBBBBBBB........."
+ ],
+ "frames": [
+  [
+   "..........GG.........WWW..",
+   "..........GG.........WWW..",
+   "........BBBBBBBB..........",
+   "......BBBBBBBBBBBB..BB....",
+   ".BBBBBBBBBBBBBBBBBB.BB....",
+   "BB...BBBBBBBBBBBBBB.BB....",
+   "BB...DDDDDDDDDDDDDDBBB....",
+   "BB...BBBBBBBBBBBBBBBBB....",
+   "BB...BBBBBBBBBBBBBBBBB....",
+   ".BBB..BBBBBBBBBBBB........",
+   ".......BBBBBBBBBB........."
+  ],
+  [
+   "............GG..........WW",
+   "............GG..........WW",
+   "........BBBBBBBB....WW....",
+   "......BBBBBBBBBBBB..BB....",
+   ".BBBBBBBBBBBBBBBBBB.BB....",
+   "BB...BBBBBBBBBBBBBB.BB....",
+   "BB...DDDDDDDDDDDDDDBBB....",
+   "BB...BBBBBBBBBBBBBBBBB....",
+   "BB...BBBBBBBBBBBBBBBBB....",
+   ".BBB..BBBBBBBBBBBB........",
+   ".......BBBBBBBBBB........."
+  ]
+ ]
+}

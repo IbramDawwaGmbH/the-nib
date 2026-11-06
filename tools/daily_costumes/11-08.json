@@ -1,0 +1,45 @@
+{
+ "date": "11-08",
+ "name": "xray_plate",
+ "title": "Radiology Day",
+ "theme": "an x-ray plate over his chest: charcoal rectangle with white ribcage lines and a grey border; ribs glow and a scan glint crosses",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  8,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "KKKKKKKKKKKKKKKKKK",
+  "KAAAAAAASSAAAAAAAK",
+  "KAASSSSSSSSSSSSAAK",
+  "KAAAAAAASSAAAAAAAK",
+  "KASSSSSASSASSSSSAK",
+  "KAAAAAAASSAAAAAAAK",
+  "KAASSSSSSSSSSSSAAK",
+  "KKKKKKKKKKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   "KKKKKKKKKKKKKKKKKK",
+   "KAAWWAAAWWAAAAAAAK",
+   "KAAWWWWWWWWWWWWAAK",
+   "KAAWWAAAWWAAAAAAAK",
+   "KAWWWWWAWWAWWWWWAK",
+   "KAAWWAAAWWAAAAAAAK",
+   "KAAWWWWWWWWWWWWAAK",
+   "KKKKKKKKKKKKKKKKKK"
+  ],
+  [
+   "KKKKKKKKKKKKKKKKKK",
+   "KAAAAAAASSAAWWAAAK",
+   "KAASSSSSSSSSWWSAAK",
+   "KAAAAAAASSAAWWAAAK",
+   "KASSSSSASSASWWSSAK",
+   "KAAAAAAASSAAWWAAAK",
+   "KAASSSSSSSSSWWSAAK",
+   "KKKKKKKKKKKKKKKKKK"
+  ]
+ ]
+}

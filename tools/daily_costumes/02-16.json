@@ -1,0 +1,48 @@
+{
+ "date": "02-16",
+ "name": "tinker_goggles",
+ "title": "Innovation Day",
+ "theme": "brass inventor goggles with teal lenses; a spark pops off the cog and a lens flashes",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  ".................SSW......",
+  ".....GGGGGG....GGSSGG.....",
+  "....GGGGGGGG..GGGGGGGG....",
+  "....GGTTTTGG..GGTTTTGG....",
+  "OOOOGGTTTTGGGGGGTTTTGGOOOO",
+  "....GGTTTTGGGGGGTTTTGG....",
+  "....GGTTTTGG..GGTTTTGG....",
+  "....GGGGGGGG..GGGGGGGG....",
+  ".....GGGGGG....GGGGGG....."
+ ],
+ "frames": [
+  [
+   ".................SS.W.....",
+   ".....GGGGGG....GGSSGG.....",
+   "....GGGGGGGG..GGGGGGGG....",
+   "....GGWWWWGG..GGTTTTGG....",
+   "OOOOGGWWWWGGGGGGTTTTGGOOOO",
+   "....GGWWWWGGGGGGTTTTGG....",
+   "....GGWWWWGG..GGTTTTGG....",
+   "....GGGGGGGG..GGGGGGGG....",
+   ".....GGGGGG....GGGGGG....."
+  ],
+  [
+   ".................SS..K....",
+   ".....GGGGGG....GGSSGG.....",
+   "....GGGGGGGG..GGGGGGGG....",
+   "....GGTTTTGG..GGTTTTGG....",
+   "OOOOGGTTTTGGGGGGTTTTGGOOOO",
+   "....GGTTTTGGGGGGTTTTGG....",
+   "....GGTTTTGG..GGTTTTGG....",
+   "....GGGGGGGG..GGGGGGGG....",
+   ".....GGGGGG....GGGGGG....."
+  ]
+ ]
+}

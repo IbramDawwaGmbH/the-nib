@@ -1,0 +1,51 @@
+{
+ "date": "05-03",
+ "name": "press_lanyard",
+ "title": "World Press Freedom Day",
+ "theme": "a press badge on a blue lanyard, white card with a blue stripe and a charcoal photo block, swaying",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  5,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "..B......B..",
+  "...B....B...",
+  "....B..B....",
+  ".....BB.....",
+  "..BBBBBBBB..",
+  "..BBBBBBBB..",
+  "..WWWWWWWW..",
+  "..WWAAAAWW..",
+  "..WWAAAAWW..",
+  "..WWWWWWWW.."
+ ],
+ "frames": [
+  [
+   "..B......B..",
+   "...B....B...",
+   "....B..B....",
+   ".....BB.....",
+   ".BBBBBBBB...",
+   ".BBBBBBBB...",
+   ".WWWWWWWW...",
+   ".WWAAAAWW...",
+   ".WWAAAAWW...",
+   ".WWWWWWWW..."
+  ],
+  [
+   "..B......B..",
+   "...B....B...",
+   "....B..B....",
+   ".....BB.....",
+   "...BBBBBBBB.",
+   "...BBBBBBBB.",
+   "...WWWWWWWW.",
+   "...WWAAAAWW.",
+   "...WWAAAAWW.",
+   "...WWWWWWWW."
+  ]
+ ]
+}

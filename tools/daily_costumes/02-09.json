@@ -1,0 +1,63 @@
+{
+ "date": "02-09",
+ "name": "pizza_slice",
+ "title": "Pizza Day",
+ "theme": "a pizza slice tipped point-down on his head, gold crust, red sauce, cheese and three pepperoni; a cheese string drips from the side",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "GGGGGGGGGGGGGGGG",
+  "GGGOGGGGOGGGOGGG",
+  ".RRRRRRRRRRRRRR.",
+  "..RRRRRRRRRRRR..",
+  "...GGGGGGGGGG...",
+  "...GRRGGGGRRG...",
+  "....RRGGGGRR....",
+  ".....GGRRGG.....",
+  "......GRRG......",
+  "......GGGG......"
+ ],
+ "frames": [
+  [
+   "GGGGGGGGGGGGGGGG",
+   "GGGOGGGGOGGGOGGG",
+   ".RRRRRRRRRRRRRR.",
+   "..RRRRRRRRRRRR..",
+   "...GGGGGGGGGG...",
+   "...GRRGGGGRRG...",
+   "...GRRGGGGRR....",
+   "...G.GGRRGG.....",
+   "......GRRG......",
+   "......GGGG......"
+  ],
+  [
+   "GGGGGGGGGGGGGGGG",
+   "GGGOGGGGOGGGOGGG",
+   ".RRRRRRRRRRRRRR.",
+   "..RRRRRRRRRRRR..",
+   "...GGGGGGGGGG...",
+   "...GRRGGGGRRG...",
+   "...GRRGGGGRR....",
+   "...G.GGRRGG.....",
+   "...G..GRRG......",
+   "......GGGG......"
+  ],
+  [
+   "GGGGGGGGGGGGGGGG",
+   "GGGOGGGGOGGGOGGG",
+   ".RRRRRRRRRRRRRR.",
+   "..RRRRRRRRRRRR..",
+   "...GGGGGGGGGG...",
+   "...GRRGGGGRRG...",
+   "....RRGGGGRR....",
+   ".....GGRRGG.....",
+   "...G..GRRG......",
+   "...G..GGGG......"
+  ]
+ ]
+}

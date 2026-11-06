@@ -1,0 +1,48 @@
+{
+  "date": "07-14",
+  "name": "shark_fin",
+  "title": "Shark Awareness Day",
+  "theme": "head: a grey dorsal fin cutting through water with a teal splash",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    6,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    "..........K.",
+    ".........KK.",
+    "........KKK.",
+    "......KKKKK.",
+    ".....KKKKKK.",
+    "...KKKKKKKK.",
+    "..KKKKKKKK..",
+    ".KKKKKKKK...",
+    ".WWWWWWWW..."
+  ],
+  "frames": [
+    [
+      ".........K..",
+      "........KK..",
+      "........KKK.",
+      "......KKKKK.",
+      ".....KKKKKK.",
+      "...KKKKKKKK.",
+      "..KKKKKKKK..",
+      ".KKKKKKKK...",
+      ".WWWWWWWW..."
+    ],
+    [
+      "...........K",
+      "..........KK",
+      "........KKK.",
+      "......KKKKK.",
+      ".....KKKKKK.",
+      "...KKKKKKKK.",
+      "..KKKKKKKK..",
+      "TKKKKKKKK...",
+      "TWWWWWWWW..."
+    ]
+  ]
+}

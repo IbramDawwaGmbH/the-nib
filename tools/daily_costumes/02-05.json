@@ -1,0 +1,71 @@
+{
+ "date": "02-05",
+ "name": "weather_vane",
+ "title": "Weatherperson's Day",
+ "theme": "a grey post on his crown carrying a gold arrow with a pointed head and forked fin and a small charcoal rooster on top; the whole arrow swings right, centre, left as the rooster turns",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........AA.....AA.......",
+  "........AA....AAAA......",
+  "........AAA...AA........",
+  "........AAAAAAAA........",
+  "....GG...AAAAAA.........",
+  "....GGG...AAA.....G.....",
+  ".....GGGGGGGGGGGGGGGG...",
+  ".....GGGGGGGGGGGGGGG....",
+  "....GGG....KK...G.......",
+  "....GG.....KK...........",
+  ".........SSSSSS.........",
+  "...........KK..........."
+ ],
+ "frames": [
+  [
+   "..........AA.....AA.....",
+   "..........AA....AAAA....",
+   "..........AAA...AA......",
+   "..........AAAAAAAA......",
+   "......GG...AAAAAA.......",
+   "......GGG...AAA.....G...",
+   ".......GGGGGGGGGGGGGGGG.",
+   ".......GGGGGGGGGGGGGGG..",
+   "......GGG..KK.....G.....",
+   "......GG...KK...........",
+   ".........SSSSSS.........",
+   "...........KK..........."
+  ],
+  [
+   ".........AA.....AA......",
+   "........AAAA....AA......",
+   "..........AA...AAA......",
+   "..........AAAAAAAA......",
+   "....GG.....AAAAAA.......",
+   "....GGG......AAA..G.....",
+   ".....GGGGGGGGGGGGGGGG...",
+   ".....GGGGGGGGGGGGGGG....",
+   "....GGG....KK...G.......",
+   "....GG.....KK...........",
+   ".........SSSSSS.........",
+   "...........KK..........."
+  ],
+  [
+   "......AA.....AA.........",
+   "......AA....AAAA........",
+   "......AAA...AA..........",
+   "......AAAAAAAA..........",
+   "..GG...AAAAAA...........",
+   "..GGG...AAA.....G.......",
+   "...GGGGGGGGGGGGGGGG.....",
+   "...GGGGGGGGGGGGGGG......",
+   "..GGG......KK.G.........",
+   "..GG.......KK...........",
+   ".........SSSSSS.........",
+   "...........KK..........."
+  ]
+ ]
+}

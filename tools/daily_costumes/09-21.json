@@ -1,0 +1,39 @@
+{
+ "date": "09-21",
+ "name": "peace_dove",
+ "title": "International Day of Peace",
+ "theme": "a white dove perched on his crown facing left with an olive sprig in its beak; its wing flaps and the sprig sways",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "...............W",
+  "N.N..WWWW.....WW",
+  "NNNNGWDWWWWWWWWW",
+  ".....WWWDDDDWW..",
+  ".......WWWWWWW..",
+  "........WWWWW..."
+ ],
+ "frames": [
+  [
+   "...............W",
+   ".N.N.WWWW.WWW.WW",
+   "NNNNGWDWWWWWWWWW",
+   ".....WWWWWWWWW..",
+   ".......WWWWWWW..",
+   "........WWWWW..."
+  ],
+  [
+   "..........WW...W",
+   "N.N..WWWW.WWW.WW",
+   "NNNNGWDWWWWWWWWW",
+   ".....WWWWWWWWW..",
+   ".......WWWWWWW..",
+   "........WWWWW..."
+  ]
+ ]
+}

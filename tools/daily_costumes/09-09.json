@@ -1,0 +1,60 @@
+{
+ "date": "09-09",
+ "name": "teddy_hug",
+ "title": "Teddy Bear Day",
+ "theme": "a small brown teddy bear hugged against his tummy with a gold muzzle and red bow; it tilts left then right and an ear wiggles",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  7,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "..OO......OO..",
+  ".ODDOOOOOODDO.",
+  ".OOAAOOOOAAOO.",
+  ".OOOGGGGGGOOO.",
+  ".OOOGGAAGGOOO.",
+  ".OOOGGGGGGOOO.",
+  ".DDDDDDDDDDDD.",
+  "....RRRRRR....",
+  "....RRDDRR....",
+  "DOOOOOOOOOOOOD",
+  "OOOOOOOOOOOOOO",
+  "DDDDDDDDDDDDDD",
+  ".OOOOO..OOOOO."
+ ],
+ "frames": [
+  [
+   "....O......OO.",
+   "..ODDOOOOOODDO",
+   "..OOAAOOOOAAOO",
+   "..OOOGGGGGGOOO",
+   "..OOOGGAAGGOOO",
+   "..OOOGGGGGGOOO",
+   "..DDDDDDDDDDDD",
+   "....RRRRRR....",
+   "....RRDDRR....",
+   "DOOOOOOOOOOOOD",
+   "OOOOOOOOOOOOOO",
+   "DDDDDDDDDDDDDD",
+   ".OOOOO..OOOOO."
+  ],
+  [
+   ".OO......OO...",
+   "ODDOOOOOODDO..",
+   "OOAAOOOOAAOO..",
+   "OOOGGGGGGOOO..",
+   "OOOGGAAGGOOO..",
+   "OOOGGGGGGOOO..",
+   "DDDDDDDDDDDD..",
+   "....RRRRRR....",
+   "....RRDDRR....",
+   "DOOOOOOOOOOOOD",
+   "OOOOOOOOOOOOOO",
+   "DDDDDDDDDDDDDD",
+   ".OOOOO..OOOOO."
+  ]
+ ]
+}

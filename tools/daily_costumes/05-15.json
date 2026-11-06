@@ -1,0 +1,55 @@
+{
+ "date": "05-15",
+ "name": "paper_chain",
+ "title": "Day of Families",
+ "theme": "a chain of five paper-doll figures holding hands across his chest, alternately pink, white and blue; a wave ripples along their hands",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  12,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  ".MM...WW...BB...WW...MM.",
+  ".MM.M.WW.W.BB.B.WW.W.MM.",
+  "MMMM.WWWW.BBBB.WWWW.MMMM",
+  ".MM...WW...BB...WW...MM.",
+  ".MM...WW...BB...WW...MM.",
+  "MMMM.WWWW.BBBB.WWWW.MMMM",
+  "MMMM.WWWW.BBBB.WWWW.MMMM"
+ ],
+ "frames": [
+  [
+   ".MM..................MM.",
+   ".MM...WW...BB...WW...MM.",
+   "MMMMM.WW.W.BB.B.WW.WMMMM",
+   ".MM..WWWW.BBBB.WWWW..MM.",
+   ".MM...WW...BB...WW...MM.",
+   "MMMM..WW...BB...WW..MMMM",
+   "MMMM.WWWW.BBBB.WWWW.MMMM",
+   ".....WWWW.BBBB.WWWW....."
+  ],
+  [
+   "......WW........WW......",
+   ".MM...WW...BB...WW...MM.",
+   ".MM.MWWWWW.BB.BWWWWW.MM.",
+   "MMMM..WW..BBBB..WW..MMMM",
+   ".MM...WW...BB...WW...MM.",
+   ".MM..WWWW..BB..WWWW..MM.",
+   "MMMM.WWWW.BBBB.WWWW.MMMM",
+   "MMMM......BBBB......MMMM"
+  ],
+  [
+   "...........BB...........",
+   ".MM...WW...BB...WW...MM.",
+   ".MM.M.WW.WBBBBB.WW.W.MM.",
+   "MMMM.WWWW..BB..WWWW.MMMM",
+   ".MM...WW...BB...WW...MM.",
+   ".MM...WW..BBBB..WW...MM.",
+   "MMMM.WWWW.BBBB.WWWW.MMMM",
+   "MMMM.WWWW......WWWW.MMMM"
+  ]
+ ]
+}

@@ -1,0 +1,83 @@
+{
+ "date": "08-18",
+ "name": "angler_bucket",
+ "title": "Gone Fishing",
+ "theme": "a green bucket hat with a bobber and hook swinging off the brim",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  14,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......NNNNNNNNNNNNNN..........",
+  ".....NNNNNNNNNNNNNNNNNN........",
+  ".....NNNNNNNNNNNNNNNNNN........",
+  ".....NNNNNNNNNNNNNNNNNN........",
+  ".....DDDDDDDDDDDDDDDDDD........",
+  ".....NNNNNNNNNNNNNNNNNN........",
+  ".NNNNNNNNNNNNNNNNNNNNNNNNNN....",
+  "NNNNNNNNNNNNNNNNNNNNNNNNNNNNK..",
+  "...........................K...",
+  "..........................RRR..",
+  "..........................RRR..",
+  "..........................WWW..",
+  "...........................S...",
+  "..........................SS...",
+  "..............................."
+ ],
+ "frames": [
+  [
+   ".......NNNNNNNNNNNNNN..........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....DDDDDDDDDDDDDDDDDD........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".NNNNNNNNNNNNNNNNNNNNNNNNNN....",
+   "NNNNNNNNNNNNNNNNNNNNNNNNNNNNK..",
+   "............................K..",
+   "...........................RRR.",
+   "...........................RRR.",
+   "...........................WWW.",
+   "............................S..",
+   "...........................SS..",
+   "..............................."
+  ],
+  [
+   ".......NNNNNNNNNNNNNN..........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....DDDDDDDDDDDDDDDDDD........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".NNNNNNNNNNNNNNNNNNNNNNNNNN....",
+   "NNNNNNNNNNNNNNNNNNNNNNNNNNNNK..",
+   ".............................K.",
+   "............................RRR",
+   "............................RRR",
+   "............................WWW",
+   ".............................S.",
+   "............................SS.",
+   "..............................."
+  ],
+  [
+   ".......NNNNNNNNNNNNNN..........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".....DDDDDDDDDDDDDDDDDD........",
+   ".....NNNNNNNNNNNNNNNNNN........",
+   ".NNNNNNNNNNNNNNNNNNNNNNNNNN....",
+   "NNNNNNNNNNNNNNNNNNNNNNNNNNNNK..",
+   "............................K..",
+   "...........................RRR.",
+   "...........................RRR.",
+   "...........................WWW.",
+   "............................S..",
+   "............................SS.",
+   "..............................."
+  ]
+ ]
+}

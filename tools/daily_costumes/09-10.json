@@ -1,0 +1,54 @@
+{
+ "date": "09-10",
+ "name": "bright_idea_bulb",
+ "title": "Swap Ideas Day",
+ "theme": "a lightbulb on his crown that flickers on with rays and off again",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  9,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "......GGGGGG......",
+  ".....GGGGGGGG.....",
+  "....GGGGGGGGGG....",
+  "....GGGGGGGGGG....",
+  "....GGGGGGGGGG....",
+  "....GGGGGGGGGG....",
+  ".....GGGGGGGG.....",
+  "......GGGGGG......",
+  "......KKKKKK......",
+  "......DDDDDD......",
+  "......KKKKKK......"
+ ],
+ "frames": [
+  [
+   ".W....GGGGGG....W.",
+   "..W..GWWGGGGG..W..",
+   "....GGWWGGGGGG....",
+   "....GGGGGGGGGG....",
+   "WW..GGGGGGGGGG..WW",
+   "....GGGGGGGGGG....",
+   ".....GGGGGGGG.....",
+   "......GGGGGG......",
+   "......KKKKKK......",
+   "......DDDDDD......",
+   "......KKKKKK......"
+  ],
+  [
+   "......GGGGGG......",
+   ".....GWGGGGGG.....",
+   "....GGGGGGGGGG....",
+   "....GGGGGGGGGG....",
+   "....GGGGGGGGGG....",
+   "....GGGGGGGGGG....",
+   ".....GGGGGGGG.....",
+   "......GGGGGG......",
+   "......KKKKKK......",
+   "......DDDDDD......",
+   "......KKKKKK......"
+  ]
+ ]
+}

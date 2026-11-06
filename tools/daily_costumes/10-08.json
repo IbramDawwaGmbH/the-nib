@@ -1,0 +1,75 @@
+{
+ "date": "10-08",
+ "name": "octopus_hat",
+ "title": "World Octopus Day",
+ "theme": "a purple octopus sitting on his head, white eyes, six tentacles with pink suckers; the tentacle tips lift in a wave from left to right and it blinks",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......PPPPPPPP.......",
+  ".....PPPPPPPPPPPP.....",
+  "....PPPPPPPPPPPPPP....",
+  "....PPWWWPPPPWWWPP....",
+  "....PPWDWPPPPWDWPP....",
+  "....PPWWWPPPPWWWPP....",
+  "PPPPPPPPPPPPPPPPPPPPPP",
+  "PPPPPPPPPPPPPPPPPPPPPP",
+  "MP..PP..PP..PP..PP..PM",
+  "PP..PP..PP..PP..PP..PP",
+  "PP..MP..MP..PM..PM..PP",
+  "MP..PP..MP..PP..PM..PM",
+  "PP......PP..PP......PP"
+ ],
+ "frames": [
+  [
+   ".......PPPPPPPP.......",
+   ".....PPPPPPPPPPPP.....",
+   "....PPPPPPPPPPPPPP....",
+   "....PPWWWPPPPWWWPP....",
+   "....PPWDWPPPPWDWPP....",
+   "....PPWWWPPPPWWWPP....",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "MP..PP..PP..PP..PP..PM",
+   "PP..PP..PP..PP..PP..PP",
+   "PP..MP..MP..PM..PM..PP",
+   "MP..PP..MP..PP..PM..PM",
+   "........PP..........PP"
+  ],
+  [
+   ".......PPPPPPPP.......",
+   ".....PPPPPPPPPPPP.....",
+   "....PPPPPPPPPPPPPP....",
+   "....PPPPPPPPPPPPPP....",
+   "....PPDDDPPPPDDDPP....",
+   "....PPPPPPPPPPPPPP....",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "MP..PP..PP..PP..PP..PM",
+   "PP..PP..PP..PP..PP..PP",
+   "PP..MP..MP..PM..PM..PP",
+   "MP......MP..PP......PM",
+   "PP......PP..PP......PP"
+  ],
+  [
+   ".......PPPPPPPP.......",
+   ".....PPPPPPPPPPPP.....",
+   "....PPPPPPPPPPPPPP....",
+   "....PPWWWPPPPWWWPP....",
+   "....PPWDWPPPPWDWPP....",
+   "....PPWWWPPPPWWWPP....",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "MP..PP..PP..PP..PP..PM",
+   "PP..PP..PP..PP..PP..PP",
+   "PP..MP..MP..PM..PM..PP",
+   "MP..PP..MP..PP..PM..PM",
+   "PP..........PP........"
+  ]
+ ]
+}

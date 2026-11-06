@@ -1,0 +1,51 @@
+{
+ "date": "08-21",
+ "name": "pool_goggles",
+ "title": "Swim Goggles Day",
+ "theme": "swimming goggles over both eyes; a water drop slides down the right lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....TTTTTTT....TTTTTTT....",
+  "...TWWTTTTTT..TWWTTTWTT...",
+  "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+  "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+  "...TTTTTTTTT..TTTTTTTTT...",
+  "....TTTTTTT....TTTTTTT....",
+  ".........................."
+ ],
+ "frames": [
+  [
+   "....TTTTTTT....TTTTTTT....",
+   "...TWWTTTTTT..TWWTTTTTT...",
+   "BBBTTTTTTTTTBBTTTTTTWTTBBB",
+   "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+   "...TTTTTTTTT..TTTTTTTTT...",
+   "....TTTTTTT....TTTTTTT....",
+   ".........................."
+  ],
+  [
+   "....TTTTTTT....TTTTTTT....",
+   "...TWWTTTTTT..TWWTTTTTT...",
+   "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+   "BBBTTTTTTTTTBBTTTTTTWTTBBB",
+   "...TTTTTTTTT..TTTTTTTTT...",
+   "....TTTTTTT....TTTTTTT....",
+   ".........................."
+  ],
+  [
+   "....TTTTTTT....TTTTTTT....",
+   "...TWWTTTTTT..TWWTTTTTT...",
+   "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+   "BBBTTTTTTTTTBBTTTTTTTTTBBB",
+   "...TTTTTTTTT..TTTTTTTTT...",
+   "....TTTTTTT....TTTTTTT....",
+   "....................W....."
+  ]
+ ]
+}

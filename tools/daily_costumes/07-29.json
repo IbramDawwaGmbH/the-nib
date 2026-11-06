@@ -1,0 +1,33 @@
+{
+ "date": "07-29",
+ "name": "tiger_ears",
+ "title": "International Tiger Day",
+ "theme": "a charcoal headband with gold striped tiger ears; left ear twitches and the tufts swap",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "..W....................W..",
+  ".GAGGAG............GAGGAG.",
+  "GGAGGAGG..........GGAGGAGG",
+  "GGWWWWGG..........GGWWWWGG",
+  "GGWWWWGG..........GGWWWWGG",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   ".....W..............W.....",
+   "..GAGGAG...........GAGGAG.",
+   ".GGAGGAGG.........GGAGGAGG",
+   ".GGWWWWGG.........GGWWWWGG",
+   ".GGWWWWGG.........GGWWWWGG",
+   "AAAAAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

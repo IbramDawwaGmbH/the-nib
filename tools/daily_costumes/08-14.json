@@ -1,0 +1,51 @@
+{
+ "date": "08-14",
+ "name": "lizard_lounge",
+ "title": "World Lizard Day",
+ "theme": "a green lizard lying across the top of his head; tail curls, tongue flicks",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "...NNNNNNNNNNNNNNNN.......",
+  "..NNWNNNNNNNNNNNNNNNNNN...",
+  "..NNNNNNNNNNNNNNNNNNNNNNNN",
+  "..NNNNNNNNNNNNNNNNN.......",
+  "........NN.NN.NN.NN.......",
+  "........NN.NN.NN.NN......."
+ ],
+ "frames": [
+  [
+   "..........................",
+   "...NNNNNNNNNNNNNNNN.......",
+   "..NNWNNNNNNNNNNNNNNNNNN.NN",
+   "..NNNNNNNNNNNNNNNNNNNNNNN.",
+   "..NNNNNNNNNNNNNNNNN.......",
+   "........NN.NN.NN.NN.......",
+   "........NN.NN.NN.NN......."
+  ],
+  [
+   "..........................",
+   "...NNNNNNNNNNNNNNNN.......",
+   "..NNWNNNNNNNNNNNNNNNNNN...",
+   "..NNNNNNNNNNNNNNNNNNNNNNN.",
+   "..NNNNNNNNNNNNNNNNN.....NN",
+   "........NN.NN.NN.NN.......",
+   "........NN.NN.NN.NN......."
+  ],
+  [
+   "..........................",
+   "...NNNNNNNNNNNNNNNN.......",
+   "..NNWNNNNNNNNNNNNNNNNNN...",
+   "RRNNNNNNNNNNNNNNNNNNNNNNNN",
+   "..NNNNNNNNNNNNNNNNN.......",
+   "........NN.NN.NN.NN.......",
+   "........NN.NN.NN.NN......."
+  ]
+ ]
+}

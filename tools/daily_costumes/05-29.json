@@ -1,0 +1,47 @@
+{
+ "date": "05-29",
+ "name": "summit_goggles",
+ "title": "Everest Day",
+ "theme": "glacier goggles: two round charcoal lenses with frosty white rims, grey bridge and white strap; a snowflake drifts down across each dark lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....WWWWW......WWWWW.....",
+  "....WWWAAAW....WWWAAAW....",
+  "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+  "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+  "....WAAAAAW....WAAAAAW....",
+  ".....WWWWW......WWWWW....."
+ ],
+ "frames": [
+  [
+   ".....WWWWW......WWWWW.....",
+   "....WAAAAAW....WAAAAAW....",
+   "WWWWWAWWAAWKKKKWAWWAAWWWWW",
+   "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+   "....WAAAAAW....WAAAAAW....",
+   ".....WWWWW......WWWWW....."
+  ],
+  [
+   ".....WWWWW......WWWWW.....",
+   "....WAAAAAW....WAAAAAW....",
+   "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+   "WWWWWAAWWAWKKKKWAAWWAWWWWW",
+   "....WAAAAAW....WAAAAAW....",
+   ".....WWWWW......WWWWW....."
+  ],
+  [
+   ".....WWWWW......WWWWW.....",
+   "....WAAAAAW....WAAAAAW....",
+   "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+   "WWWWWAAAAAWKKKKWAAAAAWWWWW",
+   "....WAAAWWW....WAAAWWW....",
+   ".....WWWWW......WWWWW....."
+  ]
+ ]
+}

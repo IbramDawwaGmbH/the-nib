@@ -1,0 +1,57 @@
+{
+ "date": "01-19",
+ "name": "popcorn_bucket",
+ "title": "Popcorn Day",
+ "theme": "a red-and-white striped popcorn bucket heaped with kernels; two kernels pop up and fall back",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........WW......",
+  ".....WWWWW......",
+  "..WW.GGGGG..GG..",
+  ".GWWGGGGGGWWGGW.",
+  "WWGGWWGGWWGGWWGG",
+  "RRWWRRWWRRWWRRWW",
+  "RRWWRRWWRRWWRRWW",
+  ".RWWRRWWRRWWRRW.",
+  ".RWWRRWWRRWWRRW.",
+  ".RWWRRWWRRWWRRW.",
+  "..WWRRWWRRWWRR..",
+  "..WWRRWWRRWWRR.."
+ ],
+ "frames": [
+  [
+   "..GG....WW......",
+   "..GG.WWWWW......",
+   ".....GGGGG..WW..",
+   ".GWWGGGGGGWWWWW.",
+   "WWGGWWGGWWGGWWGG",
+   "RRWWRRWWRRWWRRWW",
+   "RRWWRRWWRRWWRRWW",
+   ".RWWRRWWRRWWRRW.",
+   ".RWWRRWWRRWWRRW.",
+   ".RWWRRWWRRWWRRW.",
+   "..WWRRWWRRWWRR..",
+   "..WWRRWWRRWWRR.."
+  ],
+  [
+   "........WW..GG..",
+   ".....WWWWW..GG..",
+   "..WW.GGGGG......",
+   ".GWWGGGGGGWWGGW.",
+   "WWGGWWGGWWGGWWGG",
+   "RRWWRRWWRRWWRRWW",
+   "RRWWRRWWRRWWRRWW",
+   ".RWWRRWWRRWWRRW.",
+   ".RWWRRWWRRWWRRW.",
+   ".RWWRRWWRRWWRRW.",
+   "..WWRRWWRRWWRR..",
+   "..WWRRWWRRWWRR.."
+  ]
+ ]
+}

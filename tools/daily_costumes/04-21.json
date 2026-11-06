@@ -1,0 +1,51 @@
+{
+ "date": "04-21",
+ "name": "origami_crane",
+ "title": "Creativity Day",
+ "theme": "a white folded paper crane perched on his head: solid triangular wings, a neck and head with a red eye, a tail wedge and a fold line; the wings lift a row, then flatten",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  ".................WWW",
+  "....WW........WW.WWR",
+  "WW..WWW......WWW.WWW",
+  "WW..WWWW....WWWW.WW.",
+  "WWW.WWWWW..WWWWW.WW.",
+  ".WWWWWWWWWWWWWWWWWW.",
+  "..WWWWWWWDDWWWWWWW..",
+  "....WWWWWWWWWWWW....",
+  "......WWWWWWWW......"
+ ],
+ "frames": [
+  [
+   "....................",
+   "....WW........WW.WWW",
+   "....WWW......WWW.WWR",
+   "WW..WWWW....WWWW.WWW",
+   "WW..WWWWW..WWWWW.WW.",
+   "WWW.WWWWW..WWWWW.WW.",
+   ".WWWWWWWWWWWWWWWWWW.",
+   "..WWWWWWWDDWWWWWWW..",
+   "....WWWWWWWWWWWW....",
+   "......WWWWWWWW......"
+  ],
+  [
+   "....................",
+   ".................WWW",
+   ".................WWR",
+   "WW..WWW......WWW.WWW",
+   "WW..WWWW....WWWW.WW.",
+   "WWW.WWWWW..WWWWW.WW.",
+   ".WWWWWWWWWWWWWWWWWW.",
+   "..WWWWWWWDDWWWWWWW..",
+   "....WWWWWWWWWWWW....",
+   "......WWWWWWWW......"
+  ]
+ ]
+}

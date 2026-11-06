@@ -1,0 +1,55 @@
+{
+ "date": "01-29",
+ "name": "puzzle_specs",
+ "title": "Puzzle Day",
+ "theme": "square specs, a teal frame and a gold frame with jigsaw knobs; the knobs shift and click into place with a glint",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  9,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "..GG..........TT..",
+  "..GG..........TT..",
+  "TTTTTTT....GGGGGGG",
+  "TTTTTTT....GGGGGGG",
+  "TTWWWTTTTTGGGWWWGG",
+  "TTWWWTTTGGGGGWWWGG",
+  "TTTTTTT....GGGGGGG",
+  "TTTTTTT....GGGGGGG"
+ ],
+ "frames": [
+  [
+   "...GG........TT...",
+   "...GG........TT...",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG",
+   "TTWWWTTTTTGGGWWWGG",
+   "TTWWWTTTGGGGGWWWGG",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG"
+  ],
+  [
+   "..................",
+   "...GG........TT...",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG",
+   "TTWWWTTTTTGGGWWWGG",
+   "TTWWWTTTGGGGGWWWGG",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG"
+  ],
+  [
+   "..GG..........TT..",
+   "..GG..........TT..",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG",
+   "TTWWWTTTGTGGGWWWGG",
+   "TTWWWTTTGTGGGWWWGG",
+   "TTTTTTT....GGGGGGG",
+   "TTTTTTT....GGGGGGG"
+  ]
+ ]
+}

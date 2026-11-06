@@ -1,0 +1,60 @@
+{
+ "date": "06-14",
+ "name": "lemonade_apron",
+ "title": "Lemonade Stand",
+ "theme": "a gold and white striped stand apron with a lemon pocket and a leaf; the pocket glints and a drop of lemonade falls from the hem",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  13,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "...........................",
+  ".....GGGWWWGGGWWWGGGWWW....",
+  ".WWWWGGGWWWGGGWWWGGGWWWWWWW",
+  ".....GGGWWWGGGWWWGGGWWW....",
+  ".....GGGWWWGGGWWWGGGWWW....",
+  ".....GGGWWWGGNNWWGGGWWW....",
+  ".....GGGWWWDDDDDDGGGWWW....",
+  ".....GGGWWWDWGGGDGGGWWW....",
+  ".....GGGWWWDGGGGDGGGWWW....",
+  ".....GGGWWWGGGWWWGGGWWW....",
+  ".....GGGWWWGGGWWWGGGWWW....",
+  "...........................",
+  "..........................."
+ ],
+ "frames": [
+  [
+   "...........................",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".WWWWGGGWWWGGGWWWGGGWWWWWWW",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGNNWWGGGWWW....",
+   ".....GGGWWWDDDDDDGGGWWW....",
+   ".....GGGWWWDGGGGDGGGWWW....",
+   ".....GGGWWWDGGGWDGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".............BB............",
+   "..........................."
+  ],
+  [
+   "...........................",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".WWWWGGGWWWGGGWWWGGGWWWWWWW",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGNNWWGGGWWW....",
+   ".....GGGWWWDDDDDDGGGWWW....",
+   ".....GGGWWWDWGGGDGGGWWW....",
+   ".....GGGWWWDGGGGDGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   ".....GGGWWWGGGWWWGGGWWW....",
+   "...........................",
+   ".............BB............"
+  ]
+ ]
+}

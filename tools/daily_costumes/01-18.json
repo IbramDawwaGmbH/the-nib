@@ -1,0 +1,51 @@
+{
+ "date": "01-18",
+ "name": "snowball_splat",
+ "title": "Snowball Fight",
+ "theme": "a lumpy white snowball splat across his eyes with uneven snow points and two dripping drops, one falling",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........WW........",
+  ".....WW...WW........",
+  ".....WWWWWWWWWWWWW..",
+  "...WWWWWWWWWWWWWW...",
+  "WWWWWWWWWWWWWWWWWW..",
+  "WWWWWWWWWWWWWWWWWW..",
+  "...WWWWWWWWWWWWWW...",
+  ".....WWWWWWWWWW.....",
+  ".....WW.....WW......",
+  "...................."
+ ],
+ "frames": [
+  [
+   "..........WW........",
+   ".....WW...WW........",
+   ".....WWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWW...",
+   "WWWWWWWWWWWWWWWWWW..",
+   "WWWWWWWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWW...",
+   ".....WWWWWWWWWW.....",
+   ".....WW.....WW......",
+   "...........WW......."
+  ],
+  [
+   "..........WW........",
+   ".....WW...WW........",
+   ".....WWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWW...",
+   "WWWWWWWWWWWWWWWWWW..",
+   "WWWWWWWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWW...",
+   ".....WWWWWWWWWW.....",
+   ".....WW.....W.......",
+   "...........WW......."
+  ]
+ ]
+}

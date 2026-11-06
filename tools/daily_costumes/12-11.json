@@ -1,0 +1,43 @@
+{
+ "date": "12-11",
+ "name": "summit_peak",
+ "title": "Mountain Day",
+ "theme": "a snowy mountain worn as a hat: grey peak, white snowcap, red summit flag rippling and a snow flake sliding down the flank",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........ARRR........",
+  "..........ARR.........",
+  "..........WW..........",
+  ".........WWWW.........",
+  "........WWWWWW........",
+  ".......WWWWWWWW.......",
+  "......KWWKKWWKWK......",
+  ".....KWKKKKKKDKKK.....",
+  "....KKKKKKKKKKDKKK....",
+  "...KKKKKKKKKKKKDKKK...",
+  ".KKKKKKKKKKKKKKKKDKKK.",
+  "KKKKKKKKKKKKKKKKKKDKKK"
+ ],
+ "frames": [
+  [
+   "..........ARR.........",
+   "..........ARRR........",
+   "..........WW..........",
+   ".........WWWW.........",
+   "........WWWWWW........",
+   ".......WWWWWWWW.......",
+   "......KWWKKWWKWK......",
+   ".....KKKKKKKKDKKK.....",
+   "....KWKKKKKKKKDKKK....",
+   "...KKKKKKKKKKKKDKKK...",
+   ".KKKKKKKKKKKKKKKKDKKK.",
+   "KKKKKKKKKKKKKKKKKKDKKK"
+  ]
+ ]
+}

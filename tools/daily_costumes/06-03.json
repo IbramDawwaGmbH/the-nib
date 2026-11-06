@@ -1,0 +1,37 @@
+{
+ "date": "06-03",
+ "name": "cycle_helmet",
+ "title": "World Bicycle Day",
+ "theme": "a teal bike helmet with white vents and a blinking red rear light",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "........TTTTTTTTTT........",
+  ".....TTTTTTTTTTTTTTTT.....",
+  "...TTWWWTTTWWWTTTTWWWTT...",
+  "..TTTTWWWTTTWWWTTTTWWWTT..",
+  ".TTTTTTTTTTTTTTTTTTTTTTTT.",
+  "TTTTTTTTTTTTTTTTTTTTTTTTTT",
+  "DDDDDDDDDDDDDDDDDDDDDDDDRR",
+  "WWWWWWWWWWWWWWWWWWWWWWWWRR",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWW"
+ ],
+ "frames": [
+  [
+   "........TTTTTTTTTT........",
+   ".....TTWWTTTTTTTTTTTT.....",
+   "...TTWWWTTTWWWTTTTWWWTT...",
+   "..TTTTWWWTTTWWWTTTTWWWTT..",
+   ".TTTTTTTTTTTTTTTTTTTTTTTT.",
+   "TTTTTTTTTTTTTTTTTTTTTTTTTT",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "WWWWWWWWWWWWWWWWWWWWWWWWDD",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWW"
+  ]
+ ]
+}

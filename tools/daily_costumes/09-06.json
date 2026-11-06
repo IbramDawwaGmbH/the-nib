@@ -1,0 +1,43 @@
+{
+ "date": "09-06",
+ "name": "reading_lamp",
+ "title": "Read a Book Day",
+ "theme": "a green banker's lamp arching over his head from a round gold base; the bulb glows white with ray ticks, then dims",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........NNNNNNNNNN....",
+  "..GGGG.NNNNNNNNNNNN...",
+  "..GGGGNNNNNNNNNNNNNN..",
+  "..GG..NNNNNNNNNNNNNN..",
+  "..GG..NNNNNNNNNNNNNN..",
+  "..GG........WW........",
+  "..GG....GG..WW..GG....",
+  "..GG..................",
+  "..GG..................",
+  "..GG..................",
+  ".GGGG.................",
+  "GGGGGG................"
+ ],
+ "frames": [
+  [
+   "........NNNNNNNNNN....",
+   "..GGGG.NNNNNNNNNNNN...",
+   "..GGGGNNNNNNNNNNNNNN..",
+   "..GG..NNNNNNNNNNNNNN..",
+   "..GG..NNNNNNNNNNNNNN..",
+   "..GG........GG........",
+   "..GG........GG........",
+   "..GG..................",
+   "..GG..................",
+   "..GG..................",
+   ".GGGG.................",
+   "GGGGGG................"
+  ]
+ ]
+}

@@ -1,0 +1,67 @@
+{
+  "date": "07-02",
+  "name": "flying_saucer",
+  "title": "World UFO Day",
+  "theme": "a silver flying saucer with a teal dome and gold rim lights hovering above his head; it bobs and the lights blink in turn",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    14,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    "............................",
+    "..........TTTTTTTT..........",
+    ".........TTTTTTTTTT.........",
+    "........TTTTTTTTTTTT........",
+    "......SSSSSSSSSSSSSSSS......",
+    "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+    "SSSWSSSSGSSSSGSSSSSGSSSSGSSS",
+    "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+    ".......SSSSSSSSSSSSSS.......",
+    "............................",
+    "............................"
+  ],
+  "frames": [
+    [
+      "..........TTTTTTTT..........",
+      ".........TTTTTTTTTT.........",
+      "........TTTTTTTTTTTT........",
+      "......SSSSSSSSSSSSSSSS......",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      "SSSGSSSSWSSSSGSSSSSGSSSSGSSS",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      ".......SSSSSSSSSSSSSS.......",
+      "............................",
+      "............................",
+      "............................"
+    ],
+    [
+      "............................",
+      "..........TTTTTTTT..........",
+      ".........TTTTTTTTTT.........",
+      "........TTTTTTTTTTTT........",
+      "......SSSSSSSSSSSSSSSS......",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      "SSSGSSSSGSSSSGSSSSSWSSSSGSSS",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      ".......SSSSSSSSSSSSSS.......",
+      "............................",
+      "............................"
+    ],
+    [
+      "............................",
+      "............................",
+      "..........TTTTTTTT..........",
+      ".........TTTTTTTTTT.........",
+      "........TTTTTTTTTTTT........",
+      "......SSSSSSSSSSSSSSSS......",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      "SSSGSSSSGSSSSGSSSSSGSSSSWSSS",
+      "..SSSSSSSSSSSSSSSSSSSSSSSS..",
+      ".......SSSSSSSSSSSSSS.......",
+      "............................"
+    ]
+  ]
+}

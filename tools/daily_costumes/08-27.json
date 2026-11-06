@@ -1,0 +1,79 @@
+{
+ "date": "08-27",
+ "name": "porch_ukulele",
+ "title": "Ukulele Summer",
+ "theme": "a small brown ukulele held across his tummy, neck pointing left; the strings twang and a note floats up",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  13,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "........................",
+  "........................",
+  ".................OOOO...",
+  "............OOO..OOOOO..",
+  "...........OOOOOOWWWWW..",
+  "KKK.......OOOODDDOOOOO..",
+  "KKKGGGGGGGOOOODDDWWWWW..",
+  "KKKGGGGGGGOOOODDDOOOOO..",
+  "...........OOOOOOWWWWW..",
+  "...........OOOOOOOOOOO..",
+  "............OOO.OWWWWW..",
+  ".................OOOO..."
+ ],
+ "frames": [
+  [
+   "........................",
+   "........................",
+   "........................",
+   "........................",
+   ".................OOOO...",
+   "............OOO..OOOOO..",
+   "...........OOOOOOOOOOO..",
+   "KKK.......OOOODDDWWWWW..",
+   "KKKGGGGGGGOOOODDDWWWWW..",
+   "KKKGGGGGGGOOOODDDOOOOO..",
+   "...........OOOOOOWWWWW..",
+   "...........OOOOOOOOOOO..",
+   "............OOO.OWWWWW..",
+   ".................OOOO..."
+  ],
+  [
+   "........................",
+   "........................",
+   "........................",
+   "........................",
+   ".................OOOO...",
+   "............OOO..OOOOO..",
+   "...........OOOOOOWWWWW..",
+   "KKK.......OOOODDDOOOOO..",
+   "KKKGGGGGGGOOOODDDWWWWW..",
+   "KKKGGGGGGGOOOODDDOOOOO..",
+   "...........OOOOOOOOOOO..",
+   "...........OOOOOOWWWWW..",
+   "............OOO.OWWWWW..",
+   ".................OOOO..."
+  ],
+  [
+   "..W.....................",
+   "..W.....................",
+   "WWW.....................",
+   "WW......................",
+   ".................OOOO...",
+   "............OOO..OOOOO..",
+   "...........OOOOOOWWWWW..",
+   "KKK.......OOOODDDOOOOO..",
+   "KKKGGGGGGGOOOODDDWWWWW..",
+   "KKKGGGGGGGOOOODDDOOOOO..",
+   "...........OOOOOOWWWWW..",
+   "...........OOOOOOOOOOO..",
+   "............OOO.OWWWWW..",
+   ".................OOOO..."
+  ]
+ ]
+}

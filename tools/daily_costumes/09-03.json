@@ -1,0 +1,71 @@
+{
+ "date": "09-03",
+ "name": "skyscraper_spire",
+ "title": "Skyscraper Day",
+ "theme": "A grey stepped skyscraper hat with silver windows, a spire and a blinking red tip light; floors switch on gold in turn.",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......RR.......",
+  ".......SS.......",
+  ".......SS.......",
+  ".......KK.......",
+  ".......KK.......",
+  ".....KWWWWK.....",
+  ".....KWWWWK.....",
+  ".....KWWWWK.....",
+  "..KWWKKKKKKWWK..",
+  "..KWWKKKKKKWWK..",
+  "..KWWKKKKKKWWK..",
+  "..KWWKKKKKKWWK.."
+ ],
+ "frames": [
+  [
+   ".......RR.......",
+   ".......SS.......",
+   ".......SS.......",
+   ".......KK.......",
+   ".......KK.......",
+   ".....KWWWWK.....",
+   ".....KWWWWK.....",
+   ".....KWWWWK.....",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK.."
+  ],
+  [
+   ".......DD.......",
+   ".......SS.......",
+   ".......SS.......",
+   ".......KK.......",
+   ".......KK.......",
+   ".....KGGGGK.....",
+   ".....KGGGGK.....",
+   ".....KGGGGK.....",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK.."
+  ],
+  [
+   ".......RR.......",
+   ".......SS.......",
+   ".......SS.......",
+   ".......GG.......",
+   ".......GG.......",
+   ".....KGGGGK.....",
+   ".....KGGGGK.....",
+   ".....KGGGGK.....",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK..",
+   "..KGGKKKKKKGGK.."
+  ]
+ ]
+}

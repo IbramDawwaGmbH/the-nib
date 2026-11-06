@@ -1,0 +1,69 @@
+{
+ "date": "06-07",
+ "name": "double_scoop",
+ "title": "Ice Cream Scoop Day",
+ "theme": "two ice cream scoops, pink and white, with a cherry on top; the drip slides down and the cherry bobs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........D.......",
+  ".......RR.......",
+  ".......RR.......",
+  ".....WWWWWW.....",
+  "...WWWWWWWWWW...",
+  "..WWWWWWWWWWWW..",
+  "..WWWWWWWWWWWW..",
+  ".MMMMMMMMMMMMMM.",
+  "MMMMMMMMMMMMMMMM",
+  "MMMMMMMMMMMMMMMM",
+  "MMMMMMMMMMMMMMMM",
+  "MMMMMMMMMMMMMMMM",
+  "..M.............",
+  "..M.............",
+  "................",
+  "................"
+ ],
+ "frames": [
+  [
+   "................",
+   "........D.......",
+   ".......RR.......",
+   ".....WWRRWW.....",
+   "...WWWWWWWWWW...",
+   "..WWWWWWWWWWWW..",
+   "..WWWWWWWWWWWW..",
+   ".MMMMMMMMMMMMMM.",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "..M.............",
+   "..M.............",
+   "..M.............",
+   "................"
+  ],
+  [
+   "........D.......",
+   ".......RR.......",
+   ".......RR.......",
+   ".....WWWWWW.....",
+   "...WWWWWWWWWW...",
+   "..WWWWWWWWWWWW..",
+   "..WWWWWWWWWWWW..",
+   ".MMMMMMMMMMMMMM.",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "..M.............",
+   "..M.............",
+   "..M.............",
+   "..M............."
+  ]
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "date": "06-02",
+ "name": "whistle_lanyard",
+ "title": "Lifeguard on Duty",
+ "theme": "a red lanyard with a chunky silver whistle that swings",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  6,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "RRRRRRRRRRRR",
+  ".RRRRRRRRRR.",
+  "..RRRRRRRR..",
+  "...RRRRRR...",
+  "....RRRR....",
+  "....RRRR....",
+  "...SSDDSS...",
+  "..DDSSSSSS..",
+  "...SSSSSS...",
+  "...SSSSSS..."
+ ],
+ "frames": [
+  [
+   "RRRRRRRRRRRR",
+   "RRRRRRRRRR..",
+   ".RRRRRRRR...",
+   "..RRRRRR....",
+   "...RRRR.....",
+   "...RRRR.....",
+   "..SSDDSS....",
+   ".DDSSSSSS...",
+   "..SSSSSS....",
+   "..SSSSSS...."
+  ],
+  [
+   "RRRRRRRRRRRR",
+   "..RRRRRRRRRR",
+   "...RRRRRRRR.",
+   "....RRRRRR..",
+   ".....RRRR...",
+   ".....RRRR...",
+   "....SSDDSS..",
+   "...DDSSSSSS.",
+   "....SSSSSS..",
+   "....SSSSSS.."
+  ]
+ ]
+}

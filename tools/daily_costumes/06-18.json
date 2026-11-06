@@ -1,0 +1,60 @@
+{
+ "date": "06-18",
+ "name": "maki_roll",
+ "title": "International Sushi Day",
+ "theme": "a fat maki roll lying on his head, nori ring and rice round salmon and cucumber; it rocks side to side and its glint slides",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "....AAAAAAAAAAAA....",
+  ".AAAAAAAAAAAAAAAAAA.",
+  ".AAWWWWWWWWWWWWWWAA.",
+  ".AAWWWWWWWWWWWWWWAA.",
+  ".AAWWWMMMMNNNNWWWAA.",
+  ".AAWWWMWWMNNNNWWWAA.",
+  ".AAWWWMMMMNNNNWWWAA.",
+  ".AAWWWMMMMNNNNWWWAA.",
+  ".AAWWWMMMMNNNNWWWAA.",
+  ".AAWWWWWWWWWWWWWWAA.",
+  ".AAWWWWWWWWWWWWWWAA.",
+  ".AAAAAAAAAAAAAAAAAA.",
+  "....AAAAAAAAAAAA...."
+ ],
+ "frames": [
+  [
+   "...AAAAAAAAAAAA.....",
+   "AAAAAAAAAAAAAAAAAA..",
+   "AAWWWWWWWWWWWWWWAA..",
+   "AAWWWWWWWWWWWWWWAA..",
+   "AAWWWMMMMNNNNWWWAA..",
+   "AAWWWWWMMNNNNWWWAA..",
+   "AAWWWMMMMNNNNWWWAA..",
+   "AAWWWMMMMNNNNWWWAA..",
+   "AAWWWMMMMNNNNWWWAA..",
+   "AAWWWWWWWWWWWWWWAA..",
+   "AAWWWWWWWWWWWWWWAA..",
+   "AAAAAAAAAAAAAAAAAA..",
+   "...AAAAAAAAAAAA....."
+  ],
+  [
+   ".....AAAAAAAAAAAA...",
+   "..AAAAAAAAAAAAAAAAAA",
+   "..AAWWWWWWWWWWWWWWAA",
+   "..AAWWWWWWWWWWWWWWAA",
+   "..AAWWWMMMMNNNNWWWAA",
+   "..AAWWWMMWWNNNNWWWAA",
+   "..AAWWWMMMMNNNNWWWAA",
+   "..AAWWWMMMMNNNNWWWAA",
+   "..AAWWWMMMMNNNNWWWAA",
+   "..AAWWWWWWWWWWWWWWAA",
+   "..AAWWWWWWWWWWWWWWAA",
+   "..AAAAAAAAAAAAAAAAAA",
+   ".....AAAAAAAAAAAA..."
+  ]
+ ]
+}

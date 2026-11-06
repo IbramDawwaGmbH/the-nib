@@ -1,0 +1,71 @@
+{
+ "date": "04-25",
+ "name": "penguin_perch",
+ "title": "World Penguin Day",
+ "theme": "a little penguin standing on his head, charcoal with a white belly and gold beak and feet; he waddles side to side",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  5,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..AAAAAA..",
+  "..AWAAWA..",
+  "..AAGGAA..",
+  "..AAGGAA..",
+  "..AAAAAA..",
+  "AAAWWWWAAA",
+  "AAAWWWWAAA",
+  "AAAWWWWAAA",
+  "AAAWWWWAAA",
+  "..AWWWWA..",
+  ".GGG..GGG.",
+  ".GGG..GGG."
+ ],
+ "frames": [
+  [
+   ".AAAAAA...",
+   ".AWAAWA...",
+   ".AAGGAA...",
+   ".AAGGAA...",
+   "AAAAAAA...",
+   "AAAWWWWA..",
+   "AAAWWWWAAA",
+   "AAAWWWWAAA",
+   "..AWWWWAAA",
+   "..AWWWWAAA",
+   ".GGG..GGG.",
+   ".GGG..GGG."
+  ],
+  [
+   "..AAAAAA..",
+   "..AWAAWA..",
+   "..AAGGAA..",
+   "..AAGGAA..",
+   "..AAAAAA..",
+   "..AWWWWA..",
+   "AAAWWWWAAA",
+   "AAAWWWWAAA",
+   "AAAWWWWAAA",
+   "AAAWWWWAAA",
+   ".GGG..GGG.",
+   ".GGG..GGG."
+  ],
+  [
+   "...AAAAAA.",
+   "...AWAAWA.",
+   "...AAGGAA.",
+   "...AAGGAA.",
+   "...AAAAAAA",
+   "..AWWWWAAA",
+   "AAAWWWWAAA",
+   "AAAWWWWAAA",
+   "AAAWWWWA..",
+   "AAAWWWWA..",
+   ".GGG..GGG.",
+   ".GGG..GGG."
+  ]
+ ]
+}

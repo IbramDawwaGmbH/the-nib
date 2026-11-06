@@ -1,0 +1,75 @@
+{
+ "date": "03-14",
+ "name": "pi_cone",
+ "title": "Pi Day",
+ "theme": "a teal party cone with a gold pi symbol and a gold pom-pom that bobs while a white glint circles the pi",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "................",
+  ".......GGG......",
+  ".......GGG......",
+  "......TGGG......",
+  "......TTTT......",
+  ".....TTTTTT.....",
+  "....TTTTTTTT....",
+  "....TWGGGGTT....",
+  "...TTTGTGTTTT...",
+  "..TTTTGTGTTTTT..",
+  "..TTTTGTGTTTTT..",
+  ".TTTTTGTGTTTTTT.",
+  "TTTTTTTTTTTTTTTT"
+ ],
+ "frames": [
+  [
+   ".......GGG......",
+   ".......GGG......",
+   ".......GGG......",
+   "......TTTT......",
+   "......TTTT......",
+   ".....TTTTTT.....",
+   "....TTTTTTTT....",
+   "....TGGGGWTT....",
+   "...TTTGTGTTTT...",
+   "..TTTTGTGTTTTT..",
+   "..TTTTGTGTTTTT..",
+   ".TTTTTGTGTTTTTT.",
+   "TTTTTTTTTTTTTTTT"
+  ],
+  [
+   "................",
+   ".......GGG......",
+   ".......GGG......",
+   "......TGGG......",
+   "......TTTT......",
+   ".....TTTTTT.....",
+   "....TTTTTTTT....",
+   "....TGGGGGTT....",
+   "...TTTGTGTTTT...",
+   "..TTTTGTGTTTTT..",
+   "..TTTTGTGTTTTT..",
+   ".TTTTTGTWTTTTTT.",
+   "TTTTTTTTTTTTTTTT"
+  ],
+  [
+   "................",
+   "................",
+   ".......GGG......",
+   "......TGGG......",
+   "......TGGG......",
+   ".....TTTTTT.....",
+   "....TTTTTTTT....",
+   "....TGGGGGTT....",
+   "...TTTGTGTTTT...",
+   "..TTTTGTGTTTTT..",
+   "..TTTTGTGTTTTT..",
+   ".TTTTTWTGTTTTTT.",
+   "TTTTTTTTTTTTTTTT"
+  ]
+ ]
+}

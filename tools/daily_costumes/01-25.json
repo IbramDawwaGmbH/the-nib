@@ -1,0 +1,63 @@
+{
+ "date": "01-25",
+ "name": "upside_specs",
+ "title": "Opposite Day",
+ "theme": "chunky purple specs worn upside down with white lenses and a pupil in each; he winks left, then right, then both eyes open",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  9,
+  3
+ ],
+ "layer": "over",
+ "pattern": [
+  "PP..............PP",
+  "PP..............PP",
+  "PP..............PP",
+  "PPPPPPP....PPPPPPP",
+  "PWWWWWP....PWWWWWP",
+  "PWWDWWP....PWWDWWP",
+  "PWWWWWP....PWWWWWP",
+  "PWWWWWP....PWWWWWP",
+  "PPPPPPPPPPPPPPPPPP",
+  "PPPPPPPPPPPPPPPPPP"
+ ],
+ "frames": [
+  [
+   "PP..............PP",
+   "PP..............PP",
+   "PP..............PP",
+   "PPPPPPP....PPPPPPP",
+   "PPPPPPP....PWWWWWP",
+   "PPPPPPP....PWWDWWP",
+   "PPPPPPP....PWWWWWP",
+   "PPPPPPP....PWWWWWP",
+   "PPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPP"
+  ],
+  [
+   "PP..............PP",
+   "PP..............PP",
+   "PP..............PP",
+   "PPPPPPP....PPPPPPP",
+   "PWWWWWP....PPPPPPP",
+   "PWWDWWP....PPPPPPP",
+   "PWWWWWP....PPPPPPP",
+   "PWWWWWP....PPPPPPP",
+   "PPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPP"
+  ],
+  [
+   "PP..............PP",
+   "PP..............PP",
+   "PP..............PP",
+   "PPPPPPP....PPPPPPP",
+   "PWWWWWP....PWWWWWP",
+   "PWWWWWP....PWWWWWP",
+   "PWWWWWP....PWWWWWP",
+   "PWWWWWP....PWWWWWP",
+   "PPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPP"
+  ]
+ ]
+}

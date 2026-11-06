@@ -1,0 +1,67 @@
+{
+ "date": "03-29",
+ "name": "piano_scarf",
+ "title": "Piano Day",
+ "theme": "a piano-key scarf: white keys with charcoal seams and black keys, a short tail hanging on the left; the black keys are pressed one after another",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "WAAWAAWWAWAAWAAWAAWW",
+  "WAAWAAWWAWAAWAAWAAWW",
+  "WAAWAAWWAWAAWAAWAAWW",
+  "WWAWWAWWAWWAWWAWWAWW",
+  "WWAWWAWWAWWAWWAWWAWW",
+  "WWWWW...............",
+  "WWWWW...............",
+  "WWWWW...............",
+  "WWWWW...............",
+  "WWWWW...............",
+  "WWWWW..............."
+ ],
+ "frames": [
+  [
+   "WAAWWWWWAWAAWAAWAAWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WWAWAAWWAWWAWWAWWAWW",
+   "WWAWWAWWAWWAWWAWWAWW",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW..............."
+  ],
+  [
+   "WAAWAAWWAWWWWAAWAAWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WWAWWAWWAWAAWWAWWAWW",
+   "WWAWWAWWAWWAWWAWWAWW",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW..............."
+  ],
+  [
+   "WAAWAAWWAWAAWAAWWWWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WAAWAAWWAWAAWAAWAAWW",
+   "WWAWWAWWAWWAWWAWAAWW",
+   "WWAWWAWWAWWAWWAWWAWW",
+   "WWWWW...............",
+   "WWWWW...............",
+   "WWWWW...............",
+   ".WWWWW..............",
+   ".WWWWW..............",
+   ".WWWWW.............."
+  ]
+ ]
+}

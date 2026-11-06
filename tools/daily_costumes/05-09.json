@@ -1,0 +1,79 @@
+{
+ "date": "05-09",
+ "name": "lost_sock",
+ "title": "Lost Sock Memorial Day",
+ "theme": "a single striped purple-and-gold sock slung over his crown, white cuff at the left, heel and toe dangling at the right",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "...WWPPGGPPGGPPGG..",
+  "............GGGGGG.",
+  "............GGGGGG.",
+  "............PPPPPP.",
+  "............PPPPPP.",
+  "............GGGGGG.",
+  ".............GGGG.."
+ ],
+ "frames": [
+  [
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   ".............GGGGGG",
+   ".............GGGGGG",
+   ".............PPPPPP",
+   ".............PPPPPP",
+   ".............GGGGGG",
+   "..............GGGG."
+  ],
+  [
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "............GGGGGG.",
+   "............GGGGGG.",
+   "............PPPPPP.",
+   "............PPPPPP.",
+   ".............GGGGGG",
+   "..............GGGG."
+  ],
+  [
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...WWPPGGPPGGPPGG..",
+   "...........GGGGGG..",
+   "...........GGGGGG..",
+   "...........PPPPPP..",
+   "...........PPPPPP..",
+   "...........GGGGGG..",
+   "............GGGG..."
+  ]
+ ]
+}

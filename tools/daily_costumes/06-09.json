@@ -1,0 +1,41 @@
+{
+ "date": "06-09",
+ "name": "strawberry_cap",
+ "title": "Strawberry Season",
+ "theme": "a fat red strawberry with gold seeds and a green leafy top; the seeds twinkle and the stalk tilts",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "........N.......",
+  "........N.......",
+  ".....NNNNNN.....",
+  "...NNNNNNNNNN...",
+  "..RNNNNNNNNNNR..",
+  ".RRRRRRRRRRRRRR.",
+  "RRRRRGRRRRWRRRRR",
+  "RRRRRRRRRRRRRRRR",
+  "RRRWRRRRGRRRRRRR",
+  "RRRRRRRRRRRRGRRR",
+  "RRRRRRWRRRRRRRRR"
+ ],
+ "frames": [
+  [
+   ".........N......",
+   "........N.......",
+   ".....NNNNNN.....",
+   "...NNNNNNNNNN...",
+   "..RNNNNNNNNNNR..",
+   ".RRRRRRRRRRRRRR.",
+   "RRRRRWRRRRGRRRRR",
+   "RRRRRRRRRRRRRRRR",
+   "RRRGRRRRWRRRRRRR",
+   "RRRRRRRRRRRRWRRR",
+   "RRRRRRGRRRRRRRRR"
+  ]
+ ]
+}

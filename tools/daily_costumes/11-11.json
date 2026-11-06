@@ -1,0 +1,39 @@
+{
+ "date": "11-11",
+ "name": "poppy_pin",
+ "title": "Remembrance Day",
+ "theme": "a single red poppy with a dark centre, leaf and stem pinned on his chest; the side petals flutter gently",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  5,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...RRRRR...",
+  "..RRRRRRR..",
+  "RRRDRRRDRR.",
+  "RRRRAAARRR.",
+  "RRRRAAARRRR",
+  ".RRRAAARRRR",
+  ".RRDRRRDRRR",
+  "..RRRRRRR..",
+  "...RRRRRNNN",
+  ".....NNNN.."
+ ],
+ "frames": [
+  [
+   "...RRRRR...",
+   "..RRRRRRR..",
+   ".RRDRRRDRRR",
+   ".RRRAAARRRR",
+   "RRRRAAARRRR",
+   "RRRRAAARRR.",
+   "RRRDRRRDRR.",
+   "..RRRRRRR..",
+   "...RRRRRNNN",
+   ".....NNNN.."
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "02-10",
+ "name": "brolly_hat",
+ "title": "Umbrella Day",
+ "theme": "a small umbrella canopy over his head like a hat, six red, white and blue panels with grey handle and stem; raindrops roll off and the canopy tilts",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".............K............",
+  ".............K............",
+  "........RRRRDDDBBB........",
+  ".....RRRRRDWDDDWDBBBB.....",
+  "..RRRRRRDWWDBDRDWWDBBBBB..",
+  "RRRRRRRDWWDBBDRRDWWDBBBBBB",
+  "RRRRRRDWWWDBBDRRDWWWDBBBBB",
+  "RRRRDWWWWDBBBDRRRDWWWWDBBB",
+  ".B..D....D...D...D....D.B.",
+  ".B...........K..........B.",
+  ".............K............",
+  ".............K............"
+ ],
+ "frames": [
+  [
+   ".............K............",
+   "........RRRRDK............",
+   ".....RRRRRDWDDDBBB........",
+   "..RRRRRRDWWDBDDWDBBBB.....",
+   "RRRRRRRDWWDBBDRDWWDBBBBB..",
+   "RRRRRRDWWWDBBDRRDWWDBBBBBB",
+   "RRRRDWWWWDBBBDRRDWWWDBBBBB",
+   "....D....D...DRRRDWWWWDBBB",
+   ".............D...D....D.B.",
+   ".B...........K..........B.",
+   ".B...........K..........B.",
+   ".............K............"
+  ],
+  [
+   ".............K............",
+   ".............K............",
+   "........RRRRDDDBBB........",
+   ".....RRRRRDWDDDWDBBBB.....",
+   "..RRRRRRDWWDBDRDWWDBBBBB..",
+   "RRRRRRRDWWDBBDRRDWWDBBBBBB",
+   "RRRRRRDWWWDBBDRRDWWWDBBBBB",
+   "RRRRDWWWWDBBBDRRRDWWWWDBBB",
+   "....D....D...D...D....D...",
+   ".............K............",
+   ".B...........K..........B.",
+   ".............K............"
+  ]
+ ]
+}

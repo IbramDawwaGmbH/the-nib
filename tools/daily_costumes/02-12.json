@@ -1,0 +1,47 @@
+{
+ "date": "02-12",
+ "name": "loupe_lens",
+ "title": "Darwin Day",
+ "theme": "a naturalist's gold-rimmed loupe held over his right eye on a gold cord, a green beetle inside with twitching antennae and a glint",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "................GGGG.....",
+  "GGGGGGGGGGGGGGGSSWWWGG...",
+  "..............GSSWWWWG...",
+  ".............GWWAWAWWWG..",
+  ".............GWWWANAWWG..",
+  ".............GWWWNNNWWG..",
+  ".............GWWWNNNWWG..",
+  "..............GWWWWWWG...",
+  "..............GGWWWWGG...",
+  "................GGGG.....",
+  "....................GGG..",
+  ".....................GGG.",
+  "......................GGG",
+  "......................GGG"
+ ],
+ "frames": [
+  [
+   "................GGGG.....",
+   "GGGGGGGGGGGGGGGGWWWWGG...",
+   "..............GWWWWWWG...",
+   ".............GWWWWAWAWG..",
+   ".............GWWWANAWWG..",
+   ".............GWWWNNNWWG..",
+   ".............GWWWNNNWWG..",
+   "..............GWWWWWWG...",
+   "..............GGWWWWGG...",
+   "................GGGG.....",
+   "....................GGG..",
+   ".....................GGG.",
+   "......................GGG",
+   "......................GGG"
+  ]
+ ]
+}

@@ -1,0 +1,51 @@
+{
+ "date": "12-25",
+ "name": "holly_wreath_crown",
+ "title": "Christmas Day",
+ "theme": "a holly wreath worn as a crown, red berry clusters and a gold bow; the berries gleam in turn and the bow loops flutter",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "...N..................N...",
+  "...N..N...N....N...N..N...",
+  "..NNN.N..NNN..NNN..N.NNN..",
+  ".NNWRNRRNGGGDDGGGNRRNRRNN.",
+  "NNNRRNRRNGGGDDGGGNRRNRRNNN",
+  "NNNNNNNNNNNNGGNNNNNNNNNNNN",
+  ".NNNNNNNNNNNNNNNNNNNNNNNN."
+ ],
+ "frames": [
+  [
+   "...N..................N...",
+   "...N..N...N....N...N..N...",
+   "..NNN.N..NNN..NNN..N.NNN..",
+   ".NNRRNWRNGGGDDGGGNRRNRRNN.",
+   "NNNRRNRRNGGGDDGGGNRRNRRNNN",
+   "NNNNNNNNNNNNGGNNNNNNNNNNNN",
+   ".NNNNNNNNNNNNNNNNNNNNNNNN."
+  ],
+  [
+   "...N..................N...",
+   "...N..N...N....N...N..N...",
+   "..NNN.N..NNN..NNN..N.NNN..",
+   ".NNRRNRRGGGGDDGGGGRRNRRNN.",
+   "NNNRRNRRGGGGDDGGGGRRNRRNNN",
+   "NNNNNNNNNNNNGGNNNNNNNNNNNN",
+   ".NNNNNNNNNNNNNNNNNNNNNNNN."
+  ],
+  [
+   "...N..................N...",
+   "...N..N...N....N...N..N...",
+   "..NNN.N..NNN..NNN..N.NNN..",
+   ".NNRRNRRNGGGDDGGGNRWNRRNN.",
+   "NNNRRNRRNGGGDDGGGNRRNRRNNN",
+   "NNNNNNNNNNNNGGNNNNNNNNNNNN",
+   ".NNNNNNNNNNNNNNNNNNNNNNNN."
+  ]
+ ]
+}

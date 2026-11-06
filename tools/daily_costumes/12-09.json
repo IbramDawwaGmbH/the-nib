@@ -1,0 +1,54 @@
+{
+ "date": "12-09",
+ "name": "cinnamon_swirl",
+ "title": "Pastry Day",
+ "theme": "a cinnamon roll worn as a round hat: brown spiral bun with a white icing cap and two drips over the rim, the right drip slowly lengthening",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "....WWWWWWWWWW....",
+  "..WWWWWWWWWWWWWW..",
+  ".WWWWWWWWWWWWWWWW.",
+  ".OOWWOOOOOOOOWWOO.",
+  "OOOWWODDDDDDDWWOOO",
+  "OOOOOOOOOOOODOOOOO",
+  "OOOOODODDDDODOOOOO",
+  "OOOOODOODDOODOOOOO",
+  "OOOOODOOOOOODOOOOO",
+  ".OOOODDDDDDDDOOOO.",
+  "...OOOOOOOOOOOO..."
+ ],
+ "frames": [
+  [
+   "....WWWWWWWWWW....",
+   "..WWWWWWWWWWWWWW..",
+   ".WWWWWWWWWWWWWWWW.",
+   ".OOWWOOOOOOOOWWOO.",
+   "OOOWWODDDDDDDWWOOO",
+   "OOOOOOOOOOOODWWOOO",
+   "OOOOODODDDDODOOOOO",
+   "OOOOODOODDOODOOOOO",
+   "OOOOODOOOOOODOOOOO",
+   ".OOOODDDDDDDDOOOO.",
+   "...OOOOOOOOOOOO..."
+  ],
+  [
+   "....WWWWWWWWWW....",
+   "..WWWWWWWWWWWWWW..",
+   ".WWWWWWWWWWWWWWWW.",
+   ".OOWWOOOOOOOOWWOO.",
+   "OOOWWODDDDDDDWWOOO",
+   "OOOOOOOOOOOODWWOOO",
+   "OOOOODODDDDODWWOOO",
+   "OOOOODOODDOODOOOOO",
+   "OOOOODOOOOOODOOOOO",
+   ".OOOODDDDDDDDOOOO.",
+   "...OOOOOOOOOOOO..."
+  ]
+ ]
+}

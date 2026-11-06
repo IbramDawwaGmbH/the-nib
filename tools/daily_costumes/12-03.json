@@ -1,0 +1,43 @@
+{
+ "date": "12-03",
+ "name": "antler_rack",
+ "title": "Reindeer Antlers",
+ "theme": "thin headband with two mirrored brown reindeer antlers, forked with seams; they lean out and back",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  14,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....OO................OO....",
+  "....OO................OO....",
+  "....OO................OO....",
+  "....OO.OO..........OO.OO....",
+  "....OO.OO..........OO.OO....",
+  ".....OOOO..........OOOO.....",
+  "......OOO..........OOO......",
+  ".......OD..OO..OO..DO.......",
+  "........OO.OO..OO.OO........",
+  ".........DO......OD.........",
+  "..........OO....OO..........",
+  "......OOOOOOOOOOOOOOOO......"
+ ],
+ "frames": [
+  [
+   "...OO..................OO...",
+   "...OO..................OO...",
+   "...OO..................OO...",
+   "....OO.OO..........OO.OO....",
+   "....OO.OO..........OO.OO....",
+   ".....OOOO..........OOOO.....",
+   "......OOO..........OOO......",
+   ".......OD..OO..OO..DO.......",
+   "........OO.OO..OO.OO........",
+   ".........DO......OD.........",
+   "..........OO....OO..........",
+   "......OOOOOOOOOOOOOOOO......"
+  ]
+ ]
+}

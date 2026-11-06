@@ -1,0 +1,72 @@
+{
+  "date": "11-14",
+  "name": "hot_water_bottle",
+  "title": "Cosy Night",
+  "theme": "a red rubber hot-water bottle with a short neck, a white screw cap and dark ribs hugged at his tummy; a white steam wisp puffs up above the cap and drifts right",
+  "category": "Body",
+  "kind": "body",
+  "anchor": [
+    7,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    "................",
+    "................",
+    "................",
+    "................",
+    ".....WWWWWW.....",
+    ".....WWWWWW.....",
+    "......RRRR......",
+    "..RRRRRRRRRRRR..",
+    "RRRRRRRRRRRRRRRR",
+    "RRDDDDDDDDDDDDRR",
+    "RRRRRRRRRRRRRRRR",
+    "RRRRRRRRRRRRRRRR",
+    "RRDDDDDDDDDDDDRR",
+    "RRRRRRRRRRRRRRRR",
+    "RRRRRRRRRRRRRRRR",
+    "RRDDDDDDDDDDDDRR",
+    "..RRRRRRRRRRRR.."
+  ],
+  "frames": [
+    [
+      "................",
+      ".........WW.....",
+      ".........WW.....",
+      "................",
+      ".....WWWWWW.....",
+      ".....WWWWWW.....",
+      "......RRRR......",
+      "..RRRRRRRRRRRR..",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "..RRRRRRRRRRRR.."
+    ],
+    [
+      "...........WW...",
+      "...........WW...",
+      "................",
+      "................",
+      ".....WWWWWW.....",
+      ".....WWWWWW.....",
+      "......RRRR......",
+      "..RRRRRRRRRRRR..",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRR",
+      "RRDDDDDDDDDDDDRR",
+      "..RRRRRRRRRRRR.."
+    ]
+  ]
+}

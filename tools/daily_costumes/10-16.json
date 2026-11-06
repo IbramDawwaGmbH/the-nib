@@ -1,0 +1,51 @@
+{
+ "date": "10-16",
+ "name": "checked_bib",
+ "title": "World Food Day",
+ "theme": "a white napkin bib with red checks and a silver spoon tucked in; the hem ripples and the spoon bobs",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  8,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "DDWWWWWWWWWWWWDD",
+  "DDWWWWWWWWWWWWDD",
+  "WWRRWWRRWWRRKKKW",
+  "WWRRWWRRWWRRKKKW",
+  "RRWWRRWWRRWWKKKW",
+  "RRWWRRWWRRWWWKWW",
+  "WWRRWWRRWWRRWKWW",
+  "WWRRWWRRWWRRWKWW",
+  "RRWWRRWWRRWWWKWW",
+  "RRWWRRWWRRWWWWWW"
+ ],
+ "frames": [
+  [
+   "DDWWWWWWWWWWWWDD",
+   "DDWWWWWWWWWWWWDD",
+   "WWRRWWRRWWRRWWWW",
+   "WWRRWWRRWWRRKKKW",
+   "RRWWRRWWRRWWKKKW",
+   "RRWWRRWWRRWWKKKW",
+   "WWRRWWRRWWRRWKWW",
+   "WWRRWWRRWWRRWKWW",
+   "RRWWRRWWRRWWWKWW",
+   "..WWRRWWRRWWWKWW"
+  ],
+  [
+   "DDWWWWWWWWWWWWDD",
+   "DDWWWWWWWWWWWWDD",
+   "WWRRWWRRWWRRKKKW",
+   "WWRRWWRRWWRRKKKW",
+   "RRWWRRWWRRWWKKKW",
+   "RRWWRRWWRRWWWKWW",
+   "WWRRWWRRWWRRWKWW",
+   "WWRRWWRRWWRRWKWW",
+   "RRWWRRWWRRWWWKWW",
+   "RRWWRRWWRRWWWW.."
+  ]
+ ]
+}

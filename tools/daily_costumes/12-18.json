@@ -1,0 +1,31 @@
+{
+ "date": "12-18",
+ "name": "gift_ribbon_sash",
+ "title": "Gift Wrap Day",
+ "theme": "his body wrapped like a present with a red ribbon and a big bow that puffs",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  12,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  "........RRRR..RRRR........",
+  "........RDRRGGRRDR........",
+  "........RDRRGGRRDR........",
+  "RRRRRRRRRRDRRRRDRRRRRRRRRR",
+  "RRRRRRRRRRDRRRRDRRRRRRRRRR",
+  "RRRRRRRRRRDRRRRDRRRRRRRRRR"
+ ],
+ "frames": [
+  [
+   ".......RRRRR..RRRRR.......",
+   ".......RRDRRGGRRDRR.......",
+   ".......RRDRRGGRRDRR.......",
+   "RRRRRRRRRRDRRRRDRRRRRRRRRR",
+   "RRRRRRRRRRDRRRRDRRRRRRRRRR",
+   "RRRRRRRRRRDRRRRDRRRRRRRRRR"
+  ]
+ ]
+}

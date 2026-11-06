@@ -1,0 +1,51 @@
+{
+ "date": "07-07",
+ "name": "choco_coin",
+ "title": "World Chocolate Day",
+ "theme": "a gold-foil chocolate coin medal on a red ribbon; a white shine glides across the coin and the ribbon swings",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  5,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".RR.....RR",
+  "..RR...RR.",
+  "...RR.RR..",
+  "...GGGGG..",
+  "..GWGGGGG.",
+  "..GGAAAGG.",
+  "..GGAAAGG.",
+  "..GGAAAGG.",
+  "..GGGGGGG.",
+  "...GGGGG.."
+ ],
+ "frames": [
+  [
+   "..RR...RR.",
+   "..RR...RR.",
+   "...RR.RR..",
+   "...GGGGG..",
+   "..GGGGGGG.",
+   "..GGAAAGG.",
+   "..GGAWAGG.",
+   "..GGAAAGG.",
+   "..GGGGGGG.",
+   "...GGGGG.."
+  ],
+  [
+   "RR......RR",
+   ".RR.....RR",
+   "...RR.RR..",
+   "...GGGGG..",
+   "..GGGGGGG.",
+   "..GGAAAGG.",
+   "..GGAAAGG.",
+   "..GGAAAGG.",
+   "..GGGGGWG.",
+   "...GGGGG.."
+  ]
+ ]
+}

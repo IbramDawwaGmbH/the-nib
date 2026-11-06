@@ -1,0 +1,48 @@
+{
+  "date": "07-16",
+  "name": "snake_wrap",
+  "title": "World Snake Day",
+  "theme": "neck: a green snake coiled round his neck, tongue flicking",
+  "category": "Neck",
+  "kind": "neck",
+  "anchor": [
+    12,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    "..........................",
+    ".....NNN..................",
+    "....NNNNNN................",
+    "...NNGGGNNN........NNNN...",
+    "..NNG...GGNNN.....NNNNWN..",
+    ".NN.......GNNNNNNNNNNNNN..",
+    ".N.........GGNNNNNNNNNNNRR",
+    ".............GGGGGNNNNNN..",
+    ".........................."
+  ],
+  "frames": [
+    [
+      "..........................",
+      ".....NNN..................",
+      "....NNNNNN................",
+      "...NNGGGNNN........NNNN...",
+      "NNNNG...GGNNN.....NNNNWN..",
+      ".NN.......GNNNNNNNNNNNNN..",
+      ".N.........GGNNNNNNNNNNNN.",
+      ".............GGGGGNNNNNN..",
+      ".........................."
+    ],
+    [
+      "..........................",
+      ".....NNN..................",
+      "....NNNNNN................",
+      "...NNGGGNNN........NNNN...",
+      "..NNG...GGNNN.....NNNNWN..",
+      ".NN.......GNNNNNNNNNNNNN.R",
+      "NN.........GGNNNNNNNNNNNRR",
+      "N............GGGGGNNNNNN.R",
+      ".........................."
+    ]
+  ]
+}

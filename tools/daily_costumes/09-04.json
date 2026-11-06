@@ -1,0 +1,48 @@
+{
+ "date": "09-04",
+ "name": "pith_helmet",
+ "title": "Wildlife Day",
+ "theme": "a gold pith helmet with a domed crown, dark band and wide brim; a green beetle crawls along the brim, antennae twitching",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "........GGGGGGGGGG........",
+  "......GGGGGGGGGGGGGG......",
+  ".....GGGGGGGGGGGGGGGG.....",
+  "....GGGGGGGGGGGGGGGGGG....",
+  "....GGGGGGGGGGGGGGGGGG....",
+  "....DDDDDDDDDDDDDDDDDD....",
+  "GGGGGGGGGGGGGGGGGNNGGGGGGG",
+  "GGGGGGGGGGGGGGGGGNNNGGGGGG",
+  ".GGGGGGGGGGGGGGGGNNNGGGGG."
+ ],
+ "frames": [
+  [
+   "........GGGGGGGGGG........",
+   "......GGGGGGGGGGGGGG......",
+   ".....GGGGGGGGGGGGGGGG.....",
+   "....GGGGGGGGGGGGGGGGGG....",
+   "....GGGGGGGGGGGGGGGGGG....",
+   "....DDDDDDDDDDDDDDDDDD....",
+   "GGGGGGGGGGGGGGGGGGGNNGGGGG",
+   "GGGGGGGGGGGGGGGGGGNNNGGGGG",
+   ".GGGGGGGGGGGGGGGGGNNNGGGG."
+  ],
+  [
+   "........GGGGGGGGGG........",
+   "......GGGGGGGGGGGGGG......",
+   ".....GGGGGGGGGGGGGGGG.....",
+   "....GGGGGGGGGGGGGGGGGG....",
+   "....GGGGGGGGGGGGGGGGGG....",
+   "....DDDDDDDDDDDDDDDDDD....",
+   "GGGGGGGGGGGGGGGGGGGNNGGGGG",
+   "GGGGGGGGGGGGGGGGGGGNNNGGGG",
+   ".GGGGGGGGGGGGGGGGGGNNNGGG."
+  ]
+ ]
+}

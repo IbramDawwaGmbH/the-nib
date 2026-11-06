@@ -1,0 +1,75 @@
+{
+ "date": "03-22",
+ "name": "big_drop",
+ "title": "World Water Day",
+ "theme": "a giant blue water drop balanced on his head with a white highlight and a teal shade stripe; it squashes and stretches and ripples at its base",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "................",
+  ".......BB.......",
+  ".......BB.......",
+  "......BBBB......",
+  "......BBBB......",
+  ".....BBBBBB.....",
+  "....BBBBBBBT....",
+  "...BWWBBBBBBT...",
+  "..BBWWBBBBBBBT..",
+  "..BBWWBBBBBBBT..",
+  "..BBBBBBBBBBBT..",
+  "...BBBBBBBBBT...",
+  "....BBBBBBBT...."
+ ],
+ "frames": [
+  [
+   "................",
+   "................",
+   ".......BB.......",
+   "......BBBB......",
+   "......BBBB......",
+   ".....BBBBBB.....",
+   "....BBBBBBBT....",
+   "...WWBBBBBBBT...",
+   "..BWWBBBBBBBBT..",
+   ".BBBBBBBBBBBBBT.",
+   ".BBBBBBBBBBBBBT.",
+   ".WBBBBBBBBBBBTW.",
+   ".W.BBBBBBBBBT.W."
+  ],
+  [
+   "................",
+   ".......BB.......",
+   ".......BB.......",
+   "......BBBB......",
+   "......BBBB......",
+   ".....BBBBBB.....",
+   "....BBBBBBBT....",
+   "...BWWBBBBBBT...",
+   "..BBWWBBBBBBBT..",
+   "..BBWWBBBBBBBT..",
+   "..BBBBBBBBBBBT..",
+   "..WBBBBBBBBBTW..",
+   "..W.BBBBBBBT.W.."
+  ],
+  [
+   ".......BB.......",
+   ".......BB.......",
+   ".......BB.......",
+   "......BBBB......",
+   "......BBBB......",
+   ".....BBBBBT.....",
+   "....BWWBBBBT....",
+   "...BBWWBBBBBT...",
+   "...BBWWBBBBBT...",
+   "...BBBBBBBBBT...",
+   "...BBBBBBBBBT...",
+   "....BBBBBBBT....",
+   ".....BBBBBT....."
+  ]
+ ]
+}

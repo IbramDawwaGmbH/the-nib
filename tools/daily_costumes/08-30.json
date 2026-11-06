@@ -1,0 +1,63 @@
+{
+ "date": "08-30",
+ "name": "beach_ball",
+ "title": "National Beach Day",
+ "theme": "a beach ball on his head with red, white, blue and gold panels split by dark seams and a white highlight; it rolls round",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....RRDDDG.....",
+  "...RRRDWDBDGG...",
+  "..WWRDWWDBBDGG..",
+  ".RWWRDWWDBBDGGG.",
+  ".RRRDWWWDBBBDGG.",
+  "RRRRDWWWDBBBDGGG",
+  "RRRRDWWWDBBBDGGG",
+  "RRRRDWWWDBBBDGGG",
+  "RRRRDWWWDBBBDGGG",
+  ".RRRDWWWDBBBDGG.",
+  ".RRRRDWWDBBDGGG.",
+  "..RRRDWWDBBDGG..",
+  "...RRRDWDBDGG...",
+  ".....RRDDDG....."
+ ],
+ "frames": [
+  [
+   ".....GGDDDB.....",
+   "...GGGDRDWDBB...",
+   "..WWGDRRDWWDBB..",
+   ".GWWGDRRDWWDBBB.",
+   ".GGGDRRRDWWWDBB.",
+   "GGGGDRRRDWWWDBBB",
+   "GGGGDRRRDWWWDBBB",
+   "GGGGDRRRDWWWDBBB",
+   "GGGGDRRRDWWWDBBB",
+   ".GGGDRRRDWWWDBB.",
+   ".GGGGDRRDWWDBBB.",
+   "..GGGDRRDWWDBB..",
+   "...GGGDRDWDBB...",
+   ".....GGDDDB....."
+  ],
+  [
+   ".....BBDDDW.....",
+   "...BBBDGDRDWW...",
+   "..WWBDGGDRRDWW..",
+   ".BWWBDGGDRRDWWW.",
+   ".BBBDGGGDRRRDWW.",
+   "BBBBDGGGDRRRDWWW",
+   "BBBBDGGGDRRRDWWW",
+   "BBBBDGGGDRRRDWWW",
+   "BBBBDGGGDRRRDWWW",
+   ".BBBDGGGDRRRDWW.",
+   ".BBBBDGGDRRDWWW.",
+   "..BBBDGGDRRDWW..",
+   "...BBBDGDRDWW...",
+   ".....BBDDDW....."
+  ]
+ ]
+}

@@ -1,0 +1,54 @@
+{
+  "date": "01-15",
+  "name": "hat_stack",
+  "title": "National Hat Day",
+  "theme": "three hats stacked: red bowler, blue cap, green cone with a white pom that wobbles",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    10,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    ".........WW.........",
+    "........NWWN........",
+    ".......NNNNNN.......",
+    "......NNNNNNNN......",
+    "...BBBBBBBBBBBBBB...",
+    "..BBBBBBBBBBBBBBBB..",
+    "..BBBBBBBBBBBBBBBB..",
+    ".....RRRRRRRRRR.....",
+    ".....RRRRRRRRRR.....",
+    "RRRRRRRRRRRRRRRRRRRR",
+    "RRRRRRRRRRRRRRRRRRRR"
+  ],
+  "frames": [
+    [
+      ".......WW...........",
+      ".......WWNN.........",
+      "......NNNNNN........",
+      ".....NNNNNNNN.......",
+      "..BBBBBBBBBBBBBB....",
+      ".BBBBBBBBBBBBBBBB...",
+      ".BBBBBBBBBBBBBBBB...",
+      ".....RRRRRRRRRR.....",
+      ".....RRRRRRRRRR.....",
+      "RRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRR"
+    ],
+    [
+      "...........WW.......",
+      ".........NNWW.......",
+      "........NNNNNN......",
+      ".......NNNNNNNN.....",
+      "....BBBBBBBBBBBBBB..",
+      "...BBBBBBBBBBBBBBBB.",
+      "...BBBBBBBBBBBBBBBB.",
+      ".....RRRRRRRRRR.....",
+      ".....RRRRRRRRRR.....",
+      "RRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRR"
+    ]
+  ]
+}

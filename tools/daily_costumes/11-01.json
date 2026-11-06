@@ -1,0 +1,41 @@
+{
+ "date": "11-01",
+ "name": "broccoli_floret",
+ "title": "World Vegan Day",
+ "theme": "a green broccoli head on his crown: bumpy floret dome with dark seams over a pale stalk; bumps jiggle and a highlight blinks",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  ".NNN..NNNN..NNN...",
+  ".NNNNDNNNNDNNNNNN.",
+  "NNNNNDNNNNDNNNNNNN",
+  "NNNNNNNNNNDNNNNNNN",
+  "NNNNNNNNNNDNNDNNNN",
+  "NNNNNNNNNNNNNDNNNN",
+  ".NNNNNNNNNNNNNNNN.",
+  "..NNNNNNNNNNNNNN..",
+  "......WWWWWW......",
+  "......WWWWWW......",
+  "......WWWWWW......"
+ ],
+ "frames": [
+  [
+   "..NNN..NNNN..NNN..",
+   ".NNNNDNNNNDNNNNNN.",
+   "NNWWNDNNNNDNNNNNNN",
+   "NNNNNNNNNNDNNNNNNN",
+   "NNNNNNNNNNDNNDNNNN",
+   "NNNNNNNNNNNNNDNNNN",
+   ".NNNNNNNNNNNNNNNN.",
+   "..NNNNNNNNNNNNNN..",
+   "......WWWWWW......",
+   "......WWWWWW......",
+   "......WWWWWW......"
+  ]
+ ]
+}

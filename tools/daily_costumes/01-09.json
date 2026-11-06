@@ -1,0 +1,71 @@
+{
+ "date": "01-09",
+ "name": "static_hair",
+ "title": "Static Electricity Day",
+ "theme": "Five uneven charcoal hair strands standing on end with wide gaps; gold tips spark in turn and a 1px zig-zag arc jumps from gap to gap while the tips sway",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......G......GG........",
+  ".......AA..G.G..........",
+  "...G...AA..AA..G........",
+  "...AA..AA..AA..AA..G....",
+  "...AA..AA..AA..AA..AA...",
+  "...AA..AA..AA..AA..AA...",
+  "...AA..AA..AA..AA..AA...",
+  "...AA..AA..AA..AA..AA...",
+  "....AAAAAAAAAAAAAAAA....",
+  "...AAAAAAAAAAAAAAAAAA...",
+  "...AAAAAAAAAAAAAAAAAA...",
+  "....AAAAAAAAAAAAAAAA...."
+ ],
+ "frames": [
+  [
+   "........G......GG.......",
+   "........AA..A.G.........",
+   "....A..AA...AA..G.......",
+   "....AA.AA..AA...AA..A...",
+   "...AA..AA..AA..AA...AA..",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "....AAAAAAAAAAAAAAAA....",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "....AAAAAAAAAAAAAAAA...."
+  ],
+  [
+   ".......A.....G..........",
+   ".......AA..G..GG........",
+   "...G...AA..AA..A........",
+   "...AA..AA..AA..AA..G....",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "....AAAAAAAAAAAAAAAA....",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "....AAAAAAAAAAAAAAAA...."
+  ],
+  [
+   "......G......GG.........",
+   "......AA..A.G...........",
+   "..A....AA.AA..G.........",
+   "..AA...AA..AA.AA..A.....",
+   "...AA..AA..AA..AA.AA....",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "...AA..AA..AA..AA..AA...",
+   "....AAAAAAAAAAAAAAAA....",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "....AAAAAAAAAAAAAAAA...."
+  ]
+ ]
+}

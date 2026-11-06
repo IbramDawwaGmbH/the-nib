@@ -1,0 +1,48 @@
+{
+ "date": "05-06",
+ "name": "glazed_donut",
+ "title": "No Diet Day",
+ "theme": "a ring donut lying flat on his head with pink glaze over a gold dough edge, a dark filled hole and white, teal and blue sprinkles; the sprinkles twinkle in turn and a pink glaze drip grows down the right side",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....MMMMMMMMMMMM.....",
+  "...MMMWWMMMMMBBMMMM...",
+  ".GMMMMMMMMMMMMTTMMMMG.",
+  "GGMMMMMMMDDDDMMMMMMMGG",
+  "GGMMMMMDDDDDDDDMMMMMGG",
+  "GGMBBMMMMDDDDMMMMMMMGG",
+  ".GGMMMMMMMMMMMMMMMMGG.",
+  "..GGGGGGGGGGGGGMMGGG..",
+  ".....GGGGGGGGGGGG....."
+ ],
+ "frames": [
+  [
+   ".....MMMMMMMMMMMM.....",
+   "...MMMMMMMMMMBBMMMM...",
+   ".GMMMMMMMMMMMMTTMMMMG.",
+   "GGMMMMMMMDDDDMMMMMMMGG",
+   "GGMMMMMDDDDDDDDMMMMMGG",
+   "GGMBBMMMMDDDDMMMMMMMGG",
+   ".GGMMMMMMMMMMMMMMMMGG.",
+   "..GGGGGGGGGGGGGMMGGG..",
+   ".....GGGGGGGGGGMM....."
+  ],
+  [
+   ".....MMMMMMMMMMMM.....",
+   "...MMMWWMMMMMBBMMMM...",
+   ".GMMMMMMMMMMMMMMMMMMG.",
+   "GGMMMMMMMDDDDMMMMMMMGG",
+   "GGMMMMMDDDDDDDDMMMMMGG",
+   "GGMBBMMMMDDDDMMMMMMMGG",
+   ".GGMMMMMMMMMMMMMMMMGG.",
+   "..GGGGGGGGGGGGGMMGGG..",
+   ".....GGGGGGGGGGMM....."
+  ]
+ ]
+}

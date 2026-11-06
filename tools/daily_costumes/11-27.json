@@ -1,0 +1,54 @@
+{
+  "date": "11-27",
+  "name": "pincushion_hat",
+  "title": "Pins and Needles Day",
+  "theme": "a red tomato pincushion on his crown with dark seams and a green leafy calyx, four silver pins with blue and gold heads; one pin pushes in and a white glint hops between heads",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    9,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    "WW...GG...BB...GG.",
+    "WW...GG...BB...GG.",
+    ".S....S....S....S.",
+    ".S....S....S....S.",
+    ".S....S....S....S.",
+    "..RRRRRNNNNRRRRR..",
+    ".RRRRNNNNNNNNRRRR.",
+    "RRRRRRRNNNNRRRRRRR",
+    "RRRDRRRRRRRRRRDRRR",
+    "RRRDRRRRRRRRRRDRRR",
+    ".RRDRRRRRRRRRRDRR."
+  ],
+  "frames": [
+    [
+      "BB........BB...WW.",
+      "BB...GG...BB...WW.",
+      ".S...GG....S....S.",
+      ".S....S....S....S.",
+      ".S....S....S....S.",
+      "..RRRRRNNNNRRRRR..",
+      ".RRRRNNNNNNNNRRRR.",
+      "RRRRRRRNNNNRRRRRRR",
+      "RRRDRRRRRRRRRRDRRR",
+      "RRRDRRRRRRRRRRDRRR",
+      ".RRDRRRRRRRRRRDRR."
+    ],
+    [
+      "BB........WW...GG.",
+      "BB........WW...GG.",
+      ".S...GG....S....S.",
+      ".S...GG....S....S.",
+      ".S....S....S....S.",
+      "..RRRRRNNNNRRRRR..",
+      ".RRRRNNNNNNNNRRRR.",
+      "RRRRRRRNNNNRRRRRRR",
+      "RRRDRRRRRRRRRRDRRR",
+      "RRRDRRRRRRRRRRDRRR",
+      ".RRDRRRRRRRRRRDRR."
+    ]
+  ]
+}

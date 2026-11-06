@@ -1,0 +1,71 @@
+{
+ "date": "12-31",
+ "name": "nye_fireworks",
+ "title": "New Year's Eve",
+ "theme": "A fireworks burst fanning from a charcoal headband: eight gold and red spark rays that spread and lengthen each frame, white tips popping on the last",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "..........................",
+  "..........................",
+  "..........................",
+  "..........................",
+  "..........................",
+  "..........................",
+  "..........................",
+  ".....R..G.R.GR.R.G..R.....",
+  "......R.G.R.GR.R.G.R......",
+  "..AAAAAAAAAAAAAAAAAAAAAA..",
+  "..AAAAAAAAAAAAAAAAAAAAAA.."
+ ],
+ "frames": [
+  [
+   "..........................",
+   "..........................",
+   "..........................",
+   "..........................",
+   "..........................",
+   "..........................",
+   "...R..G..R..GR..R..G..R...",
+   "....R..G..R.GR.R..G..R....",
+   ".....R..G.R.GR.R.G..R.....",
+   "......R.G.R.GR.R.G.R......",
+   "..AAAAAAAAAAAAAAAAAAAAAA..",
+   "..AAAAAAAAAAAAAAAAAAAAAA.."
+  ],
+  [
+   "..........................",
+   "..........................",
+   "..........................",
+   "R..G....R...GR...R....G..R",
+   ".R..G...R...GR...R...G..R.",
+   "..R..G...R..GR..R...G..R..",
+   "...R..G..R..GR..R..G..R...",
+   "....R..G..R.GR.R..G..R....",
+   ".....R..G.R.GR.R.G..R.....",
+   "......R.G.R.GR.R.G.R......",
+   "..AAAAAAAAAAAAAAAAAAAAAA..",
+   "..AAAAAAAAAAAAAAAAAAAAAA.."
+  ],
+  [
+   "..........................",
+   "..........................",
+   ".......W....WW....W.......",
+   "W..W....R...GR...R....W..W",
+   ".R..G...R...GR...R...G..R.",
+   "..R..G...R..GR..R...G..R..",
+   "...R..G..R..GR..R..G..R...",
+   "....R..G..R.GR.R..G..R....",
+   ".....R..G.R.GR.R.G..R.....",
+   "......R.G.R.GR.R.G.R......",
+   "..AAAAAAAAAAAAAAAAAAAAAA..",
+   "..AAAAAAAAAAAAAAAAAAAAAA.."
+  ]
+ ]
+}

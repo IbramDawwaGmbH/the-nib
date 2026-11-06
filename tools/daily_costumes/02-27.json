@@ -1,0 +1,51 @@
+{
+ "date": "02-27",
+ "name": "polar_bear_hood",
+ "title": "International Polar Bear Day",
+ "theme": "a fluffy white polar bear hood with round ears, eye dots and a dark nose; the ears twitch and the nose sniffs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  ".WWWWW....................",
+  ".WSSWW..............WWWWW.",
+  ".WSSWW..WWWWWWWWWW..WWSSW.",
+  ".WWWWWWWWWWWWWWWWWWWWWSSW.",
+  ".WWWWWWWWWWWWWWWWWWWWWWWW.",
+  "WWWWWWWAWWWWWWWWWWAWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWAAAWWWWWWWWWWWW",
+  "SSSSSSSSSSSAAASSSSSSSSSSSS"
+ ],
+ "frames": [
+  [
+   "....................WWWWW.",
+   ".WWWWW..............WWSSW.",
+   ".WSSWW..WWWWWWWWWW..WWSSW.",
+   ".WSSWWWWWWWWWWWWWWWWWWWWW.",
+   ".WWWWWWWWWWWWWWWWWWWWWWWW.",
+   "WWWWWWWAWWWWWWWWWWAWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWAAAWWWWWWWWWWWWW",
+   "SSSSSSSSSSAAASSSSSSSSSSSSS"
+  ],
+  [
+   "..........................",
+   ".WWWWW..............WWWWW.",
+   ".WSSWW..WWWWWWWWWW..WWSSW.",
+   ".WSSWWWWWWWWWWWWWWWWWWSSW.",
+   ".WWWWWWWWWWWWWWWWWWWWWWWW.",
+   "WWWWWWWAWWWWWWWWWWAWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWAAAWWWWWWWWWWWW",
+   "SSSSSSSSSSSAAASSSSSSSSSSSS"
+  ]
+ ]
+}

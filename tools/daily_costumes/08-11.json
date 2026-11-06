@@ -1,0 +1,51 @@
+{
+  "date": "08-11",
+  "name": "beach_bucket",
+  "title": "Play in the Sand Day",
+  "theme": "a blue toy bucket upside down on his head with a dark rim seam; a silver-bladed spade stands beside it and gold sand trickles down its side onto a little pile",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    8,
+    9
+  ],
+  "layer": "over",
+  "pattern": [
+    "....BBBBBBBB.........OO.",
+    "....BWWBBBBB....GG...OO.",
+    "...BBBBBBBBBB...GG...OO.",
+    "...DDDDDDDDDDD.......OO.",
+    "..BBBBBBBBBBBB.......OO.",
+    "..BBBBBBBBBBBB.......OO.",
+    ".BBBBBBBBBBBBBB......OO.",
+    "DDDDDDDDDDDDDDDD....SSSS",
+    "BBBBBBBBBBBBBBBBGGG.SSSS",
+    "BBBBBBBBBBBBBBBBGGGGSSSS"
+  ],
+  "frames": [
+    [
+      "....BBBBBBBB..........OO",
+      "....BWWBBBBB.........OO.",
+      "...BBBBBBBBBB........OO.",
+      "...DDDDDDDDDDD.......OO.",
+      "..BBBBBBBBBBBB..GG...OO.",
+      "..BBBBBBBBBBBB..GG...OO.",
+      ".BBBBBBBBBBBBBB......OO.",
+      "DDDDDDDDDDDDDDDD....SSSS",
+      "BBBBBBBBBBBBBBBBGGG.SSSS",
+      "BBBBBBBBBBBBBBBBGGGGSSSS"
+    ],
+    [
+      "....BBBBBBBB.........OO.",
+      "....BWWBBBBB.........OO.",
+      "...BBBBBBBBBB........OO.",
+      "...DDDDDDDDDDD.......OO.",
+      "..BBBBBBBBBBBB.......OO.",
+      "..BBBBBBBBBBBB.......OO.",
+      ".BBBBBBBBBBBBBB.GG...OO.",
+      "DDDDDDDDDDDDDDDDGG..SSSS",
+      "BBBBBBBBBBBBBBBBGGG.SSSS",
+      "BBBBBBBBBBBBBBBBGGGGSSSS"
+    ]
+  ]
+}

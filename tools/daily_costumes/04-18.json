@@ -1,0 +1,60 @@
+{
+ "date": "04-18",
+ "name": "turret_crown",
+ "title": "World Heritage Day",
+ "theme": "a little grey stone castle turret as a crown, four battlements and a silver pole with a red pennant that ripples",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........SRRR......",
+  "..........SRRRRR....",
+  "..........SRRR......",
+  ".KKK..KKK.SKKK..KKK.",
+  ".KKK..KKK.SKKK..KKK.",
+  ".KKK..KKK.SKKK..KKK.",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   "..........SRRRR.....",
+   "..........SRRR......",
+   "..........SRRR......",
+   ".KKK..KKK.SKKK..KKK.",
+   ".KKK..KKK.SKKK..KKK.",
+   ".KKK..KKK.SKKK..KKK.",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK"
+  ],
+  [
+   "..........SRRR......",
+   "..........SRRRR.....",
+   "..........SRRRR.....",
+   ".KKK..KKK.SKKK..KKK.",
+   ".KKK..KKK.SKKK..KKK.",
+   ".KKK..KKK.SKKK..KKK.",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKK"
+  ]
+ ]
+}

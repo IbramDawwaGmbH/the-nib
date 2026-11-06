@@ -1,0 +1,57 @@
+{
+  "date": "02-21",
+  "name": "speech_bubble",
+  "title": "Mother Language Day",
+  "theme": "a white speech bubble over his head, its tail pointing at him, with red, gold and blue dots lighting up in turn like typing",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    11,
+    12
+  ],
+  "layer": "over",
+  "pattern": [
+    "..................",
+    ".WWWWWWWWWWWWWWWW.",
+    "WWWWWWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWWWW",
+    "WWWRRWWWWWWWWWWWWW",
+    "WWWRRWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWWWW",
+    ".WWWWWWWWWWWWWWWW.",
+    ".........WWWWW....",
+    "..........WWW.....",
+    "...........W......"
+  ],
+  "frames": [
+    [
+      ".WWWWWWWWWWWWWWWW.",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWRRWWWGGWWWWWWWW",
+      "WWWRRWWWGGWWWWWWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      ".WWWWWWWWWWWWWWWW.",
+      ".........WWWWW....",
+      "..........WWW.....",
+      "...........W......",
+      ".................."
+    ],
+    [
+      "..................",
+      ".WWWWWWWWWWWWWWWW.",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWRRWWWGGWWWBBWWW",
+      "WWWRRWWWGGWWWBBWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWWW",
+      ".WWWWWWWWWWWWWWWW.",
+      ".........WWWWW....",
+      "..........WWW.....",
+      "...........W......"
+    ]
+  ]
+}

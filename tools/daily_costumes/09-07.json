@@ -1,0 +1,63 @@
+{
+ "date": "09-07",
+ "name": "stopwatch_lanyard",
+ "title": "Marathon Season",
+ "theme": "a silver stopwatch with a white face on a wide charcoal lanyard that spans his chin; a dark hand points 12, 3, 6, 9 in turn, a red start button on a silver stem, swinging a pixel",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  7,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".AA..........AA.",
+  "....AA....AA....",
+  ".....AARRAA.....",
+  ".....AASSAA.....",
+  ".....SSSSSS.....",
+  "...SWWWDWWWWS...",
+  "...SWWWDWWWWS...",
+  "...SWWWWWWWWS...",
+  "...SWWWWWWWWS...",
+  ".....SSSSSS....."
+ ],
+ "frames": [
+  [
+   "..AA..........AA",
+   ".....AA....AA...",
+   "......AARRAA....",
+   "......AASSAA....",
+   "......SSSSSS....",
+   "....SWWWWWWWWS..",
+   "....SWWWDDDDWS..",
+   "....SWWWWWWWWS..",
+   "....SWWWWWWWWS..",
+   "......SSSSSS...."
+  ],
+  [
+   ".AA..........AA.",
+   "....AA....AA....",
+   ".....AARRAA.....",
+   ".....AASSAA.....",
+   ".....SSSSSS.....",
+   "...SWWWWWWWWS...",
+   "...SWWWDWWWWS...",
+   "...SWWWDWWWWS...",
+   "...SWWWDWWWWS...",
+   ".....SSSSSS....."
+  ],
+  [
+   "AA..........AA..",
+   "...AA....AA.....",
+   "....AARRAA......",
+   "....AASSAA......",
+   "....SSSSSS......",
+   "..SWWWWWWWWS....",
+   "..SDDDDWWWWS....",
+   "..SWWWWWWWWS....",
+   "..SWWWWWWWWS....",
+   "....SSSSSS......"
+  ]
+ ]
+}

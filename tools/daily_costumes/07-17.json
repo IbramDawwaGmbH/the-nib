@@ -1,0 +1,51 @@
+{
+ "date": "07-17",
+ "name": "smiley_badge",
+ "title": "World Emoji Day",
+ "theme": "a round gold badge with a silver rim and a charcoal smiley face that changes from smile to wink to open grin",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  4,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...SSSS...",
+  ".SSGGGGSS.",
+  "SGGGGGGGGS",
+  "SGAGGGGAGS",
+  "SGAGGGGAGS",
+  "SGGGGGGGGS",
+  "SGAGGGGAGS",
+  "SGGAAAAGGS",
+  ".SSGGGGSS.",
+  "...SSSS..."
+ ],
+ "frames": [
+  [
+   "...SSSS...",
+   ".SSGGGGSS.",
+   "SGGGGGGGGS",
+   "SGGGGGGAGS",
+   "SGAAGGGAGS",
+   "SGGGGGGGGS",
+   "SGAGGGGAGS",
+   "SGGAAAAGGS",
+   ".SSGGGGSS.",
+   "...SSSS..."
+  ],
+  [
+   "...SSSS...",
+   ".SSGGGGSS.",
+   "SGGGGGGGGS",
+   "SGAGGGGAGS",
+   "SGAGGGGAGS",
+   "SGGGGGGGGS",
+   "SGAAAAAAGS",
+   "SGGAAAAGGS",
+   ".SSGGGGSS.",
+   "...SSSS..."
+  ]
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "date": "01-01",
+ "name": "sparkler_tiara",
+ "title": "New Year's Day",
+ "theme": "a gold tiara with a five-row centre peak under a fountain of rising white and silver sparks",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  "......SS............",
+  "............WW......",
+  ".........WW.........",
+  ".........GG.........",
+  "........GGGG........",
+  ".......GGGGGG.......",
+  ".......GGGGGG.......",
+  "......GGGGGGGG......",
+  "GGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGG"
+ ],
+ "frames": [
+  [
+   "............WW......",
+   ".........WW.........",
+   "....................",
+   ".........SS.........",
+   ".........GG.........",
+   "........GGGG........",
+   ".......GGGGGG.......",
+   ".......GGGGGG.......",
+   "......GGGGGGGG......",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   "....................",
+   ".........SS.........",
+   "............WW......",
+   ".......SS...........",
+   ".........GG.........",
+   "........GGGG........",
+   ".......GGGGGG.......",
+   ".......GGGGGG.......",
+   "......GGGGGGGG......",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   ".........WW.........",
+   "....................",
+   "......SS............",
+   "............WW......",
+   ".........GG.........",
+   "........GGGG........",
+   ".......GGGGGG.......",
+   ".......GGGGGG.......",
+   "......GGGGGGGG......",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ]
+ ]
+}

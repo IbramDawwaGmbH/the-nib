@@ -1,0 +1,71 @@
+{
+ "date": "05-08",
+ "name": "donkey_ears",
+ "title": "World Donkey Day",
+ "theme": "two broad grey donkey ears with dark tips and pink insides, splayed outward on a thin grey headband; they flick one after the other",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  16,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".DDD........................DDD.",
+  "..KKK......................KKK..",
+  "..KMK......................KMK..",
+  "...KMMK..................KMMK...",
+  "...KMMK..................KMMK...",
+  "....KMMMK..............KMMMK....",
+  "....KMMMK..............KMMMK....",
+  ".....KMMMKK..........KKMMMK.....",
+  ".....KMMMKK..........KKMMMK.....",
+  "......KMMMKK........KKMMMK......",
+  "......KMMMKK........KKMMMK......",
+  "...KKKKKKKKKKKKKKKKKKKKKKKKKK..."
+ ],
+ "frames": [
+  [
+   "DDD.........................DDD.",
+   ".KKK.......................KKK..",
+   ".KMK.......................KMK..",
+   "..KMMK...................KMMK...",
+   "...KMMK..................KMMK...",
+   "....KMMMK..............KMMMK....",
+   "....KMMMK..............KMMMK....",
+   ".....KMMMKK..........KKMMMK.....",
+   ".....KMMMKK..........KKMMMK.....",
+   "......KMMMKK........KKMMMK......",
+   "......KMMMKK........KKMMMK......",
+   "...KKKKKKKKKKKKKKKKKKKKKKKKKK..."
+  ],
+  [
+   ".DDD.........................DDD",
+   "..KKK.......................KKK.",
+   "..KMK.......................KMK.",
+   "...KMMK...................KMMK..",
+   "...KMMK..................KMMK...",
+   "....KMMMK..............KMMMK....",
+   "....KMMMK..............KMMMK....",
+   ".....KMMMKK..........KKMMMK.....",
+   ".....KMMMKK..........KKMMMK.....",
+   "......KMMMKK........KKMMMK......",
+   "......KMMMKK........KKMMMK......",
+   "...KKKKKKKKKKKKKKKKKKKKKKKKKK..."
+  ],
+  [
+   "DDD..........................DDD",
+   ".KKK........................KKK.",
+   ".KMK........................KMK.",
+   "..KMMK....................KMMK..",
+   "...KMMK..................KMMK...",
+   "....KMMMK..............KMMMK....",
+   "....KMMMK..............KMMMK....",
+   ".....KMMMKK..........KKMMMK.....",
+   ".....KMMMKK..........KKMMMK.....",
+   "......KMMMKK........KKMMMK......",
+   "......KMMMKK........KKMMMK......",
+   "...KKKKKKKKKKKKKKKKKKKKKKKKKK..."
+  ]
+ ]
+}

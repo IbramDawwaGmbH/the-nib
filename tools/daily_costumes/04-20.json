@@ -1,0 +1,39 @@
+{
+ "date": "04-20",
+ "name": "frog_peepers",
+ "title": "Spring Frog Day",
+ "theme": "two bulging green frog eyes on a band that sit over his own; they blink",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "..NNNNN........NNNNN..",
+  ".NNNNNNN......NNNNNNN.",
+  "NNWWWWNNN....NNWWWWNNN",
+  "NNWDDWNNN....NNWDDWNNN",
+  "NNWDDWNNN....NNWDDWNNN",
+  "NNWWWWNNN....NNWWWWNNN",
+  "NNNNNNNNN....NNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNN"
+ ],
+ "frames": [
+  [
+   "..NNNNN........NNNNN..",
+   ".NNNNNNN......NNNNNNN.",
+   "NNNNNNNNN....NNNNNNNNN",
+   "NNNNNNNNN....NNNNNNNNN",
+   "NNDDDDNNN....NNDDDDNNN",
+   "NNNNNNNNN....NNNNNNNNN",
+   "NNNNNNNNN....NNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ]
+ ]
+}

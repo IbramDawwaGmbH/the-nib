@@ -1,0 +1,55 @@
+{
+ "date": "12-17",
+ "name": "biplane_topper",
+ "title": "Wright Brothers Day",
+ "theme": "a little biplane perched on his head with a spinning propeller",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........................",
+  ".....................KKK.",
+  "AA.WWWWWWWWWWWWWWWWWWKKK.",
+  "AA......DRRRRRRRRDKKKKK..",
+  "AA......DRRRRRRRRD.......",
+  "AA......DRRRRRRRRD.......",
+  "AA.WWWWWWWWWWWWWWWWWWWW..",
+  "........................."
+ ],
+ "frames": [
+  [
+   ".........................",
+   ".....................KKK.",
+   "AA.WWWWWWWWWWWWWWWWWWKKK.",
+   "AA......DRRRRRRRRDKKKKK..",
+   "AA......DRRRRRRRRD.......",
+   ".AA.....DRRRRRRRRD.......",
+   ".AAWWWWWWWWWWWWWWWWWWWW..",
+   "........................."
+  ],
+  [
+   ".........................",
+   ".....................KKK.",
+   "...WWWWWWWWWWWWWWWWWWKKK.",
+   "........DRRRRRRRRDKKKKK..",
+   "AAA.....DRRRRRRRRD.......",
+   "AAA.....DRRRRRRRRD.......",
+   "...WWWWWWWWWWWWWWWWWWWW..",
+   "........................."
+  ],
+  [
+   ".........................",
+   "......................KKK",
+   ".AAWWWWWWWWWWWWWWWWWWWKKK",
+   ".AA.....DRRRRRRRRDKKKKK..",
+   "AA......DRRRRRRRRD.......",
+   "AA......DRRRRRRRRD.......",
+   "AA.WWWWWWWWWWWWWWWWWWWW..",
+   "........................."
+  ]
+ ]
+}

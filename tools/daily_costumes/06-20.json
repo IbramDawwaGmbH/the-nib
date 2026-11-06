@@ -1,0 +1,57 @@
+{
+ "date": "06-20",
+ "name": "lightning_rod",
+ "title": "Summer Storm",
+ "theme": "a silver lightning rod on his crown with a grey base and a round gold ball tip; a gold bolt strikes down-left from the top-right into the tip, flashes white and vanishes while the tip glows",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  3,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".GGG....GGG",
+  ".GGG...GG..",
+  ".GGG..GG...",
+  "..SSGGG....",
+  "..SS.......",
+  "..SS.......",
+  "..SS.......",
+  "..SS.......",
+  "..SS.......",
+  "..SS.......",
+  ".KKKK......",
+  "KKKKKK....."
+ ],
+ "frames": [
+  [
+   ".WWW....WWW",
+   ".WWW...WW..",
+   ".WWW..WW...",
+   "..SSWWW....",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   ".KKKK......",
+   "KKKKKK....."
+  ],
+  [
+   ".GWG.......",
+   ".WWW.......",
+   ".GWG.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   "..SS.......",
+   ".KKKK......",
+   "KKKKKK....."
+  ]
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "date": "10-27",
+ "name": "spider_thread",
+ "title": "Spooky Spider",
+ "theme": "a charcoal spider with red eyes dangling on a silk thread from under his mouth; it lowers and climbs back, legs twitching",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  3,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....K....",
+  "....K....",
+  "....K....",
+  "....K....",
+  "A..AAA..A",
+  ".AAAAAAA.",
+  "..ARARA..",
+  ".AAAAAAA.",
+  "A..AAA..A",
+  ".........",
+  "........."
+ ],
+ "frames": [
+  [
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "A...K...A",
+   ".A.AAA.A.",
+   "..AAAAA..",
+   "..ARARA..",
+   "..AAAAA..",
+   ".A.AAA.A.",
+   "A.......A"
+  ],
+  [
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "A..AAA..A",
+   ".AAAAAAA.",
+   "..ARARA..",
+   ".AAAAAAA.",
+   "A..AAA..A"
+  ],
+  [
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "....K....",
+   "AA.AAA.AA",
+   "..AAAAA..",
+   "..ARARA..",
+   "..AAAAA..",
+   "AA.AAA.AA",
+   "........."
+  ]
+ ]
+}

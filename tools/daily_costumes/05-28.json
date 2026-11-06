@@ -1,0 +1,67 @@
+{
+ "date": "05-28",
+ "name": "burger_hat",
+ "title": "Hamburger Day",
+ "theme": "a hamburger on his head: sesame bun, lettuce, patty, drooping cheese and bottom bun; the cheese drips and the seeds twinkle",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....OOOOOWOOOO.....",
+  "..OOOOGOOOOOOWOOOO..",
+  "OOOOOOOOOOOOOOOOOOOO",
+  "NNNNNNNNNNNNNNNNNNNN",
+  "ANNAANNAANNAANNAANNA",
+  ".AAAAAAAAAAAAAAAAAA.",
+  "GGGGGGGGGGGGGGGGGGGG",
+  "GOOOOOOOOOOOOOOOOOOG",
+  "..OOOOOOOOOOOOOOOO.G",
+  "....................",
+  "...................."
+ ],
+ "frames": [
+  [
+   ".....OOOOOGOOOO.....",
+   "..OOOOWOOOOOOGOOOO..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "NNNNNNNNNNNNNNNNNNNN",
+   "ANNAANNAANNAANNAANNA",
+   ".AAAAAAAAAAAAAAAAAA.",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GOOOOOOOOOOOOOOOOOOG",
+   "..OOOOOOOOOOOOOOOO.G",
+   "...................G",
+   "...................."
+  ],
+  [
+   ".....OOOOOWOOOO.....",
+   "..OOOOGOOOOOOWOOOO..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "NNNNNNNNNNNNNNNNNNNN",
+   "ANNAANNAANNAANNAANNA",
+   ".AAAAAAAAAAAAAAAAAA.",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GOOOOOOOOOOOOOOOOOOG",
+   "..OOOOOOOOOOOOOOOO.G",
+   "...................G",
+   "...................G"
+  ],
+  [
+   ".....OOOOOGOOOO.....",
+   "..OOOOWOOOOOOGOOOO..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "NNNNNNNNNNNNNNNNNNNN",
+   "ANNAANNAANNAANNAANNA",
+   ".AAAAAAAAAAAAAAAAAA.",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GOOOOOOOOOOOOOOOOOOG",
+   "..OOOOOOOOOOOOOOOO..",
+   "....................",
+   "...................."
+  ]
+ ]
+}

@@ -1,0 +1,39 @@
+{
+ "date": "10-11",
+ "name": "smoke_alarm_hat",
+ "title": "Fire Prevention Week",
+ "theme": "a round white smoke alarm worn flat on his head with grey vent slots, dark rim seam and a red light; the light blinks and sound ticks pop out either side",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  14,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........WWWWWWWW..........",
+  "........WWWWWRRWWWWW........",
+  "......WWWWWWWRRWWWWWWW......",
+  "....WWKKKKWWWWWWWWKKKKWW....",
+  "....WWWWKKKKWWWWKKKKWWWW....",
+  ".....DDDDDDDDDDDDDDDDDD....."
+ ],
+ "frames": [
+  [
+   "..........WWWWWWWW..........",
+   "..WW....WWWWWKKWWWWW....WW..",
+   ".WW...WWWWWWWKKWWWWWWW...WW.",
+   "....WWKKKKWWWWWWWWKKKKWW....",
+   "....WWWWKKKKWWWWKKKKWWWW....",
+   ".....DDDDDDDDDDDDDDDDDD....."
+  ],
+  [
+   "WW........WWWWWWWW........WW",
+   "WW......WWWWWRRWWWWW......WW",
+   "......WWWWWWWRRWWWWWWW......",
+   "....WWKKKKWWWWWWWWKKKKWW....",
+   "....WWWWKKKKWWWWKKKKWWWW....",
+   ".....DDDDDDDDDDDDDDDDDD....."
+  ]
+ ]
+}

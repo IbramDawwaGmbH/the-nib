@@ -1,0 +1,39 @@
+{
+  "date": "11-15",
+  "name": "patch_quilt",
+  "title": "Hibernation Day",
+  "theme": "a patchwork quilt wrapped round his shoulders in purple, teal and gold squares with dark stitch seams and a white edge; a corner lifts and settles",
+  "category": "Body",
+  "kind": "body",
+  "anchor": [
+    15,
+    5
+  ],
+  "layer": "over",
+  "pattern": [
+    ".PPPPPPDTTTTTTDDGGGGGGDPPPPPP.",
+    "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+    "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+    "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+    "WDDDDDDDDDDDDDDDDDDDDDDDDDDDDW",
+    "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+    "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+    "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+    "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+    ".WWWWWWWWWWWWWWWWWWWWWWWWWWWW."
+  ],
+  "frames": [
+    [
+      ".PPPPPPDTTTTTTDDGGGGGGDPPPPPP.",
+      "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+      "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+      "WPPPPPPDTTTTTTDDGGGGGGDPPPPPPW",
+      "WDDDDDDDDDDDDDDDDDDDDDDDDDDDDW",
+      "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+      "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+      "WGGGGGGDPPPPPPDDTTTTTTDGGGGGGW",
+      "WGGGGGGDPPPPPPDDTTTTTTDWWWWWW.",
+      ".WWWWWWWWWWWWWWWWWWWWWW......."
+    ]
+  ]
+}

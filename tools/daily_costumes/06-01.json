@@ -1,0 +1,67 @@
+{
+ "date": "06-01",
+ "name": "spinning_top",
+ "title": "Children's Day",
+ "theme": "a toy spinning top with a red cone, gold stripe, dark seam, silver point and grey handle; the stripe shifts round to show spin and the top tilts left, upright, right",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "......KK........",
+  "......KK........",
+  "....RRRRRR......",
+  "..RRRRRRRRRR....",
+  "RRRRRRRRRRRRRR..",
+  "GGGGGGRRGGGGGG..",
+  ".DDDDDDDDDDDD...",
+  "...RRRRRRRRRR...",
+  ".....RRRRRR.....",
+  ".......SS.......",
+  ".......SS......."
+ ],
+ "frames": [
+  [
+   ".......KK.......",
+   ".......KK.......",
+   ".....RRRRRR.....",
+   "...RRRRRRRRRR...",
+   ".RRRRRRRRRRRRRR.",
+   ".GGGGRRGGGGGGRR.",
+   "..DDDDDDDDDDDD..",
+   "...RRRRRRRRRR...",
+   ".....RRRRRR.....",
+   ".......SS.......",
+   ".......SS......."
+  ],
+  [
+   "........KK......",
+   "........KK......",
+   "......RRRRRR....",
+   "....RRRRRRRRRR..",
+   "..RRRRRRRRRRRRRR",
+   "..GGRRGGGGGGRRGG",
+   "...DDDDDDDDDDDD.",
+   "...RRRRRRRRRR...",
+   ".....RRRRRR.....",
+   ".......SS.......",
+   ".......SS......."
+  ],
+  [
+   ".......KK.......",
+   ".......KK.......",
+   ".....RRRRRR.....",
+   "...RRRRRRRRRR...",
+   ".RRRRRRRRRRRRRR.",
+   ".RRGGGGGGRRGGGG.",
+   "..DDDDDDDDDDDD..",
+   "...RRRRRRRRRR...",
+   ".....RRRRRR.....",
+   ".......SS.......",
+   ".......SS......."
+  ]
+ ]
+}

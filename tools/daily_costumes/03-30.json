@@ -1,0 +1,63 @@
+{
+ "date": "03-30",
+ "name": "stethoscope",
+ "title": "Doctors' Day",
+ "theme": "a charcoal stethoscope looped round his neck, both tubes mirrored, with a silver chest-piece that pulses like a heartbeat while one tube sways",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  8,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".A.............A.",
+  ".A.............A.",
+  ".A.............A.",
+  ".A...SSSSSSS...A.",
+  ".A...SSSSSSS...A.",
+  ".A...SSAAASS...A.",
+  "..A..SSAAASS..A..",
+  "...A.SSAAASS.A...",
+  "....ASSSSSSSA....",
+  ".....SSSSSSS....."
+ ],
+ "frames": [
+  [
+   ".A.............A.",
+   ".A.............A.",
+   ".A.............A.",
+   ".A...SSSSSSS...A.",
+   ".A...SAAAAAS...A.",
+   ".A...SAAAAAS...A.",
+   "..A..SAAAAAS..A..",
+   "...A.SAAAAAS.A...",
+   "....ASAAAAASA....",
+   ".....SSSSSSS....."
+  ],
+  [
+   ".A.............A.",
+   ".A.............A.",
+   ".A.............A.",
+   ".A...SSSSSSS....A",
+   ".A...SSSSSSS....A",
+   ".A...SSAAASS...A.",
+   "..A..SSAAASS..A..",
+   "...A.SSAAASS.A...",
+   "....ASSSSSSSA....",
+   ".....SSSSSSS....."
+  ],
+  [
+   ".A.............A.",
+   ".A.............A.",
+   ".A.............A.",
+   ".A...SSSSSSS...A.",
+   ".A...SSSSSSS....A",
+   ".A...SSAAASS...A.",
+   "..A..SSAAASS..A..",
+   "...A.SSAAASS.A...",
+   "....ASSSSSSSA....",
+   ".....SSSSSSS....."
+  ]
+ ]
+}

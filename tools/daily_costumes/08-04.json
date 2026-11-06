@@ -1,0 +1,71 @@
+{
+ "date": "08-04",
+ "name": "owl_perch",
+ "title": "Owl Awareness Day",
+ "theme": "a round brown owl perched on his head; it blinks and turns its head side to side",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".O..........O.",
+  ".OO........OO.",
+  ".OOOOOOOOOOOO.",
+  "OOWWWWOOWWWWOO",
+  "OOWKKWOOWKKWOO",
+  "OOWKKWOOWKKWOO",
+  "OOWWWWGGWWWWOO",
+  "OOOOOOGGOOOOOO",
+  "OOOOWWWWWWOOOO",
+  "OOOOWWWWWWOOOO",
+  ".OOOWWWWWWOOO.",
+  "..OOWWWWWWOO.."
+ ],
+ "frames": [
+  [
+   ".O..........O.",
+   ".OO........OO.",
+   ".OOOOOOOOOOOO.",
+   "OOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOO",
+   "OODDDDOODDDDOO",
+   "OOOOOOGGOOOOOO",
+   "OOOOOOGGOOOOOO",
+   "OOOOWWWWWWOOOO",
+   "OOOOWWWWWWOOOO",
+   ".OOOWWWWWWOOO.",
+   "..OOWWWWWWOO.."
+  ],
+  [
+   "O..........O..",
+   "OO........OO..",
+   ".OOOOOOOOOOOO.",
+   "OWWWWOOWWWWOOO",
+   "OWKKWOOWKKWOOO",
+   "OWKKWOOWKKWOOO",
+   "OWWWWGGWWWWOOO",
+   "OOOOOGGOOOOOOO",
+   "OOOOWWWWWWOOOO",
+   "OOOOWWWWWWOOOO",
+   ".OOOWWWWWWOOO.",
+   "..OOWWWWWWOO.."
+  ],
+  [
+   "..O..........O",
+   "..OO........OO",
+   ".OOOOOOOOOOOO.",
+   "OOOWWWWOOWWWWO",
+   "OOOWKKWOOWKKWO",
+   "OOOWKKWOOWKKWO",
+   "OOOWWWWGGWWWWO",
+   "OOOOOOOGGOOOOO",
+   "OOOOWWWWWWOOOO",
+   "OOOOWWWWWWOOOO",
+   ".OOOWWWWWWOOO.",
+   "..OOWWWWWWOO.."
+  ]
+ ]
+}

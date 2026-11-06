@@ -1,0 +1,63 @@
+{
+ "date": "05-20",
+ "name": "bee_crown",
+ "title": "World Bee Day",
+ "theme": "A gold and charcoal striped bee headband with ball-tipped antennae; a little bee bobs above",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....GG..........GG.....",
+  ".....GG..........GG.....",
+  ".....A............A.....",
+  ".....A....WW.WW...A.....",
+  ".....A....GAGAG...A.....",
+  ".....A....GAGAG...A.....",
+  ".....A....GAGAG...A.....",
+  "GGGAAAGGGAAAGGGAAAGGGAAA",
+  "GGGAAAGGGAAAGGGAAAGGGAAA",
+  "GGGAAAGGGAAAGGGAAAGGGAAA"
+ ],
+ "frames": [
+  [
+   "........................",
+   ".....GG..........GG.....",
+   ".....GG....WW.WW.GG.....",
+   ".....A.....GAGAG..A.....",
+   ".....A.....GAGAG..A.....",
+   ".....A.....GAGAG..A.....",
+   ".....A............A.....",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA"
+  ],
+  [
+   ".....GG..........GG.....",
+   ".....GG..........GG.....",
+   ".....A............A.....",
+   ".....A......WW.WW.A.....",
+   ".....A......GAGAG.A.....",
+   ".....A......GAGAG.A.....",
+   ".....A......GAGAG.A.....",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA"
+  ],
+  [
+   "........................",
+   ".....GG..........GG.....",
+   ".....GG..........GG.....",
+   ".....A.....WW.WW..A.....",
+   ".....A.....GAGAG..A.....",
+   ".....A.....GAGAG..A.....",
+   ".....A.....GAGAG..A.....",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA",
+   "GGGAAAGGGAAAGGGAAAGGGAAA"
+  ]
+ ]
+}

@@ -1,0 +1,48 @@
+{
+ "date": "08-22",
+ "name": "pillow_coin",
+ "title": "Under the Pillow",
+ "theme": "a white pillow held against his tummy with a grey stitched edge and a full silver coin beside it; the coin slides out and its face glints gold",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  9,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  "..WWWWWWWWWWWWWW..........",
+  "WWWKWKWKWKWKWKWWWW........",
+  "WKWWWWWWWWWWWWWWKW..SSS...",
+  "WWWWWWWWWWWWWWWWWW.SSSSS..",
+  "WKWWWWWWWWWWWWWWKW.SSSSS..",
+  "WWWWWWWWWWWWWWWWWW.SSSSS..",
+  "WWWKWKWKWKWKWKWWWW..SSS...",
+  "..WWWWWWWWWWWWWWWW........",
+  ".........................."
+ ],
+ "frames": [
+  [
+   "..WWWWWWWWWWWWWW..........",
+   "WWWKWKWKWKWKWKWWWW........",
+   "WKWWWWWWWWWWWWWWKW...SSS..",
+   "WWWWWWWWWWWWWWWWWW..SSSSS.",
+   "WKWWWWWWWWWWWWWWKW..SSSSS.",
+   "WWWWWWWWWWWWWWWWWW..SSSSS.",
+   "WWWKWKWKWKWKWKWWWW...SSS..",
+   "..WWWWWWWWWWWWWWWW........",
+   ".........................."
+  ],
+  [
+   "..WWWWWWWWWWWWWW..........",
+   "WWWKWKWKWKWKWKWWWW........",
+   "WKWWWWWWWWWWWWWWKW....SSS.",
+   "WWWWWWWWWWWWWWWWWW...SGGGS",
+   "WKWWWWWWWWWWWWWWKW...SGGGS",
+   "WWWWWWWWWWWWWWWWWW...SGGGS",
+   "WWWKWKWKWKWKWKWWWW....SSS.",
+   "..WWWWWWWWWWWWWWWW........",
+   ".........................."
+  ]
+ ]
+}

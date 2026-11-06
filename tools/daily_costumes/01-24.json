@@ -1,0 +1,57 @@
+{
+ "date": "01-24",
+ "name": "gold_star_sticker",
+ "title": "Compliment Day",
+ "theme": "a big gold five-point star sticker tilted on his head with a white twinkle hopping between its points",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........G......",
+  "........G......",
+  ".......WWG.....",
+  ".......WWG.....",
+  ".GGGGGGGGGGGGG.",
+  "..GGGGGGGGGGG..",
+  "...GGGGGGGGG...",
+  "....GGGGGGG....",
+  "....GGGGGGG....",
+  "..GGGG.GGGG....",
+  "..GGG...GGG....",
+  ".GGG.....GGG..."
+ ],
+ "frames": [
+  [
+   ".......G.......",
+   ".......G.......",
+   "......GGG......",
+   "......GGG......",
+   ".GGGGGGGGGGWWG.",
+   "..GGGGGGGGGWW..",
+   "...GGGGGGGGG...",
+   "....GGGGGGG....",
+   "....GGGGGGG....",
+   "...GGGG.GGGG...",
+   "...GGG...GGG...",
+   "..GGG.....GGG.."
+  ],
+  [
+   "........G......",
+   "........G......",
+   ".......GGG.....",
+   ".......GGG.....",
+   ".GGGGGGGGGGGGG.",
+   "..GGGGGGGGGGG..",
+   "...GGGGGGGGG...",
+   "....GGGGGGG....",
+   "....GGGGGGG....",
+   "..WWGG.GGGG....",
+   "..WWG...GGG....",
+   ".GGG.....GGG..."
+  ]
+ ]
+}

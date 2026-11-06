@@ -1,0 +1,71 @@
+{
+ "date": "08-06",
+ "name": "float_mug",
+ "title": "Root Beer Float Day",
+ "theme": "a frosty root beer float mug as a hat; a bubble rises and the foam puffs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "RR.WWWWWW.......",
+  ".RRWWWWWWW......",
+  ".WRRWWWWWWW.....",
+  "KKKKKKKKKKKK....",
+  "KOOOOOOOOOOK....",
+  "KOOOOOOOOOOKDD..",
+  "KOOOOOOOOOOKDDDD",
+  "KOOOOOOOOOOKDDDD",
+  "KOOOOOOOOOOKDDDD",
+  "KOOOWWOOOOOKDD..",
+  "KOOOWWOOOOOK....",
+  "KKKKKKKKKKKK...."
+ ],
+ "frames": [
+  [
+   "RR.WWWWWW.......",
+   ".RRWWWWWWW......",
+   ".WRRWWWWWWW.....",
+   "KKKKKKKKKKKK....",
+   "KOOOOOOOOOOK....",
+   "KOOOOOOOOOOKDD..",
+   "KOOOOOOOOOOKDDDD",
+   "KOOOOOOOOOOKDDDD",
+   "KOOOWWOOOOOKDDDD",
+   "KOOOWWOOOOOKDD..",
+   "KOOOOOOOOOOK....",
+   "KKKKKKKKKKKK...."
+  ],
+  [
+   "RR.WWWWWW.......",
+   ".RRWWWWWWW......",
+   ".WRRWWWWWWW.....",
+   "KKKKKKKKKKKK....",
+   "KOOOOOOOOOOK....",
+   "KOOOOOOOOOOKDD..",
+   "KOOOOOOOOOOKDDDD",
+   "KOOOWWOOOOOKDDDD",
+   "KOOOWWOOOOOKDDDD",
+   "KOOOOOOOOOOKDD..",
+   "KOOOOOOOOOOK....",
+   "KKKKKKKKKKKK...."
+  ],
+  [
+   "RR.WWWWWWW......",
+   ".RRWWWWWWW......",
+   ".WRRWWWWWWW.....",
+   "KKKKKKKKKKKK....",
+   "KOOOOOOOOOOK....",
+   "KOOOOOOOOOOKDD..",
+   "KOOOWWOOOOOKDDDD",
+   "KOOOWWOOOOOKDDDD",
+   "KOOOOOOOOOOKDDDD",
+   "KOOOOOOOOOOKDD..",
+   "KOOOOOOOOOOK....",
+   "KKKKKKKKKKKK...."
+  ]
+ ]
+}

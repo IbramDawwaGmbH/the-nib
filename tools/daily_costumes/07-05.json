@@ -1,0 +1,33 @@
+{
+ "date": "07-05",
+ "name": "surf_wetsuit",
+ "title": "Surf's Up",
+ "theme": "a charcoal wetsuit torso with a teal chest panel, dark centre seam and a silver zip cord that swings left and right while a blue water drop slides down the panel",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  12,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "AAAAAAAATTSSTTTTTTAAAAAAAA",
+  "AAAAAAAATTSSTTTTTTAAAAAAAA",
+  "AAAAAAAATBBSDDTTTTAAAAAAAA",
+  "AAAAAAAATBBTDDTTTTAAAAAAAA",
+  "AAAAAAAATTTTDDTTTTAAAAAAAA",
+  "AAAAAAAATTTTDDTTTTAAAAAAAA",
+  "AAAAAAAATTTTDDTTTTAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "AAAAAAAATTTTTTSSTTAAAAAAAA",
+   "AAAAAAAATTTTTTSSTTAAAAAAAA",
+   "AAAAAAAATTTTDDSSTTAAAAAAAA",
+   "AAAAAAAATTTTDDTTTTAAAAAAAA",
+   "AAAAAAAATBBTDDTTTTAAAAAAAA",
+   "AAAAAAAATBBTDDTTTTAAAAAAAA",
+   "AAAAAAAATTTTDDTTTTAAAAAAAA"
+  ]
+ ]
+}

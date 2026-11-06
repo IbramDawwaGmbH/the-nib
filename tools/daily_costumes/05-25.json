@@ -1,0 +1,48 @@
+{
+ "date": "05-25",
+ "name": "flying_disc",
+ "title": "Flying Disc Day",
+ "theme": "a red flying disc seen edge-on spinning just above his head, white rim stripe and dark centre seam; the stripe shifts across it as it spins and it bobs one pixel",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "....RRRRRRRRRRRRRRRR....",
+  ".RWWWWWWRRRRRRRRRRRRRRR.",
+  "RRRRRRRRRDDDDDDRRRRRRRRR",
+  ".RRRRRRRRRRRRRRRRRRRRRR.",
+  "........................",
+  "........................",
+  "........................"
+ ],
+ "frames": [
+  [
+   "........................",
+   "....RRRRRRRRRRRRRRRR....",
+   ".RRRRRRRRWWWWWWRRRRRRRR.",
+   "RRRRRRRRRDDDDDDRRRRRRRRR",
+   ".RRRRRRRRRRRRRRRRRRRRRR.",
+   "........................",
+   "........................",
+   "........................",
+   "........................"
+  ],
+  [
+   "........................",
+   "........................",
+   "....RRRRRRRRRRRRRRRR....",
+   ".RRRRRRRRRRRRRRRWWWWWWR.",
+   "RRRRRRRRRDDDDDDRRRRRRRRR",
+   ".RRRRRRRRRRRRRRRRRRRRRR.",
+   "........................",
+   "........................",
+   "........................"
+  ]
+ ]
+}

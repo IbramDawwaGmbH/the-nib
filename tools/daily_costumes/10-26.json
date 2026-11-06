@@ -1,0 +1,57 @@
+{
+ "date": "10-26",
+ "name": "pumpkin_ribs",
+ "title": "Pumpkin Day",
+ "theme": "a squat flame-orange pumpkin with five dark ribs and a green stem and curling tendril on his head; the tendril curls and a highlight blinks",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........NNNN.........",
+  ".........NNNNNNN......",
+  ".....FFFFNNNNFFFF.....",
+  "..FDFFFDFFFDFFFDFFFD..",
+  "FFFDWWFDFFFDFFFDFFFDFF",
+  "FFFDFFFDFFFDFFFDFFFDFF",
+  "FFFDFFFDFFFDFFFDFFFDFF",
+  "FFFDFFFDFFFDFFFDFFFDFF",
+  "FFFDFFFDFFFDFFFDFFFDFF",
+  ".FFDFFFDFFFDFFFDFFFDF.",
+  "..FDFFFDFFFDFFFDFFFD..",
+  "....FFFDFFFDFFFDFF...."
+ ],
+ "frames": [
+  [
+   ".........NNNN..NN.....",
+   ".........NNNNNN.......",
+   ".....FFFFNNNNFFFF.....",
+   "..FDFFFDFFFDFFFDFFFD..",
+   "FFFDWWFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   ".FFDFFFDFFFDFFFDFFFDF.",
+   "..FDFFFDFFFDFFFDFFFD..",
+   "....FFFDFFFDFFFDFF...."
+  ],
+  [
+   ".........NNNN...NN....",
+   ".........NNNNNNN......",
+   ".....FFFFNNNNFFFF.....",
+   "..FDFFFDFFFDFFFDFFFD..",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   "FFFDFFFDFFFDFFFDFFFDFF",
+   ".FFDFFFDFFFDFFFDFFFDF.",
+   "..FDFFFDFFFDFFFDFFFD..",
+   "....FFFDFFFDFFFDFF...."
+  ]
+ ]
+}

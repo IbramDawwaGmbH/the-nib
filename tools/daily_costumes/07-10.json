@@ -1,0 +1,57 @@
+{
+ "date": "07-10",
+ "name": "pineapple_crest",
+ "title": "Pina Colada Day",
+ "theme": "a golden pineapple with a green leafy crown and a red cocktail straw; the leaves wiggle and the straw tilts",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......NN......",
+  "....N.NN.N....",
+  "...NN.NN.NN..R",
+  "...NNNNNNNN..R",
+  "...NNNNNNNN.R.",
+  "...GGGDGGGD.R.",
+  ".GGGDGGGDGGGD.",
+  "GGDGGGDGGGDGGG",
+  "DGGGDGGGDGGGDG",
+  "GGDGGGDGGGDGGG",
+  ".GGGDGGGDGGGD.",
+  "...GGGDGGGD..."
+ ],
+ "frames": [
+  [
+   "......NN......",
+   "....N.NN.N....",
+   "..N.N.NN.N.N.R",
+   "...NNNNNNNN..R",
+   "...NNNNNNNN..R",
+   "...GGGDGGGD.R.",
+   ".GGGDGGGDGGGD.",
+   "GGDGGGDGGGDGGG",
+   "DGGGDGGGDGGGDG",
+   "GGDGGGDGGGDGGG",
+   ".GGGDGGGDGGGD.",
+   "...GGGDGGGD..."
+  ],
+  [
+   "......NN......",
+   "....N.NN.N....",
+   "...NN.NN.NN.R.",
+   "...NNNNNNNN.R.",
+   "...NNNNNNNNR..",
+   "...GGGDGGGDR..",
+   ".GGGDGGGDGGGD.",
+   "GGDGGGDGGGDGGG",
+   "DGGGDGGGDGGGDG",
+   "GGDGGGDGGGDGGG",
+   ".GGGDGGGDGGGD.",
+   "...GGGDGGGD..."
+  ]
+ ]
+}

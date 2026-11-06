@@ -1,0 +1,42 @@
+{
+ "date": "08-03",
+ "name": "melon_shades",
+ "title": "Watermelon Day",
+ "theme": "sunglasses made of two watermelon half-slices; the seeds blink in turn",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "RRRRRRRRRR......RRRRRRRRRR",
+  "RRAARRRAARRRRRRRRAARRRAARR",
+  "RRAARRRAARRRRRRRRAARRRAARR",
+  ".RRRRRRRRR......RRRRRRRRR.",
+  "..RRRRRRRR......RRRRRRRR..",
+  "...WWWWWW........WWWWWW...",
+  "....NNNN..........NNNN...."
+ ],
+ "frames": [
+  [
+   "RRRRRRRRRR......RRRRRRRRRR",
+   "RRRRRRRRRRRRRRRRRAARRRAARR",
+   "RRRRRRRRRRRRRRRRRAARRRAARR",
+   ".RRRRRRRRR......RRRRRRRRR.",
+   "..RRRRRRRR......RRRRRRRR..",
+   "...WWWWWW........WWWWWW...",
+   "....NNNN..........NNNN...."
+  ],
+  [
+   "RRRRRRRRRR......RRRRRRRRRR",
+   "RRAARRRAARRRRRRRRRRRRRRRRR",
+   "RRAARRRAARRRRRRRRRRRRRRRRR",
+   ".RRRRRRRRR......RRRRRRRRR.",
+   "..RRRRRRRR......RRRRRRRR..",
+   "...WWWWWW........WWWWWW...",
+   "....NNNN..........NNNN...."
+  ]
+ ]
+}

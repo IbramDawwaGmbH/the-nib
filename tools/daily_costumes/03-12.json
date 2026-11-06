@@ -1,0 +1,75 @@
+{
+ "date": "03-12",
+ "name": "sprout_pot",
+ "title": "Plant a Flower Day",
+ "theme": "a terracotta flower pot on his head with a green sprout that grows leaf by leaf and finally opens a pink bloom",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................",
+  "..................",
+  "..................",
+  "..................",
+  "........NN........",
+  "........NN........",
+  "........NN........",
+  "...AAAAAAAAAAAA...",
+  "OOOOOOOOOOOOOOOOOO",
+  ".DDDDDDDDDDDDDDDD.",
+  ".OOOOOOOOOOOOOOOO.",
+  "..OOOOOOOOOOOOOO..",
+  "...OOOOOOOOOOOO..."
+ ],
+ "frames": [
+  [
+   "..................",
+   "..................",
+   "........NN........",
+   "......NNNN........",
+   "......NNNN........",
+   "........NN........",
+   "........NN........",
+   "...AAAAAAAAAAAA...",
+   "OOOOOOOOOOOOOOOOOO",
+   ".DDDDDDDDDDDDDDDD.",
+   ".OOOOOOOOOOOOOOOO.",
+   "..OOOOOOOOOOOOOO..",
+   "...OOOOOOOOOOOO..."
+  ],
+  [
+   ".......MMM........",
+   ".......MMM........",
+   ".......MMMNN......",
+   "......NNNNNN......",
+   "......NNNN........",
+   "........NN........",
+   "........NN........",
+   "...AAAAAAAAAAAA...",
+   "OOOOOOOOOOOOOOOOOO",
+   ".DDDDDDDDDDDDDDDD.",
+   ".OOOOOOOOOOOOOOOO.",
+   "..OOOOOOOOOOOOOO..",
+   "...OOOOOOOOOOOO..."
+  ],
+  [
+   ".......MMM........",
+   "......MMMMM.......",
+   ".......MMMNN......",
+   "......NNNNNN......",
+   "......NNNN........",
+   "........NN........",
+   "........NN........",
+   "...AAAAAAAAAAAA...",
+   "OOOOOOOOOOOOOOOOOO",
+   ".DDDDDDDDDDDDDDDD.",
+   ".OOOOOOOOOOOOOOOO.",
+   "..OOOOOOOOOOOOOO..",
+   "...OOOOOOOOOOOO..."
+  ]
+ ]
+}

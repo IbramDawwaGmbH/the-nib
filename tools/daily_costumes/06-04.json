@@ -1,0 +1,54 @@
+{
+ "date": "06-04",
+ "name": "cheese_wedge",
+ "title": "Cheese Day",
+ "theme": "a gold cheese wedge with dark holes and a gliding glint",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................GG",
+  "................GGGG",
+  "..............GGGGGG",
+  "............GGGDDGGG",
+  "..........GGGGGDDGGG",
+  "........GGGGGGGGGGGG",
+  "......GGWWDDGGGGGGGG",
+  "....GGGGGGDDGGGGGGGG",
+  "..GGDDGGGGGGGGDDGGGG",
+  ".GGGDDGGGGGGGGDDGGGG",
+  "GGGGGGGGGGGGGGGGGGGG"
+ ],
+ "frames": [
+  [
+   "..................GG",
+   "................GGGG",
+   "..............GGGGGG",
+   "............GGGDDGGG",
+   "..........GWWGGDDGGG",
+   "........GGGGGGGGGGGG",
+   "......GGGGDDGGGGGGGG",
+   "....GGGGGGDDGGGGGGGG",
+   "..GGDDGGGGGGGGDDGGGG",
+   ".GGGDDGGGGGGGGDDGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   "..................GG",
+   "................GGGG",
+   "..............GWWGGG",
+   "............GGGDDGGG",
+   "..........GGGGGDDGGG",
+   "........GGGGGGGGGGGG",
+   "......GGGGDDGGGGGGGG",
+   "....GGGGGGDDGGGGGGGG",
+   "..GGDDGGGGGGGGDDGGGG",
+   ".GGGDDGGGGGGGGDDGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ]
+ ]
+}

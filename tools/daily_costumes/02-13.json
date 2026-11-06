@@ -1,0 +1,51 @@
+{
+ "date": "02-13",
+ "name": "mic_lanyard",
+ "title": "World Radio Day",
+ "theme": "a press microphone on a blue lanyard under his mouth, round silver head on a charcoal handle; the red live light blinks and sound bars pop out beside it",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  6,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "B..........B",
+  ".B........B.",
+  "..B......B..",
+  "....SSSS....",
+  "...SSSSSS...",
+  "...SSSSSS...",
+  "....SSSS....",
+  "....ARRA....",
+  "....ARRA....",
+  "....AAAA...."
+ ],
+ "frames": [
+  [
+   "B..........B",
+   ".B........B.",
+   "..B......B..",
+   "....SSSS....",
+   "...SSSSSS...",
+   "...SSSSSS...",
+   "....SSSS....",
+   "....ADDA....",
+   "....ADDA....",
+   "....AAAA...."
+  ],
+  [
+   "B..........B",
+   ".B........B.",
+   "..B......B..",
+   "....SSSS....",
+   ".K.SSSSSS.K.",
+   ".K.SSSSSS.K.",
+   ".K.SSSSSS.K.",
+   "....ARRA....",
+   "....ARRA....",
+   "....AAAA...."
+  ]
+ ]
+}

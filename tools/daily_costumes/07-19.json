@@ -1,0 +1,63 @@
+{
+ "date": "07-19",
+ "name": "snorkel_set",
+ "title": "Snorkel Day",
+ "theme": "a blue dive mask with teal lens and gold snorkel; bubbles rise from the tip and a glint slides over the lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  ".....................W..",
+  "........................",
+  "......................W.",
+  ".....................GGG",
+  ".....................GGG",
+  ".....................GG.",
+  ".....................GG.",
+  "...BBBBBBBBBBBBBBBBBBGG.",
+  "...BTTTTTTTTTTTTTTTTBGG.",
+  "..BBTTWTTTTTTTTTTTTTBGG.",
+  "...BTWTTTTTTTTTTTTTTBGG.",
+  "...BTTTTTTTTTTTTTTTTBB..",
+  "...BBBBBBBBBBBBBBBBBB..."
+ ],
+ "frames": [
+  [
+   ".....................W..",
+   "........................",
+   "......................W.",
+   "........................",
+   ".....................GGG",
+   ".....................GGG",
+   ".....................GG.",
+   ".....................GG.",
+   "...BBBBBBBBBBBBBBBBBBGG.",
+   "...BTTTTTTTTTTTTTTTTBGG.",
+   "..BBTTTTTTTWTTTTTTTTBGG.",
+   "...BTTTTTTWTTTTTTTTTBGG.",
+   "...BTTTTTTTTTTTTTTTTBB..",
+   "...BBBBBBBBBBBBBBBBBB..."
+  ],
+  [
+   "........................",
+   "......................W.",
+   "........................",
+   ".....................W..",
+   ".....................GGG",
+   ".....................GGG",
+   ".....................GG.",
+   ".....................GG.",
+   "...BBBBBBBBBBBBBBBBBBGG.",
+   "...BTTTTTTTTTTTTTTTTBGG.",
+   "..BBTTTTTTTTTTTTWTTTBGG.",
+   "...BTTTTTTTTTTTWTTTTBGG.",
+   "...BTTTTTTTTTTTTTTTTBB..",
+   "...BBBBBBBBBBBBBBBBBB..."
+  ]
+ ]
+}

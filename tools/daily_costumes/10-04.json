@@ -1,0 +1,43 @@
+{
+ "date": "10-04",
+ "name": "giraffe_ossicones",
+ "title": "World Animal Day",
+ "theme": "a gold headband with brown patches and two short gold horns topped with brown tufts; the horns tilt apart and together and the tufts wiggle",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....OOO........OOO.....",
+  "....OOOOO......OOOOO....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  ".....GGG........GGG.....",
+  "GGGGGGGGGGGGGGGGGGGGGGGG",
+  "GGOOGGGGOOGGGGOOGGGGOOGG",
+  "GGOOGGGGOOGGGGOOGGGGOOGG"
+ ],
+ "frames": [
+  [
+   "..OOO..............OOO..",
+   "...OOOO..........OOOO...",
+   "...GGG............GGG...",
+   "...GGG............GGG...",
+   "....GGG..........GGG....",
+   "....GGG..........GGG....",
+   ".....GGG........GGG.....",
+   ".....GGG........GGG.....",
+   ".....GGG........GGG.....",
+   "GGGGGGGGGGGGGGGGGGGGGGGG",
+   "GGOOGGGGOOGGGGOOGGGGOOGG",
+   "GGOOGGGGOOGGGGOOGGGGOOGG"
+  ]
+ ]
+}

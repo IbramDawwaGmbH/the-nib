@@ -1,0 +1,57 @@
+{
+  "date": "03-04",
+  "name": "marching_drum",
+  "title": "March Forth",
+  "theme": "a red snare drum with white rims and a dark seam, slung on his chest by a charcoal strap over his shoulder; two silver drumsticks with gold tips strike in turn with a white hit flash",
+  "category": "Body",
+  "kind": "body",
+  "anchor": [
+    12,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    "AA....................",
+    "AA.............SSSGG..",
+    "AA..GGSSS......SSSGG..",
+    "AA..GGSSS.............",
+    "AAWWWWWWWWWWWWWWWWWWWW",
+    "..RRRWWRRRRRRRRRRRRRRR",
+    "..RRRWWRRRRRDDRRRRRRRR",
+    "..RRRRRRRRRRDDRRRRRRRR",
+    "..RRRRRRRRRRDDRRRRRRRR",
+    "..DDDDDDDDDDDDDDDDDDDD",
+    "..RRRRRRRRRRRRRRRRRRRR",
+    "..WWWWWWWWWWWWWWWWWWWW"
+  ],
+  "frames": [
+    [
+      "AA....................",
+      "AA..GGSSS.............",
+      "AA..GGSSS......SSSGG..",
+      "AA.............SSSGG..",
+      "AAWWWWWWWWWWWWWWWWWWWW",
+      "..RRRRRRRRRRRRRRRWWRRR",
+      "..RRRRRRRRRRDDRRRWWRRR",
+      "..RRRRRRRRRRDDRRRRRRRR",
+      "..RRRRRRRRRRDDRRRRRRRR",
+      "..DDDDDDDDDDDDDDDDDDDD",
+      "..RRRRRRRRRRRRRRRRRRRR",
+      "..WWWWWWWWWWWWWWWWWWWW"
+    ],
+    [
+      "AA....................",
+      "AA..GGSSS......SSSGG..",
+      "AA..GGSSS......SSSGG..",
+      "AA....................",
+      "AAWWWWWWWWWWWWWWWWWWWW",
+      "..RRRRRRRRRRRRRRRRRRRR",
+      "..RRRRRRRRRRDDRRRRRRRR",
+      "..RRRRRRRRRRDDRRRRRRRR",
+      "..RRRRRRRRRRDDRRRRRRRR",
+      "..DDDDDDDDDDDDDDDDDDDD",
+      "..RRRRRRRRRRRRRRRRRRRR",
+      "..WWWWWWWWWWWWWWWWWWWW"
+    ]
+  ]
+}

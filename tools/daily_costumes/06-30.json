@@ -1,0 +1,45 @@
+{
+ "date": "06-30",
+ "name": "asteroid_streak",
+ "title": "Asteroid Day",
+ "theme": "a grey cratered asteroid streaking over his head with a gold and flame tail; the tail flickers and a spark flies off the tip",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  14,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "................KKKKK...",
+  "..........GGGG.KAAKKKKK.",
+  ".....GGGGGFFFFKKAAKKKKKK",
+  "..GGGFFFFFFFFFKKKKKKAAKK",
+  ".....GGGGGFFFFKKKKKKAAKK",
+  "..........GGGGKKKAAKKKKK",
+  "...............KKAAKKKK.",
+  ".................KKKKKK."
+ ],
+ "frames": [
+  [
+   "................KKKKK...",
+   "..........GGGF.KAAKKKKK.",
+   ".....FGGGFFFFGKKAAKKKKKK",
+   "GFGGGGFFFGFFFGKKKKKKAAKK",
+   ".....FGGGFFFFGKKKKKKAAKK",
+   "..........GGGFKKKAAKKKKK",
+   "...............KKAAKKKK.",
+   ".................KKKKKK."
+  ],
+  [
+   "................KKKKK...",
+   "..........GFGG.KAAKKKKK.",
+   ".....GGFGGFGFFKKAAKKKKKK",
+   "...WGFFGFFFGFFKKKKKKAAKK",
+   ".....GGFGGFGFFKKKKKKAAKK",
+   "..........GFGGKKKAAKKKKK",
+   "...............KKAAKKKK.",
+   ".................KKKKKK."
+  ]
+ ]
+}

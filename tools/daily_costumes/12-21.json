@@ -1,0 +1,37 @@
+{
+ "date": "12-21",
+ "name": "crossword_specs",
+ "title": "Crossword Puzzle Day",
+ "theme": "crossword spectacles with charcoal rims; the checker squares on the top of each lens swap black and white as the grid is filled in",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "AAWWAWWAA..AAWWAWWAA",
+  "AAWWAWWAA..AAWWAWWAA",
+  "AA.....AA..AA.....AA",
+  "AA.....AA..AA.....AA",
+  "AA.....AAAAAA.....AA",
+  "AA.....AA..AA.....AA",
+  "AA.....AA..AA.....AA",
+  "AAAAAAAAA..AAAAAAAAA",
+  "AAAAAAAAA..AAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "WWAAWAAWW..WWAAWAAWW",
+   "WWAAWAAWW..WWAAWAAWW",
+   "AA.....AA..AA.....AA",
+   "AA.....AA..AA.....AA",
+   "AA.....AAAAAA.....AA",
+   "AA.....AA..AA.....AA",
+   "AA.....AA..AA.....AA",
+   "AAAAAAAAA..AAAAAAAAA",
+   "AAAAAAAAA..AAAAAAAAA"
+  ]
+ ]
+}
