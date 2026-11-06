@@ -169,6 +169,22 @@ cfg, b = fresh("restart", memory=remembered)
 check("three already today, from before a restart: full straight away",
       b.treat() and b._antic == B.TREAT_FULL_ANIM, b._antic)
 
+# Not with memory switched off since, though: the file it left keeps its counts, and off means
+# none of them are used - today's count is only the one kept since he started.
+file_path = SCRATCH / "treat_off_since.memory.json"
+file_path.unlink(missing_ok=True)
+on_cfg = Config(SCRATCH / "treat_off_since_on.json")
+on_cfg["memory_enabled"] = True
+written = Memory(file_path, on_cfg)
+written.record("treats", TODAY, 3)
+written.save_if_dirty()
+off_cfg = Config(SCRATCH / "treat_off_since_off.json")
+off_cfg["memory_enabled"] = False
+cfg, b = fresh("off_since", memory=Memory(file_path, off_cfg))
+check("memory switched off over a file with three today: he eats one after a restart",
+      b.memory.day(TODAY).treats == 3 and b.treat() and b._antic == B.EAT_ANIM,
+      f"file says {b.memory.day(TODAY).treats}, {b._antic}")
+
 print("\n--- where a biscuit cannot be handed over ---")
 cfg, b = fresh("drag")
 b.drag_start()

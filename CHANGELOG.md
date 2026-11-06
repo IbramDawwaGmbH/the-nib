@@ -12,7 +12,7 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 - **You can see how he is.** Hover over the tray icon: when nothing more pressing is showing, the
   tooltip is his name and his mood in a word, then the bond's (below) — `Nib — fine, just met`,
   `Nib — in good spirits, just met` — and the mood word changes as soon as you pet him. A new
-  **About him** tab in Settings says the same in a sentence.
+  **About him** tab in Settings puts the mood in a sentence.
 - A fifth first-run tip: that you can rename him, and where to see how he's doing.
 - **He remembers you.** He keeps count of the days you've shared and the pets, prompts and focus
   sessions along the way (and the throws and hard landings), plus the same counts day by day for
@@ -57,10 +57,10 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   `memory_enabled` off both are exactly as before; a new mascot starts a few percent off it.
 - **He naps.** Worn out late at night, with you gone ten minutes, he dozes off where he sat
   waiting — and when you come back he wakes and greets you as he would have anyway, maybe with a
-  line about it. Sleep that isn't the sulk's: no clock, no grumble when you click him awake, and
-  the tray tooltip says `Nib — napping`. He has to be properly tired — under about 0.17 energy
-  when you leave, since time away rests him — and never naps in a focus session or standing on a
-  window. A new `nap_enabled` setting on the Personality tab.
+  line about it. Sleep that isn't the sulk's: no clock, and no grumble when you click him awake.
+  He has to be properly tired — under about 0.17 energy when you leave, since time away rests
+  him — and never naps in a focus session or standing on a window. A new `nap_enabled` setting
+  on the Personality tab.
 - **Give him a treat.** **Give a treat** in the tray, or **Give him a treat** on the tool wheel,
   and a biscuit lands beside him: he picks it up, eats it (a new `eat` animation, four frames) and
   goes *nom, nom* if sound is on (a new `nom` sound). It lifts his mood a little less than a pet,

@@ -97,7 +97,7 @@ the-nib/
   main.py               entry point, timers, wiring, tray/window/bubble glue
   behavior.py           state machine: wander, gait, antics, annoyance, sleep (Qt-free)
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
-  mood.py               how the day went - the one thing that survives a restart (Qt-free)
+  mood.py               how the day went - one number, kept across a restart (Qt-free)
   needs.py              energy, affection and boredom - leans on what he does, two moments (Qt-free)
   memory.py             what he remembers: counts, a 7-day window, tastes, memory.json (Qt-free)
   voice.py              whether he may say a line now - the gap, the daily cap - and which (Qt-free)

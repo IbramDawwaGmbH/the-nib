@@ -57,8 +57,9 @@ within a second. It is the same word his mood uses everywhere, and the second is
 [the bond](BEHAVIOUR.md#the-bond), which only ever grows — words, never numbers. With
 `memory_enabled` off there is no bond to speak of, and the tooltip stops after the mood. It steps
 aside for the things that matter more right then — a focus countdown, a live microphone or
-camera, a pinned window — and while he is napping it just says so: `Nib — napping`.
-**Settings → About him** says the same thing in a sentence, followed by a word
+camera, a pinned window. While he is napping it says `Nib — napping`, though you will rarely
+catch it: reaching for the tray is you coming back, and that wakes him.
+**Settings → About him** puts the mood in a sentence, followed by a word
 each for how rested, how loved and how bored he is — `Nib is fine — tired, loved, busy.` See
 [How the day went](BEHAVIOUR.md#how-the-day-went) for what moves the mood, and
 [Energy, affection and boredom](BEHAVIOUR.md#energy-affection-and-boredom) for the rest: a long

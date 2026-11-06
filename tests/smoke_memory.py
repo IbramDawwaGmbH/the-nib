@@ -273,6 +273,25 @@ check("unreadable values become zeros, readable ones survive",
       and weird.day(day(4)).pets == 0, f"{weird.totals} {weird.day(day(4))}")
 check("...and a key that isn't a date is dropped", "yesterday" not in weird._days)
 check("...as is a tally with the wrong number of hours", weird._arrival_hours == [0] * 24)
+# A number too big for a float: a taste would raise in float(), and a count stored as it is would
+# raise later, in the log bond() takes - on the tooltip's first poll, so he would never start.
+huge = 10 ** 400
+cfg, path = fresh("huge")
+path.write_text(json.dumps({"days_seen": huge, "totals": {"pets": huge}, "taste": {"hop": huge},
+                            "days": {day(4): {"pets": huge, "prompts": 2}},
+                            "arrival_hours": [huge] + [0] * 23}), encoding="utf-8")
+try:
+    m = Memory(path, cfg, FakeClock())
+    said = (m.bond(), m.bond_label(), m.summary_lines("Nib"))
+    ok = True
+except Exception as exc:  # noqa: BLE001 - the point is that nothing escapes
+    ok, m = False, None
+    print("    raised:", type(exc).__name__, exc)
+check("a file with a number too big for a float loads, and the bond reads it, without raising", ok)
+check("...and each such number is an unreadable zero, the rest survives",
+      m is not None and m.days_seen == 0 and m.totals["pets"] == 0 and "hop" not in m._taste
+      and m.day(day(4)).pets == 0 and m.day(day(4)).prompts == 2 and m._arrival_hours == [0] * 24,
+      "" if m is None else f"{m.days_seen} {m.totals} {m._taste} {m.day(day(4))}")
 
 print("\n--- switched off: not a byte on disk ---")
 cfg, path = fresh("off", memory_enabled=False)
