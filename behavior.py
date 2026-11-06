@@ -909,7 +909,7 @@ class Behavior:
         self._config = config
         self._sheet = sheet
         self.animator = Animator(sheet, "idle")
-        #: How the day has gone - the only part of him that survives a restart. Constructed here
+        #: How the day has gone - one number, kept across a restart. Constructed here
         #: when the caller does not supply one, so a test can build a Behavior on its own.
         self.mood = mood if mood is not None else Mood(config)
         #: What he remembers about the two of you - counts, and his tastes. The default keeps
@@ -1435,7 +1435,9 @@ class Behavior:
         key = self._date_key()
         given = self._treats_today[1] if self._treats_today[0] == key else 0
         # Whichever count is higher: memory's survives a restart, this one counts with memory off.
-        if max(self.memory.day(key).treats, given) >= TREATS_PER_DAY:
+        # Not memory's while it is off, though: what the file still holds is not used then.
+        stored = self.memory.day(key).treats if self.memory.enabled else 0
+        if max(stored, given) >= TREATS_PER_DAY:
             log.info("offered a treat, but he has had %d today", TREATS_PER_DAY)
             self._event("treat_full")
             self._begin_sequence([(TREAT_FULL_ANIM, TREAT_FULL_MS)])
@@ -1447,7 +1449,7 @@ class Behavior:
         self._sound("nom")
         self._event("treat")
         anim = EAT_ANIM if self._sheet.has_state(EAT_ANIM) else EAT_FALLBACK_ANIM
-        log.info("a treat (%d today)", max(self.memory.day(key).treats, given + 1))
+        log.info("a treat (%d today)", max(stored, given) + 1)
         self._begin_antic(anim, EAT_MS)
         # From the first frame, as in quick_change: ANTIC -> ANTIC does not restart the animation,
         # so a second treat from the tray while he is still eating the first would carry on from
@@ -2015,6 +2017,11 @@ class Behavior:
             self.needs.nudge("thrown")
         self._enter(State.IDLE)
 
+    @property
+    def airborne(self) -> bool:
+        """Still falling or rolling from a drop - which update() finishes even while paused."""
+        return self._falling or self._rolling
+
     # --- perching on a window -------------------------------------------------------
 
     @property
@@ -2294,6 +2301,12 @@ class Behavior:
         if (self._napping and state not in (State.SLEEP, State.DRAG)
                 and not (self._falling or self._rolling)):
             self._end_nap()
+        # Likewise the sleep drag_start owes a carried sulk or nap. A drop spends it in _settle,
+        # which zeroes it before landing him back in SLEEP; any other end - set down on a window,
+        # or hidden or a focus session started mid-carry - must drop it here, or the next ordinary
+        # landing, minutes later, would put him down for a sulk-length sleep he never earned.
+        if state not in (State.SLEEP, State.DRAG) and not (self._falling or self._rolling):
+            self._resume_sleep_ms = 0.0
         # The greeting a nap owes lives through the nap and the WAKE after it, and no further.
         if state != State.WAKE and not self._napping:
             self._nap_greeting = None
@@ -2685,11 +2698,7 @@ class Behavior:
         hand nobody has registered as back yet must not see him nod straight off again.
         """
         self._napping = False
-        # drag_start owes a carried nap the whole cooldown back. A throw has already spent that
-        # in _settle, which zeroes it before landing him back in SLEEP; any other end - set down
-        # on a window, or hidden or a focus session started mid-carry - must drop it here, or the
-        # next ordinary landing would put him down for a sulk-length sleep he never earned.
-        self._resume_sleep_ms = 0.0
+        # The cooldown drag_start owed a carried nap is dropped by _enter, under the same test.
         napped_h = max(0.0, self._clock_ms - self._nap_since_ms) / 3_600_000.0
         self.needs.nudge("nap_woke", scale=min(1.0, napped_h / NAP_FULL_H))
         if self._away:

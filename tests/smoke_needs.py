@@ -246,6 +246,27 @@ w = writes_over(work, cfg_d2, 10, away=False, part_of_day=W.PART_DAY, present_in
 # the bar is smoke_mood's: a handful, never one every flush.
 check("one drifting while you work writes a couple of times at most", w <= 3, f"{w} writes")
 
+# Worn out at the machine, energy pinned at 0 with nothing else moving: no value changes, so with
+# nothing more the stamp would go hours stale, and a restart there and then would age every one
+# of those open hours as closed - rested. The stamp is renewed instead, every STAMP_REFRESH_S.
+clock = FakeClock()
+cfg_s = fresh("stale_stamp", need_energy=0.02, needs_saved_at=clock.now)
+pinned = Needs(cfg_s, clock)
+w = 0
+for _ in range(2 * 360):               # two hours of the app's 10s flush, at night, kept busy
+    clock.now += 10.0
+    pinned.tick(10_000.0, away=False, part_of_day=W.PART_NIGHT, present_interacting=True)
+    pinned.persist()
+    if cfg_s.dirty:
+        w += 1
+        cfg_s.save()
+age_min = (clock.now - cfg_s["needs_saved_at"]) / 60.0
+restarted = Needs(cfg_s, clock)
+check("worn out at the machine for two hours, a restart there and then finds him still worn out",
+      pinned.energy == 0.0 and restarted.energy < 0.1,
+      f"{pinned.energy} -> {restarted.energy:.2f}, stamp {age_min:.0f} min old")
+check("...for a write every ten minutes or so", w <= 15, f"{w} writes")
+
 print("\n--- switched off ---")
 cfg_off = fresh("off", needs_enabled=False, need_energy=0.1, need_affection=0.9,
                 need_boredom=0.8, needs_saved_at=123.0)

@@ -362,8 +362,8 @@ class SettingsWindow(QDialog):
         self._now_label.setWordWrap(True)
         form.addRow("Right now", self._now_label)
         form.addRow(self._hint(
-            "The same words are on the tray icon's tooltip. They change with how the day has "
-            "gone - pet him, then come back to this tab."
+            "The mood's word is the one on the tray icon's tooltip. It changes with how the day "
+            "has gone - pet him, then come back to this tab."
         ))
         self._memory_label = QLabel(self)
         self._memory_label.setWordWrap(True)

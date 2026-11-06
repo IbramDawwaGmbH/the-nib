@@ -145,6 +145,8 @@ def _count(value) -> int:
     """A stored count, forced to a non-negative int. Anything unreadable is a zero."""
     try:
         number = int(value)
+        # Too big for a float is unreadable too: bond() takes a log of it, and would raise.
+        float(number)
     except (TypeError, ValueError, OverflowError):
         return 0
     return max(0, number)
@@ -259,7 +261,7 @@ class Memory:
             for name, value in taste.items():
                 try:
                     number = float(value)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError, OverflowError):
                     continue
                 if isinstance(name, str) and math.isfinite(number):
                     number = max(TASTE_MIN, min(TASTE_MAX, number))

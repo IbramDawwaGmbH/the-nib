@@ -524,6 +524,38 @@ for _ in range(int(10_000 / 16)):
 check("...so when the window goes and he steps down, he lands awake",
       not b.perched and b.state is not State.SLEEP and not b._napping, b.state.value)
 
+# The sulk's twin: drag_start owes a carried sulk the rest of its cooldown too, and every end of
+# the carry but a drop must drop it - or a landing minutes later is a sulk-length sleep, with the
+# gentle set-down's sparkle and a hard landing's hurt both lost to it.
+for route, how in (("window", "set down on a window"), ("hidden", "hidden"),
+                   ("focus", "a focus session started")):
+    cfg, b = fresh(f"sulk_carried_{route}", annoyance_threshold=1, quirks_enabled=False)
+    b.bubble_dismissed()
+    sulked = until(b, lambda x: x.state is State.SLEEP, seconds=20.0)
+    b.drag_start()
+    for _ in range(5):
+        b.drag_to(1200, int(b.rest_top()) - 300)
+        b.update(16.0, None)
+    if route == "window":
+        b.drag_end(PERCH_RECT)
+    elif route == "hidden":
+        b.set_hidden(True)
+        b.set_hidden(False)
+    else:
+        b.set_focus(True)
+    check(f"carried mid-sulk, then {how}, he owes no sleep for later",
+          sulked and b.state is not State.SLEEP and b._resume_sleep_ms == 0,
+          f"sulked={sulked} {b.state.value} {b._resume_sleep_ms}")
+    if route == "window":
+        wait(b, 60.0)
+        for _ in range(int(10_000 / 16)):
+            if not b.perched and not (b._falling or b._rolling):
+                break
+            b.update_perch(None)
+            b.update(16.0, None)
+        check("...so when the window goes and he steps down, he lands awake",
+              not b.perched and b.state is not State.SLEEP, b.state.value)
+
 # The greeting a nap owes lasts through the WAKE after it and no further: picked up mid-wake it
 # is dropped, and a later sulk's wake-up must not find it and greet you for nothing.
 cfg, b = napping_after_away("nap_greeting_dropped")

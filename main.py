@@ -916,7 +916,10 @@ class NibApp:
         """
         if self._tick_timer is None:
             return
-        if self._hidden_by_fullscreen or self._snoozed or self.behavior.paused:
+        # Paused, but not while he is still in the air: update() lands a drop even then, and a
+        # 250ms step is too coarse for the bounce to die out - he would thud on every tick.
+        if (self._hidden_by_fullscreen or self._snoozed
+                or (self.behavior.paused and not self.behavior.airborne)):
             wanted = IDLE_TICK_MS
         else:
             wanted = int(self.behavior.next_tick_ms(TICK_MS, IDLE_TICK_MS))
@@ -2275,8 +2278,11 @@ class NibApp:
         # Quantised inside Mood, so this is a no-op within a hundredth of the range rather than a
         # disk write every ten seconds for as long as he is running.
         self.mood.persist()
-        # Quantised the same way. Energy drifts while you are here, so this writes about once
-        # every seven minutes at most - and nothing at all with needs_enabled off.
+        # Quantised the same way, but energy is always drifting: measured, this writes about every
+        # 7.5 minutes while you work by day, every 2.6 at night and every 70 seconds while he
+        # rests back to full with you away - more often while boredom builds too, never more than
+        # once a flush. Held still short of rested, the stamp alone is renewed every ten minutes
+        # (needs.STAMP_REFRESH_S). Nothing at all with needs_enabled off.
         self.needs.persist()
         # Dirty only when a count moved, and the most frequent count is a minute of presence - so
         # this writes memory.json at most about once a minute, and never while nothing happens.

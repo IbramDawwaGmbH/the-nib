@@ -316,7 +316,9 @@ Everything above is **derived**. The time of day, the season, whether the machin
 it is recomputed from your clock on every launch, which means two sessions an hour apart are
 identical in every respect that matters. Nothing you did in the first one reaches the second.
 
-This is the exception, and the only part of him that is. One number — **spirits**, from −1 to +1 —
+This is the exception, though not the only one: so are
+[energy, affection and boredom](#energy-affection-and-boredom) and
+[what he remembers](USING-HIM.md#what-he-remembers). One number — **spirits**, from −1 to +1 —
 moved by the things you do to him and fading back to neutral on a half-life:
 
 | What you do | Which way |
@@ -392,10 +394,11 @@ by `needs.py` and written to `config.json` next to the mood:
 | **Affection** — lonely to doted on | A treat (+0.08), a pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), being set down gently (+0.018, at most every 30 seconds), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
 | **Boredom** — kept busy to bored stiff | **+0.1 an hour** while you are here and doing nothing with him | Anything you do with him knocks **0.5** off; something happening around him (a moment, an app reaction) 0.2; otherwise it fades on a 2-hour half-life |
 
-A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, about three hours at
-the machine makes him tired, so an ordinary working day ends in a tired evening — and lunch away
-from the desk perks him up again. A night off has him rested in the morning. Kindness is tapered
-the same way the mood's is (squared headroom), so no amount of petting pins affection at the top.
+A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, just under two hours at
+the machine makes him tired and about three wears him out (energy under 0.25), so an ordinary
+working day ends in a tired evening — and lunch away from the desk perks him up again. A night
+off has him rested in the morning. Kindness is tapered the same way the mood's is (squared
+headroom), so no amount of petting pins affection at the top.
 
 **They never fire anything, with two small exceptions.** Like the mood, they only lean on what
 he already does:
@@ -414,13 +417,13 @@ mascot behaves precisely as he did before any of this existed (`tests/fidget_rat
 `tests/quirk_rate.py` and `tests/day_rate.py` are the check).
 
 The two exceptions are [moments](#moments--things-he-does-once), and wait their turn like every
-other: a **tired** yawn and heavy blink, only in the evening or at night, and **fond** heart eyes
-when he is doted on (affection over 0.85) and your pointer is near. They share one 90-minute
-cooldown on top of the 45-second budget every moment shares. Boredom gets no moment at all —
-past 0.6 he may only *say* so, once per that same 90 minutes, through the
-[lines he says](USING-HIM.md#he-says-things-rarely). Measured over a simulated day held worn out
-(`tests/day_rate.py`): **8 tired yawns**, all in the evening or the small hours and at least 90
-minutes apart; held at the starting point, none.
+other: a **tired** yawn and heavy blink when he is worn out (energy under 0.25), only in the
+evening or at night, and **fond** heart eyes when he is doted on (affection over 0.85) and your
+pointer is near. They share one 90-minute cooldown on top of the 45-second budget every moment
+shares. Boredom gets no moment at all — past 0.6 he may only *say* so, once per that same 90
+minutes, through the [lines he says](USING-HIM.md#he-says-things-rarely). Measured over a
+simulated day held worn out (`tests/day_rate.py`): **8 tired yawns**, all in the evening or the
+small hours and at least 90 minutes apart; held at the starting point, none.
 
 Energy decides one thing more, and it is not a moment: worn out late at night, with you gone ten
 minutes, he dozes off — [the nap](#the-nap).
@@ -437,8 +440,13 @@ and fades on its half-life instead.
 
 **While he is closed** the stored values are aged on the wall clock as if you had been away:
 energy comes back, affection drifts to the middle, boredom fades. They are stored to two
-decimals, so energy draining while you work rewrites `config.json` about once every seven
-minutes at most. A clock that jumps backwards ages nothing.
+decimals, but energy is always on the move, so they rewrite `config.json` about every 7.5
+minutes while you work by day, every 2.6 at night and every 70 seconds while he rests back to
+full with you away — more often while boredom builds as well (every 3.3 minutes on average by
+day) — and never more than once per ten-second flush; once he is rested with you gone, not at
+all. Held anywhere else with nothing moving — worn out at the machine, say — only the time stamp
+changes, every ten minutes, so a restart never counts more than ten minutes of you being there as
+rest. A clock that jumps backwards ages nothing.
 
 **Where you can read them.** As words on **Settings → About him**, after the mood:
 `Nib is in good spirits — rested, loved, busy.` Energy is *tired*, *okay* or *rested*; affection
@@ -647,7 +655,7 @@ nod straight back off before the app has noticed you are back.
 | **How long** | `sleep_cooldown_s` (60s), then he gets up by himself | No clock — until you're back |
 | **A hover near him** | Near the end, wakes him early | Nothing |
 | **A click** | A grumble, and he stays asleep | Wakes him, no grumble |
-| **The tray** | His mood, as ever | `Nib — napping` |
+| **The tray** | His mood, as ever | `Nib — napping`, though reaching for it is you coming back, and wakes him |
 | **Waking up** | Forgets what he was cross about | Forgets what he was cross about, then greets you |
 
 Underneath, both are the same sleep: no petting, no sneezes, nothing said while he's out, and you

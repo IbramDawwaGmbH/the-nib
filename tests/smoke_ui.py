@@ -683,6 +683,36 @@ check("...below the focus, device and pin tooltips, above the mood and the bond"
       presence.index("self._perch_pinned") < presence.index("self.behavior.napping")
       < presence.index("label_for(self.mood.spirits)"))
 
+print("\n--- paused, a drop still lands ---")
+# Pausing freezes what he does, never a drop already under way: update() lands it either way. So
+# the app has to keep ticking him at the moving rate while he is in the air - at the paused 250ms
+# a bounce never dies out, and he thuds on every tick until you unpause. Driven at whatever
+# interval the app's own timer is set to, as _tick would be.
+nib._on_pause_toggled(True)
+b = nib.behavior
+b.drag_start()
+for _ in range(5):
+    b.drag_to(b.x, b.rest_top() - 20)  # a gentle set-down, the easy one to get stuck on
+    b.update(16.0, None)
+b.drag_end()
+b.take_sounds()
+nib._update_tick_rate()
+flying = nib._tick_timer.interval()
+thuds = 0
+for _ in range(240):                    # a minute, at the paused rate
+    if not b.airborne:
+        break
+    b.update(float(nib._tick_timer.interval()), None)
+    thuds += b.take_sounds().count("land")
+    nib._update_tick_rate()
+check("paused, he is still ticked at the moving rate while in the air",
+      flying < M.IDLE_TICK_MS, f"{flying}ms")
+check("...so he lands, with a thud or two rather than one every tick",
+      not b.airborne and thuds <= 3, f"airborne={b.airborne}, {thuds} thuds")
+check("...and once he is down the paused rate is back",
+      nib._tick_timer.interval() == M.IDLE_TICK_MS, f"{nib._tick_timer.interval()}ms")
+nib._on_pause_toggled(False)
+
 print("\n--- the lines he says: when they are shown, and what a click does ---")
 if nib.config["ghost_mode"]:
     nib._on_ghost_toggled(False)
