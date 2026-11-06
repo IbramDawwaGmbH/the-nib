@@ -357,9 +357,9 @@ Set `mood_enabled` to `false` and it reports a flat zero, contributing nothing a
 
 **Where you can read it.** As a word, never the number: *delighted*, *in good spirits*, *fine*,
 *a bit flat* or *thoroughly fed up*. It is the tray icon's tooltip whenever nothing more pressing
-(a focus countdown, a live mic or camera, a pinned window) has it — `Nib — fine` — and the
-"Right now" line on **Settings → About him**. Both use his `name`. With `mood_enabled` off the
-word is always *fine*.
+(a focus countdown, a live mic or camera, a pinned window) has it — the first word in
+`Nib — fine, friends`, ahead of [the bond](#the-bond) — and the "Right now" line on
+**Settings → About him**. Both use his `name`. With `mood_enabled` off the word is always *fine*.
 
 **What he remembers is separate.** The mood is one number about *today*; the longer story — the
 days you have shared and how many pets, prompts and focus sessions — is kept in `memory.json` by
@@ -387,7 +387,7 @@ by `needs.py` and written to `config.json` next to the mood:
 | Need | Goes up | Goes down |
 | --- | --- | --- |
 | **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
-| **Affection** — lonely to doted on | A pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
+| **Affection** — lonely to doted on | A pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), being set down gently (+0.018, at most every 30 seconds), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
 | **Boredom** — kept busy to bored stiff | **+0.1 an hour** while you are here and doing nothing with him | Anything you do with him knocks **0.5** off; something happening around him (a moment, an app reaction) 0.2; otherwise it fades on a 2-hour half-life |
 
 A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, about three hours at
@@ -595,7 +595,7 @@ Set `play_with_windows` to `false` to switch both off.
   2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — only being pestered puts him
   to sleep. Two things he [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on
   a morning after a heavy day the overnight wake-up finishes with a coffee, and once he knows you
-  well — a month or so of days together and a few hundred pets, the bond `memory.py` calls
+  well — a month or so of days together and a few hundred pets, the [bond](#the-bond) at
   *close* — the hop is followed by heart eyes. The wave never changes: a coffee break is not a
   reunion.
 - **He watches the wheel.** His eyes follow the tool you're aiming at, the tools that give him
@@ -617,8 +617,9 @@ There was **no way to be kind to him at all**.
 
 So it does the two things that matters:
 
-- **It forgives a poke** every 1.2 seconds it runs. It is the only thing besides sending a prompt
-  that takes accumulated annoyance back off, and the only one that works while he is already cross
+- **It forgives a poke** every 1.2 seconds it runs — sooner once he knows you, down to every 0.72
+  seconds at the top of [the bond](#the-bond). It is the only thing besides sending a prompt that
+  takes accumulated annoyance back off, and the only one that works while he is already cross
   about something.
 - **It is worth twice a sent prompt** to [how the day went](#how-the-day-went).
 
@@ -643,6 +644,42 @@ coordinates, so it is already satisfied by the time he arrives.
 
 Not while he is asleep, cross, hidden, in your hand, mid-throw, or while you are away. Set
 `petting_enabled` to `false` to switch it off.
+
+### The bond
+
+How well he knows you, worked out from what he [remembers](USING-HIM.md#what-he-remembers) and
+always said in one of five words, low to high: **just met**, **warming up**, **friends**,
+**close**, **inseparable**. Never a number, for the same reason the mood has none: a number
+invites optimising, a word just describes. With `memory_enabled` on it is the last word of the
+tray tooltip — `Nib — fine, friends` — whenever nothing more pressing is showing there.
+
+It grows with the days he has seen you, which weigh the most — turning up matters more than any
+one thing done — and with pets, prompts and finished focus sessions. Each of those saturates on
+its own scale, so the first weeks move it most: a month or so of days and a few hundred pets is
+*close*. It is made of counts that only go up, so **it never goes down** — not after a bad day,
+not after a throw.
+
+It changes three things, each a lean on something he already does:
+
+- **He squirms less in your hand** — down to 40% of a stranger's wriggle at the top.
+- **A pet forgives faster** — a poke every 0.72 seconds at the top, rather than every 1.2.
+- **Coming back gets heart eyes** after the hop, from *close* up (see
+  [How he reacts to you](#how-he-reacts-to-you)).
+
+With `memory_enabled` off, each of them is exactly what it was before the bond existed. A new
+mascot is very nearly there, but not quite: the first sighting of day one is already a little
+bond, enough for 4% less squirm, and the first pet forgives 4% sooner — it is counted before it
+starts forgiving — and each pet after it adds a little more.
+
+**How you handle him counts too, in both directions.** Set him down gently and he sparkles as he
+lands; throw him while he is fond of you and he sparkles for another go (see
+[Picking him up](USING-HIM.md#picking-him-up-throwing-him-and-dropping-him)). Hurt him at least
+five times in the last seven days, and more often than you petted him in them, and he goes
+**wary**: among the antics he picks between walks, heart eyes are weighted 0.5× and sparkles
+0.7×. His moments and his answers to you — the heart eyes after the hop, the sparkle for a gentle
+set-down — are left alone. Like the [needs](#energy-affection-and-boredom), it only leans —
+nothing stops — and it mends by itself, as the hard landings age out of the week or as soon as
+the pets catch up with them. The bond is not touched by it either way.
 
 ### The inline calculator
 

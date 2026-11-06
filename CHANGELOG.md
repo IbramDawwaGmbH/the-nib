@@ -10,8 +10,9 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   the tray tooltip, his toasts and his lines call him, and a rename applies on Apply with no
   restart. Window titles still say Nib — that's the app.
 - **You can see how he is.** Hover over the tray icon: when nothing more pressing is showing, the
-  tooltip is his name and his mood in a word — `Nib — fine`, `Nib — in good spirits` — and it
-  changes as soon as you pet him. A new **About him** tab in Settings says the same in a sentence.
+  tooltip is his name and his mood in a word, then the bond's (below) — `Nib — fine, just met`,
+  `Nib — in good spirits, just met` — and the mood word changes as soon as you pet him. A new
+  **About him** tab in Settings says the same in a sentence.
 - A fifth first-run tip: that you can rename him, and where to see how he's doing.
 - **He remembers you.** He keeps count of the days you've shared and the pets, prompts and focus
   sessions along the way (and the throws and hard landings), plus the same counts day by day for
@@ -44,6 +45,16 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   names all three in words. A new `needs_enabled` setting on the Personality tab, and four hidden
   values in `config.json` (`need_energy`, `need_affection`, `need_boredom`, `needs_saved_at`).
   Forget everything resets them.
+- **How you handle him matters.** Set him down gently — slowly, and from lower than the drop
+  that hurts — and he sparkles as he lands, a little fonder of you for it (at most every 30
+  seconds). Throw him while he's fond of you and he lands with the same sparkle, ready to go
+  again. Hurt him five times in a week, more often than you've petted him, and he goes wary:
+  fewer heart eyes and sparkles of his own accord until the week moves on or the pets catch up.
+- **The bond shows.** How well he knows you, in one of five words — *just met*, *warming up*,
+  *friends*, *close*, *inseparable* — now ends the tray tooltip: `Nib — fine, friends`. The
+  better he knows you, the less he squirms when you pick him up (down to 40% of a stranger's
+  wriggle) and the faster a pet forgives a poke (down to every 0.72 seconds from 1.2). With
+  `memory_enabled` off both are exactly as before; a new mascot starts a few percent off it.
 
 ### Changed
 

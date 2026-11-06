@@ -49,9 +49,12 @@ fastest way to use the whole app. **Show tips** in the tray menu replays the tou
 
 ### How he's doing
 
-**Hover over the tray icon.** When nothing more pressing is going on, the tooltip is just his name
-and how he is: `Nib — fine`, `Nib — in good spirits`, `Nib — a bit flat`. Pet him and it changes
-within a second. It is the same word his mood uses everywhere — never a number — and it steps
+**Hover over the tray icon.** When nothing more pressing is going on, the tooltip is just his name,
+how he is, and how well you two know each other: `Nib — fine, just met`,
+`Nib — in good spirits, friends`, `Nib — a bit flat, close`. Pet him and the first word changes
+within a second. It is the same word his mood uses everywhere, and the second is
+[the bond](BEHAVIOUR.md#the-bond), which only ever grows — words, never numbers. With
+`memory_enabled` off there is no bond to speak of, and the tooltip stops after the mood. It steps
 aside for the things that matter more right then: a focus countdown, a live microphone or camera,
 a pinned window. **Settings → About him** says the same thing in a sentence, followed by a word
 each for how rested, how loved and how bored he is — `Nib is fine — tired, loved, busy.` See
@@ -78,7 +81,9 @@ the first time you come back to it. That is all of it: **counts, never names, ti
 
 **He acts on it, quietly.** A party on the 7th, 30th, 100th and 365th day he has seen you and on
 your third finished focus session of a day, a coffee at the end of his good-morning after a heavy
-day, and heart eyes after the hop once he knows you well. See
+day, and heart eyes after the hop once he knows you well — and the better he knows you, the less
+he squirms when you pick him up and the faster a pet forgives a poke. See
+[The bond](BEHAVIOUR.md#the-bond),
 [Moments](BEHAVIOUR.md#moments--things-he-does-once) and
 [How he reacts to you](BEHAVIOUR.md#how-he-reacts-to-you).
 
@@ -587,6 +592,24 @@ same transform, so a hat still tracks his head even when his head is the part on
 
 Shuffling him along the taskbar does not hurt him; the fall has to be a real one. And if you drop
 him mid-nap he goes straight back to sleeping rather than being hurt — he was already down.
+
+**Put him down gently and he notices.** Let go slowly — slowly enough that over a window he would
+have [stood on it](#pinning-him-to-a-window) — from lower than the ~60px drop that hurts, and he
+sparkles as he lands, a little fonder of you for it: about a third of a pet to his
+[affection](BEHAVIOUR.md#energy-affection-and-boredom), and not counted as a pet. At most once
+every 30 seconds, or shuffling him up and down the taskbar would be a way to farm it. A flick is
+never a set-down, however slow; set down on a window he simply stands on it, and mid-nap he just
+goes back to sleep.
+
+**Throw him when he's fond of you** — affection over 0.6, which two pets will do from the
+starting point — and as long as the landing didn't hurt, he gets up with the same sparkle:
+*again!* Every throw, no cooldown; each one is something you did on purpose.
+
+**He squirms less for somebody he knows.** The wriggle in your grip eases as
+[the bond](BEHAVIOUR.md#the-bond) grows, down to 40% of a stranger's. It works the other way too:
+hurt him five times in a week, more often than you pet him, and he goes **wary** for a while —
+fewer heart eyes and sparkles of his own accord — until the hard landings age out of the week or
+the pets catch up.
 
 ### Double-click and the last prompt
 

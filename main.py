@@ -757,10 +757,16 @@ class NibApp:
             self.tray.set_tooltip(f"{name} - pinned a window on top; grab him to let it go")
         else:
             # Nothing more pressing to say, so say how he is - the one place the mood is
-            # readable at a glance without opening anything. The same words as Settings → About
-            # him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows before
-            # the first poll gets here.
-            self.tray.set_tooltip(f"{name} — {label_for(self.mood.spirits)}")
+            # readable at a glance without opening anything. The same mood word as Settings →
+            # About him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows
+            # before the first poll gets here.
+            tip = f"{name} — {label_for(self.mood.spirits)}"
+            if self.memory.enabled:
+                # Then the bond's word - "Nib — fine, friends" - which is how you two are rather
+                # than how he is today. Not with memory off: the bond reads as day one's "just met"
+                # then, and that would be saying something untrue.
+                tip += f", {self.memory.bond_label()}"
+            self.tray.set_tooltip(tip)
 
     def _update_memory(self, state) -> None:
         """First sighting of the day, and the minutes you were here and the machine was busy.
