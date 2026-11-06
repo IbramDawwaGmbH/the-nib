@@ -452,13 +452,19 @@ nib.config["camera_indicator_enabled"] = False
 if nib.behavior.focus_active:
     nib.behavior.set_focus(False)
 nib.mood.reset()
+nib.memory.forget()          # a run before this one may have left a file in scratch
 nib._update_presence()
-check("a fresh mood reads as fine in the tray", nib.tray._tray.toolTip() == "Nib — fine",
-      nib.tray._tray.toolTip())
+check("a fresh mood reads as fine in the tray, with the bond's word after it",
+      nib.tray._tray.toolTip() == "Nib — fine, just met", nib.tray._tray.toolTip())
 nib.mood.nudge("petted")
 nib._update_presence()
-check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits",
+check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits, just met",
       nib.tray._tray.toolTip())
+nib.config["memory_enabled"] = False
+nib._update_presence()
+check("...and no bond word with memory off, where it would always say 'just met'",
+      nib.tray._tray.toolTip() == "Nib — in good spirits", nib.tray._tray.toolTip())
+nib.config["memory_enabled"] = True
 nib.needs.reset()
 check("the status line says the same, with a word for each need",
       nib._status_text()["line"] == "Nib is in good spirits — okay, fine, busy.",
@@ -629,7 +635,11 @@ check("after Forget, today counts again as the day you met",
 check("...but forgetting at three is not arriving at three", not any(nib.memory._arrival_hours),
       str(nib.memory._arrival_hours))
 nib.memory.forget()
-nib.config["away_after_s"] = cfg_module.DEFAULTS["away_after_s"]
+# Left at 0 rather than put back to the default: every _update_presence from here on would read
+# the real machine's idle clock, and a run started after nobody had touched the machine for
+# away_after_s (an unattended CI runner, a suite left to itself) saw him step away mid-suite - the
+# focus tooltip below read "paused (away)" and every line after it was blocked as away.
+nib.config["away_after_s"] = 0
 nib.behavior.set_away(False)
 window_no_forget = S.SettingsWindow(fresh_config("about-noforget"), costumes=[], skins=["default"],
                                     status=lambda: {"line": "x", "memory": ["a"],

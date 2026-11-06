@@ -92,6 +92,18 @@ check("only the newest eight days are kept", sorted(m._days) == [day(n) for n in
 check("...while the total still has all twelve", m.totals["pets"] == 12)
 check("yesterday is the calendar day before", m.yesterday(day(12)) == DayRecord(pets=1))
 check("...and None when he has nothing for it", m.yesterday(day(5)) is None)
+m.record("hurts", day(12), n=2)
+m.record("hurts", day(6), n=3)      # six days before the 12th: the last of this week
+m.record("hurts", day(5), n=4)      # seven before it: in the window, but last week
+check("the last seven days are today and the six before it",
+      m.recent(day(12)) == DayRecord(pets=7, hurts=5), str(m.recent(day(12))))
+check("...a missing day adds nothing", m.recent(day(14)) == DayRecord(pets=5, hurts=2),
+      str(m.recent(day(14))))
+check("...a shorter span is just as easy", m.recent(day(12), days=1) == DayRecord(pets=1, hurts=2))
+check("...and a bad date is nothing at all", m.recent("not a date") == DayRecord())
+cfg["memory_enabled"] = False
+check("...as is anything with memory off", m.recent(day(12)) == DayRecord())
+cfg["memory_enabled"] = True
 
 print("\n--- first sight: once a day, forwards only ---")
 cfg, path = fresh("sight")

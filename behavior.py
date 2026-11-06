@@ -378,6 +378,46 @@ STRUGGLE_X_RATE = 0.019
 STRUGGLE_X_BURST_RATE = 0.0068
 STRUGGLE_Y_RATE = 0.0131
 
+# --- how he is handled, and how well he knows you --------------------------------------------
+#
+# The bond is memory.bond(): 0..1, from days together, pets, prompts and focus sessions, and it only
+# ever grows. Here it softens the two things that are about trust - how hard he fights being held,
+# and how quickly a pet takes the sting out of being poked. At a bond of 0 - memory switched off,
+# or a fresh memory before he has first seen you - both are exactly the constants above. Not quite
+# on day one: that first sighting is already a little bond, so he squirms 4% less, and the first pet
+# forgives 4% sooner, since it is counted before it starts forgiving. Each pet after adds a little.
+
+#: How much of the squirm a full bond takes away: at 1.0 he wriggles at 40% of a stranger's
+#: amplitude. Never all of it - being hoisted about is undignified however well he knows you.
+SQUIRM_BOND_CALM = 0.6
+#: How much quicker a full bond lets a pet forgive: at 1.0, one poke every 0.72s rather than 1.2s.
+FORGIVE_BOND_SPEEDUP = 0.4
+
+#: Faster than this sideways at the release and a let-go is a throw: counted, and played with.
+THROWN_ABOVE_PX_MS = 0.4
+#: Set down gently - slowly enough to perch (PERCH_MAX_RELEASE_SPEED_PX_MS), not thrown, and from
+#: lower than the drop that hurts - and he sparkles: you put him down carefully. Worth a fraction
+#: of a pet to his affection, once per GENTLE_COOLDOWN_MS on the behaviour clock: without the
+#: cooldown, shuffling him along the taskbar would be a way to farm it.
+GENTLE_ANIM = "sparkle"
+GENTLE_MS = 900.0
+GENTLE_COOLDOWN_MS = 30000.0
+GENTLE_PET_SCALE = 0.3
+#: Thrown, landed unhurt, and fond of you right now: the same sparkle, meaning "again!". No
+#: cooldown - every throw is one you made on purpose - and no nudge of its own, because drag_end
+#: has already nudged "thrown" for the throw itself.
+PLAY_ANIM = "sparkle"
+PLAY_MS = 900.0
+PLAY_AFFECTION_ABOVE = 0.6
+
+#: Hurt a lot lately, and more often than petted: he goes wary, and the warm looks thin out. Over
+#: the last WARY_DAYS days, at least WARY_MIN_HURTS hard landings AND more of them than pets - so a
+#: bad afternoon from somebody who pets him every day is not enough. A lean like the needs', never
+#: a switch, and above the 0.4 floor every lean keeps.
+WARY_DAYS = 7
+WARY_MIN_HURTS = 5
+WARY_WEIGHTS = {"heart_eyes": 0.5, "sparkle": 0.7}
+
 # --- world awareness ------------------------------------------------------------------
 #
 # Two quite different mechanisms, and keeping them apart is what stops this turning into a dozen
@@ -874,6 +914,16 @@ class Behavior:
         self._rolling = False
         self._pending_injury = False
         self._fall_from_y = 0.0
+        #: What the landing in progress means, judged at the release - by the time he stops, a
+        #: bounce has replaced both the speed and the height. Set by drag_end, read and cleared by
+        #: _settle, and dropped by anything that cuts the fall short (a catch, a perch, a hide).
+        #: See GENTLE_ANIM and PLAY_ANIM.
+        self._gentle_pending = False
+        self._throw_pending = False
+        #: When he last sparkled at being set down gently, on the behaviour clock. A timestamp
+        #: rather than a countdown, the same pattern as _back_at_ms: _settle runs on the near side
+        #: of the pause check, and the cooldown loop does not.
+        self._gentle_at_ms = -1e9
         #: (dt, dx, dy) over the tail of the current drag - see THROW_SAMPLE_MS.
         self._drag_samples: deque[tuple[float, float, float]] = deque()
         self._drag_last: tuple[float, float] | None = None
@@ -1685,6 +1735,8 @@ class Behavior:
         self._falling = False
         self._rolling = False
         self._pending_injury = False
+        # Caught again mid-flight: the landing that was on its way never happens.
+        self._gentle_pending = self._throw_pending = False
         self._vx = self._vy = 0.0
         self._drag_samples.clear()
         self._drag_last = None
@@ -1725,7 +1777,16 @@ class Behavior:
         self._fall_from_y = self._y  # remembered so the landing knows how far he fell
         self._drag_samples.clear()
         self._drag_last = None
-        if abs(self._vx) > 0.4:
+        self._throw_pending = abs(self._vx) > THROWN_ABOVE_PX_MS
+        # Never both. A release between 0.4 and 0.5 px/ms sideways is slow enough to perch, but it
+        # is still a flick, and a flick is play rather than care. Under the drop that hurts is the
+        # injury rule's own figure, so a gentle set-down can never also be a hard landing.
+        self._gentle_pending = (
+            not self._throw_pending
+            and math.hypot(vx, vy) <= PERCH_MAX_RELEASE_SPEED_PX_MS
+            and self.rest_top() - self._y < INJURY_FALL_PX
+        )
+        if self._throw_pending:
             log.debug("thrown at %.2f,%.2f px/ms", self._vx, self._vy)
             self.memory.record("throws", self._date_key())
             self.needs.nudge("thrown")
@@ -1761,6 +1822,8 @@ class Behavior:
         self._falling = False
         self._rolling = False
         self._pending_injury = False
+        # Standing on a window is a landing of its own, and never reaches _settle: no sparkle.
+        self._gentle_pending = self._throw_pending = False
         self._vx = self._vy = 0.0
         self._enter(State.PERCH)
         self._reposition_perch()
@@ -1879,14 +1942,24 @@ class Behavior:
         self._enter(State.PET)
         return True
 
+    def _pet_forgive_every_ms(self) -> float:
+        """How long a pet takes to forgive one poke: less, the better he knows you.
+
+        Exactly ``PET_DRAIN_MS`` at a bond of 0. Read on every pet tick rather than cached when
+        the pet begins: the bond is four logarithms, and the pet that started it has just been
+        counted towards it.
+        """
+        return PET_DRAIN_MS * (1.0 - FORGIVE_BOND_SPEEDUP * self.memory.bond())
+
     def _tick_pet(self, dt_ms: float, cursor) -> None:
         """Lean into it for as long as the hand stays, forgiving a poke as he goes."""
         self._advance(dt_ms)
         # Draining the annoyance is the entire point of the feature: until this existed there was
         # no way at all to take it back off, only to wait it out.
+        every = self._pet_forgive_every_ms()
         self._pet_drain_ms += dt_ms
-        while self._pet_drain_ms >= PET_DRAIN_MS:
-            self._pet_drain_ms -= PET_DRAIN_MS
+        while self._pet_drain_ms >= every:
+            self._pet_drain_ms -= every
             if self._pokes:
                 self._pokes.popleft()
             self._residual = max(0.0, self._residual - 1.0)
@@ -1938,6 +2011,9 @@ class Behavior:
         if hidden and self._state != State.HIDDEN:
             self._prev_state = self._state
             self._hidden_since_ms = self._clock_ms
+            # A fall cut short here finishes when he comes back, which can be hours later: by then
+            # a sparkle for how he was let go would answer nothing anybody remembers doing.
+            self._gentle_pending = self._throw_pending = False
             self._enter(State.HIDDEN)
         elif not hidden and self._state == State.HIDDEN:
             # Only resume states that still make sense after an arbitrary gap. A fullscreen game
@@ -2791,11 +2867,11 @@ class Behavior:
     def _mood_weights(self) -> dict[str, float]:
         """Multipliers for the ambient pool.
 
-        Five independent sources, composed **multiplicatively** rather than by replacement: the
-        time of day, the season, the persistent mood, his needs, and the personality preset -
-        plus the attention arc's boost. Every one of them means something different, and letting
-        any one overwrite the others would produce nonsense like a good mood cancelling the fact
-        that it is two in the morning.
+        Six independent sources, composed **multiplicatively** rather than by replacement: the
+        time of day, the season, the persistent mood, his needs, a week of rough handling (see
+        _wary), and the personality preset - plus the attention arc's boost. Every one of them
+        means something different, and letting any one overwrite the others would produce
+        nonsense like a good mood cancelling the fact that it is two in the morning.
         """
         weights: dict[str, float] = {}
         for name, factor in self.mood.weights().items():
@@ -2804,6 +2880,11 @@ class Behavior:
         # rather than the clock, so they stay in even with world awareness switched off.
         for name, factor in self.needs.weights().items():
             weights[name] = weights.get(name, 1.0) * factor
+        # Wary after a week of rough handling - about him too, so also in with the world off. The
+        # keys are absent rather than 1.0 otherwise, so a fresh install's weights are unchanged.
+        if self._wary():
+            for name, factor in WARY_WEIGHTS.items():
+                weights[name] = weights.get(name, 1.0) * factor
         for name, factor in self._preset().get("weights", {}).items():
             weights[name] = weights.get(name, 1.0) * float(factor)
 
@@ -2829,6 +2910,16 @@ class Behavior:
             # afternoon instead of firing once and clashing with the knocking-off dance.
             weights["dance"] = weights.get("dance", 1.0) * FRIDAY_DANCE_BOOST
         return weights
+
+    def _wary(self) -> bool:
+        """Hurt at least WARY_MIN_HURTS times in the last WARY_DAYS days, and more than petted.
+
+        Read off the counts memory already keeps, so it mends by itself and there is nothing to
+        reset: pet him as often as you hurt him, or let the hard landings age out of the week, and
+        it is gone. Never with memory off - no counts, no week.
+        """
+        week = self.memory.recent(self._date_key(), WARY_DAYS)
+        return week.hurts >= WARY_MIN_HURTS and week.hurts > week.pets
 
     # --- being ignored --------------------------------------------------------------
 
@@ -3489,9 +3580,12 @@ class Behavior:
         self._settle()
 
     def _settle(self) -> None:
-        """Everything has stopped moving: pick up the nap, or sit up hurt."""
+        """Everything has stopped moving: pick up the nap, sit up hurt, or answer how he landed."""
         self._vx = self._vy = 0.0
         self._rolling = False
+        # Read and cleared first, so no branch below can leave one set for the next landing.
+        gentle, thrown = self._gentle_pending, self._throw_pending
+        self._gentle_pending = self._throw_pending = False
         if self._resume_sleep_ms > 0:
             # He was thrown mid-nap: now that he has stopped, serve out the rest of the cooldown.
             remaining = self._resume_sleep_ms
@@ -3507,6 +3601,32 @@ class Behavior:
             self.memory.record("hurts", self._date_key())
             self._injured_ms = float(self._config.get("injury_duration_s", 3.0)) * 1000.0
             self._enter(State.INJURED)
+            return
+        self._answer_landing(gentle=gentle, thrown=thrown)
+
+    def _answer_landing(self, *, gentle: bool, thrown: bool) -> None:
+        """Set down gently: a sparkle and a little affection. Thrown, and fond of you: "again!".
+
+        Only from IDLE, where drag_end left him: a click that opened the bubble mid-flight is not
+        overridden by it. Never while paused - _settle runs on the near side of the pause check so
+        that a drop still lands, but an antic started there would sit frozen on its first frame.
+        A nap resumed and an injury have already returned before this; a perch never gets here.
+        """
+        if self.paused or self._state != State.IDLE:
+            return
+        if gentle:
+            if self._clock_ms - self._gentle_at_ms < GENTLE_COOLDOWN_MS:
+                return
+            self._gentle_at_ms = self._clock_ms
+            log.debug("set down gently")
+            # A fraction of a pet to affection, and not a pet in memory: the count says pets.
+            self.needs.nudge("petted", GENTLE_PET_SCALE)
+            if self._sheet.has_state(GENTLE_ANIM):
+                self._begin_antic(GENTLE_ANIM, GENTLE_MS)
+        elif (thrown and self.needs.affection > PLAY_AFFECTION_ABOVE
+              and self._sheet.has_state(PLAY_ANIM)):
+            log.debug("thrown, and up for another")
+            self._begin_antic(PLAY_ANIM, PLAY_MS)
 
     def _would_injure(self, fallen_px: float, *, impact_px_ms: float = 0.0) -> bool:
         """Was that hard enough to hurt? A long drop, or a hard sideways impact."""
@@ -3574,11 +3694,20 @@ class Behavior:
         self._advance(dt_ms)
         self._tick_blink(dt_ms)
 
+    def _struggle_amplitude_px(self) -> float:
+        """How hard he squirms in your hand, in screen px: less, the better he knows you.
+
+        Exactly ``STRUGGLE_AMPLITUDE_PX`` times the sprite scale at a bond of 0. Read on every drag
+        tick, like the scale already was - the bond is four logarithms, and a drag lasts seconds.
+        """
+        calm = 1.0 - SQUIRM_BOND_CALM * self.memory.bond()
+        return STRUGGLE_AMPLITUDE_PX * calm * self._sheet.scale
+
     def _tick_drag(self, dt_ms: float, cursor) -> None:
         """Squirm while held: he is trying to kick free and get back down."""
         self._struggle_ms += dt_ms
         t = self._struggle_ms
-        amplitude = STRUGGLE_AMPLITUDE_PX * self._sheet.scale
+        amplitude = self._struggle_amplitude_px()
         # Amplitude-modulated on x so the wriggling comes in bursts, and a slower, independent
         # rate on y, which keeps the motion from collapsing into a straight diagonal line.
         self._struggle_dx = amplitude * math.sin(t * STRUGGLE_X_RATE) * math.cos(

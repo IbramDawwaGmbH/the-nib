@@ -412,6 +412,26 @@ class Memory:
         key = (today - timedelta(days=1)).isoformat()
         return self.day(key) if key in self._days else None
 
+    def recent(self, date_key: str, days: int = 7) -> DayRecord:
+        """Every count summed over ``date_key`` and the ``days - 1`` calendar days before it.
+
+        "The last seven days" by default: today and the six before it, which the window always
+        holds (it keeps one more, so yesterday's heavy-day judgement has a full week behind it).
+        A day missing from the window adds nothing. All zeros while memory is off, so whatever
+        leans on it behaves as on day one - the same stance as :meth:`bond`.
+        """
+        total = DayRecord()
+        today = _parse_day(date_key)
+        if not self.enabled or today is None or not self._days:
+            return total
+        for back in range(max(0, min(int(days), MAX_DAYS))):
+            record = self._days.get((today - timedelta(days=back)).isoformat())
+            if record is None:
+                continue
+            for key in DAY_KEYS:
+                setattr(total, key, getattr(total, key) + getattr(record, key))
+        return total
+
     def usual_hour(self) -> float | None:
         """The hour he most often first sees you, once there are enough days to say so.
 
