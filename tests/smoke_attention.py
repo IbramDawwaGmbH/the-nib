@@ -155,8 +155,10 @@ before = b._neglect_stage
 b._wave_cooldown_ms = 0.0
 # Over a window rather than a single tick: the wave fires from _tick_idle and _tick_walk, so if
 # this lands while he happens to be mid-antic the check never reaches the code it is testing.
-# Sampling one tick made this fail about one run in six.
-for _ in range(60):
+# Sampling one tick made this fail about one run in six; a 3s window still failed about one in
+# fifty, because football, dance, press-ups and sit_dangle can all run past 3s (up to 4.4s).
+# 10s outlasts any antic he can be in (even the 8s Friday flop) with the wave still to come.
+for _ in range(200):
     b.update(50.0, (int(b._x + b.sprite_w + 40), b.top + b.sprite_h // 2))
     if b._neglect_stage == 0:
         break
