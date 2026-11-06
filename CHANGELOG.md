@@ -55,6 +55,12 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   better he knows you, the less he squirms when you pick him up (down to 40% of a stranger's
   wriggle) and the faster a pet forgives a poke (down to every 0.72 seconds from 1.2). With
   `memory_enabled` off both are exactly as before; a new mascot starts a few percent off it.
+- **He naps.** Worn out late at night, with you gone ten minutes, he dozes off where he sat
+  waiting — and when you come back he wakes and greets you as he would have anyway, maybe with a
+  line about it. Sleep that isn't the sulk's: no clock, no grumble when you click him awake, and
+  the tray tooltip says `Nib — napping`. He has to be properly tired — under about 0.17 energy
+  when you leave, since time away rests him — and never naps in a focus session or standing on a
+  window. A new `nap_enabled` setting on the Personality tab.
 
 ### Changed
 
