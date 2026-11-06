@@ -37,6 +37,9 @@ a = Analysis(
         # Costumes are optional at runtime, but a build without them silently has no hats.
         ("assets/costumes.png", "assets"),
         ("assets/costumes.json", "assets"),
+        # The costume of the day: its manifest, and the twelve month sheets it loads on demand.
+        ("assets/daily_costumes.json", "assets"),
+        ("assets/daily", "assets/daily"),
         # The Away Guard's speech-bubble lines. guard_scene has a one-line fallback per category,
         # so a build without it still works - it would just say the same thing all day.
         ("assets/guard_phrases.json", "assets"),

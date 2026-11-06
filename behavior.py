@@ -22,6 +22,7 @@ import random
 import time
 from collections import deque
 
+import costume_calendar
 from animator import Animator, SpriteSheet
 from memory import Memory
 from mood import Mood
@@ -2505,10 +2506,10 @@ class Behavior:
 
     @property
     def auto_costume(self) -> str:
-        """What the season says he should be wearing, or "" for nothing.
+        """What the date - or failing that, the season - says he should be wearing, or "".
 
         Ambient, unlike ``persona_costume``: it is not tied to an antic and does not expire, so he
-        keeps it on for as long as the season lasts. The app treats the persona one as taking
+        keeps it on for as long as the day or the season lasts. The app treats the persona one as taking
         precedence, so a code editor still swaps the beanie for reading glasses and swaps back
         afterwards.
         """
@@ -2517,7 +2518,15 @@ class Behavior:
             return ""
         if not bool(self._config.get("world_enabled", True)):
             return ""
-        if not bool(self._config.get("seasonal_enabled", True)) or not self._may_dress():
+        if not self._may_dress():
+            return ""
+        if bool(self._config.get("daily_costumes", True)):
+            # The costume of the day, when the sheet has it: a date is as good a reason as a
+            # season, and a more specific one. See costume_calendar.
+            today = costume_calendar.costume_for(state.date_key)
+            if today and self._sheet.has_costume(today):
+                return today
+        if not bool(self._config.get("seasonal_enabled", True)):
             return ""
         return SEASON_COSTUMES.get(state.season, "")
 

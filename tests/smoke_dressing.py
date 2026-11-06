@@ -36,6 +36,9 @@ def fresh(tag, season=W.SEASON_WINTER, busy=False, hour=14.0, weekday=2, **overr
     path.unlink(missing_ok=True)
     cfg = Config(path)
     cfg["last_seen_date"] = "2026-07-31"
+    # The season's costumes are what this suite is about; the calendar, which outranks them, has
+    # its own in smoke_daily_costumes.
+    overrides.setdefault("daily_costumes", False)
     for k, v in overrides.items():
         cfg[k] = v
     sheet = SpriteSheet(SRC / "assets" / "nib_sheet.png", SRC / "assets" / "frames.json", 2)

@@ -82,6 +82,7 @@ is normalised — so a hand-edited file cannot break him.
 | `task_finished_reaction_enabled` | `true` | Celebrate once a long sustained-load stretch drops back to quiet |
 | `persona_costumes` | `true` | Let an app persona put temporary headwear on him |
 | `auto_costumes` | `true` | Let him dress himself when there's a reason to — see [Costumes](ART.md#costumes-and-colours) |
+| `daily_costumes` | `true` | A costume for every date of the year — see [The costume of the day](ART.md#the-costume-of-the-day). Off falls back to the season's |
 | `persona_apps` | `{}` | `{"exe.exe": "animation"}`, merged over the built-in personas |
 | `play_with_windows` | `true` | Peeking over the taskbar, and heaving at a window overhead |
 
