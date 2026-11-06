@@ -113,7 +113,9 @@ themed on the season they fall in, and no two days share an idea.
 It is the season rule made more specific, not a timer. The same date always gets the same
 costume, so it is still something you can reason about — "it's the fourteenth of March, so he's
 got the pi hat on" — and next year he wears it again. Movable feasts (Easter, Lunar New Year,
-Diwali, Eid, Thanksgiving) do not land on one date, so none of them is pinned to one.
+Diwali, Eid, Thanksgiving) do not land on one date, so none of them is pinned to one. The calendar
+is drawn for the northern hemisphere and, unlike the season fallback, does not flip with
+`southern_seasons`: south of the equator he will still wear a frosty-morning costume in January.
 
 | | |
 | --- | --- |
