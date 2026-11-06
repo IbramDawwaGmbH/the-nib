@@ -1,0 +1,51 @@
+{
+ "date": "12-22",
+ "name": "longest_night_cap",
+ "title": "Longest Night",
+ "theme": "a deep blue night-sky cap with a gold crescent moon and three white stars that twinkle",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "........BBBBBBBB........",
+  "......BBBBBBBBBBBB......",
+  "....BBBWBBBBBBBBBBBB....",
+  "...BBBBBBBBBBBBBGGBBB...",
+  "..BBBBBBBBBBBBBBBGGBBB..",
+  ".BBWBBBBBBBBBBBBBBGGBBB.",
+  "BBBBBBBBBGBBBBBBBGGBBBBB",
+  "BBBBBBBBBBBBBBBBGGBBBBBB",
+  "BBBBBBBBBBBBBBBBBBBBBBBB",
+  "AAAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "........BBBBBBBB........",
+   "......BBBBBBBBBBBB......",
+   "....BBBGBBBBBBBBBBBB....",
+   "...BBBBBBBBBBBBBGGBBB...",
+   "..BBBBBBBBBBBBBBBGGBBB..",
+   ".BBWBBBBBBBBBBBBBBGGBBB.",
+   "BBBBBBBBBWBBBBBBBGGBBBBB",
+   "BBBBBBBBBBBBBBBBGGBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBBBB",
+   "AAAAAAAAAAAAAAAAAAAAAAAA"
+  ],
+  [
+   "........BBBBBBBB........",
+   "......BBBBBBBBBBBB......",
+   "....BBBWBBBBBBBBBBBB....",
+   "...BBBBBBBBBBBBBGGBBB...",
+   "..BBBBBBBBBBBBBBBGGBBB..",
+   ".BBGBBBBBBBBBBBBBBGGBBB.",
+   "BBBBBBBBBWBBBBBBBGGBBBBB",
+   "BBBBBBBBBBBBBBBBWGBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBBBB",
+   "AAAAAAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

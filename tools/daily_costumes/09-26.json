@@ -1,0 +1,69 @@
+{
+ "date": "09-26",
+ "name": "letter_blocks",
+ "title": "Day of Languages",
+ "theme": "three stacked wooden toy blocks on his head (gold, blue, red) each with one white letter; the top block tilts and the letters change one block at a time",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "....RRRRRRRD....",
+  "....RRRRRRRD....",
+  "....RRRWRRRD....",
+  "....RRWRWRRD....",
+  "....RRWWWRRD....",
+  "....RRWRWRRD....",
+  "....RRRRRRRD....",
+  "....DDDDDDDD....",
+  "GGGGGGGDBBBBBBBD",
+  "GGGGGGGDBBBBBBBD",
+  "GGWWWGGDBBWWWBBD",
+  "GGGWGGGDBBWBWBBD",
+  "GGGWGGGDBBWBWBBD",
+  "GGGWGGGDBBWWWBBD",
+  "GGGGGGGDBBBBBBBD",
+  "DDDDDDDDDDDDDDDD"
+ ],
+ "frames": [
+  [
+   ".....RRRRRRRD...",
+   ".....RRRRRRRD...",
+   ".....RRWWWRRD...",
+   ".....RRRRWRRD...",
+   ".....RRRWRRRD...",
+   ".....RRWWWRRD...",
+   ".....RRRRRRRD...",
+   ".....DDDDDDDD...",
+   "GGGGGGGDBBBBBBBD",
+   "GGGGGGGDBBBBBBBD",
+   "GGWWWGGDBBWWWBBD",
+   "GGGWGGGDBBWBWBBD",
+   "GGGWGGGDBBWBWBBD",
+   "GGGWGGGDBBWWWBBD",
+   "GGGGGGGDBBBBBBBD",
+   "DDDDDDDDDDDDDDDD"
+  ],
+  [
+   "....RRRRRRRD....",
+   "....RRRRRRRD....",
+   "....RRWWWRRD....",
+   "....RRRRWRRD....",
+   "....RRRWRRRD....",
+   "....RRWWWRRD....",
+   "....RRRRRRRD....",
+   "....DDDDDDDD....",
+   "GGGGGGGDBBBBBBBD",
+   "GGGGGGGDBBBBBBBD",
+   "GGWGWGGDBBWWWBBD",
+   "GGWWWGGDBBWBWBBD",
+   "GGWGWGGDBBWBWBBD",
+   "GGWGWGGDBBWWWBBD",
+   "GGGGGGGDBBBBBBBD",
+   "DDDDDDDDDDDDDDDD"
+  ]
+ ]
+}

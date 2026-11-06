@@ -1,0 +1,63 @@
+{
+ "date": "04-08",
+ "name": "perch_bird",
+ "title": "Draw a Bird Day",
+ "theme": "a little blue songbird perched on top of his head with gold beak, white belly and a flicking tail",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "..BBBBB.........",
+  "..BDBBB.........",
+  "GGBBBBB.........",
+  "GGBBBBBBBBB.....",
+  "..BBBBBBBBBB....",
+  "....BBBBBBBB....",
+  "....BBBBBBBB....",
+  "....BWWWWBBBBBBB",
+  "....BWWWWBBBBBBB",
+  ".....WWWWBB....."
+ ],
+ "frames": [
+  [
+   "..BBBBB.........",
+   "..BDBBB.........",
+   "GGBBBBB.........",
+   "GGBBBBBBBBB.....",
+   "..BBBBBBBBBB....",
+   "....BBBBBBBB....",
+   "....BBBBBBBBBBBB",
+   "....BWWWWBBBBBBB",
+   "....BWWWWBBB....",
+   ".....WWWWBB....."
+  ],
+  [
+   "................",
+   "..BBBBB.........",
+   "..BDBBB.........",
+   "GGBBBBBBBBB.....",
+   "GGBBBBBBBBBB....",
+   "..BBBBBBBBBB....",
+   "....BBBBBBBB....",
+   "....BWWWWBBBBBBB",
+   "....BWWWWBBBBBBB",
+   ".....WWWWBB....."
+  ],
+  [
+   "..BBBBB.........",
+   "..BDBBB.........",
+   "GGBBBBB.........",
+   "GGBBBBBBBBB.....",
+   "..BBBBBBBBBB....",
+   "....BBBBBBBB....",
+   "....BBBBBBBB....",
+   "....BWWWWBBB....",
+   "....BWWWWBBBBBBB",
+   ".....WWWWBBBBBBB"
+  ]
+ ]
+}

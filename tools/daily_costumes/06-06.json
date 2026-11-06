@@ -1,0 +1,60 @@
+{
+ "date": "06-06",
+ "name": "lorgnette_handle",
+ "title": "National Eyewear Day",
+ "theme": "gold rimmed lorgnette spectacles with purple lenses and a gold handle angling down to the right; the lenses drop a row and lift back and a white glint hops lens to lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........................",
+  "GGGGGGGGG..GGGGGGGGG.....",
+  "GPPPPPPPG..GPPPPPPPG.....",
+  "GPWWPPPPGGGGPPPPPPPGGG...",
+  "GPWWPPPPGGGGPPPPPPPGGG...",
+  "GPPPPPPPG..GPPPPPPPG.GG..",
+  "GPPPPPPPG..GPPPPPPPG.GG..",
+  "GGGGGGGGG..GGGGGGGGG..GG.",
+  "......................GG.",
+  ".......................GG",
+  ".......................GG",
+  ".........................",
+  "........................."
+ ],
+ "frames": [
+  [
+   ".........................",
+   ".........................",
+   "GGGGGGGGG..GGGGGGGGG.....",
+   "GPPPPPPPG..GPPPPPPPG.....",
+   "GPPPPPPPGGGGPWWPPPPGGG...",
+   "GPPPPPPPGGGGPWWPPPPGGG...",
+   "GPPPPPPPG..GPPPPPPPG.GG..",
+   "GPPPPPPPG..GPPPPPPPG.GG..",
+   "GGGGGGGGG..GGGGGGGGG..GG.",
+   "......................GG.",
+   ".......................GG",
+   ".......................GG",
+   "........................."
+  ],
+  [
+   "GGGGGGGGG..GGGGGGGGG.....",
+   "GPPPPPPPG..GPPPPPPPG.....",
+   "GPWWPPPPGGGGPPPPPPPGGG...",
+   "GPWWPPPPGGGGPPPPPPPGGG...",
+   "GPPPPPPPG..GPPPPPPPG.GG..",
+   "GPPPPPPPG..GPPPPPPPG.GG..",
+   "GGGGGGGGG..GGGGGGGGG..GG.",
+   "......................GG.",
+   ".......................GG",
+   ".......................GG",
+   ".........................",
+   ".........................",
+   "........................."
+  ]
+ ]
+}

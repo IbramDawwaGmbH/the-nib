@@ -1,0 +1,42 @@
+{
+ "date": "01-26",
+ "name": "ice_skates",
+ "title": "Powder Day",
+ "theme": "figure skates with white boots, grey laces and silver blades with toe picks; he carves fresh ice, flinging chips, and each skate lifts in turn with a glint on the blade",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  13,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "..........................",
+  "...WWWWWWW.....WWWWWWW....",
+  "...WWWWKKW.....WWWWKKW....",
+  "...WWWWKKW.....WWWWKKW....",
+  "...WWWWWWWSS...WWWWWWWSS..",
+  "WWSSSSSSSSSS..SSSSSSSSSSWW"
+ ],
+ "frames": [
+  [
+   "..........................",
+   "...............WWWWWWW....",
+   "...WWWWWWW.....WWWWKKW....",
+   "...WWWWKKW.....WWWWKKW....",
+   "...WWWWKKW.....WWWWWWWSS..",
+   "...WWWWWWWSS..SSSWWSSSSS..",
+   "WWSSSSSSSSSS............WW"
+  ],
+  [
+   "..........................",
+   "...WWWWWWW................",
+   "...WWWWKKW.....WWWWWWW....",
+   "...WWWWKKW.....WWWWKKW....",
+   "...WWWWWWWSS...WWWWKKW....",
+   "..SSSWWSSSSS...WWWWWWWSS..",
+   "WW............SSSSSSSSSSWW"
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "12-23",
+ "name": "elf_bell_hat",
+ "title": "Elf Hat",
+ "theme": "a generic green elf hat with a red zigzag band, its tip drooping to the right with a gold bell that jingles",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  ".............NNNN.....",
+  ".........NNNNNNNNNNN..",
+  "........NNNN.....NNN..",
+  ".......NNNN......GGG..",
+  "......NNNNNN.....GGG..",
+  "....NNNNNNNNNN...GGG..",
+  "...NNNNNNNNNNNN.......",
+  ".NNNNNNNNNNNNNNNN.....",
+  "NNNNNNNNNNNNNNNNNN....",
+  "RRNNRRNNRRNNRRNNRR....",
+  "RRRRRRRRRRRRRRRRRR...."
+ ],
+ "frames": [
+  [
+   "......................",
+   ".............NNNN.....",
+   ".........NNNNNNNNNNN..",
+   "........NNNN.....NNN..",
+   ".......NNNN......NNN..",
+   "......NNNNNN.....GGG..",
+   "....NNNNNNNNNN...GGG..",
+   "...NNNNNNNNNNNN..GGG..",
+   ".NNNNNNNNNNNNNNNN.....",
+   "NNNNNNNNNNNNNNNNNN....",
+   "RRNNRRNNRRNNRRNNRR....",
+   "RRRRRRRRRRRRRRRRRR...."
+  ],
+  [
+   "......................",
+   ".............NNNN.....",
+   ".........NNNNNNNNNNNN.",
+   "........NNNN.....NNNN.",
+   ".......NNNN.......GGG.",
+   "......NNNNNN......GGG.",
+   "....NNNNNNNNNN....GGG.",
+   "...NNNNNNNNNNNN.......",
+   ".NNNNNNNNNNNNNNNN.....",
+   "NNNNNNNNNNNNNNNNNN....",
+   "RRNNRRNNRRNNRRNNRR....",
+   "RRRRRRRRRRRRRRRRRR...."
+  ]
+ ]
+}

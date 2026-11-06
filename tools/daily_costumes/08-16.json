@@ -1,0 +1,31 @@
+{
+  "date": "08-16",
+  "name": "gag_arrow_band",
+  "title": "Tell a Joke Day",
+  "theme": "the classic arrow-through-the-head gag: a charcoal band with a brown shaft, gold fletching sticking out on the left and a silver point on the right; the fletching flutters and the point glints",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    13,
+    5
+  ],
+  "layer": "over",
+  "pattern": [
+    ".GG...................S...",
+    ".GGG..................SS..",
+    ".GGGGOOOAAAAAAAAAAOOOOSSSS",
+    ".GGGGOOAAAAAAAAAAAAOOOSSSS",
+    ".GGG...AAAAAAAAAAAA...SS..",
+    ".GG....AAAAAAAAAAAA...S..."
+  ],
+  "frames": [
+    [
+      "GG....................S...",
+      "GGG...................SS..",
+      ".GGGGOOOAAAAAAAAAAOOOOSWWS",
+      ".GGGGOOAAAAAAAAAAAAOOOSSSS",
+      "..GGG..AAAAAAAAAAAA...SS..",
+      "..GG...AAAAAAAAAAAA...S..."
+    ]
+  ]
+}

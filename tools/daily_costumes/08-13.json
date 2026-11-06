@@ -1,0 +1,75 @@
+{
+ "date": "08-13",
+ "name": "lefty_wave",
+ "title": "Left-Handers Day",
+ "theme": "a big white cartoon left hand waving on a stick above his head",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "......WW.WW......",
+  "...WW.WW.WW.WW...",
+  "...WW.WW.WW.WW...",
+  "...WWWWWWWWWWW...",
+  ".WWWWWWWWWWWWW...",
+  ".WWWWWWWWWWWWW...",
+  "...WWWWWWWWWWW...",
+  "...WWWWWWWWWWW...",
+  "...WWWWWWWWWWW...",
+  ".....KKKKKKK.....",
+  ".....KKKKKKK.....",
+  "........DD.......",
+  "........DD......."
+ ],
+ "frames": [
+  [
+   ".......WW.WW.....",
+   "....WW.WW.WW.WW..",
+   "....WW.WW.WW.WW..",
+   "....WWWWWWWWWWW..",
+   "..WWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "......KKKKKKK....",
+   "......KKKKKKK....",
+   "........DD.......",
+   "........DD......."
+  ],
+  [
+   "........WW.WW....",
+   ".....WW.WW.WW.WW.",
+   ".....WW.WW.WW.WW.",
+   ".....WWWWWWWWWWW.",
+   "...WWWWWWWWWWWWW.",
+   "...WWWWWWWWWWWWW.",
+   ".....WWWWWWWWWWW.",
+   ".....WWWWWWWWWWW.",
+   ".....WWWWWWWWWWW.",
+   ".......KKKKKKK...",
+   ".......KKKKKKK...",
+   "........DD.......",
+   "........DD......."
+  ],
+  [
+   ".......WW.WW.....",
+   "...WW..WW.WW..WW.",
+   "...WW..WW.WW..WW.",
+   "...WWWWWWWWWWWWW.",
+   "..WWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "....WWWWWWWWWWW..",
+   "......KKKKKKK....",
+   "......KKKKKKK....",
+   "........DD.......",
+   "........DD......."
+  ]
+ ]
+}

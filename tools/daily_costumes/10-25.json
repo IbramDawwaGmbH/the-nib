@@ -1,0 +1,57 @@
+{
+ "date": "10-25",
+ "name": "pasta_bowl",
+ "title": "World Pasta Day",
+ "theme": "a bowl of green-gold spaghetti with a red meatball and a silver fork stuck in it, worn on his head; a strand drapes down the bowl",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........RRR......SS...",
+  "........RRR......SS...",
+  "...GDGGDRRRGGDGGDSS...",
+  "...DGGDGGDGGDGGDGSS...",
+  "...GGDGGDGGDGGDGGSS...",
+  "...GGDGGGDGGGDGGGSS...",
+  ".WWGWWWWWWWWWWWWWWWWW.",
+  ".WWWWWWWWWWWWWWWWWWWW.",
+  "..BBBBBBBBBBBBBBBBBB..",
+  "..WWWWWWWWWWWWWWWWWW..",
+  "...WWWWWWWWWWWWWWWW...",
+  "....WWWWWWWWWWWWWW...."
+ ],
+ "frames": [
+  [
+   "........RRR.......SS..",
+   "........RRR.......SS..",
+   "...GDGGDRRRGGDGGDGSS..",
+   "...DGGDGGDGGDGGDGSS...",
+   "...GGDGGDGGDGGDGGSS...",
+   "...GGDGGGDGGGDGGGSS...",
+   ".WWGWWWWWWWWWWWWWWWWW.",
+   ".WWGWWWWWWWWWWWWWWWWW.",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "..WWWWWWWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWWWW...",
+   "....WWWWWWWWWWWWWW...."
+  ],
+  [
+   "........RRR.....SS....",
+   "........RRR.....SS....",
+   "...GDGGDRRRGGDGGSSG...",
+   "...DGGDGGDGGDGGDGSS...",
+   "...GGDGGDGGDGGDGGSS...",
+   "...GGDGGGDGGGDGGGSS...",
+   ".WWGWWWWWWWWWWWWWWWWW.",
+   ".WWGWWWWWWWWWWWWWWWWW.",
+   "..BGBBBBBBBBBBBBBBBB..",
+   "..WWWWWWWWWWWWWWWWWW..",
+   "...WWWWWWWWWWWWWWWW...",
+   "....WWWWWWWWWWWWWW...."
+  ]
+ ]
+}

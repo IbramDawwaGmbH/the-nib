@@ -1,0 +1,63 @@
+{
+ "date": "05-16",
+ "name": "prism_ray",
+ "title": "Day of Light",
+ "theme": "a glass triangular prism with a white highlight on his head; a white beam enters from the left and splits into red, gold, green and blue rays that lengthen and shimmer",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  "............................",
+  "............................",
+  "...................RRWW.....",
+  "................RRRRRWW.....",
+  "...........SSRRRRRR.........",
+  "...........SSRRR....GGG.....",
+  "..........SSSSGGGGGGGGG.....",
+  "..........WSSSGGGGGG........",
+  ".........WSSSSSNNNNN........",
+  "WWWWWWWWWWSSSSSSNNNNNWW.....",
+  "WWWWWWWWWWSSSSSS....NWW.....",
+  ".......WWSSSSSSSSBB.........",
+  "......WWSSSSSSSSSSBBBBB.....",
+  "......WWSSSSSSSSSS.BBBB....."
+ ],
+ "frames": [
+  [
+   "............................",
+   "............................",
+   "...................RRWWRR...",
+   "................RRRRRWWRR...",
+   "...........SSRRRRRR.........",
+   "...........SSRRR....GGGWW...",
+   "..........SSSSGGGGGGGGGWW...",
+   "..........WSSSGGGGGG........",
+   ".........WSSSSSNNNNN........",
+   "WWWWWWWWWWSSSSSSNNNNNWWNN...",
+   "WWWWWWWWWWSSSSSS....NWWNN...",
+   ".......WWSSSSSSSSBB.........",
+   "......WWSSSSSSSSSSBBBBBWW...",
+   "......WWSSSSSSSSSS.BBBBWW..."
+  ],
+  [
+   "............................",
+   "............................",
+   "...................RRWWRRWW.",
+   "................RRRRRWWRRWW.",
+   "...........SSRRRRRR.........",
+   "...........SSRRR....GGGGGGG.",
+   "..........SSSSGGGGGGGGGGGGG.",
+   "..........WSSSGGGGGG........",
+   ".........WSSSSSNNNNN........",
+   "WWWWWWWWWWSSSSSSNNNNNWWNNNN.",
+   "WWWWWWWWWWSSSSSS....NWWNNNN.",
+   ".......WWSSSSSSSSBB.........",
+   "......WWSSSSSSSSSSBBBBBBBWW.",
+   "......WWSSSSSSSSSS.BBBBBBWW."
+  ]
+ ]
+}

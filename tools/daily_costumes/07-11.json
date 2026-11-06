@@ -1,0 +1,54 @@
+{
+ "date": "07-11",
+ "name": "swim_ring",
+ "title": "Pool Day",
+ "theme": "a red and white inflatable swim ring around his neck, teal water in the middle; it bobs and bubbles rise",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  13,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "......RRRRRRRWWWWWWW......",
+  "...RRRRRRRRRRWWWWWWWWWW...",
+  ".RRRRRRRRRRRRWWWWWWWWWWWW.",
+  "RRRRRRRRTTTTTTTTTTWWWWWWWW",
+  "RRRRTTTTTTTTTTTTTTTTTTWWWW",
+  "WWWWTTTTTTTTTTTWTTTTTTRRRR",
+  "WWWWWWWWTTWTTTTTTTRRRRRRRR",
+  ".WWWWWWWWWWWWRRRRRRRRRRRR.",
+  "...WWWWWWWWWWRRRRRRRRRR...",
+  "......WWWWWWWRRRRRRR......",
+  ".........................."
+ ],
+ "frames": [
+  [
+   "..........................",
+   "......RRRRRRRWWWWWWW......",
+   "...RRRRRRRRRRWWWWWWWWWW...",
+   ".RRRRRRRRRRRRWWWWWWWWWWWW.",
+   "RRRRRRRRTTTTTTTTTTWWWWWWWW",
+   "RRRRTTTTTTTTTTTWTTTTTTWWWW",
+   "WWWWTTTTTTWTTTTTTTTTTTRRRR",
+   "WWWWWWWWTTTTTTTTTTRRRRRRRR",
+   ".WWWWWWWWWWWWRRRRRRRRRRRR.",
+   "...WWWWWWWWWWRRRRRRRRRR...",
+   "......WWWWWWWRRRRRRR......"
+  ],
+  [
+   "......RRRRRRRWWWWWWW......",
+   "...RRRRRRRRRRWWWWWWWWWW...",
+   ".RRRRRRRRRRRRWWWWWWWWWWWW.",
+   "RRRRRRRRTTTTTTTWTTWWWWWWWW",
+   "RRRRTTTTTTWTTTTTTTTTTTWWWW",
+   "WWWWTTTTTTTTTTTTTTTTTTRRRR",
+   "WWWWWWWWTTTTTTTTTTRRRRRRRR",
+   ".WWWWWWWWWWWWRRRRRRRRRRRR.",
+   "...WWWWWWWWWWRRRRRRRRRR...",
+   "......WWWWWWWRRRRRRR......",
+   ".........................."
+  ]
+ ]
+}

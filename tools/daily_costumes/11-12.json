@@ -1,0 +1,57 @@
+{
+ "date": "11-12",
+ "name": "pinecone_topper",
+ "title": "Pinecone Season",
+ "theme": "a brown pinecone with dark scale seams standing on his crown over a green needle sprig; scales open from the bottom and the sprig twitches",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....OOOO....",
+  "...OOOOOO...",
+  "..DODODODO..",
+  ".OOOOOOOOOO.",
+  ".ODODODODOD.",
+  ".OOOOOOOOOO.",
+  ".DODODODODO.",
+  "..OOOOOOOO..",
+  "...ODODOD...",
+  "...OOOOOO...",
+  ".NNOOOOOONN.",
+  "NN.NNNNNN.NN"
+ ],
+ "frames": [
+  [
+   "....OOOO....",
+   "...OOOOOO...",
+   "..DODODODO..",
+   ".OOOOOOOOOO.",
+   ".ODODODODOD.",
+   ".OOOOOOOOOO.",
+   ".DODODODODO.",
+   "..OOOOOOOO..",
+   "...ODODOD...",
+   "..OOOOOOOO..",
+   "NNNOOOOOONNN",
+   "...NNNNNN..."
+  ],
+  [
+   "....OOOO....",
+   "...OOWOOO...",
+   "..DODODODO..",
+   ".OOOOOOOOOO.",
+   ".ODODODODOD.",
+   ".OOOOOOOOOO.",
+   ".DODODODODO.",
+   "..OOOOOOOO..",
+   "..OODODODO..",
+   "..OOOOOOOO..",
+   ".NNOOOOOONN.",
+   "NNN.NNNN.NNN"
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "06-11",
+ "name": "husk_cob",
+ "title": "Corn on the Cob Day",
+ "theme": "an upright golden ear of corn with kernel rows and green husk leaves; the husks sway and a highlight climbs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....GGGGGG....",
+  "...GGGGGGGG...",
+  "...GGGGGGGG...",
+  "...GDGDGDGD...",
+  "...DGDGDGDG...",
+  "...GGGGGGGG...",
+  ".N.GGGGGGGG.N.",
+  ".NNGGWGGGGGNN.",
+  ".NNNGGGGGGNNN.",
+  "..NNNGGGGNNN..",
+  "..NNNNNNNNNN..",
+  "...NNNNNNNN..."
+ ],
+ "frames": [
+  [
+   "....GGGGGG....",
+   "...GGGGGGGG...",
+   "...GGGGGGGG...",
+   "...GDGDGDGD...",
+   "...DGDGDGDG...",
+   "...GGGGGGGG...",
+   "N..GGWGGGGG..N",
+   "NN.GGGGGGGG.NN",
+   "NNNGGGGGGGGNNN",
+   ".NNNGGGGGGNNN.",
+   "..NNNNNNNNNN..",
+   "...NNNNNNNN..."
+  ],
+  [
+   "....GGGGGG....",
+   "...GGGGGGGG...",
+   "...GGGGGGGG...",
+   "...GDGDGDGD...",
+   "...DGDGDGDG...",
+   "...GGWGGGGG...",
+   ".N.GGGGGGGG.N.",
+   ".NNGGGGGGGGNN.",
+   ".NNNGGGGGGNNN.",
+   "..NNNGGGGNNN..",
+   "..NNNNNNNNNN..",
+   "...NNNNNNNN..."
+  ]
+ ]
+}

@@ -1,0 +1,63 @@
+{
+ "date": "06-26",
+ "name": "canoe_vest",
+ "title": "Canoe Day",
+ "theme": "a blue buoyancy vest with a white zip, two straps and silver buckles; the buckles glint and a teal water drop slides down the zip",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  9,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  ".BB..............BB.",
+  "BBBBBBBBBWWBBBBBBBBB",
+  "BBBBBBBBBWWBBBBBBBBB",
+  "WWWWWWWWWSSWWWWWWWWW",
+  "BBBBBBBBBSSBBBBBBBBB",
+  "BBBBBBBBBWWBBBBBBBBB",
+  "WWWWWWWWWSSWWWWWWWWW",
+  "BBBBBBBBBSSBBBBBBBBB",
+  "BBBBBBBBBWWBBBBBBBBB"
+ ],
+ "frames": [
+  [
+   "....................",
+   ".BB..............BB.",
+   "BBBBBBBBBTTBBBBBBBBB",
+   "BBBBBBBBBTTBBBBBBBBB",
+   "WWWWWWWWWDDWWWWWWWWW",
+   "BBBBBBBBBDDBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "WWWWWWWWWSSWWWWWWWWW",
+   "BBBBBBBBBSSBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB"
+  ],
+  [
+   "....................",
+   ".BB..............BB.",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "WWWWWWWWWTTWWWWWWWWW",
+   "BBBBBBBBBTTBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "WWWWWWWWWDDWWWWWWWWW",
+   "BBBBBBBBBDDBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB"
+  ],
+  [
+   "....................",
+   ".BB..............BB.",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB",
+   "WWWWWWWWWSSWWWWWWWWW",
+   "BBBBBBBBBSSBBBBBBBBB",
+   "BBBBBBBBBTTBBBBBBBBB",
+   "WWWWWWWWWTTWWWWWWWWW",
+   "BBBBBBBBBSSBBBBBBBBB",
+   "BBBBBBBBBWWBBBBBBBBB"
+  ]
+ ]
+}

@@ -1,0 +1,59 @@
+{
+  "date": "08-12",
+  "name": "perseid_streak",
+  "title": "Perseid Meteor Night",
+  "theme": "a blue night-sky cap with a gold star shooting across it trailing a white streak, and twinkling stars",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    14,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    "............................",
+    ".......BBBBBBBBBBBBBB.......",
+    "....WWBBBBBBBBBBBBBBBBBB....",
+    "..BWWWWBBGBBBBBBBBWBBBBBBB..",
+    "BBBBBBBGGGGGBBBBBBBBBBBBBBBB",
+    "BBBBBBBBBGBBBBBBBBBBBBBBBBBB",
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+    "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+  ],
+  "frames": [
+    [
+      "............................",
+      ".......BBBBBBBBBBBBBB.......",
+      "....BBBBBBBBBBBBBBBBBBBB....",
+      "..BBBBBWWBBBBBBBBBBBBBBBBB..",
+      "BBBBBBWWWWBBGBBBBBBBBBBBBBBB",
+      "BBBBBBBBBBGGGGGBBBBBBBBBBBBB",
+      "BBBBBBBBBBBBGBBBBBBBBBBWBBBB",
+      "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    ],
+    [
+      "............................",
+      ".......BBBBBBBBBBBBBB.......",
+      "....BBBBBBBBBBBBBBBBBBBB....",
+      "..BBBBBBBBBBBBBBBBWBBBBBBB..",
+      "BBBBBBBBBBWWBBBBBBBBBBBBBBBB",
+      "BBBBBBBBBWWWWBBGBBBBBBBBBBBB",
+      "BBBBBBBBBBBBBGGGGGBBBBBBBBBB",
+      "BBBBBBBBBBBBBBBGBBBBBBBBBBBB",
+      "BBBBBBBBBBBBBBBBBBBBBBBBBBBB"
+    ],
+    [
+      "............................",
+      ".......BBBBBBBBBBBBBB.......",
+      "....BBBBBBBBBBBBBBBBBBBB....",
+      "..BBBBBBBBBBBBBBBBBBBBBBBB..",
+      "BBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "BBBBBBBBBBBBBWWBBBBBBBBBBBBB",
+      "BBBBBBBBBBBBWWWWBBGBBBBWBBBB",
+      "BBBBBBBBBBBBBBBBGGGGGBBBBBBB",
+      "BBBBBBBBBBBBBBBBBBGBBBBBBBBB"
+    ]
+  ]
+}

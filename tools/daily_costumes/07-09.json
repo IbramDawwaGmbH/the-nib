@@ -1,0 +1,33 @@
+{
+ "date": "07-09",
+ "name": "cateye_specs",
+ "title": "Fashion Day",
+ "theme": "pink cat-eye fashion glasses with purple lenses; a white glint slides lens to lens and the studs twinkle",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "SM................MS",
+  ".MMMMMMM....MMMMMMM.",
+  ".MPPWPPPMMMMPPPPPPM.",
+  ".MPWPPPPM..MPPPPPPM.",
+  ".MPPPPPPM..MPPPPPPM.",
+  ".MPPPPPPM..MPPPPPPM.",
+  "..MMMMMM....MMMMMM.."
+ ],
+ "frames": [
+  [
+   "WM................MW",
+   ".MMMMMMM....MMMMMMM.",
+   ".MPPPPPPMMMMPPPWPPM.",
+   ".MPPPPPPM..MPPWPPPM.",
+   ".MPPPPPPM..MPPPPPPM.",
+   ".MPPPPPPM..MPPPPPPM.",
+   "..MMMMMM....MMMMMM.."
+  ]
+ ]
+}

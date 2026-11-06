@@ -1,0 +1,79 @@
+{
+ "date": "05-19",
+ "name": "pinwheel",
+ "title": "Pinwheel Day",
+ "theme": "A toy pinwheel on a stick; the four coloured blades turn round the pin",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  5,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  "RRRRR....G",
+  ".RRRR...GG",
+  "..RRR..GGG",
+  "...RR.GGGG",
+  "....WWGGGG",
+  "NNNNWW....",
+  "NNNN.BB...",
+  "NNN..BBB..",
+  "NN...BBBB.",
+  "N....BBBBB",
+  "....KK....",
+  "....KK....",
+  "....KK....",
+  "....KK...."
+ ],
+ "frames": [
+  [
+   "NNNNN....R",
+   ".NNNN...RR",
+   "..NNN..RRR",
+   "...NN.RRRR",
+   "....WWRRRR",
+   "BBBBWW....",
+   "BBBB.GG...",
+   "BBB..GGG..",
+   "BB...GGGG.",
+   "B....GGGGG",
+   "....KK....",
+   "....KK....",
+   "....KK....",
+   "....KK...."
+  ],
+  [
+   "BBBBB....N",
+   ".BBBB...NN",
+   "..BBB..NNN",
+   "...BB.NNNN",
+   "....WWNNNN",
+   "GGGGWW....",
+   "GGGG.RR...",
+   "GGG..RRR..",
+   "GG...RRRR.",
+   "G....RRRRR",
+   "....KK....",
+   "....KK....",
+   "....KK....",
+   "....KK...."
+  ],
+  [
+   "GGGGG....B",
+   ".GGGG...BB",
+   "..GGG..BBB",
+   "...GG.BBBB",
+   "....WWBBBB",
+   "RRRRWW....",
+   "RRRR.NN...",
+   "RRR..NNN..",
+   "RR...NNNN.",
+   "R....NNNNN",
+   "....KK....",
+   "....KK....",
+   "....KK....",
+   "....KK...."
+  ]
+ ]
+}

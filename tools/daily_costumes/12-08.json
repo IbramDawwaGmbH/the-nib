@@ -1,0 +1,43 @@
+{
+  "date": "12-08",
+  "name": "snowman_hat",
+  "title": "Build a Snowman",
+  "theme": "a little white snowman standing on his head: two balls, coal eyes and buttons, a carrot nose and stick arms; the arms wave and a snowflake drifts past",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    5,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "...WWWW.SS",
+    "...WWWW.SS",
+    "..WAWWAW..",
+    "..WAWWAW..",
+    "..WWFFWW..",
+    "...WWWW...",
+    "OWWWWWWWWO",
+    "OWWWWWWWWO",
+    ".WWWAAWWW.",
+    ".WWWWWWWW.",
+    ".WWWAAWWW.",
+    "..WWWWWW.."
+  ],
+  "frames": [
+    [
+      "...WWWW...",
+      "...WWWW...",
+      "..WAWWAW..",
+      "..WAWWAW.S",
+      "..WWFFWW.S",
+      "...WWWW...",
+      ".WWWWWWWW.",
+      ".WWWWWWWW.",
+      "OWWWAAWWWO",
+      "OWWWWWWWWO",
+      ".WWWAAWWW.",
+      "..WWWWWW.."
+    ]
+  ]
+}

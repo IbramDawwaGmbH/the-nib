@@ -1,0 +1,67 @@
+{
+ "date": "01-03",
+ "name": "counting_sheep",
+ "title": "Festival of Sleep",
+ "theme": "three fluffy white sheep with charcoal faces and legs hop one after another over the top of his head",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "..........................",
+  ".WWWW.....................",
+  "WWWWWW....................",
+  "WWWWWAA...WWWW......WWWW..",
+  "WWWWWAA..WWWWWW....WWWWWW.",
+  "WWWWWW...WWWWWAA...WWWWWAA",
+  ".AA.AA...WWWWWAA...WWWWWAA",
+  ".AA.AA...WWWWWW....WWWWWW.",
+  "..........AA.AA.....AA.AA.",
+  "..........AA.AA.....AA.AA."
+ ],
+ "frames": [
+  [
+   "..........................",
+   "..........................",
+   "..........WWWW............",
+   ".WWWW....WWWWWW...........",
+   "WWWWWW...WWWWWAA....WWWW..",
+   "WWWWWAA..WWWWWAA...WWWWWW.",
+   "WWWWWAA..WWWWWW....WWWWWAA",
+   "WWWWWW....AA.AA....WWWWWAA",
+   ".AA.AA....AA.AA....WWWWWW.",
+   ".AA.AA..............AA.AA.",
+   "....................AA.AA."
+  ],
+  [
+   "..........................",
+   "..........................",
+   "....................WWWW..",
+   "..........WWWW.....WWWWWW.",
+   ".WWWW....WWWWWW....WWWWWAA",
+   "WWWWWW...WWWWWAA...WWWWWAA",
+   "WWWWWAA..WWWWWAA...WWWWWW.",
+   "WWWWWAA..WWWWWW.....AA.AA.",
+   "WWWWWW....AA.AA.....AA.AA.",
+   ".AA.AA....AA.AA...........",
+   ".AA.AA...................."
+  ],
+  [
+   "..........................",
+   "..........................",
+   "..........................",
+   "....................WWWW..",
+   ".WWWW.....WWWW.....WWWWWW.",
+   "WWWWWW...WWWWWW....WWWWWAA",
+   "WWWWWAA..WWWWWAA...WWWWWAA",
+   "WWWWWAA..WWWWWAA...WWWWWW.",
+   "WWWWWW...WWWWWW.....AA.AA.",
+   ".AA.AA....AA.AA.....AA.AA.",
+   ".AA.AA....AA.AA..........."
+  ]
+ ]
+}

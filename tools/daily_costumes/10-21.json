@@ -1,0 +1,57 @@
+{
+ "date": "10-21",
+ "name": "red_apple",
+ "title": "Apple Day",
+ "theme": "a big red apple on his head with a stem and a green leaf that twitches",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..............",
+  "......D..NN...",
+  "......DNNNN...",
+  "......DNNN....",
+  "..RRRDDDRRRR..",
+  ".RRRRRRRRRRRR.",
+  "RRWWRRRRRRRRRR",
+  "RRWWRRRRRRRRRR",
+  "RRRRRRRRRRRRRR",
+  "RRRRRRRRRRRRRR",
+  ".RRRRRRRRRRRR.",
+  "..RRRRRRRRRR.."
+ ],
+ "frames": [
+  [
+   ".......NN.....",
+   "......DNNNN...",
+   "......D.NNN...",
+   "......D.......",
+   "..RRRDDDRRRR..",
+   ".RRRRRRRRRRRR.",
+   "RRRWWRRRRRRRRR",
+   "RRRWWRRRRRRRRR",
+   "RRRRRRRRRRRRRR",
+   "RRRRRRRRRRRRRR",
+   ".RRRRRRRRRRRR.",
+   "..RRRRRRRRRR.."
+  ],
+  [
+   ".........NN...",
+   "......DNNNN...",
+   "......DNNN....",
+   "......D.......",
+   "..RRRDDDRRRR..",
+   ".RRRRRRRRRRRR.",
+   "RRWWRRRRRRRRRR",
+   "RRWWRRRRRRRRRR",
+   "RRRRRRRRRRRRRR",
+   "RRRRRRRRRRRRRR",
+   ".RRRRRRRRRRRR.",
+   "..RRRRRRRRRR.."
+  ]
+ ]
+}

@@ -1,0 +1,27 @@
+{
+  "date": "10-05",
+  "name": "ear_pencil",
+  "title": "World Teachers' Day",
+  "theme": "a big yellow pencil with pink eraser, silver ferrule and graphite tip lying across his head; it wobbles",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    11,
+    3
+  ],
+  "layer": "over",
+  "pattern": [
+    "MMMSGGGGGGG...........",
+    "MMMSDDDDDDDGGGGGGWW...",
+    "MMMSGGGGGGGDDDDDDWWWDD",
+    "...........GGGGGGWW..."
+  ],
+  "frames": [
+    [
+      "......................",
+      "MMMSGGGGGGGGGGGGGWW...",
+      "MMMSDDDDDDDDDDDDDWWWDD",
+      "MMMSGGGGGGGGGGGGGWW..."
+    ]
+  ]
+}

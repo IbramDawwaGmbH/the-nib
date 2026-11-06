@@ -1,0 +1,71 @@
+{
+  "date": "11-21",
+  "name": "retro_tv",
+  "title": "World Television Day",
+  "theme": "a little grey television with a teal screen full of flickering static and two twinkling rabbit-ear antennae",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    9,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "......W....S......",
+    ".......S..S.......",
+    "........SS........",
+    "KKKKKKKKKKKKKKKKKK",
+    "KKTTTTTTTTTTKKKKKK",
+    "KKTWTTWTTTTTKKAAKK",
+    "KKTTTTTTTWTTKKAAKK",
+    "KKTTTTTTTTWTKKKKKK",
+    "KKTTWTTTTTTTKKAAKK",
+    "KKTTTTTTWTTTKKAAKK",
+    "KKKKKKKKKKKKKKKKKK",
+    "KKKKKKKKKKKKKKKKKK"
+  ],
+  "frames": [
+    [
+      "......S....W......",
+      ".......S..S.......",
+      "........SS........",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKTTTWTTTTTTKKKKKK",
+      "KKTTTTTTTTWTKKAAKK",
+      "KKWTTTTTTTTTKKAAKK",
+      "KKTTTTTWTTTTKKKKKK",
+      "KKTTTTTTTWTTKKAAKK",
+      "KKTWTTTTTTTTKKAAKK",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKKKKKKKKKKKKKKKKK"
+    ],
+    [
+      "......W....S......",
+      ".......S..S.......",
+      "........SS........",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKTTWTTTTTTTKKKKKK",
+      "KKTTTTTTWTTTKKAAKK",
+      "KKTTTWTTTTTTKKAAKK",
+      "KKTTTTTTTTTTKKKKKK",
+      "KKWTTTTTTTTWKKAAKK",
+      "KKTTTTWTTTTTKKAAKK",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKKKKKKKKKKKKKKKKK"
+    ],
+    [
+      "......S....W......",
+      ".......S..S.......",
+      "........SS........",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKTTTTTTTWTTKKKKKK",
+      "KKWTTTTTTTTTKKAAKK",
+      "KKTTTTWTTTTTKKAAKK",
+      "KKTWTTTTTTTTKKKKKK",
+      "KKTTTTTWTTTTKKAAKK",
+      "KKTTTTTTTTWTKKAAKK",
+      "KKKKKKKKKKKKKKKKKK",
+      "KKKKKKKKKKKKKKKKKK"
+    ]
+  ]
+}

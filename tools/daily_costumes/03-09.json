@@ -1,0 +1,71 @@
+{
+ "date": "03-09",
+ "name": "nest_eggs",
+ "title": "Birdwatching",
+ "theme": "a brown twig nest on his head holding three blue speckled eggs; the middle egg cracks, a gold beak pokes out, then it wobbles shut",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..BBB...BBB...BBB...",
+  ".BBBBB.BBBBB.BBBBB..",
+  ".BTTBB.BBWBB.BTTBB..",
+  ".BBBBB.BWBBB.BBBBB..",
+  ".BBTTB.BBBBB.BBTTB..",
+  "OOOOOOOOOOOOOOOOOOOO",
+  "OODDDOOODDDOOODDDOOO",
+  "OOOOOOOOOOOOOOOOOOOO",
+  "OOOOODDDOOODDDOODDDO",
+  ".OOOOOOOOOOOOOOOOOO.",
+  "..OODDDOOODDDOOOOO..",
+  "....OOOOOOOOOOOO...."
+ ],
+ "frames": [
+  [
+   "..BBB...BBB...BBB...",
+   ".BBBBB.BBWBB.BBBBB..",
+   ".BTTBB.BWWBB.BTTBB..",
+   ".BBBBB.BBWWB.BBBBB..",
+   ".BBTTB.BWBBB.BBTTB..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OODDDOOODDDOOODDDOOO",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OOOOODDDOOODDDOODDDO",
+   ".OOOOOOOOOOOOOOOOOO.",
+   "..OODDDOOODDDOOOOO..",
+   "....OOOOOOOOOOOO...."
+  ],
+  [
+   "..BBB....BBB..BBB...",
+   ".BBBBB.BWGGB.BBBBB..",
+   ".BTTBB.BWGWB.BTTBB..",
+   ".BBBBB.BBWBB.BBBBB..",
+   ".BBTTB.BBBBB.BBTTB..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OODDDOOODDDOOODDDOOO",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OOOOODDDOOODDDOODDDO",
+   ".OOOOOOOOOOOOOOOOOO.",
+   "..OODDDOOODDDOOOOO..",
+   "....OOOOOOOOOOOO...."
+  ],
+  [
+   "..BBB..BBB....BBB...",
+   ".BBBBBBBBBB..BBBBB..",
+   ".BTTBBBBWBB..BTTBB..",
+   ".BBBBBBBWBB..BBBBB..",
+   ".BBTTBBBBBB..BBTTB..",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OODDDOOODDDOOODDDOOO",
+   "OOOOOOOOOOOOOOOOOOOO",
+   "OOOOODDDOOODDDOODDDO",
+   ".OOOOOOOOOOOOOOOOOO.",
+   "..OODDDOOODDDOOOOO..",
+   "....OOOOOOOOOOOO...."
+  ]
+ ]
+}

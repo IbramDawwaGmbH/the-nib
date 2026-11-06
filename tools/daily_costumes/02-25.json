@@ -1,0 +1,57 @@
+{
+  "date": "02-25",
+  "name": "clam_shell_hat",
+  "title": "Clam Chowder Day",
+  "theme": "a ridged grey clam shell with a silver hinge on his head; the top half lifts to show pink inside and a white steam wisp escapes",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    10,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "....................",
+    "....................",
+    ".....KKKKKKKKKK.....",
+    "...KDKKKKDDKKKKDK...",
+    "..KKDKKKKDDKKKKDKK..",
+    ".KKKDKKKKDDKKKKDKKK.",
+    "KKKKDKKKKDDKKKKDKKKK",
+    ".DDDDDDDDDDDDDDDDDD.",
+    "KKKKDKKKKDDKKKKDKKKK",
+    ".KKKDKKKKDDKKKKDKKK.",
+    "...KKKKKSSSSKKKKK...",
+    ".....KKKSSSSKKK....."
+  ],
+  "frames": [
+    [
+      ".....KKKKKKKKKK.....",
+      "...KDKKKKDDKKKKDKWW.",
+      "..KKDKKKKDDKKKKDKK..",
+      ".KKKDKKKKDDKKKKDKKK.",
+      "KKKKDKKKKDDKKKKDKKKK",
+      ".MMMMMMMMMMMMMMMMMM.",
+      ".MMMMMMMMMMMMMMMMMM.",
+      ".DDDDDDDDDDDDDDDDDD.",
+      "KKKKDKKKKDDKKKKDKKKK",
+      ".KKKDKKKKDDKKKKDKKK.",
+      "...KKKKKSSSSKKKKK...",
+      ".....KKKSSSSKKK....."
+    ],
+    [
+      ".....KKKKKKKKKK...WW",
+      "...KDKKKKDDKKKKDKWW.",
+      "..KKDKKKKDDKKKKDKKWW",
+      ".KKKDKKKKDDKKKKDKKK.",
+      "KKKKDKKKKDDKKKKDKKKK",
+      ".MMMMMMMMMMMMMMMMMM.",
+      ".MMMMMMMMMMMMMMMMMM.",
+      ".DDDDDDDDDDDDDDDDDD.",
+      "KKKKDKKKKDDKKKKDKKKK",
+      ".KKKDKKKKDDKKKKDKKK.",
+      "...KKKKKSSSSKKKKK...",
+      ".....KKKSSSSKKK....."
+    ]
+  ]
+}

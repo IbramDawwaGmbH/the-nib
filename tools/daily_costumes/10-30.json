@@ -1,0 +1,48 @@
+{
+ "date": "10-30",
+ "name": "mummy_wrap",
+ "title": "Mummy Wrap",
+ "theme": "white mummy bandages wound across his eyes with dark gaps where he peers out and a loose strip end dangling at the left; the end flutters",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  15,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....WWWWWWWWWWWWWWWWWWWW",
+  ".....WWWWWWWWWWWWWWWWWWWW",
+  ".....WWAAAAAKKKKKKAAAAAKK",
+  "......WAAAAAWWWKKKAAAAAKK",
+  "......WWWWWWWWWWWWWWWWWWW",
+  ".......KKKKKKKKWWWWWWWWWW",
+  ".WWWWWWWWWWWWWWKKKKKKKKKK",
+  ".WWWWWWWWWWWWWWWWWWWWWWWW",
+  "........................."
+ ],
+ "frames": [
+  [
+   ".....WWWWWWWWWWWWWWWWWWWW",
+   ".....WWWWWWWWWWWWWWWWWWWW",
+   ".....WWAAAAAKKKKKKAAAAAKK",
+   "......KAAAAAKKKKKKAAAAAKK",
+   "......WAAAAAWWWKKKAAAAAKK",
+   "......WWWWWWWWWWWWWWWWWWW",
+   "......WWWWWWWWWWWWWWWWWWW",
+   ".WWWW.WWWWWWWWWWWWWWWWWWW",
+   ".WWWW...................."
+  ],
+  [
+   ".....WWWWWWWWWWWWWWWWWWWW",
+   ".....WWWWWWWWWWWWWWWWWWWW",
+   ".....WWAAAAAKKKKKKAAAAAKK",
+   "......WAAAAAWWWKKKAAAAAKK",
+   "......WWWWWWWWWWWWWWWWWWW",
+   ".......KKKKKKKKWWWWWWWWWW",
+   ".....WWWWWWWWWWKKKKKKKKKK",
+   "WWWWWWWWWWWWWWWWWWWWWWWWW",
+   "WWWW....................."
+  ]
+ ]
+}

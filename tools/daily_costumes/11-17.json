@@ -1,0 +1,69 @@
+{
+ "date": "11-17",
+ "name": "yarn_ball",
+ "title": "Knitting Day",
+ "theme": "a blue ball of yarn with crossed silver knitting needles tipped in gold, and a loose strand trailing down the side",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........BBBBBBBB.........",
+  "GG....BBBBBBBBBBBB....GG.",
+  "GGSS.BBBBBBBBBBBBBB.SSGG.",
+  "....SSBBBBBBBBBBBBSS.....",
+  "....BDSSBBBBBBBBSSDB.....",
+  "....BBBDSSDBBDSSDBBB.....",
+  "....BBBBBBSSSSBBBBBB.....",
+  "....BBBDDDSSSSDDDBBB.....",
+  "....BDDBSSBBBBSSBDDB.....",
+  ".....BSSBBBBBBBBSSB.B....",
+  "......BBBBBBBBBBBB...B...",
+  "........BBBBBBBB......B..",
+  ".......................B.",
+  ".......................B.",
+  ".......................B.",
+  ".......................B."
+ ],
+ "frames": [
+  [
+   "........BBBBBBBB.........",
+   "WW....BBBBBBBBBBBB....GG.",
+   "WWSS.BBBBBBBBBBBBBB.SSGG.",
+   "....SSBBBBBBBBBBBBSS.....",
+   "....BDSSBBBBBBBBSSDB.....",
+   "....BBBDSSDBBDSSDBBB.....",
+   "....BBBBBBSSSSBBBBBB.....",
+   "....BBBDDDSSSSDDDBBB.....",
+   "....BDDBSSBBBBSSBDDB.....",
+   ".....BSSBBBBBBBBSSB.B....",
+   "......BBBBBBBBBBBB...B...",
+   "........BBBBBBBB......B..",
+   ".......................B.",
+   "........................B",
+   "........................B",
+   "........................B"
+  ],
+  [
+   "........BBBBBBBB.........",
+   "GG....BBBBBBBBBBBB....WW.",
+   "GGSS.BBBBBBBBBBBBBB.SSWW.",
+   "....SSBBBBBBBBBBBBSS.....",
+   "....BDSSBBBBBBBBSSDB.....",
+   "....BBBDSSDBBDSSDBBB.....",
+   "....BBBBBBSSSSBBBBBB.....",
+   "....BBBDDDSSSSDDDBBB.....",
+   "....BDDBSSBBBBSSBDDB.....",
+   ".....BSSBBBBBBBBSSB.B....",
+   "......BBBBBBBBBBBB...B...",
+   "........BBBBBBBB......B..",
+   ".......................B.",
+   "......................B..",
+   "......................B..",
+   "......................B.."
+  ]
+ ]
+}

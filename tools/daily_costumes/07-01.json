@@ -1,0 +1,51 @@
+{
+ "date": "07-01",
+ "name": "rubber_chicken",
+ "title": "International Joke Day",
+ "theme": "a floppy gold rubber chicken slung round his neck, a rounded head with a red comb on top, a red beak pointing left and a dark eye hanging on the left, legs dangling on the right, dark wing seam; the head swings and the legs kick alternately",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  22,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".............GGGGGGGGGGGGGGGG....",
+  "...........GGGGGGDDGGGGGGGGGGGG..",
+  ".....RRR...GGGGGGGGDDGGGGGGGGGG..",
+  ".....RRR.GGGGGGGGGGGGGGGGGGGGGG..",
+  "....GGGGGGG.............GG....GG.",
+  "...GGGGGG...............GG....GG.",
+  ".RRGGDGGG...............GG...GGGG",
+  ".RRGGGGGG...............GG...GGGG",
+  "...GGGGGG..............GGGG......",
+  "....GGGG...............GGGG......"
+ ],
+ "frames": [
+  [
+   ".............GGGGGGGGGGGGGGGG....",
+   "...........GGGGGGDDGGGGGGGGGGGG..",
+   "....RRR....GGGGGGGGDDGGGGGGGGGG..",
+   "....RRR.GGGGGGGGGGGGGGGGGGGGGGG..",
+   "...GGGGGGGG.............GG....GG.",
+   "..GGGGGG................GG....GG.",
+   "RRGGDGGG................GG....GG.",
+   "RRGGGGGG...............GGGG..GGGG",
+   "..GGGGGG...............GGGG..GGGG",
+   "...GGGG.........................."
+  ],
+  [
+   ".............GGGGGGGGGGGGGGGG....",
+   "...........GGGGGGDDGGGGGGGGGGGG..",
+   "......RRR..GGGGGGGGDDGGGGGGGGGG..",
+   "......RRR.GGGGGGGGGGGGGGGGGGGGG..",
+   ".....GGGGGG.............GG....GG.",
+   "....GGGGGG..............GG....GG.",
+   "..RRGGDGGG.............GGGG...GG.",
+   "..RRGGGGGG.............GGGG...GG.",
+   "....GGGGGG...................GGGG",
+   ".....GGGG....................GGGG"
+  ]
+ ]
+}

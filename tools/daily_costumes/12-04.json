@@ -1,0 +1,51 @@
+{
+ "date": "12-04",
+ "name": "gingerbread_cookie",
+ "title": "Cookie Day",
+ "theme": "a flat gingerbread cookie worn like a beret, white icing zigzag, three candy dots that twinkle white in turn, one bite scallop",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "....OOOOOOOOOOOO....",
+  "..OOORROOGGOORROO...",
+  ".OOOORROOGGOORRO....",
+  "OOOOOOOOOOOOOOOOO...",
+  "OOWWOOWWOOWWOOWWOOOO",
+  "OOOOWWOOWWOOWWOOWWOO",
+  "..OOOOOOOOOOOOOOOO.."
+ ],
+ "frames": [
+  [
+   "....OOOOOOOOOOOO....",
+   "..OOOWWOOGGOORROO...",
+   ".OOOOWWOOGGOORRO....",
+   "OOOOOOOOOOOOOOOOO...",
+   "OOWWOOWWOOWWOOWWOOOO",
+   "OOOOWWOOWWOOWWOOWWOO",
+   "..OOOOOOOOOOOOOOOO.."
+  ],
+  [
+   "....OOOOOOOOOOOO....",
+   "..OOORROOWWOORROO...",
+   ".OOOORROOWWOORRO....",
+   "OOOOOOOOOOOOOOOOO...",
+   "OOWWOOWWOOWWOOWWOOOO",
+   "OOOOWWOOWWOOWWOOWWOO",
+   "..OOOOOOOOOOOOOOOO.."
+  ],
+  [
+   "....OOOOOOOOOOOO....",
+   "..OOORROOGGOOWWOO...",
+   ".OOOORROOGGOOWWO....",
+   "OOOOOOOOOOOOOOOOO...",
+   "OOWWOOWWOOWWOOWWOOOO",
+   "OOOOWWOOWWOOWWOOWWOO",
+   "..OOOOOOOOOOOOOOOO.."
+  ]
+ ]
+}

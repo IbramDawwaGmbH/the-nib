@@ -1,0 +1,59 @@
+{
+ "date": "09-25",
+ "name": "lobster_claws",
+ "title": "Lobster Day",
+ "theme": "two big red lobster claws with white tips at his sides, joined by a thin red strap across his chest; the pincer jaws snap open and shut in turn",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  18,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "WWRRR............................RRRWW",
+  "RRRRRRR........................RRRRRRR",
+  "RRRDDRRR......................RRRDDRRR",
+  "....RRRR......................RRRRRRRR",
+  "....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDDDD",
+  "....RRRRDDDDDDDDDDDDDDDDDDDDDDRRRRRRRR",
+  "RRRDDRRR......................RRRDDRRR",
+  "RRRRRRR........................RRRRRRR",
+  "WWRRR............................RRRWW"
+ ],
+ "frames": [
+  [
+   "WWRRR............................RRRWW",
+   "RRRRRRR........................RRRRRRR",
+   "RRRDDRRR......................RRRDDRRR",
+   "RRRRRRRR......................RRRRRRRR",
+   "DDDDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRDDDD",
+   "RRRRRRRRDDDDDDDDDDDDDDDDDDDDDDRRRRRRRR",
+   "RRRDDRRR......................RRRDDRRR",
+   "RRRRRRR........................RRRRRRR",
+   "WWRRR............................RRRWW"
+  ],
+  [
+   "WWRRR............................RRRWW",
+   "RRRRRRR........................RRRRRRR",
+   "RRRDDRRR......................RRRDDRRR",
+   "RRRRRRRR......................RRRR....",
+   "DDDDRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....",
+   "RRRRRRRRDDDDDDDDDDDDDDDDDDDDDDRRRR....",
+   "RRRDDRRR......................RRRDDRRR",
+   "RRRRRRR........................RRRRRRR",
+   "WWRRR............................RRRWW"
+  ],
+  [
+   "WWRRR............................RRRWW",
+   "RRRRRRR........................RRRRRRR",
+   "RRRDDRRR......................RRRDDRRR",
+   "....RRRR......................RRRR....",
+   "....RRRRRRRRRRRRRRRRRRRRRRRRRRRRRR....",
+   "....RRRRDDDDDDDDDDDDDDDDDDDDDDRRRR....",
+   "RRRDDRRR......................RRRDDRRR",
+   "RRRRRRR........................RRRRRRR",
+   "WWRRR............................RRRWW"
+  ]
+ ]
+}

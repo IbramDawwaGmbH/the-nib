@@ -1,0 +1,75 @@
+{
+ "date": "10-28",
+ "name": "film_reel",
+ "title": "Animation Day",
+ "theme": "a charcoal film reel with a silver rim and five white holes standing on edge on his head, a strip of film trailing off to the side; the reel spins",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  6,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "....SSSSS...........",
+  "..SSSAAASSS.........",
+  ".SSAAAAAAASS........",
+  ".SAAAAWWAAAS........",
+  "SSAAAAWWAAASS.......",
+  "SAAWWAAAAWWAS.......",
+  "SAAWWASSAWWAS.......",
+  "SAAAAASSAAAAS.......",
+  "SSAAAAAAAAASS.......",
+  ".SAAWWAAWWAS........",
+  ".SSAWWAAWWSS........",
+  "..SSSAAASAWAWAWAWAWA",
+  "....SSSSSAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "....SSSSS...........",
+   "..SSSAAASSS.........",
+   ".SSAAAAAAASS........",
+   ".SAAAAAWWAAS........",
+   "SSAWWAAWWAASS.......",
+   "SAAWWAAAAAAAS.......",
+   "SAAAAASSAWWAS.......",
+   "SAAAAASSAWWAS.......",
+   "SSAWWAAAAAASS.......",
+   ".SAWWAAWWAAS........",
+   ".SSAAAAWWASS........",
+   "..SSSAAASAAWAWAWAWAW",
+   "....SSSSSAAAAAAAAAAA"
+  ],
+  [
+   "....SSSSS...........",
+   "..SSSAAASSS.........",
+   ".SSAAAAAAASS........",
+   ".SAAWWAAWWAS........",
+   "SSAAWWAAWWASS.......",
+   "SAAAAAAAAAAAS.......",
+   "SAAAAASSAAAAS.......",
+   "SAAWWASSAWWAS.......",
+   "SSAWWAAAAWWSS.......",
+   ".SAAAAWWAAAS........",
+   ".SSAAAWWAASS........",
+   "..SSSAAASAWAWAWAWAWA",
+   "....SSSSSAAAAAAAAAAA"
+  ],
+  [
+   "....SSSSS...........",
+   "..SSSAAASSS.........",
+   ".SSAAAAAAASS........",
+   ".SAAAWWAAAAS........",
+   "SSAAAWWAAWWSS.......",
+   "SAAAAAAAAWWAS.......",
+   "SAAWWASSAAAAS.......",
+   "SAAWWASSAAAAS.......",
+   "SSAAAAAAAWWSS.......",
+   ".SAAAWWAAWWS........",
+   ".SSAAWWAAASS........",
+   "..SSSAAASAAWAWAWAWAW",
+   "....SSSSSAAAAAAAAAAA"
+  ]
+ ]
+}

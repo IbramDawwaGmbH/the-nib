@@ -1,0 +1,54 @@
+{
+ "date": "01-23",
+ "name": "pen_lanyard",
+ "title": "Handwriting Day",
+ "theme": "a blue lanyard holds a gold fountain pen that swings and drips a bead of ink",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  5,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".BB.....BB.",
+  "..BB...BB..",
+  "...BBBBB...",
+  "...GGG.....",
+  "...GDD.....",
+  "...GGD.....",
+  "...GGG.....",
+  "...GGG.....",
+  "...SSS.....",
+  "....S......",
+  "..........."
+ ],
+ "frames": [
+  [
+   ".BB.....BB.",
+   "..BB...BB..",
+   "...BBBBB...",
+   "....GGG....",
+   "....GDD....",
+   "....GGD....",
+   "....GGG....",
+   "....GGG....",
+   "....SSS....",
+   ".....S.....",
+   ".....B....."
+  ],
+  [
+   ".BB.....BB.",
+   "..BB...BB..",
+   "...BBBBB...",
+   ".....GGG...",
+   ".....GDD...",
+   ".....GGD...",
+   ".....GGG...",
+   ".....GGG...",
+   ".....SSS...",
+   "......S....",
+   "..........."
+  ]
+ ]
+}

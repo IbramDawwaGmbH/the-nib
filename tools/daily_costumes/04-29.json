@@ -1,0 +1,63 @@
+{
+ "date": "04-29",
+ "name": "dance_ribbon",
+ "title": "International Dance Day",
+ "theme": "a dancer's silk ribbon tied at his neck, a pink knot with a pink and a purple tail rippling out to the side",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  3,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "MMMDMMM............",
+  "MMMDMMMMMM...MMM...",
+  "MMMDMMMMMMMMMMMMMMM",
+  "..........MMM...MMM",
+  "...................",
+  "...................",
+  "...................",
+  "...PPP...PPP...PPP.",
+  "...PPPPPPPPPPPPPPP.",
+  "......PPP...PPP...."
+ ],
+ "frames": [
+  [
+   "MMMDMMM............",
+   "MMMDMMM.MMM...MMM..",
+   "MMMDMMMMMMMMMMMMMMM",
+   ".......M...MMM...MM",
+   "...................",
+   "...................",
+   "...................",
+   "....PPP...PPP...PP.",
+   "...PPPPPPPPPPPPPPP.",
+   "...P...PPP...PPP..."
+  ],
+  [
+   "MMMDMMM............",
+   "MMMDMMM..MMM...MMM.",
+   "MMMDMMMMMMMMMMMMMMM",
+   ".......MM...MMM...M",
+   "...................",
+   "...................",
+   "...................",
+   ".....PPP...PPP...P.",
+   "...PPPPPPPPPPPPPPP.",
+   "...PP...PPP...PPP.."
+  ],
+  [
+   "MMMDMMM............",
+   "MMMDMMM...MMM...MMM",
+   "MMMDMMMMMMMMMMMMMMM",
+   ".......MMM...MMM...",
+   "...................",
+   "...................",
+   "...................",
+   "......PPP...PPP....",
+   "...PPPPPPPPPPPPPPP.",
+   "...PPP...PPP...PPP."
+  ]
+ ]
+}

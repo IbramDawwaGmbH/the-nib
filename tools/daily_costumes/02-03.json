@@ -1,0 +1,45 @@
+{
+ "date": "02-03",
+ "name": "robin_perch",
+ "title": "Feed the Birds Day",
+ "theme": "a plump grey robin with a red breast perched on his head, pecking at golden seeds",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....KKKKKKKK.",
+  ".....KAKKKKKK.",
+  "...GGRRRRKKKK.",
+  ".....RRRRKKKKK",
+  ".....RRRRKKKK.",
+  ".....RRRRKKKK.",
+  ".......G..G...",
+  "G.G.G..G..G..."
+ ],
+ "frames": [
+  [
+   "..............",
+   ".....KKKKKKKK.",
+   ".....KAKKKKKK.",
+   "...GGRRRRKKKKK",
+   ".....RRRRKKKK.",
+   ".....RRRRKKKK.",
+   ".....RRRRKKKK.",
+   "G.G.G..G..G..."
+  ],
+  [
+   "..............",
+   "..............",
+   ".....KKKKKKKK.",
+   ".....KAKKKKKK.",
+   "...GGRRRRKKKKK",
+   ".....RRRRKKKK.",
+   ".....RRRRKKKK.",
+   "G...GRRRRKKKK."
+  ]
+ ]
+}

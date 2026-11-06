@@ -1,0 +1,39 @@
+{
+  "date": "11-13",
+  "name": "hug_arms",
+  "title": "World Kindness Day",
+  "theme": "two soft pink cartoon arms wrapping round his tummy from behind, white mitten hands meeting at the front; the arms squeeze tighter and a red heart pops up",
+  "category": "Body",
+  "kind": "body",
+  "anchor": [
+    15,
+    7
+  ],
+  "layer": "over",
+  "pattern": [
+    "...............................",
+    "...............................",
+    "...............................",
+    "...............................",
+    "...............................",
+    "...MMMMMMMDMMMMMMMMMDMMMMMMM...",
+    "MMMMMMMMMMDWWWWDWWWWDMMMMMMMMMM",
+    "MMMMMMMMMMDWWWWDWWWWDMMMMMMMMMM",
+    "MMMMMMMMMMDWWWWDWWWWDMMMMMMMMMM",
+    "...MMMMMMMDMMMMMMMMMDMMMMMMM..."
+  ],
+  "frames": [
+    [
+      ".............WW.WW.............",
+      ".............WWWWW.............",
+      "..............WWW..............",
+      "...............W...............",
+      "...............................",
+      "....MMMMMMDMMMMMMMMMDMMMMMM....",
+      ".MMMMMMMMMDWWWWDWWWWDMMMMMMMMM.",
+      ".MMMMMMMMMDWWWWDWWWWDMMMMMMMMM.",
+      ".MMMMMMMMMDWWWWDWWWWDMMMMMMMMM.",
+      "....MMMMMMDMMMMMMMMMDMMMMMM...."
+    ]
+  ]
+}

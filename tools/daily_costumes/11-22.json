@@ -1,0 +1,47 @@
+{
+  "date": "11-22",
+  "name": "deerstalker",
+  "title": "Detective Day",
+  "theme": "a checked grey detective's cap with a gold bow and ear flaps; the bow and flaps flutter",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    14,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    "..........GGG.GGG...........",
+    "..........GGGDGGG...........",
+    "............GGG.............",
+    "........DKKKDKKKDKKK........",
+    ".....KKKDKKKDKKKDKKKDKK.....",
+    "...DDDDDDDDDDDDDDDDDDDDDD...",
+    "..KKDKKKDKKKDKKKDKKKDKKKDK..",
+    "..KKDKKKDKKKDKKKDKKKDKKKDK..",
+    "KKDDDDDDDDDDDDDDDDDDDDDDDDKK",
+    "KKKKK..................KKKKK",
+    "..KKK..................KKK..",
+    "..KKK..................KKK..",
+    "..KKK..................KKK..",
+    "..KKK..................KKK.."
+  ],
+  "frames": [
+    [
+      ".........GGG...GGG..........",
+      ".........GGGGDGGGG..........",
+      "............GGG.............",
+      "........DKKKDKKKDKKK........",
+      ".....KKKDKKKDKKKDKKKDKK.....",
+      "...DDDDDDDDDDDDDDDDDDDDDD...",
+      "..KKDKKKDKKKDKKKDKKKDKKKDK..",
+      "..KKDKKKDKKKDKKKDKKKDKKKDK..",
+      "KKDDDDDDDDDDDDDDDDDDDDDDDDKK",
+      "KKKKK..................KKKKK",
+      ".KKK....................KKK.",
+      ".KKK....................KKK.",
+      ".KKK....................KKK.",
+      ".KKK....................KKK."
+    ]
+  ]
+}

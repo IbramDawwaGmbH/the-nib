@@ -1,0 +1,83 @@
+{
+  "date": "02-23",
+  "name": "tennis_sweatband",
+  "title": "Play Tennis Day",
+  "theme": "a white terry sweatband with a red stripe across his forehead and a green tennis ball bouncing over his head",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    12,
+    9
+  ],
+  "layer": "over",
+  "pattern": [
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "........................",
+    "..........NNNN..........",
+    ".........NNNNWN.........",
+    ".........NNNWNN.........",
+    ".........NNNWNN.........",
+    ".........NNNNWN.........",
+    "..........NNNN..........",
+    "WWWWWWWWWWWWWWWWWWWWWWWW",
+    "RRRRRRRRRRRRRRRRRRRRRRRR",
+    "WWWWWWWWWWWWWWWWWWWWWWWW"
+  ],
+  "frames": [
+    [
+      "........................",
+      "........................",
+      "..........NNNN..........",
+      ".........NNNWNN.........",
+      ".........NNWNNN.........",
+      ".........NNWNNN.........",
+      ".........NNNWNN.........",
+      "..........NNNN..........",
+      "........................",
+      "........................",
+      "........................",
+      "........................",
+      "WWWWWWWWWWWWWWWWWWWWWWWW",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "WWWWWWWWWWWWWWWWWWWWWWWW"
+    ],
+    [
+      "..........NNNN..........",
+      ".........NNNNWN.........",
+      ".........NNNWNN.........",
+      ".........NNNWNN.........",
+      ".........NNNNWN.........",
+      "..........NNNN..........",
+      "........................",
+      "........................",
+      "........................",
+      "........................",
+      "........................",
+      "........................",
+      "WWWWWWWWWWWWWWWWWWWWWWWW",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "WWWWWWWWWWWWWWWWWWWWWWWW"
+    ],
+    [
+      "........................",
+      "........................",
+      "..........NNNN..........",
+      ".........NNNNNN.........",
+      ".........NNNNWN.........",
+      ".........NNNWNN.........",
+      ".........NNNWNN.........",
+      "..........NNNW..........",
+      "........................",
+      "........................",
+      "........................",
+      "........................",
+      "WWWWWWWWWWWWWWWWWWWWWWWW",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "WWWWWWWWWWWWWWWWWWWWWWWW"
+    ]
+  ]
+}

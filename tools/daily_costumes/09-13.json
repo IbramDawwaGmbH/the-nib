@@ -1,0 +1,54 @@
+{
+ "date": "09-13",
+ "name": "fortune_cookie_cap",
+ "title": "Fortune Cookie Day",
+ "theme": "a gold fortune cookie worn as a hat, a white paper slip fluttering from its fold",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........WWW.........",
+  ".........WWW.........",
+  ".GG......WWW......GG.",
+  ".GGG.....WWW.....GGG.",
+  "..GGGG...WWW...GGGG..",
+  "...GGGGG.DDD.GGGGG...",
+  "....GGGGGDDDGGGGG....",
+  ".....GGGGGGGGGGG.....",
+  "......GGGGGGGGG......",
+  ".......GGGGGGG.......",
+  "........GGGGG........"
+ ],
+ "frames": [
+  [
+   ".......WWW...........",
+   "........WWW..........",
+   ".GG......WWW......GG.",
+   ".GGG.....WWW.....GGG.",
+   "..GGGG...WWW...GGGG..",
+   "...GGGGG.DDD.GGGGG...",
+   "....GGGGGDDDGGGGG....",
+   ".....GGGGGGGGGGG.....",
+   "......GGGGGGGGG......",
+   ".......GGGGGGG.......",
+   "........GGGGG........"
+  ],
+  [
+   "...........WWW.......",
+   "..........WWW........",
+   ".GG......WWW......GG.",
+   ".GGG.....WWW.....GGG.",
+   "..GGGG...WWW...GGGG..",
+   "...GGGGG.DDD.GGGGG...",
+   "....GGGGGDDDGGGGG....",
+   ".....GGGGGGGGGGG.....",
+   "......GGGGGGGGG......",
+   ".......GGGGGGG.......",
+   "........GGGGG........"
+  ]
+ ]
+}

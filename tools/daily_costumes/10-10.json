@@ -1,0 +1,71 @@
+{
+ "date": "10-10",
+ "name": "sunbreak_cloud",
+ "title": "Mental Health Day",
+ "theme": "a soft white cloud with a gold sun rising from behind it on the right, grey underside seam; the sun rises a row per frame and its rays appear one at a time",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "........................",
+  "........................",
+  "....WWWWWWW....GGGGGG...",
+  "...WWWWWWWWWW.GGGGGGGG..",
+  "...WWWWWWWWWWWWWWWWWW...",
+  "..WWWWWWWWWWWWWWWWWWWW..",
+  "..WWWWWWWWWWWWWWWWWWWW..",
+  "..WWWWWWWWWWWWWWWWWWWW..",
+  "...KKKKKKKKKKKKKKKKKK...",
+  ".....WWWWWWWWWWWWWW....."
+ ],
+ "frames": [
+  [
+   "........................",
+   "........................",
+   ".................GG.....",
+   "...............GGGGGG...",
+   "....WWWWWWW...GGGGGGGG..",
+   "...WWWWWWWWWWGGGGGGGGGG.",
+   "...WWWWWWWWWWWWWWWWWW...",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "...KKKKKKKKKKKKKKKKKK...",
+   ".....WWWWWWWWWWWWWW....."
+  ],
+  [
+   "........................",
+   ".................GG.....",
+   "...............GGGGGG...",
+   "............GGGGGGGGGG..",
+   "....WWWWWWW..GGGGGGGGGG.",
+   "...WWWWWWWWWWGGGGGGGGGG.",
+   "...WWWWWWWWWWWWWWWWWW...",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "...KKKKKKKKKKKKKKKKKK...",
+   ".....WWWWWWWWWWWWWW....."
+  ],
+  [
+   ".................GG.....",
+   "...............GGGGGG...",
+   "............GGGGGGGGGGGG",
+   ".............GGGGGGGGGG.",
+   "....WWWWWWW..GGGGGGGGGG.",
+   "...WWWWWWWWWWGGGGGGGGGG.",
+   "...WWWWWWWWWWWWWWWWWW...",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "..WWWWWWWWWWWWWWWWWWWW..",
+   "...KKKKKKKKKKKKKKKKKK...",
+   ".....WWWWWWWWWWWWWW....."
+  ]
+ ]
+}

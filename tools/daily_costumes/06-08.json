@@ -1,0 +1,54 @@
+{
+ "date": "06-08",
+ "name": "coral_crown",
+ "title": "World Oceans Day",
+ "theme": "a crown of branching coral in pink and purple with dark seams and a small gold fish; the fish swims from branch to branch and a white bubble rises",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "........MM....MM........",
+  "........MM....MM........",
+  "..PP..WWMM....MM....PP..",
+  "..PP..WWMM....MMMM..PP..",
+  "MMPP..MMMM....MMMM..PPMM",
+  "MMPP..MMMM....MM....PPMM",
+  "..PP.GGGMM....MM....PP..",
+  "..PPGGGGMM....MM....PP..",
+  "DDDDDDDDDDDDDDDDDDDDDDDD",
+  "PPPPPPPPPPPPPPPPPPPPPPPP",
+  "MMMMMMMMMMMMMMMMMMMMMMMM"
+ ],
+ "frames": [
+  [
+   "........MM....MM........",
+   "........MM....MM........",
+   "..PP....MM....MM....PP..",
+   "..PP....MM..WWMMMM..PP..",
+   "MMPP..MMMM..WWMMMM..PPMM",
+   "MMPP..MMMM.GGGMM....PPMM",
+   "..PP....MMGGGGMM....PP..",
+   "..PP....MMMMMMMM....PP..",
+   "DDDDDDDDDDDDDDDDDDDDDDDD",
+   "PPPPPPPPPPPPPPPPPPPPPPPP",
+   "MMMMMMMMMMMMMMMMMMMMMMMM"
+  ],
+  [
+   "........MM....MM........",
+   "........MM....MMWW......",
+   "..PP....MM....MMWW..PP..",
+   "..PP....MM....MMMM..PP..",
+   "MMPP..MMMM....MMMM..PPMM",
+   "MMPP..MMMM....MM....PPMM",
+   "..PP....MM....MM.GGGPP..",
+   "..PP....MM....MMGGGGPP..",
+   "DDDDDDDDDDDDDDDDDDDDDDDD",
+   "PPPPPPPPPPPPPPPPPPPPPPPP",
+   "MMMMMMMMMMMMMMMMMMMMMMMM"
+  ]
+ ]
+}

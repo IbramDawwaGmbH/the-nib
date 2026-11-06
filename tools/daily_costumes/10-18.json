@@ -1,0 +1,54 @@
+{
+ "date": "10-18",
+ "name": "knitted_mittens",
+ "title": "Mitten Weather",
+ "theme": "a pair of red knitted mittens with white cuffs hanging from a grey string round his neck; they swing apart and together like a pendulum",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  15,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....KKKKKKKKKKKKKKKKKKKKKK....",
+  "....KK..................KK....",
+  "....KK..................KK....",
+  "..WWWWWWW............WWWWWWW..",
+  "..WWWWWWW............WWWWWWW..",
+  "RRRRRRRRR............RRRRRRRRR",
+  "RRRRRRRRR............RRRRRRRRR",
+  "..RDRDRDR............RDRDRDR..",
+  "...RRRRR..............RRRRR...",
+  "....RRR................RRR....",
+  ".............................."
+ ],
+ "frames": [
+  [
+   ".......KKKKKKKKKKKKKKKK.......",
+   ".......KK............KK.......",
+   ".......KK............KK.......",
+   ".....WWWWWWW......WWWWWWW.....",
+   ".....WWWWWWW......WWWWWWW.....",
+   "...RRRRRRRRR......RRRRRRRRR...",
+   "...RRRRRRRRR......RRRRRRRRR...",
+   ".....RDRDRDR......RDRDRDR.....",
+   "......RRRRR........RRRRR......",
+   ".......RRR..........RRR.......",
+   ".............................."
+  ],
+  [
+   ".........KKKKKKKKKKKK.........",
+   ".........KK........KK.........",
+   ".........KK........KK.........",
+   ".......WWWWWWW..WWWWWWW.......",
+   ".......WWWWWWW..WWWWWWW.......",
+   ".....RRRRRRRRR..RRRRRRRRR.....",
+   ".....RRRRRRRRR..RRRRRRRRR.....",
+   ".......RDRDRDR..RDRDRDR.......",
+   "........RRRRR....RRRRR........",
+   ".........RRR......RRR.........",
+   ".............................."
+  ]
+ ]
+}

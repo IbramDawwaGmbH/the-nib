@@ -1,0 +1,51 @@
+{
+  "date": "11-29",
+  "name": "bolo_tie",
+  "title": "Square Dance Day",
+  "theme": "a western bolo tie: charcoal cords, a silver oval clasp with a teal stone, silver-tipped ends; the cord ends swing and the stone glints",
+  "category": "Neck",
+  "kind": "neck",
+  "anchor": [
+    4,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    "A......A",
+    ".A....A.",
+    ".A....A.",
+    "..SSSS..",
+    ".SSTTSS.",
+    ".SSTTSS.",
+    ".SSTTSS.",
+    ".SSSSSS.",
+    "..SSSS..",
+    "..S..S.."
+  ],
+  "frames": [
+    [
+      "A......A",
+      ".A....A.",
+      ".A....A.",
+      "..SSSS..",
+      ".SSWTSS.",
+      ".SSTTSS.",
+      ".SSTTSS.",
+      ".SSSSSS.",
+      "..SSSS..",
+      ".S..S..."
+    ],
+    [
+      "A......A",
+      ".A....A.",
+      ".A....A.",
+      "..SSSS..",
+      ".SSTTSS.",
+      ".SSTTSS.",
+      ".SSTTSS.",
+      ".SSSSSS.",
+      "..SSSS..",
+      "...S..S."
+    ]
+  ]
+}

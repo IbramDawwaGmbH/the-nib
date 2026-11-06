@@ -1,0 +1,45 @@
+{
+  "date": "02-24",
+  "name": "fogged_specs",
+  "title": "Foggy Glasses Day",
+  "theme": "big round winter spectacles with teal lenses; frost creeps in until they are almost fully misted, then clear again",
+  "category": "Eyes",
+  "kind": "eyes",
+  "anchor": [
+    13,
+    1
+  ],
+  "layer": "over",
+  "pattern": [
+    ".....AAAAA......AAAAA.....",
+    "....AAAAAAA....AAAAAAA....",
+    "...AATTTTTAA..AATTTTTAA...",
+    "AAAAATTTTTAAAAAATTTTTAAAAA",
+    "...AATTTTTAAAAAATTTTTAA...",
+    "...AATTTTTAA..AATTTTTAA...",
+    "....AAAAAAA....AAAAAAA....",
+    ".....AAAAA......AAAAA....."
+  ],
+  "frames": [
+    [
+      ".....AAAAA......AAAAA.....",
+      "....AAAAAAA....AAAAAAA....",
+      "...AATTTTTAA..AATTTTTAA...",
+      "AAAAATTTTTAAAAAATTTTTAAAAA",
+      "...AAWWWWWAAAAAAWWWWWAA...",
+      "...AAWWWWWAA..AAWWWWWAA...",
+      "....AAAAAAA....AAAAAAA....",
+      ".....AAAAA......AAAAA....."
+    ],
+    [
+      ".....AAAAA......AAAAA.....",
+      "....AAAAAAA....AAAAAAA....",
+      "...AATTWWWAA..AATTWWWAA...",
+      "AAAAATTWWWAAAAAATTWWWAAAAA",
+      "...AAWWWWWAAAAAAWWWWWAA...",
+      "...AAWWWWWAA..AAWWWWWAA...",
+      "....AAAAAAA....AAAAAAA....",
+      ".....AAAAA......AAAAA....."
+    ]
+  ]
+}

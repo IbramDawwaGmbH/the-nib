@@ -1,0 +1,57 @@
+{
+ "date": "09-28",
+ "name": "alpine_feather_hat",
+ "title": "Alpine Feather Hat",
+ "theme": "a green felt alpine hat with a dark cord band and a white feather that sways",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....WW................",
+  "....WW................",
+  "....WW................",
+  "....WW.NNNNNNNNNN.....",
+  "...NNWWNNNNNNNNNNNN...",
+  "...NNWWNNNNNNNNNNNN...",
+  "...NNKNNNNNNNNNNNNN...",
+  "...NNKNNNNNNNNNNNNN...",
+  "...NNKNNNNNNNNNNNNN...",
+  "...DDDDDDDDDDDDDDDD...",
+  "NNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNN"
+ ],
+ "frames": [
+  [
+   ".....WW...............",
+   ".....WW...............",
+   ".....WW...............",
+   ".....WWNNNNNNNNNN.....",
+   "...NNWWNNNNNNNNNNNN...",
+   "...NNWWNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...DDDDDDDDDDDDDDDD...",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ],
+  [
+   ".......WW.............",
+   ".......WW.............",
+   ".....WWW..............",
+   ".....WWWNNNNNNNNN.....",
+   "...NNWWNNNNNNNNNNNN...",
+   "...NNWWNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...NNKNNNNNNNNNNNNN...",
+   "...DDDDDDDDDDDDDDDD...",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ]
+ ]
+}

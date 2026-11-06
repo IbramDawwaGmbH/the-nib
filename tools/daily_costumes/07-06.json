@@ -1,0 +1,51 @@
+{
+  "date": "07-06",
+  "name": "kiss_mark",
+  "title": "Kissing Day",
+  "theme": "a pink lipstick kiss print on his forehead with two little red hearts beside it; the lips pulse and the hearts drift up and twinkle",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    11,
+    4
+  ],
+  "layer": "over",
+  "pattern": [
+    "......................",
+    ".R.R..............R.R.",
+    ".RRR..............RRR.",
+    "..R................R..",
+    "......MMMM..MMMM......",
+    ".....MMMMMMMMMMMM.....",
+    ".....MDDDDDDDDDDM.....",
+    "......MMMMMMMMMM......",
+    "......MMMMMMMMMM......",
+    ".......MMMMMMMM......."
+  ],
+  "frames": [
+    [
+      "......................",
+      ".W.W..............W.W.",
+      ".WWW..............WWW.",
+      "..W................W..",
+      "......MMMM..MMMM......",
+      "....MMMMMMMMMMMMMM....",
+      "....MMDDDDDDDDDDMM....",
+      ".....MMMMMMMMMMMM.....",
+      ".....MMMMMMMMMMMM.....",
+      ".......MMMMMMMM......."
+    ],
+    [
+      ".R.R..............R.R.",
+      ".RRR..............RRR.",
+      "..R................R..",
+      "......................",
+      "......MMMM..MMMM......",
+      ".....MMMMMMMMMMMM.....",
+      ".....MDDDDDDDDDDM.....",
+      "......MMMMMMMMMM......",
+      "......MMMMMMMMMM......",
+      ".......MMMMMMMM......."
+    ]
+  ]
+}

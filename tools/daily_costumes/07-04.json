@@ -1,0 +1,39 @@
+{
+ "date": "07-04",
+ "name": "glow_stick_crown",
+ "title": "Summer Night",
+ "theme": "a ring of glow sticks worn as a band: alternating teal and pink segments with dark joints and a white hot spot in each; the segments flash white in turn like chasing lights",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  3
+ ],
+ "layer": "over",
+ "pattern": [
+  "DTTTTDMMMMDTTTTDMMMMDTTTTD",
+  "DWWWWDWWWWDTWWTDMWWMDTWWTD",
+  "DWWWWDWWWWDTTTTDMMMMDTTTTD",
+  "DTTTTDMMMMDTTTTDMMMMDTTTTD"
+ ],
+ "frames": [
+  [
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD",
+   "DTWWTDWWWWDWWWWDMWWMDTWWTD",
+   "DTTTTDWWWWDWWWWDMMMMDTTTTD",
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD"
+  ],
+  [
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD",
+   "DTWWTDMWWMDWWWWDWWWWDTWWTD",
+   "DTTTTDMMMMDWWWWDWWWWDTTTTD",
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD"
+  ],
+  [
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD",
+   "DTWWTDMWWMDTWWTDWWWWDWWWWD",
+   "DTTTTDMMMMDTTTTDWWWWDWWWWD",
+   "DTTTTDMMMMDTTTTDMMMMDTTTTD"
+  ]
+ ]
+}

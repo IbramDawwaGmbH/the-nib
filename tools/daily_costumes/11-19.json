@@ -1,0 +1,57 @@
+{
+  "date": "11-19",
+  "name": "plunger_hat",
+  "title": "World Toilet Day",
+  "theme": "a red rubber plunger stuck on his head; the cup squashes and the handle dips, then it springs back with a glint on the knob",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    9,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "........OO........",
+    ".......OOOO.......",
+    "........OO........",
+    "........OO........",
+    "........OO........",
+    "........OO........",
+    ".....RRROORRR.....",
+    "...RRRRRRRRRRRR...",
+    "..RRRRRRRRRRRRRR..",
+    ".RRRRRRRRRRRRRRRR.",
+    ".RRRRRRRRRRRRRRRR.",
+    ".RRRRRRRRRRRRRRRR."
+  ],
+  "frames": [
+    [
+      "..................",
+      "........OO........",
+      ".......OOOO.......",
+      "........OO........",
+      "........OO........",
+      "........OO........",
+      "........OO........",
+      "....RRRROORRRR....",
+      "..RRRRRRRRRRRRRR..",
+      ".RRRRRRRRRRRRRRRR.",
+      "RRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRR"
+    ],
+    [
+      "........WW........",
+      ".......OOOO.......",
+      "........OO........",
+      "........OO........",
+      "........OO........",
+      "........OO........",
+      ".....RRROORRR.....",
+      "...RRRRRRRRRRRR...",
+      "..RRRRRRRRRRRRRR..",
+      ".RRRRRRRRRRRRRRRR.",
+      ".RRRRRRRRRRRRRRRR.",
+      ".RRRRRRRRRRRRRRRR."
+    ]
+  ]
+}

@@ -1,0 +1,33 @@
+{
+ "date": "12-27",
+ "name": "fruitcake_loaf",
+ "title": "Fruitcake Day",
+ "theme": "a fruitcake slice worn flat on his head: white scalloped icing over dark cake studded with red, green and gold fruit; the fruit shuffles and the icing drips",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  ".WWWWWWWWWWWWWWWWWW.",
+  "WWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWW",
+  "AWWAAWWAAWWAAWWAAWWA",
+  "AWWRAAAAAGAAAAANAAAA",
+  "AAAAAANAAAAARAAAAAGA",
+  "OOOOOOOOOOOOOOOOOOOO"
+ ],
+ "frames": [
+  [
+   ".WWWWWWWWWWWWWWWWWW.",
+   "WWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWW",
+   "AAWWAAWWAAWWAAWWAAWW",
+   "AAWWAAAAARAAAAAGAAAA",
+   "AAWWAAGAAAAANAAAAARA",
+   "OOOOOOOOOOOOOOOOOOOO"
+  ]
+ ]
+}

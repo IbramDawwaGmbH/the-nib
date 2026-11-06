@@ -1,0 +1,51 @@
+{
+  "date": "11-16",
+  "name": "jigsaw_pair",
+  "title": "Day for Tolerance",
+  "theme": "two interlocking jigsaw pieces, teal and gold, hanging on a grey cord under his mouth; they drift apart then click together with a white glint",
+  "category": "Neck",
+  "kind": "neck",
+  "anchor": [
+    10,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    "....KK........KK....",
+    ".....KK......KK.....",
+    ".TTTTTTTT...GGGGGGGG",
+    ".TTTTTTTT...GGGGGGGG",
+    ".TTTTTTTT...GGGGGGGG",
+    ".TTTTTTTTTT...GGGGGG",
+    ".TTTTTTTTTT...GGGGGG",
+    ".TTTTTTTT...GGGGGGGG",
+    ".TTTTTTTT...GGGGGGGG",
+    ".TTTTTTTT...GGGGGGGG"
+  ],
+  "frames": [
+    [
+      "....KK........KK....",
+      ".....KK......KK.....",
+      "TTTTTTTT....GGGGGGGG",
+      "TTTTTTTT....GGGGGGGG",
+      "TTTTTTTT....GGGGGGGG",
+      "TTTTTTTTTT....GGGGGG",
+      "TTTTTTTTTT....GGGGGG",
+      "TTTTTTTT....GGGGGGGG",
+      "TTTTTTTT....GGGGGGGG",
+      "TTTTTTTT....GGGGGGGG"
+    ],
+    [
+      "....KK........KK....",
+      ".....KK......KK.....",
+      "..TTTTTTTTGGGGGGGG..",
+      "..TTTTTTTWWGGGGGGG..",
+      "..TTTTTTTWWGGGGGGG..",
+      "..TTTTTTTTTTGGGGGG..",
+      "..TTTTTTTTTTGGGGGG..",
+      "..TTTTTTTTGGGGGGGG..",
+      "..TTTTTTTTGGGGGGGG..",
+      "..TTTTTTTTGGGGGGGG.."
+    ]
+  ]
+}

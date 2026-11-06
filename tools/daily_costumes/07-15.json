@@ -1,0 +1,71 @@
+{
+ "date": "07-15",
+ "name": "garden_sprinkler",
+ "title": "Sprinkler Day",
+ "theme": "a teal lawn sprinkler head on a grey stem with a fan of blue drops that sweeps left, centre, right, centre while the head turns",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......BB............",
+  "...BB.BB............",
+  "...BB...............",
+  "BB.....BB...........",
+  "BB.....BB...........",
+  ".......TTTT.........",
+  "......TTTTTTTT......",
+  ".....TTTTTTTTTT.....",
+  ".....TTTTTTTTTT.....",
+  ".....DDDDDDDDDD.....",
+  ".........KK.........",
+  ".........KK........."
+ ],
+ "frames": [
+  [
+   ".........BB.........",
+   "....BB...BB...BB....",
+   "....BB........BB....",
+   ".BB..............BB.",
+   ".BB..............BB.",
+   "........TTTT........",
+   "......TTTTTTTT......",
+   ".....TTTTTTTTTT.....",
+   ".....TTTTTTTTTT.....",
+   ".....DDDDDDDDDD.....",
+   ".........KK.........",
+   ".........KK........."
+  ],
+  [
+   "............BB......",
+   "............BB.BB...",
+   "...............BB...",
+   "...........BB.....BB",
+   "...........BB.....BB",
+   ".........TTTT.......",
+   "......TTTTTTTT......",
+   ".....TTTTTTTTTT.....",
+   ".....TTTTTTTTTT.....",
+   ".....DDDDDDDDDD.....",
+   ".........KK.........",
+   ".........KK........."
+  ],
+  [
+   "....................",
+   ".........BB.........",
+   "....BB...BB...BB....",
+   "....BB........BB....",
+   ".BB..............BB.",
+   ".BB.....TTTT.....BB.",
+   "......TTTTTTTT......",
+   ".....TTTTTTTTTT.....",
+   ".....TTTTTTTTTT.....",
+   ".....DDDDDDDDDD.....",
+   ".........KK.........",
+   ".........KK........."
+  ]
+ ]
+}

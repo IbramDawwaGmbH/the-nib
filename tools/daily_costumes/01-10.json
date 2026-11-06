@@ -1,0 +1,54 @@
+{
+ "date": "01-10",
+ "name": "potted_fern",
+ "title": "Houseplant Appreciation",
+ "theme": "A teal flowerpot on his head with green fern fronds spreading out above it; the outer fronds tilt up and down in a draught",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "NN.......NN.........",
+  ".NN......NN.........",
+  "..NN.....NN......NNN",
+  "..NN.....NN.....NN..",
+  "....NN...NN...NN....",
+  "......NNNNNNNN......",
+  "....TTTTTTTTTTTT....",
+  ".....DDDDDDDDDD.....",
+  ".....TTTTTTTTTT.....",
+  ".....TTTTTTTTTT.....",
+  "......TTTTTTTT......"
+ ],
+ "frames": [
+  [
+   ".........NN.........",
+   "NN.......NN.......NN",
+   ".NN......NN......NN.",
+   "..NN.....NN.....NN..",
+   "....NN...NN...NN....",
+   "......NNNNNNNN......",
+   "....TTTTTTTTTTTT....",
+   ".....DDDDDDDDDD.....",
+   ".....TTTTTTTTTT.....",
+   ".....TTTTTTTTTT.....",
+   "......TTTTTTTT......"
+  ],
+  [
+   ".........NN.......NN",
+   ".........NN......NN.",
+   "NNN......NN.....NN..",
+   "..NN.....NN.....NN..",
+   "....NN...NN...NN....",
+   "......NNNNNNNN......",
+   "....TTTTTTTTTTTT....",
+   ".....DDDDDDDDDD.....",
+   ".....TTTTTTTTTT.....",
+   ".....TTTTTTTTTT.....",
+   "......TTTTTTTT......"
+  ]
+ ]
+}

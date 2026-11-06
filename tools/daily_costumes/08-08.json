@@ -1,0 +1,45 @@
+{
+  "date": "08-08",
+  "name": "whisker_mask",
+  "title": "International Cat Day",
+  "theme": "a charcoal cat-face eye mask with gold slit-pupil eyes, pink nose and white whiskers that twitch",
+  "category": "Eyes",
+  "kind": "eyes",
+  "anchor": [
+    14,
+    0
+  ],
+  "layer": "over",
+  "pattern": [
+    ".....AAAAAAAAAAAAAAAAAA.....",
+    "WW..AAAGGGAAAAAAAAGGGAAA..WW",
+    "..WWAAGGAGGAAAAAAGGAGGAAWW..",
+    "....AAGGAGGAAMMAAGGAGGAA....",
+    "WWWWAAGGAGGAAMMAAGGAGGAAWWWW",
+    "....AAGGAGGAAAAAAGGAGGAA....",
+    "..WWAAAGGGAAAAAAAAGGGAAAWW..",
+    "WW...AAAAAAAAAAAAAAAAAA...WW"
+  ],
+  "frames": [
+    [
+      "WW...AAAAAAAAAAAAAAAAAA...WW",
+      "..WWAAAGGGAAAAAAAAGGGAAAWW..",
+      "....AAGGAGGAAAAAAGGAGGAA....",
+      "....AAGGAGGAAMMAAGGAGGAA....",
+      "WWWWAAGGAGGAAMMAAGGAGGAAWWWW",
+      "..WWAAGGAGGAAAAAAGGAGGAAWW..",
+      "WW..AAAGGGAAAAAAAAGGGAAA..WW",
+      ".....AAAAAAAAAAAAAAAAAA....."
+    ],
+    [
+      ".....AAAAAAAAAAAAAAAAAA.....",
+      "....AAAGGGAAAAAAAAGGGAAA....",
+      "WW..AAGGGGGAAAAAAGGGGGAA..WW",
+      "..WWAAGGAGGAAMMAAGGAGGAAWW..",
+      "WWWWAAGGGGGAAMMAAGGGGGAAWWWW",
+      "....AAGGGGGAAAAAAGGGGGAA....",
+      "....AAAGGGAAAAAAAAGGGAAA....",
+      "WWWW.AAAAAAAAAAAAAAAAAA.WWWW"
+    ]
+  ]
+}

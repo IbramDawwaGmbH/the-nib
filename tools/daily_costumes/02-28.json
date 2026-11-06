@@ -1,0 +1,54 @@
+{
+ "date": "02-28",
+ "name": "tooth_fairy_cap",
+ "title": "Tooth Fairy Day",
+ "theme": "a big white molar tooth on his head with a gold sparkle star; the sparkle twinkles and the tooth bobs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  6,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  ".................G..",
+  "..WWWWWWWWWW....GGG.",
+  "WWWWWWWWWWWWWW.GGGGG",
+  "WWWWWWWWWWWWWW..GGG.",
+  "WWWSSSSSSSSWWW...G..",
+  "WWWWWWWWWWWWWW......",
+  ".WWWWWWWWWWWW.......",
+  ".WWWWWWWWWWWW.......",
+  ".WWWWWWWWWWWW.......",
+  ".WWWWW..WWWWW.......",
+  ".WWWWW..WWWWW......."
+ ],
+ "frames": [
+  [
+   "..WWWWWWWWWW........",
+   "WWWWWWWWWWWWWW...G..",
+   "WWWWWWWWWWWWWW..GGG.",
+   "WWWSSSSSSSSWWW...G..",
+   "WWWWWWWWWWWWWW......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWW..WWWWW.......",
+   ".WWWWW..WWWWW.......",
+   "...................."
+  ],
+  [
+   "....................",
+   "..WWWWWWWWWW........",
+   "WWWWWWWWWWWWWW...W..",
+   "WWWWWWWWWWWWWW......",
+   "WWWSSSSSSSSWWW......",
+   "WWWWWWWWWWWWWW......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWWWWWWWWW.......",
+   ".WWWWW..WWWWW.......",
+   ".WWWWW..WWWWW......."
+  ]
+ ]
+}

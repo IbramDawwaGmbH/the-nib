@@ -1,0 +1,59 @@
+{
+ "date": "11-02",
+ "name": "marigold_garland",
+ "title": "Marigold Day",
+ "theme": "A garland of five separate marigolds on his chest, each with one orange centre, joined by a green thread and leaves; a swell runs from flower to flower, each opening wider in turn.",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  15,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...............................",
+  "..GGG.....................GGG..",
+  ".GGGGG..GGG.........GGG..GGGGG.",
+  ".GGFGGNGGGGG..GGG..GGGGGNGGFGG.",
+  ".GGGGGNGGFGGNGGGGGNGGFGGNGGGGG.",
+  "..GGG.NGGGGGNGGFGGNGGGGGN.GGG..",
+  "........GGG.NGGGGGN.GGG........",
+  "..............GGG..............",
+  "..............................."
+ ],
+ "frames": [
+  [
+   "..GGG..........................",
+   "..GGG...GGG...............GGG..",
+   ".GGGGG..GGG.........GGG..GGGGG.",
+   ".GGFGGNGGGGG..GGG..GGGGGNGGFGG.",
+   ".GGGGGNGGFGGNGGGGGNGGFGGNGGGGG.",
+   "..GGG.NGGGGGNGGFGGNGGGGGN.GGG..",
+   "..GGG...GGG.NGGGGGN.GGG........",
+   "........GGG...GGG..............",
+   "..............................."
+  ],
+  [
+   "...............................",
+   "..GGG.....................GGG..",
+   ".GGGGG..GGG...GGG...GGG..GGGGG.",
+   ".GGFGGNGGGGG..GGG..GGGGGNGGFGG.",
+   ".GGGGGNGGFGGNGGGGGNGGFGGNGGGGG.",
+   "..GGG.NGGGGGNGGFGGNGGGGGN.GGG..",
+   "........GGG.NGGGGGN.GGG........",
+   "..............GGG..............",
+   "..............GGG.............."
+  ],
+  [
+   "..........................GGG..",
+   "..GGG...............GGG...GGG..",
+   ".GGGGG..GGG.........GGG..GGGGG.",
+   ".GGFGGNGGGGG..GGG..GGGGGNGGFGG.",
+   ".GGGGGNGGFGGNGGGGGNGGFGGNGGGGG.",
+   "..GGG.NGGGGGNGGFGGNGGGGGN.GGG..",
+   "........GGG.NGGGGGN.GGG...GGG..",
+   "..............GGG...GGG........",
+   "..............................."
+  ]
+ ]
+}

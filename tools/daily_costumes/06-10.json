@@ -1,0 +1,31 @@
+{
+ "date": "06-10",
+ "name": "click_pen",
+ "title": "Ballpoint Pen Day",
+ "theme": "a blue ballpoint pen tilted across the top of his head; the button clicks and the tip glints",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  14,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................DD......",
+  ".................BDDBBBBSS",
+  ".........BBBBBBBBBBBBBBBSS",
+  ".SSBBBBBBBBBBBBBBBBBBBBBSS",
+  "SSSBBBBBBBBBBBBBB.........",
+  ".SSBBBBBB................."
+ ],
+ "frames": [
+  [
+   "..................DD....SS",
+   ".................BDDBBBBSS",
+   ".........BBBBBBBBBBBBBBBSS",
+   ".WSBBBBBBBBBBBBBBBBBBBBB..",
+   "SSSBBBBBBBBBBBBBB.........",
+   ".SSBBBBBB................."
+  ]
+ ]
+}

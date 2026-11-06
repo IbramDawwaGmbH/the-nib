@@ -1,0 +1,54 @@
+{
+ "date": "01-07",
+ "name": "icicle_fringe",
+ "title": "Icicle Morning",
+ "theme": "A silver band across the top of his head with five white icicles hanging from it; a drip forms, falls, and the next one starts on the other side",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+  "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+  ".WW...WW....WW....WW...WW.",
+  ".WW...WW....WW....WW...WW.",
+  ".WW....W.....W....W....WW.",
+  ".WW....................WW.",
+  ".WW....................WW.",
+  "..W....................W..",
+  "..W.......................",
+  "..........................",
+  ".........................."
+ ],
+ "frames": [
+  [
+   "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+   "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+   ".WW...WW....WW....WW...WW.",
+   ".WW...WW....WW....WW...WW.",
+   ".WW....W.....W....W....WW.",
+   ".WW....................WW.",
+   ".WW....................WW.",
+   "..W....................W..",
+   "..........................",
+   "..........................",
+   "..W......................."
+  ],
+  [
+   "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+   "SSSSSSSSSSSSSSSSSSSSSSSSSS",
+   ".WW...WW....WW....WW...WW.",
+   ".WW...WW....WW....WW...WW.",
+   ".WW....W.....W....W....WW.",
+   ".WW....................WW.",
+   ".WW....................WW.",
+   "..W....................W..",
+   ".......................W..",
+   "..........................",
+   ".........................."
+  ]
+ ]
+}

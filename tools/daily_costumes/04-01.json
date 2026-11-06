@@ -1,0 +1,57 @@
+{
+ "date": "04-01",
+ "name": "fools_jester",
+ "title": "April Fools' Day",
+ "theme": "a purple jester's cap with three floppy pink and purple points, each tipped with a gold bell; the bells jingle up and down",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "...........GGG............",
+  ".GGG.......GGG........GGG.",
+  ".GGG.......GGG........GGG.",
+  ".GGG......PPPPP.......GGG.",
+  "MMMMM....PPPPPPP.....MMMMM",
+  "MMMMMM...PPPPPPPP...MMMMMM",
+  "MMMMMMM..PPPPPPPP..MMMMMMM",
+  "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+  "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+  "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+  "PPPPPPPPPPPPPPPPPPPPPPPPPP"
+ ],
+ "frames": [
+  [
+   "...........GGG............",
+   "...........GGG............",
+   "...........GGG............",
+   ".GGG......PPPPP.......GGG.",
+   ".GGG.....PPPPPPP......GGG.",
+   ".GGG.....PPPPPPPP.....GGG.",
+   "MMMMM....PPPPPPPP....MMMMM",
+   "MMMMMM...PPPPPPPP...MMMMMM",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP"
+  ],
+  [
+   "..........................",
+   ".GGG..................GGG.",
+   ".GGG.......GGG........GGG.",
+   ".GGG.......GGG........GGG.",
+   "MMMMM......GGG.......MMMMM",
+   "MMMMMM....PPPPP.....MMMMMM",
+   "MMMMMMM..PPPPPPP...MMMMMMM",
+   "MMMMMMMM.PPPPPPPP.MMMMMMMM",
+   "DDDDDDDDDDDDDDDDDDDDDDDDDD",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPPPPPP"
+  ]
+ ]
+}

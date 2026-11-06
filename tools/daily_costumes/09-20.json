@@ -1,0 +1,60 @@
+{
+ "date": "09-20",
+ "name": "puddle_boat",
+ "title": "Paper Boat Day",
+ "theme": "a white folded paper boat with a dark fold seam floating on a blue puddle on his head, two blue drops above; the boat bobs and a drop splashes the puddle with a white ripple",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  "...BB.................",
+  "...BB.................",
+  "..........WW..........",
+  ".........WWWW....BB...",
+  "........WWWWWW...BB...",
+  ".......WWWWWWWW.......",
+  "......DDDDDDDDDD......",
+  "....WWWWWWWWWWWWWW....",
+  ".....WWWWWWWWWWWW.....",
+  ".BBBBBWWWWWWWWWWBBBBB.",
+  "BBBBBBBBBBBBBBBBBBBBBB",
+  "..BBBBBBBBBBBBBBBBBB.."
+ ],
+ "frames": [
+  [
+   "......................",
+   "......................",
+   "..........WW..........",
+   ".........WWWW.........",
+   "...BB...WWWWWW........",
+   "...BB..WWWWWWWW.......",
+   "......DDDDDDDDDD......",
+   "....WWWWWWWWWWWWWBB...",
+   ".....WWWWWWWWWWWWBB...",
+   "......WWWWWWWWWW......",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "..BBBBBBBBBBBBBBBBBB.."
+  ],
+  [
+   "......................",
+   "......................",
+   "......................",
+   "..........WW..........",
+   ".........WWWW.........",
+   "........WWWWWW........",
+   ".......WWWWWWWW.......",
+   "...BB.DDDDDDDDDD......",
+   "...BBWWWWWWWWWWWWW....",
+   ".....WWWWWWWWWWWW.....",
+   ".BBBBBWWWWWWWWWWBWWBB.",
+   "BBBBBBBBBBBBBBWWBBBBWW",
+   "..BBBBBBBBBBBBBBBBBB.."
+  ]
+ ]
+}

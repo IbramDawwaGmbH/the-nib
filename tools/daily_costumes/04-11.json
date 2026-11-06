@@ -1,0 +1,63 @@
+{
+ "date": "04-11",
+ "name": "pet_collar",
+ "title": "National Pet Day",
+ "theme": "a blue dog collar under his mouth with a silver buckle and a swinging gold tag on a ring",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  "BBBBSSBBBBBBBBBBBBBB",
+  "BBBBSSBBBBBBBBBBBBBB",
+  "...BBBBBBBBBBBBBB...",
+  "..........S.........",
+  ".........GGG........",
+  "........GGGGG.......",
+  "........GGGGG.......",
+  "........GGGGG.......",
+  ".........GGG........"
+ ],
+ "frames": [
+  [
+   "....................",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "...BBBBBBBBBBBBBB...",
+   "...........S........",
+   "..........GGG.......",
+   ".........GGGGG......",
+   ".........GGGGG......",
+   ".........GGGGG......",
+   "..........GGG......."
+  ],
+  [
+   "....................",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "...BBBBBBBBBBBBBB...",
+   "..........S.........",
+   ".........GGG........",
+   "........GWGGG.......",
+   "........GGGGG.......",
+   "........GGGGG.......",
+   ".........GGG........"
+  ],
+  [
+   "....................",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "BBBBSSBBBBBBBBBBBBBB",
+   "...BBBBBBBBBBBBBB...",
+   ".........S..........",
+   "........GGG.........",
+   ".......GGGGG........",
+   ".......GGGGG........",
+   ".......GGGGG........",
+   "........GGG........."
+  ]
+ ]
+}

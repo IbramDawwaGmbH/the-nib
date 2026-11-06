@@ -1,0 +1,63 @@
+{
+ "date": "06-28",
+ "name": "full_turn_specs",
+ "title": "Tau Day",
+ "theme": "round charcoal spectacles with white lenses and a teal radius line from the centre to the rim in each lens; the line sweeps a quarter turn each frame so a full turn completes over the loop",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "..AAAAAA......AAAAAA..",
+  ".AAWTTWAA....AAWTTWAA.",
+  "AAWWTTWWAA..AAWWTTWWAA",
+  "AWWWTTWWWA..AWWWTTWWWA",
+  "AWWWTTWWWAAAAWWWTTWWWA",
+  "AWWWTTWWWAAAAWWWTTWWWA",
+  "AWWWWWWWWA..AWWWWWWWWA",
+  "AAWWWWWWAA..AAWWWWWWAA",
+  ".AAWWWWAA....AAWWWWAA.",
+  "..AAAAAA......AAAAAA.."
+ ],
+ "frames": [
+  [
+   "..AAAAAA......AAAAAA..",
+   ".AAWWWWAA....AAWWWWAA.",
+   "AAWWWWWWAA..AAWWWWWWAA",
+   "AWWWWWWWWA..AWWWWWWWWA",
+   "AWWWTTTTTAAAAWWWTTTTTA",
+   "AWWWTTTTTAAAAWWWTTTTTA",
+   "AWWWWWWWWA..AWWWWWWWWA",
+   "AAWWWWWWAA..AAWWWWWWAA",
+   ".AAWWWWAA....AAWWWWAA.",
+   "..AAAAAA......AAAAAA.."
+  ],
+  [
+   "..AAAAAA......AAAAAA..",
+   ".AAWWWWAA....AAWWWWAA.",
+   "AAWWWWWWAA..AAWWWWWWAA",
+   "AWWWWWWWWA..AWWWWWWWWA",
+   "AWWWTTWWWAAAAWWWTTWWWA",
+   "AWWWTTWWWAAAAWWWTTWWWA",
+   "AWWWTTWWWA..AWWWTTWWWA",
+   "AAWWTTWWAA..AAWWTTWWAA",
+   ".AAWTTWAA....AAWTTWAA.",
+   "..AAAAAA......AAAAAA.."
+  ],
+  [
+   "..AAAAAA......AAAAAA..",
+   ".AAWWWWAA....AAWWWWAA.",
+   "AAWWWWWWAA..AAWWWWWWAA",
+   "AWWWWWWWWA..AWWWWWWWWA",
+   "ATTTTTWWWAAAATTTTTWWWA",
+   "ATTTTTWWWAAAATTTTTWWWA",
+   "AWWWWWWWWA..AWWWWWWWWA",
+   "AAWWWWWWAA..AAWWWWWWAA",
+   ".AAWWWWAA....AAWWWWAA.",
+   "..AAAAAA......AAAAAA.."
+  ]
+ ]
+}

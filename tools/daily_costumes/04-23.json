@@ -1,0 +1,55 @@
+{
+ "date": "04-23",
+ "name": "open_book",
+ "title": "World Book Day",
+ "theme": "an open book roofed over his head; the wind lifts the right page",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "WWWWWWWWWWWRRWWWWWWWWWWW",
+  "WWWWDDDDDWWRRWWDDDDDWWWW",
+  "RWWWWWWWWWWRRWWWWWWWWWWR",
+  ".RRWWWDDDDWRRWDDDDWWWRR.",
+  "...RRRWWWWWRRWWWWWRRR...",
+  "......RRRRRRRRRRRR......"
+ ],
+ "frames": [
+  [
+   "........................",
+   "....................WWWW",
+   "WWWWWWWWWWWRRWWWWWWWWWWW",
+   "WWWWDDDDDWWRRWWDDDDDWWWR",
+   "RWWWWWWWWWWRRWWWWWWWWRR.",
+   ".RRWWWDDDDWRRWDDDDWWR...",
+   "...RRRWWWWWRRWWWWWRR....",
+   "......RRRRRRRRRRRR......"
+  ],
+  [
+   "....................WWWW",
+   "....................WWWW",
+   "WWWWWWWWWWWRRWWWWWWWWWWR",
+   "WWWWDDDDDWWRRWWDDDDDWRR.",
+   "RWWWWWWWWWWRRWWWWWWWR...",
+   ".RRWWWDDDDWRRWDDDDWW....",
+   "...RRRWWWWWRRWWWWWRR....",
+   "......RRRRRRRRRRRR......"
+  ],
+  [
+   "......................WW",
+   "....................WWWW",
+   "WWWWWWWWWWWRRWWWWWWWWWWR",
+   "WWWWDDDDDWWRRWWDDDDDWWR.",
+   "RWWWWWWWWWWRRWWWWWWWWR..",
+   ".RRWWWDDDDWRRWDDDDWWR...",
+   "...RRRWWWWWRRWWWWWRR....",
+   "......RRRRRRRRRRRR......"
+  ]
+ ]
+}

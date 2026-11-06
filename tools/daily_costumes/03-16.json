@@ -1,0 +1,57 @@
+{
+ "date": "03-16",
+ "name": "bamboo_stalk",
+ "title": "Panda Day",
+ "theme": "a green bamboo stalk 3px wide and 12 rows tall standing on his head with dark node seams every 3 rows and two tufts of long pointed leaves on alternate sides; it leans a pixel left then right and the leaves sway the other way",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......NNN......",
+  ".......NNN......",
+  ".......NNN......",
+  ".......DDD......",
+  "NNNN...NNN......",
+  "..NNNNNNNN......",
+  ".......DDD......",
+  ".......NNN..NNNN",
+  ".......NNNNNNN..",
+  ".......DDD......",
+  ".......NNN......",
+  ".......NNN......"
+ ],
+ "frames": [
+  [
+   "......NNN.......",
+   "......NNN.......",
+   "......NNN.......",
+   ".......DDD......",
+   ".NNNN..NNN......",
+   "...NNNNNNN......",
+   ".......DDD......",
+   ".......NNN.NNNN.",
+   ".......NNNNNNN..",
+   ".......DDD......",
+   ".......NNN......",
+   ".......NNN......"
+  ],
+  [
+   "........NNN.....",
+   "........NNN.....",
+   "........NNN.....",
+   ".......DDD......",
+   "NNN....NNN......",
+   ".NNNNNNNNN......",
+   ".......DDD......",
+   ".......NNN...NNN",
+   ".......NNNNNNNN.",
+   ".......DDD......",
+   ".......NNN......",
+   ".......NNN......"
+  ]
+ ]
+}

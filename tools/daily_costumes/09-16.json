@@ -1,0 +1,42 @@
+{
+ "date": "09-16",
+ "name": "ozone_visor",
+ "title": "Ozone Layer Day",
+ "theme": "a sky-blue sun visor with a teal protective band and a glint sweeping across it",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  ".TTTTTTTTTTTTTTTTTTTT.",
+  "TTWWTTTTTTTTTTTTTTTTTT",
+  "BBBBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBBBBBBBBBBBBBBB",
+  ".BBBBBBBBBBBBBBBBBBBB."
+ ],
+ "frames": [
+  [
+   ".TTTTTTTTTTTTTTTTTTTT.",
+   "TTTTTTTTTTWWTTTTTTTTTT",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   ".BBBBBBBBBBBBBBBBBBBB."
+  ],
+  [
+   ".TTTTTTTTTTTTTTTTTTTT.",
+   "TTTTTTTTTTTTTTTTTWWTTT",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBBBB",
+   ".BBBBBBBBBBBBBBBBBBBB."
+  ]
+ ]
+}

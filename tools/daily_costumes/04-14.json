@@ -1,0 +1,48 @@
+{
+ "date": "04-14",
+ "name": "sky_lenses",
+ "title": "Look Up at the Sky Day",
+ "theme": "big round blue sky-gazing glasses with a white cloud and a gold sun dot in each lens; the clouds drift right",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "...BBBBB......BBBBB...",
+  "..BBBBBGB....BBBBBGB..",
+  "WBBBBBBBBBWWBBBBBBBBBW",
+  ".BBBBBBBBB..BBBBBBBBB.",
+  ".BWWWBBBBB..BWWWBBBBB.",
+  ".BWWWBBBBB..BWWWBBBBB.",
+  ".BBBBBBBBB..BBBBBBBBB.",
+  "..BBBBBBB....BBBBBBB..",
+  "...BBBBB......BBBBB..."
+ ],
+ "frames": [
+  [
+   "...BBBBB......BBBBB...",
+   "..BBBBBGB....BBBBBGB..",
+   "WBBBBBBBBBWWBBBBBBBBBW",
+   ".BBBBBBBBB..BBBBBBBBB.",
+   ".BBWWWBBBB..BBWWWBBBB.",
+   ".BBWWWBBBB..BBWWWBBBB.",
+   ".BBBBBBBBB..BBBBBBBBB.",
+   "..BBBBBBB....BBBBBBB..",
+   "...BBBBB......BBBBB..."
+  ],
+  [
+   "...BBBBB......BBBBB...",
+   "..BBBBBGB....BBBBBGB..",
+   "WBBBBBBBBBWWBBBBBBBBBW",
+   ".BBBBBBBBB..BBBBBBBBB.",
+   ".BBBWWWBBB..BBBWWWBBB.",
+   ".BBBWWWBBB..BBBWWWBBB.",
+   ".BBBBBBBBB..BBBBBBBBB.",
+   "..BBBBBBB....BBBBBBB..",
+   "...BBBBB......BBBBB..."
+  ]
+ ]
+}

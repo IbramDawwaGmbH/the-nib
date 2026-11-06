@@ -1,0 +1,51 @@
+{
+ "date": "01-05",
+ "name": "birder_binoculars",
+ "title": "National Bird Day",
+ "theme": "a charcoal strap in a V holding binoculars with silver rims and teal lenses that swing and glint",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  7,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "..AA......AA..",
+  "...AA....AA...",
+  "....AA..AA....",
+  ".....AAAA.....",
+  ".SSSSSAASSSSS.",
+  ".AWTTAAAATTTA.",
+  ".ATTTAAAATTTA.",
+  ".ATTTAAAATTTA.",
+  ".ATTTAAAATTTA.",
+  ".SSSSS..SSSSS."
+ ],
+ "frames": [
+  [
+   "..AA......AA..",
+   "...AA....AA...",
+   "...AA..AA.....",
+   "....AAAA......",
+   "SSSSSAASSSSS..",
+   "ATTTAAAAWTTA..",
+   "ATTTAAAATTTA..",
+   "ATTTAAAATTTA..",
+   "ATTTAAAATTTA..",
+   "SSSSS..SSSSS.."
+  ],
+  [
+   "..AA......AA..",
+   "...AA....AA...",
+   ".....AA..AA...",
+   "......AAAA....",
+   "..SSSSSAASSSSS",
+   "..AWTTAAAATTTA",
+   "..ATTTAAAATTTA",
+   "..ATTTAAAATTTA",
+   "..ATTTAAAATTTA",
+   "..SSSSS..SSSSS"
+  ]
+ ]
+}

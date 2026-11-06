@@ -1,0 +1,63 @@
+{
+ "date": "09-05",
+ "name": "pizza_cutter",
+ "title": "Cheese Pizza Day",
+ "theme": "a gold cheese-pizza slice with a brown crust and a pepperoni on his head, a red-handled silver pizza cutter rolling beside it, a dark seam spinning round the wheel",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "........RRRRRRRRRRRR....",
+  "........RRRRRRRRRRRR....",
+  "......GG........SRRS....",
+  ".....GGGG......WSSSDS...",
+  "....GGGGGG....WSSSSSSS..",
+  "...GGGRRGGG...SSSDDSSS..",
+  "..GGGGRRGGGG..SSSDDSSS..",
+  ".GGGGGGGGGGGG.SSSSSSSS..",
+  "OOOOOOOOOOOOOO.SSSSSS...",
+  "OOOOOOOOOOOOOO..SSSS...."
+ ],
+ "frames": [
+  [
+   ".........RRRRRRRRRRRR...",
+   ".........RRRRRRRRRRRR...",
+   "......GG.........SRRS...",
+   ".....GGGG.......WSSSSS..",
+   "....GGGGGG.....WSSSSSSS.",
+   "...GGGRRGGG....SSSDDSSD.",
+   "..GGGGRRGGGG...SSSDDSSS.",
+   ".GGGGGGGGGGGG..SSSSSSSS.",
+   "OOOOOOOOOOOOOO..SSSSSS..",
+   "OOOOOOOOOOOOOO...SSSS..."
+  ],
+  [
+   "..........RRRRRRRRRRRR..",
+   "..........RRRRRRRRRRRR..",
+   "......GG..........SRRS..",
+   ".....GGGG........WSSSSS.",
+   "....GGGGGG......WSSSSSSS",
+   "...GGGRRGGG.....SSSDDSSS",
+   "..GGGGRRGGGG....SSSDDSSS",
+   ".GGGGGGGGGGGG...SSSSSSSS",
+   "OOOOOOOOOOOOOO...SSDSSS.",
+   "OOOOOOOOOOOOOO....SSSS.."
+  ],
+  [
+   ".........RRRRRRRRRRRR...",
+   ".........RRRRRRRRRRRR...",
+   "......GG.........SRRS...",
+   ".....GGGG.......WSSSSS..",
+   "....GGGGGG.....WSSSSSSS.",
+   "...GGGRRGGG....SSSDDSSS.",
+   "..GGGGRRGGGG...DSSDDSSS.",
+   ".GGGGGGGGGGGG..SSSSSSSS.",
+   "OOOOOOOOOOOOOO..SSSSSS..",
+   "OOOOOOOOOOOOOO...SSSS..."
+  ]
+ ]
+}

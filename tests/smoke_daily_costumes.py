@@ -173,11 +173,17 @@ from PySide6.QtGui import QIcon, QPixmap  # noqa: E402
 _pm = QPixmap(16, 16)
 tray = Tray(QIcon(_pm), costumes={**bare.costume_categories(), **bare.calendar_groups()},
             skins=["default"], personalities=["calm"], costume_labels=bare.costume_menu_labels())
-costume_menu = next(a.menu() for a in tray._menu.actions() if a.text() == "Costume")
-calendar_menu = next((a.menu() for a in costume_menu.actions() if a.text() == "Calendar"), None)
-check("one Calendar submenu, beside the wardrobe's categories", calendar_menu is not None
-      and sum(a.text() == "Calendar" for a in costume_menu.actions()) == 1)
-months = [a.text() for a in calendar_menu.actions()] if calendar_menu else []
+# Walked up from an action rather than down from the tray: the submenus belong to Qt, and a
+# wrapper fetched through QAction.menu() can outlive the object it wraps.
+month_menu = tray._costume_actions[march].parent()
+calendar_menu = month_menu.parent()
+costume_menu = calendar_menu.parent()
+check("one Calendar submenu, beside the wardrobe's categories",
+      calendar_menu.title() == "Calendar" and costume_menu.title() == "Costume"
+      and [m.title() for m in costume_menu.findChildren(type(calendar_menu))
+           if m.parent() is costume_menu].count("Calendar") == 1)
+months = [m.title() for m in calendar_menu.findChildren(type(calendar_menu))
+          if m.parent() is calendar_menu]
 check("...holding the twelve months in order", months == [f"{datetime.date(2024, m, 1):%B}"
                                                            for m in range(1, 13)], months)
 check("every costume is reachable from it", len(tray._costume_actions) ==

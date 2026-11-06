@@ -1,0 +1,33 @@
+{
+ "date": "07-24",
+ "name": "flight_goggles",
+ "title": "Aviation Pioneers Day",
+ "theme": "vintage round flying goggles with silver lenses, gold frames and leather straps; a glint flashes and the straps lift in the wind",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...GGGGGG....GGGGGG...",
+  "..GGSSSSGG..GGSSSSGG..",
+  "O.GSSSSSSGGGGSSSSSSG.O",
+  "OOGSSSSSSGGGGSSSSSSGOO",
+  "..GSSSSSSG..GSSSSSSG..",
+  "..GGSSSSGG..GGSSSSGG..",
+  "...GGGGGG....GGGGGG..."
+ ],
+ "frames": [
+  [
+   "...GGGGGG....GGGGGG...",
+   "O.GGSSSSGG..GGSSSSGG.O",
+   "O.GSSWSSSGGGGSSWSSSG.O",
+   ".OGSWSSSSGGGGSWSSSSGO.",
+   "..GSSSSSSG..GSSSSSSG..",
+   "..GGSSSSGG..GGSSSSGG..",
+   "...GGGGGG....GGGGGG..."
+  ]
+ ]
+}

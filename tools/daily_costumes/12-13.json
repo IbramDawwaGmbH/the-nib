@@ -1,0 +1,54 @@
+{
+ "date": "12-13",
+ "name": "lucia_candle_crown",
+ "title": "St Lucia Day",
+ "theme": "a green wreath crown with five white candles, each with a flickering flame, for St Lucia Day",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "............F...........",
+  ".......F...GG...F.......",
+  ".F....GG...WW...GG....F.",
+  ".GG...WW...WW...WW...GG.",
+  ".WW...WW...WW...WW...WW.",
+  ".WW...WW...WW...WW...WW.",
+  ".WW...WW...WW...WW...WW.",
+  ".WW...WW...WW...WW...WW.",
+  ".WW...WW...WW...WW...WW.",
+  "NNNNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNNNN"
+ ],
+ "frames": [
+  [
+   "...........F............",
+   "......F....GG....F......",
+   "..F...GG...WW...GG...F..",
+   ".GG...WW...WW...WW...GG.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   "NNNNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNNNN"
+  ],
+  [
+   "............F...........",
+   ".......F...GG....F......",
+   "..F...GG...WW...GG....F.",
+   ".GG...WW...WW...WW...GG.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   ".WW...WW...WW...WW...WW.",
+   "NNNNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNNNN"
+  ]
+ ]
+}

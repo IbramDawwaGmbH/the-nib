@@ -1,0 +1,51 @@
+{
+ "date": "01-22",
+ "name": "chili_garland",
+ "title": "Hot Sauce Day",
+ "theme": "a ristra of three red chilies with green stems hung on a thin cord; they sway in turn",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "OOOOO............OOOOO",
+  "...NNOOOO....OOOONN...",
+  "...NN...OOOOOO...NN...",
+  "..RRRR....NN....RRRR..",
+  "..RRRR....NN....RRRR..",
+  "..RRRR...RRRR...RRRR..",
+  "..RRR....RRRR....RRR..",
+  "...RR....RRRR....RR...",
+  "....R.....RR.....R....",
+  "...........R.........."
+ ],
+ "frames": [
+  [
+   "OOOOO............OOOOO",
+   "...NNOOOO....OOOONN...",
+   "...NN...OOOOOO...NN...",
+   "..RRRR....NN....RRRR..",
+   "..RRRR....NN....RRRR..",
+   "..RRRR...RRRR...RRRR..",
+   ".RRR.....RRRR.....RRR.",
+   "..RR.....RRRR.....RR..",
+   "...R......RR......R...",
+   "...........R.........."
+  ],
+  [
+   "OOOOO............OOOOO",
+   "...NNOOOO....OOOONN...",
+   "...NN...OOOOOO...NN...",
+   "..RRRR....NN....RRRR..",
+   "..RRRR....NN....RRRR..",
+   "..RRRR...RRRR...RRRR..",
+   "...RRR...RRRR...RRR...",
+   "....RR...RRRR...RR....",
+   ".....R....RR....R.....",
+   "...........R.........."
+  ]
+ ]
+}

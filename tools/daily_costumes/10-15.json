@@ -1,0 +1,67 @@
+{
+ "date": "10-15",
+ "name": "soap_bubbles",
+ "title": "Handwashing Day",
+ "theme": "a cluster of soap bubbles over his head; they rise, the small one pops in a splash and reappears below",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  "....................",
+  ".........WWWW.......",
+  "........WBBBBW......",
+  ".......WBWWBBBW.....",
+  ".WW....WBWBBBBW...B.",
+  "WBBW...WBBBBBBW..BWB",
+  "WBBW...WBBBBBBW...B.",
+  ".WW.....WBBBBW......",
+  ".........WWWW.......",
+  "...................."
+ ],
+ "frames": [
+  [
+   "....................",
+   ".........WWWW.......",
+   "........WBBBBW......",
+   ".......WBWWBBBW.....",
+   ".WW....WBWBBBBW...B.",
+   "WBBW...WBBBBBBW..BWB",
+   "WBBW...WBBBBBBW...B.",
+   ".WW.....WBBBBW......",
+   ".........WWWW.......",
+   "....................",
+   "...................."
+  ],
+  [
+   ".........WWWW.......",
+   "........WBBBBW......",
+   ".......WBWWBBBW.....",
+   ".WW....WBWBBBBW...W.",
+   "WBBW...WBBBBBBW..WWW",
+   "WBBW...WBBBBBBW...W.",
+   ".WW.....WBBBBW......",
+   ".........WWWW.......",
+   "....................",
+   "....................",
+   "...................."
+  ],
+  [
+   "....................",
+   ".........WWWW.......",
+   "........WBBBBW......",
+   ".......WBWWBBBW.....",
+   ".WW....WBWBBBBW.....",
+   "WBBW...WBBBBBBW.....",
+   "WBBW...WBBBBBBW.....",
+   ".WW.....WBBBBW....B.",
+   ".........WWWW....BWB",
+   "..................B.",
+   "...................."
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "02-04",
+ "name": "lavender_posy",
+ "title": "World Cancer Day",
+ "theme": "a small posy of three lavender spikes in purple with pink tips on green stalks, tied with a big white bow; the spikes lean in a breeze",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".MMM..MMM..MMM.",
+  ".PPP..PPP..PPP.",
+  ".PPP..PPP..PPP.",
+  ".PPP..PPP..PPP.",
+  ".PPP..PPP..PPP.",
+  ".NN...NN...NN..",
+  "...NN.NN.NN....",
+  "....NNNNNN.....",
+  "..WWW.WWW.WWW..",
+  "..WW..WWW..WW..",
+  "......NNN......",
+  "......NNN......"
+ ],
+ "frames": [
+  [
+   "MMM..MMM..MMM..",
+   "PPP..PPP..PPP..",
+   "PPP..PPP..PPP..",
+   "PPP..PPP..PPP..",
+   "PPP..PPP..PPP..",
+   ".NN...NN...NN..",
+   "...NN.NN.NN....",
+   "....NNNNNN.....",
+   "..WWW.WWW.WWW..",
+   "......WWW......",
+   "......NNN......",
+   "......NNN......"
+  ],
+  [
+   "..MMM..MMM..MMM",
+   "..PPP..PPP..PPP",
+   "..PPP..PPP..PPP",
+   "..PPP..PPP..PPP",
+   "..PPP..PPP..PPP",
+   ".NN...NN...NN..",
+   "...NN.NN.NN....",
+   "....NNNNNN.....",
+   "..WWW.WWW.WWW..",
+   "......WWW......",
+   "......NNN......",
+   "......NNN......"
+  ]
+ ]
+}

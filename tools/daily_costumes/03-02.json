@@ -1,0 +1,63 @@
+{
+ "date": "03-02",
+ "name": "reading_specs",
+ "title": "Reading Day",
+ "theme": "half-moon reading glasses with gold rims, clear lenses and grey cords beside his face; a glint flicks between the lenses",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "GGGGGGGGGG.GG.GGGGGGGGGG",
+  "K..WDDWWWW....WWWWWWW..K",
+  "K..WWWWWWW....WWWWWWW..K",
+  "K..WWWWWWW....WWWWWWW..K",
+  "K..GWWWWWG....GWWWWWG..K",
+  "K......................K",
+  "K......................K",
+  "........................"
+ ],
+ "frames": [
+  [
+   "........................",
+   "........................",
+   "GGGGGGGGGG.GG.GGGGGGGGGG",
+   "K..WWWWWWW....WDDWWWW..K",
+   "K..WWWWWWW....WWWWWWW..K",
+   "K..WWWWWWW....WWWWWWW..K",
+   "K..GWWWWWG....GWWWWWG..K",
+   "K......................K",
+   "K......................K",
+   "........................"
+  ],
+  [
+   "........................",
+   "........................",
+   "GGGGGGGGGG.GG.GGGGGGGGGG",
+   "..KWDDWWWW....WWWWWWWK..",
+   "..KWWWWWWW....WWWWWWWK..",
+   "..KWWWWWWW....WWWWWWWK..",
+   "..KGWWWWWG....GWWWWWGK..",
+   "..K..................K..",
+   "..K..................K..",
+   "........................"
+  ],
+  [
+   "........................",
+   "........................",
+   "GGGGGGGGGG.GG.GGGGGGGGGG",
+   "..KWWWWWWW....WDDWWWWK..",
+   "..KWWWWWWW....WWWWWWWK..",
+   "..KWWWWWWW....WWWWWWWK..",
+   "..KGWWWWWG....GWWWWWGK..",
+   "..K..................K..",
+   "..K..................K..",
+   "........................"
+  ]
+ ]
+}

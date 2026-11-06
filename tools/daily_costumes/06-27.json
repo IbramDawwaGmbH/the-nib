@@ -1,0 +1,42 @@
+{
+ "date": "06-27",
+ "name": "visor_shades",
+ "title": "National Sunglasses Day",
+ "theme": "a sporty wraparound charcoal visor with a grey rim; a white glint sweeps across the lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....KKKKKKKKKKKKKKKK....",
+  "...AAAAAAAAAAAAAAAAAA...",
+  "..AAAAAAAAAAAAAAAAAAAA..",
+  "KKAAAWAAAAAAAAAAAAAAAAKK",
+  "..AAWAAAAAAAAAAAAAAAAA..",
+  "...AAAAAAAAAAAAAAAAAA...",
+  ".....AAAAAAAAAAAAAA....."
+ ],
+ "frames": [
+  [
+   "....KKKKKKKKKKKKKKKK....",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "..AAAAAAAAAAAAAAAAAAAA..",
+   "KKAAAAAAAAAWAAAAAAAAAAKK",
+   "..AAAAAAAAWAAAAAAAAAAA..",
+   "...AAAAAAAAAAAAAAAAAA...",
+   ".....AAAAAAAAAAAAAA....."
+  ],
+  [
+   "....KKKKKKKKKKKKKKKK....",
+   "...AAAAAAAAAAAAAAAAAA...",
+   "..AAAAAAAAAAAAAAAAAAAA..",
+   "KKAAAAAAAAAAAAAAAWAAAAKK",
+   "..AAAAAAAAAAAAAAWAAAAA..",
+   "...AAAAAAAAAAAAAAAAAA...",
+   ".....AAAAAAAAAAAAAA....."
+  ]
+ ]
+}

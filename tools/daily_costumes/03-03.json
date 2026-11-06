@@ -1,0 +1,43 @@
+{
+  "date": "03-03",
+  "name": "rhino_horns",
+  "title": "World Wildlife Day",
+  "theme": "a grey headband with a big curved horn and a smaller horn behind it, dark base seams and white tip highlights",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    12,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    ".....WW.................",
+    ".....WW.................",
+    "......KKK...............",
+    "......KKK...............",
+    ".......KKKK.............",
+    ".......KKKK......WW.....",
+    ".......KKKKK.....KK.....",
+    "........KKKKK...KKK.....",
+    ".........KKKKKK.KKKK....",
+    ".........DDDDDD.DDDD....",
+    "KKKKKKKKKKKKKKKKKKKKKKKK",
+    "DDDDDDDDDDDDDDDDDDDDDDDD"
+  ],
+  "frames": [
+    [
+      "........................",
+      "....KK..................",
+      "....KK..................",
+      ".....KKK................",
+      ".....KKK................",
+      "......KKKK.......KK.....",
+      ".......KKKK......KK.....",
+      ".......KKKKK....KKK.....",
+      "........KKKKK...KKKK....",
+      ".........DDDDDD.DDDD....",
+      "KKKKKKKKKDDDDDDKKKKKKKKK",
+      "DDDDDDDDDDDDDDDDDDDDDDDD"
+    ]
+  ]
+}

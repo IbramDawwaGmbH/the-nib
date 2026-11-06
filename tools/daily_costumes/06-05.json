@@ -1,0 +1,48 @@
+{
+ "date": "06-05",
+ "name": "seedling_tuft",
+ "title": "World Environment Day",
+ "theme": "a green seedling on a little mound of soil; the leaves sway",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  7,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "..............",
+  "...WWNNNNNNN..",
+  "..NWWNNNNNNNN.",
+  "....NNNNNNN...",
+  ".......N......",
+  ".......N......",
+  ".......N......",
+  "...AAAAAAAA...",
+  ".AAAAAAAAAAAA."
+ ],
+ "frames": [
+  [
+   "...WWNN.......",
+   "..NWWNNN......",
+   "....NNNNNNNNN.",
+   ".......NNNNN..",
+   ".......NNNN...",
+   ".......N......",
+   ".......N......",
+   "...AAAAAAAA...",
+   ".AAAAAAAAAAAA."
+  ],
+  [
+   "........NNNN..",
+   ".......NNNNNN.",
+   "...WWNNNNNNN..",
+   "..NWWNNN......",
+   "....NNNN......",
+   ".......N......",
+   ".......N......",
+   "...AAAAAAAA...",
+   ".AAAAAAAAAAAA."
+  ]
+ ]
+}

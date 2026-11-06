@@ -1,0 +1,63 @@
+{
+ "date": "03-08",
+ "name": "purple_rosette",
+ "title": "Women's Day",
+ "theme": "a purple rosette at the collar with a white centre and two striped ribbon tails; the tails swing and the centre brightens",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  6,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "....PPPPP....",
+  "...PPPPPPP...",
+  "...PPWWWPP...",
+  "...PPWWWPP...",
+  "...PPWWWPP...",
+  "...PPPPPPP...",
+  "....PPPPP....",
+  "...PWP.PWP...",
+  "...PWP.PWP...",
+  "...PWP.PWP..."
+ ],
+ "frames": [
+  [
+   "....PPPPP....",
+   "...PPPPPPP...",
+   "...PPWWWPP...",
+   "...PPWWWPP...",
+   "...PPWWWPP...",
+   "...PPPPPPP...",
+   "....PPPPP....",
+   "...PWP.PWP...",
+   "...PWP.PWP...",
+   "..PWP..PWP..."
+  ],
+  [
+   "....PPPPP....",
+   "...PPPWPPP...",
+   "...PPWWWPP...",
+   "...PWWWWWP...",
+   "...PPWWWPP...",
+   "...PPPWPPP...",
+   "....PPPPP....",
+   "...PWP.PWP...",
+   "...PWP.PWP...",
+   "...PWP.PWP..."
+  ],
+  [
+   "....PPPPP....",
+   "...PPPPPPP...",
+   "...PPWWWPP...",
+   "...PPWWWPP...",
+   "...PPWWWPP...",
+   "...PPPPPPP...",
+   "....PPPPP....",
+   "...PWP.PWP...",
+   "...PWP.PWP...",
+   "...PWP..PWP.."
+  ]
+ ]
+}

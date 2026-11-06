@@ -1,0 +1,63 @@
+{
+ "date": "03-17",
+ "name": "shamrock_bowler",
+ "title": "St Patrick's Day",
+ "theme": "a green bowler hat with a gold band and a white-edged shamrock pinned on the side; the shamrock wobbles and the band glints",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......NNNNNNNN.......",
+  ".....NNNNNNWWWNNN.....",
+  "....NNNNNNNWWWNNNN....",
+  "....NNNNNWWWWWWWNN....",
+  "....NNNNNWWWWWWWNN....",
+  "....NNNNNWWWNWWWNN....",
+  "....NNNNNNNNWNNNNN....",
+  "....GWWGGGGGWGGGGG....",
+  "NNNNNNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNNNNNN"
+ ],
+ "frames": [
+  [
+   ".......NNNNNNNN.......",
+   ".....NNNNNWWWNNNN.....",
+   "....NNNNNNWWWNNNNN....",
+   "....NNNNWWWWWWWNNN....",
+   "....NNNNWWWWWWWNNN....",
+   "....NNNNWWWNWWWNNN....",
+   "....NNNNNNNWNNNNNN....",
+   "....GGGGGWWWGGGGGG....",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ],
+  [
+   ".......NNNNNNNN.......",
+   ".....NNNNNNWWWNNN.....",
+   "....NNNNNNNWWWNNNN....",
+   "....NNNNNWWWWWWWNN....",
+   "....NNNNNWWWWWWWNN....",
+   "....NNNNNWWWNWWWNN....",
+   "....NNNNNNNNWNNNNN....",
+   "....GGGGGGGGWGWWGG....",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ],
+  [
+   ".......NNNNNNNN.......",
+   ".....NNNNNNNWWWNN.....",
+   "....NNNNNNNNWWWNNN....",
+   "....NNNNNNWWWWWWWN....",
+   "....NNNNNNWWWWWWWN....",
+   "....NNNNNNWWWNWWWN....",
+   "....NNNNNNNNNWNNNN....",
+   "....GGGGGGGGGWGGWW....",
+   "NNNNNNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNNNNNN"
+  ]
+ ]
+}

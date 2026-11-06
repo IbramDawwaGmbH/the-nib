@@ -1,0 +1,60 @@
+{
+ "date": "09-14",
+ "name": "grape_bunch_hat",
+ "title": "Grape Harvest",
+ "theme": "a purple bunch of grapes worn as a hat, two green leaves wiggling and a highlight twinkling",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......OO.......",
+  "...NNNNOONNNN...",
+  "..NNNNNOONNNNN..",
+  ".....PPPPPP.....",
+  ".....PPPPPP.....",
+  ".....PPDPPP.....",
+  "....PWPPPPPP....",
+  "...PPDPPDPPDP...",
+  "...PPPPPPPPPP...",
+  "..PDPPDPPDPPDP..",
+  ".PPPPPPPPPPPPPP.",
+  ".PPPDPPDPPDPPDP.",
+  "PPPPPPPPPPPPPPPP"
+ ],
+ "frames": [
+  [
+   "...NNNNOO.......",
+   "..NNNN.OONNNN...",
+   ".......OONNNNN..",
+   ".....PPPPPP.....",
+   ".....PPPPPP.....",
+   ".....PPDPPP.....",
+   "....PPPPPPPP....",
+   "...PPDPPDPPDP...",
+   "...PPPPPPPPPP...",
+   "..PDPPDPPDWPDP..",
+   ".PPPPPPPPPPPPPP.",
+   ".PPPDPPDPPDPPDP.",
+   "PPPPPPPPPPPPPPPP"
+  ],
+  [
+   ".......OONNNN...",
+   "...NNNNOO.NNNN..",
+   "..NNNNNOO.......",
+   ".....PPPPPP.....",
+   ".....PPPPPP.....",
+   ".....PPDPPP.....",
+   "....PPPPPPPP....",
+   "...PPDPPDPPDP...",
+   "...PPPPPPPPPP...",
+   "..PDPPDPPDPPDP..",
+   ".PPPPPWPPPPPPPP.",
+   ".PPPDPPDPPDPPDP.",
+   "PPPPPPPPPPPPPPPP"
+  ]
+ ]
+}

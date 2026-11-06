@@ -1,0 +1,67 @@
+{
+ "date": "02-02",
+ "name": "groundhog_mound",
+ "title": "Groundhog Day",
+ "theme": "an earth mound with a hole; a grey groundhog pops up, peeks, blinks and ducks back down",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "........................",
+  "........................",
+  "........................",
+  "........KK....KK........",
+  "........KKKKKKKK........",
+  "........KKAKKAKK........",
+  "...DDDDDKKKMMKKKDDDDD...",
+  ".DDOOOOOAKKKKKKAOOOOODD.",
+  "DOOOOOOOAAAAAAAAOOOOOOOD",
+  "OOOOOOOOOOOOOOOOOOOOOOOO",
+  "OOOOOOOOOOOOOOOOOOOOOOOO"
+ ],
+ "frames": [
+  [
+   "........................",
+   "........................",
+   "........KK....KK........",
+   "........KKKKKKKK........",
+   "........KKAKKAKK........",
+   "........KKKMMKKK........",
+   "...DDDDDKKKKKKKKDDDDD...",
+   ".DDOOOOOAKKKKKKAOOOOODD.",
+   "DOOOOOOOAAAAAAAAOOOOOOOD",
+   "OOOOOOOOOOOOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOOOOOOOOOOOO"
+  ],
+  [
+   "........................",
+   "........................",
+   "........................",
+   "........KK....KK........",
+   "........KKKKKKKK........",
+   "........KAAKKAAK........",
+   "...DDDDDKKKMMKKKDDDDD...",
+   ".DDOOOOOAKKKKKKAOOOOODD.",
+   "DOOOOOOOAAAAAAAAOOOOOOOD",
+   "OOOOOOOOOOOOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOOOOOOOOOOOO"
+  ],
+  [
+   "........................",
+   "........................",
+   "........................",
+   "........................",
+   "........KK....KK........",
+   "........KKKKKKKK........",
+   "...DDDDDKKAKKAKKDDDDD...",
+   ".DDOOOOOAAKMMKAAOOOOODD.",
+   "DOOOOOOOAAAAAAAAOOOOOOOD",
+   "OOOOOOOOOOOOOOOOOOOOOOOO",
+   "OOOOOOOOOOOOOOOOOOOOOOOO"
+  ]
+ ]
+}

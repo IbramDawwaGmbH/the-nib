@@ -1,0 +1,63 @@
+{
+ "date": "05-31",
+ "name": "macaron_stack",
+ "title": "Macaron Day",
+ "theme": "A stack of three macarons (pink, teal, gold) zigzagged on his head, white filling between the shells; the stack wobbles and a sparkle blinks on the top shell",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "...GGGGGGGGGG.....",
+  ".GGGGGGGGGGGGGG...",
+  "..WWWWWWWWWWWW....",
+  ".GGGGGGGGGGGGGG...",
+  "...TTTTTTTTTTTTTT.",
+  "....WWWWWWWWWWWW..",
+  "...TTTTTTTTTTTTTT.",
+  "..MMMMMMMMMMMMMM..",
+  "...WWWWWWWWWWWW...",
+  "..MMMMMMMMMMMMMM.."
+ ],
+ "frames": [
+  [
+   "..GGWWGGGGGG......",
+   "GGGGGGGGGGGGGG....",
+   ".WWWWWWWWWWWW.....",
+   "GGGGGGGGGGGGGG....",
+   "...TTTTTTTTTTTTTT.",
+   "....WWWWWWWWWWWW..",
+   "...TTTTTTTTTTTTTT.",
+   "..MMMMMMMMMMMMMM..",
+   "...WWWWWWWWWWWW...",
+   "..MMMMMMMMMMMMMM.."
+  ],
+  [
+   "...GGGGGGGGGG.....",
+   ".GGGGGGGGGGGGGG...",
+   "..WWWWWWWWWWWW....",
+   ".GGGGGGGGGGGGGG...",
+   "....TTTTTTTTTTTTTT",
+   ".....WWWWWWWWWWWW.",
+   "....TTTTTTTTTTTTTT",
+   "..MMMMMMMMMMMMMM..",
+   "...WWWWWWWWWWWW...",
+   "..MMMMMMMMMMMMMM.."
+  ],
+  [
+   "...GGWGWGGGGG.....",
+   ".GGGGGGGGGGGGGG...",
+   "..WWWWWWWWWWWW....",
+   ".GGGGGGGGGGGGGG...",
+   "...TTTTTTTTTTTTTT.",
+   "....WWWWWWWWWWWW..",
+   "...TTTTTTTTTTTTTT.",
+   "..MMMMMMMMMMMMMM..",
+   "...WWWWWWWWWWWW...",
+   "..MMMMMMMMMMMMMM.."
+  ]
+ ]
+}

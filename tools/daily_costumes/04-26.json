@@ -1,0 +1,67 @@
+{
+ "date": "04-26",
+ "name": "pretzel_twist",
+ "title": "Pretzel Day",
+ "theme": "a brown twisted pretzel with white salt crystals that twinkle",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..OOOOOO......OOOOOO..",
+  ".OOWOOOOO....OOOOOWOO.",
+  ".OOODDDOOOOOOOODDDOOO.",
+  ".OODDDDDOOOOOODDDDDOO.",
+  ".OODDDDDDOOOODDDDDDOO.",
+  ".WOODDDDDOOOODDDDDOOW.",
+  ".OOOODDDOOOOOODDDOOOO.",
+  ".OOOOOOOODDDDDDOOOOOO.",
+  "..OOOOOOODDDDDDOOOOOO.",
+  "...OOOOOOOWOOOOOOOO...",
+  ".....OOOOOOOOOOOO....."
+ ],
+ "frames": [
+  [
+   "..OOOOOO......OOOOOO..",
+   ".OOOOOOOO....OOOOOWOO.",
+   ".OOODDDOOOOOOOODDDOOO.",
+   ".OODDDDDOOOOOODDDDDOO.",
+   ".OODDDDDDOOOODDDDDDOO.",
+   ".WOODDDDDOOOODDDDDOOO.",
+   ".OOOODDDOOOOOODDDOOOO.",
+   ".OOOOOOOODDDDDDOOOOOO.",
+   "..OOOOOOODDDDDDOOOOOO.",
+   "...OOOOOOOWOOOOOOOO...",
+   ".....OOOOOOOOOOOO....."
+  ],
+  [
+   "..OOOOOO......OOOOOO..",
+   ".OOWOOOOO....OOOOOOOO.",
+   ".OOODDDOOOOOOOODDDOOO.",
+   ".OODDDDDOOOOOODDDDDOO.",
+   ".OODDDDDDOOOODDDDDDOO.",
+   ".OOODDDDDOOOODDDDDOOW.",
+   ".OOOODDDOOOOOODDDOOOO.",
+   ".OOOOOOOODDDDDDOOOOOO.",
+   "..OOOOOOODDDDDDOOOOOO.",
+   "...OOOOOOOWOOOOOOOO...",
+   ".....OOOOOOOOOOOO....."
+  ],
+  [
+   "..OOOOOO......OOOOOO..",
+   ".OOOOOOOO....OOOOOWOO.",
+   ".OOODDDOOOOOOOODDDOOO.",
+   ".OODDDDDOOOOOODDDDDOO.",
+   ".OODDDDDDOOOODDDDDDOO.",
+   ".OOODDDDDOOOODDDDDOOW.",
+   ".OOOODDDOOOOOODDDOOOO.",
+   ".OOOOOOOODDDDDDOOOOOO.",
+   "..OOOOOOODDDDDDOOOOOO.",
+   "...OOOOOOOWOOOOOOOO...",
+   ".....OOOOOOOOOOOO....."
+  ]
+ ]
+}

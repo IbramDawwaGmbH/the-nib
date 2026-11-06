@@ -1,0 +1,71 @@
+{
+ "date": "04-09",
+ "name": "unicorn_horn",
+ "title": "Unicorn Day",
+ "theme": "a white spiral unicorn horn with pink ears and headband; a gold four-point sparkle twinkles beside the tip",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "...................",
+  ".........W.........",
+  "........WWP........",
+  "........WPW........",
+  "........PWW........",
+  "........WWP........",
+  ".......WWWPW.......",
+  ".MM....WWPWW....MM.",
+  "MMMM...WPWWW...MMMM",
+  "MMMM...PWWWW...MMMM",
+  "MMMM...WWWWW...MMMM",
+  "MMMMMMMMMMMMMMMMMMM"
+ ],
+ "frames": [
+  [
+   "............G......",
+   ".........W.GGG.....",
+   "........WWP.G......",
+   "........WPW........",
+   "........PWW........",
+   "........WWP........",
+   ".......WWWPW.......",
+   ".MM....WWPWW....MM.",
+   "MMMM...WPWWW...MMMM",
+   "MMMM...PWWWW...MMMM",
+   "MMMM...WWWWW...MMMM",
+   "MMMMMMMMMMMMMMMMMMM"
+  ],
+  [
+   ".............G.....",
+   ".........W.GGGGG...",
+   "........WWP..G.....",
+   "........WPW........",
+   "........PWW........",
+   "........WWP........",
+   ".......WWWPW.......",
+   ".MM....WWPWW....MM.",
+   "MMMM...WPWWW...MMMM",
+   "MMMM...PWWWW...MMMM",
+   "MMMM...WWWWW...MMMM",
+   "MMMMMMMMMMMMMMMMMMM"
+  ],
+  [
+   "...................",
+   ".........W..G......",
+   "........WWP........",
+   "........WPW........",
+   "........PWW........",
+   "........WWP........",
+   ".......WWWPW.......",
+   ".MM....WWPWW....MM.",
+   "MMMM...WPWWW...MMMM",
+   "MMMM...PWWWW...MMMM",
+   "MMMM...WWWWW...MMMM",
+   "MMMMMMMMMMMMMMMMMMM"
+  ]
+ ]
+}

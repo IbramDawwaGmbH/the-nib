@@ -1,0 +1,51 @@
+{
+ "date": "06-29",
+ "name": "tropic_lei",
+ "title": "Day of the Tropics",
+ "theme": "a flower lei in pink, gold and white on a green cord; the flower centres twinkle and the lowest bobs",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  11,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "MMMM................MMMM",
+  "MGMM................MGMM",
+  "MMMM................MMMM",
+  "..GGGG............GGGG..",
+  "..GWGG............GWGG..",
+  "..GGGG............GGGG..",
+  ".....WWWW.MMMM.WWWW.....",
+  ".....WMWWNMGMMNWMWW.....",
+  ".....WWWW.MMMM.WWWW.....",
+  "........................"
+ ],
+ "frames": [
+  [
+   "MMMM................MMMM",
+   "MWMM................MWMM",
+   "MMMM................MMMM",
+   "..GGGG............GGGG..",
+   "..GWGG............GWGG..",
+   "..GGGG............GGGG..",
+   ".....WWWW.MMMM.WWWW.....",
+   ".....WMWWNMGMMNWMWW.....",
+   ".....WWWW.MMMM.WWWW.....",
+   "........................"
+  ],
+  [
+   "MMMM................MMMM",
+   "MGMM................MGMM",
+   "MMMM................MMMM",
+   "..GGGG............GGGG..",
+   "..GWGG............GWGG..",
+   "..GGGG............GGGG..",
+   ".....WWWW......WWWW.....",
+   ".....WMWW.MMMM.WMWW.....",
+   ".....WWWWNMWMMNWWWW.....",
+   "..........MMMM.........."
+  ]
+ ]
+}

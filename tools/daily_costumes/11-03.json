@@ -1,0 +1,69 @@
+{
+ "date": "11-03",
+ "name": "jelly_dome",
+ "title": "World Jellyfish Day",
+ "theme": "A pink jellyfish bell with purple spots worn as a hat; the dome pulses while the purple tentacles sway left and right.",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........................",
+  ".........MMMMMMM.........",
+  "......MMWWMMMMMMMMM......",
+  "....MMWWMMMMMPPMMMMMM....",
+  "...MMWMMMMMMMPPMMMMMMM...",
+  "..MMMMPPMMMMMMMMMMMMMMM..",
+  "..MMMMPPMMMMMMMMMMPPMMM..",
+  "..MMMMMMMMMMMMMMMMPPMMM..",
+  "..MMMMMMMMMMMMMMMMMMMMM..",
+  "..MMMMMMMMMMMMMMMMMMMMM..",
+  "..PP..PP.........PP..PP..",
+  "..PP..PP.........PP..PP..",
+  "..PP..PP.........PP..PP..",
+  "..PP..PP.........PP..PP..",
+  "..PP..PP.........PP..PP..",
+  "..PP..PP.........PP..PP.."
+ ],
+ "frames": [
+  [
+   "..........MMMMM..........",
+   ".......MMMMMMMMMMM.......",
+   ".....MMMWWMMMMMMMMMM.....",
+   "....MMWWMMMMMPPMMMMMM....",
+   "...MMWMMMMMMMPPMMMMMMM...",
+   "...MMMPPMMMMMMMMMMMMMM...",
+   "...MMMPPMMMMMMMMMMPPMM...",
+   "...MMMMMMMMMMMMMMMPPMM...",
+   "...MMMMMMMMMMMMMMMMMMM...",
+   "..MMMMMMMMMMMMMMMMMMMMM..",
+   ".PP..PP.........PP..PP...",
+   ".PP..PP.........PP..PP...",
+   ".PP..PP.........PP..PP...",
+   ".PP..PP.........PP..PP...",
+   ".PP..PP.........PP..PP...",
+   ".PP..PP.........PP..PP..."
+  ],
+  [
+   ".........................",
+   ".........MMMMMMM.........",
+   "......MMWWMMMMMMMMM......",
+   "....MMWWMMMMMPPMMMMMM....",
+   "...MMWMMMMMMMPPMMMMMMM...",
+   "..MMMMPPMMMMMMMMMMMMMMM..",
+   "..MMMMPPMMMMMMMMMMPPMMM..",
+   "..MMMMMMMMMMMMMMMMPPMMM..",
+   "..MMMMMMMMMMMMMMMMMMMMM..",
+   "..MMMMMMMMMMMMMMMMMMMMM..",
+   "...PP..PP.........PP..PP.",
+   "...PP..PP.........PP..PP.",
+   "...PP..PP.........PP..PP.",
+   "...PP..PP.........PP..PP.",
+   "...PP..PP.........PP..PP.",
+   "...PP..PP.........PP..PP."
+  ]
+ ]
+}

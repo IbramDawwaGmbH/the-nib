@@ -1,0 +1,43 @@
+{
+ "date": "12-24",
+ "name": "nightcap_tassel",
+ "title": "Christmas Eve",
+ "theme": "a sleepy red-and-white striped nightcap with a white cuff, its tip folded left with a pom-pom that sways",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  14,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....RRRRRRRR...........",
+  ".WWWRRRRRRRR...........",
+  ".WWW....WWWWWWWW.......",
+  ".WWW....WWWWWWWW.......",
+  "........RRRRRRRRRRRR...",
+  "........RRRRRRRRRRRR...",
+  ".......WWWWWWWWWWWWWW..",
+  ".......WWWWWWWWWWWWWW..",
+  "......RRRRRRRRRRRRRRRR.",
+  "......RRRRRRRRRRRRRRRR.",
+  ".....WWWWWWWWWWWWWWWWWW",
+  ".....WWWWWWWWWWWWWWWWWW"
+ ],
+ "frames": [
+  [
+   ".......................",
+   "...RRRRRRRR............",
+   "WWWRRRRRWWWWWWWW.......",
+   "WWWWWWWWWWWWWWWW.......",
+   "WWW.....RRRRRRRRRRRR...",
+   "........RRRRRRRRRRRR...",
+   ".......WWWWWWWWWWWWWW..",
+   ".......WWWWWWWWWWWWWW..",
+   "......RRRRRRRRRRRRRRRR.",
+   "......RRRRRRRRRRRRRRRR.",
+   ".....WWWWWWWWWWWWWWWWWW",
+   ".....WWWWWWWWWWWWWWWWWW"
+  ]
+ ]
+}

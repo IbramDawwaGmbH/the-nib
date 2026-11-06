@@ -1,0 +1,63 @@
+{
+ "date": "01-08",
+ "name": "shower_cap",
+ "title": "Bubble Bath Day",
+ "theme": "a puffy pink shower cap with white polka dots and a white frill band, two blue water drops falling at its sides",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  17,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "............MMMMMMMMMM............",
+  ".........MMMMMMMMMMMMMMMM.........",
+  ".B.....MMMMMWWMMMMMMWWMMMMM.......",
+  "BBB...MMMMMMWWMMMMMMWWMMMMMM......",
+  "BBB..MMMMMMMMMMMMMMMMMMMMMMMM.....",
+  "....MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+  "....MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+  "....MMMMMMMMMMMMMMMMMMMMMMMMMM..B.",
+  "....WWWWWWWWWWWWWWWWWWWWWWWWWW.BBB",
+  "....WWW.WWW.WWW.WWW.WWW.WWW.WW.BBB",
+  "..................................",
+  "..................................",
+  "..................................",
+  ".................................."
+ ],
+ "frames": [
+  [
+   "............MMMMMMMMMM............",
+   ".........MMMMMMMMMMMMMMMM.........",
+   ".......MMMMMWWMMMMMMWWMMMMM.......",
+   "......MMMMMMWWMMMMMMWWMMMMMM......",
+   ".....MMMMMMMMMMMMMMMMMMMMMMMM.....",
+   "....MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+   ".B..MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+   "BBB.MMMMMMMMMMMMMMMMMMMMMMMMMM....",
+   "BBB.WWWWWWWWWWWWWWWWWWWWWWWWWW....",
+   "....WW.WWW.WWW.WWW.WWW.WWW.WWW....",
+   "..................................",
+   "................................B.",
+   "...............................BBB",
+   "...............................BBB"
+  ],
+  [
+   "............MMMMMMMMMM............",
+   ".........MMMMMMMMMMMMMMMM.........",
+   ".......MMMMMWWMMMMMMWWMMMMM.....B.",
+   "......MMMMMMWWMMMMMMWWMMMMMM...BBB",
+   ".....MMMMMMMMMMMMMMMMMMMMMMMM..BBB",
+   "....MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+   "....MMMMWWMMMMMMWWMMMMMMWWMMMM....",
+   "....MMMMMMMMMMMMMMMMMMMMMMMMMM....",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW....",
+   "....W.WWW.WWW.WWW.WWW.WWW.WWW.....",
+   ".B................................",
+   "BBB...............................",
+   "BBB...............................",
+   ".................................."
+  ]
+ ]
+}

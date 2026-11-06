@@ -1,0 +1,54 @@
+{
+  "date": "01-13",
+  "name": "rubber_duck",
+  "title": "Rubber Ducky Day",
+  "theme": "a gold rubber duck sits on his head; it bobs and quacks",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    7,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    "..............",
+    "....GGGG......",
+    "...GDGGGG.....",
+    "FFFGGGGGG.....",
+    "FFFGGGGGG...GG",
+    "..GGGGGGGGGGG.",
+    "..GGGGGGGGGGGG",
+    "..GGGGGGGGGGGG",
+    "..GGGGGGGGGGGG",
+    "..GGGGGGGGGGGG",
+    "...GGGGGGGGGG."
+  ],
+  "frames": [
+    [
+      "....GGGG......",
+      "FFFGDGGGG.....",
+      "...GGGGGG...GG",
+      "FFFGGGGGGGGGG.",
+      "..GGGGGGGGGGG.",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "...GGGGGGGGGG.",
+      ".............."
+    ],
+    [
+      "..............",
+      "....GGGG......",
+      "...GDGGGG.....",
+      "FFFGGGGGG...GG",
+      "FFFGGGGGG...G.",
+      "..GGGGGGGGGGG.",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "..GGGGGGGGGGGG",
+      "...GGGGGGGGGG."
+    ]
+  ]
+}

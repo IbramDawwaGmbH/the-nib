@@ -1,0 +1,63 @@
+{
+  "date": "02-22",
+  "name": "cog_thinking_cap",
+  "title": "Thinking Cap Day",
+  "theme": "a snug purple thinking cap with a gold brim and a chunky gold cog on top that turns a step each frame; an idea spark pops up",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    11,
+    9
+  ],
+  "layer": "over",
+  "pattern": [
+    "................G.....",
+    "..............GGGGG...",
+    "..............GGGGG...",
+    "......PPPPPPPGGGDGGG..",
+    "...PPPPPPPPPPPGGGGG...",
+    ".PPPPPPPPPPPPPGGGGGPP.",
+    "PPPPPPPPPPPPPPPPGPPPPP",
+    "PPPPPPPPPPPPPPPPPPPPPP",
+    "PPPPPPPPPPPPPPPPPPPPPP",
+    "GGGGGGGGGGGGGGGGGGGGGG"
+  ],
+  "frames": [
+    [
+      ".............G.....G..",
+      "..............GGGGG...",
+      "..............GGGGG...",
+      "......PPPPPPPPGGDGG...",
+      "...PPPPPPPPPPPGGGGG...",
+      ".PPPPPPPPPPPPPGGGGGPP.",
+      "PPPPPPPPPPPPPGPPPPPGPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "GGGGGGGGGGGGGGGGGGGGGG"
+    ],
+    [
+      "................G.....",
+      "...............GGG....",
+      "..............GGGGG...",
+      "......PPPPPPPGGGDGGG..",
+      "...PPPPPPPPPPPGGGGG...",
+      ".PPPPPPPPPPPPPPGGGPPP.",
+      "PPPPPPPPPPPPPPPPGPPPPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "GGGGGGGGGGGGGGGGGGGGGG"
+    ],
+    [
+      ".............G.....G..",
+      "..............GGGGG..W",
+      "..............GGGGG...",
+      "......PPPPPPPPGGDGG...",
+      "...PPPPPPPPPPPGGGGG...",
+      ".PPPPPPPPPPPPPGGGGGPP.",
+      "PPPPPPPPPPPPPGPPPPPGPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "PPPPPPPPPPPPPPPPPPPPPP",
+      "GGGGGGGGGGGGGGGGGGGGGG"
+    ]
+  ]
+}

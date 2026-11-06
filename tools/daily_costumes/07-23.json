@@ -1,0 +1,57 @@
+{
+ "date": "07-23",
+ "name": "soft_serve",
+ "title": "Vanilla Ice Cream Day",
+ "theme": "a white soft-serve swirl in a gold waffle cone; the top curl wobbles and a drip slides down the cone",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......WW.....",
+  ".....WWWWW....",
+  "......DDD.....",
+  "..WWWWWWWWW...",
+  "..WWWWWWWWW...",
+  "..DDDDDDDDDD..",
+  ".WWWWWWWWWWWW.",
+  ".WWWWWWWWWWWW.",
+  "GGGDGGGDGGGDGG",
+  "..GGGDGGGDGG..",
+  "....GGGGGG....",
+  "......GG......"
+ ],
+ "frames": [
+  [
+   "......WW......",
+   ".....WWWWW....",
+   "......DDD.....",
+   "..WWWWWWWWW...",
+   "..WWWWWWWWW...",
+   "..DDDDDDDDDD..",
+   ".WWWWWWWWWWWW.",
+   ".WWWWWWWWWWWW.",
+   "GGGDGGGDGGGDGG",
+   "..GGGDGGGDGW..",
+   "....GGGGGG....",
+   "......GG......"
+  ],
+  [
+   "........WW....",
+   ".....WWWWW....",
+   "......DDD.....",
+   "..WWWWWWWWW...",
+   "..WWWWWWWWW...",
+   "..DDDDDDDDDD..",
+   ".WWWWWWWWWWWW.",
+   ".WWWWWWWWWWWW.",
+   "GGGDGGGDGGGDGG",
+   "..GGGDGGGDGG..",
+   "....GGGGGW....",
+   "......GG......"
+  ]
+ ]
+}

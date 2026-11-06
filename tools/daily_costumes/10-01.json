@@ -1,0 +1,54 @@
+{
+  "date": "10-01",
+  "name": "coffee_mug_hat",
+  "title": "Coffee Day",
+  "theme": "a white mug with coffee and a D rim seam, a W handle, two K steam wisps that drift and fade",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    7,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    "....K...K........",
+    "....K...K........",
+    "....K...K........",
+    "WOOOOOOOOOOOOW...",
+    "WOOOOOOOOOOOOW...",
+    "DDDDDDDDDDDDDDWW.",
+    "WWWWWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWWW",
+    "WWWWWWWWWWWWWWWW.",
+    ".WWWWWWWWWWWW...."
+  ],
+  "frames": [
+    [
+      "...K.....K.......",
+      "....K...K........",
+      "....K...K........",
+      "WOOOOOOOOOOOOW...",
+      "WOOOOOOOOOOOOW...",
+      "DDDDDDDDDDDDDDWW.",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWW...."
+    ],
+    [
+      ".................",
+      "....K...K........",
+      "....K...K........",
+      "WOOOOOOOOOOOOW...",
+      "WOOOOOOOOOOOOW...",
+      "DDDDDDDDDDDDDDWW.",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWWW",
+      "WWWWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWW...."
+    ]
+  ]
+}

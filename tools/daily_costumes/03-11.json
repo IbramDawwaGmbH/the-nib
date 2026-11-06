@@ -1,0 +1,48 @@
+{
+ "date": "03-11",
+ "name": "pipe_wrench",
+ "title": "World Plumbing Day",
+ "theme": "a big red pipe wrench lying across his head with a dark seam down the handle and silver jaws; the upper jaw opens and closes with a white glint",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  ".................SSWWSSSSS",
+  ".................SSSSSSSSS",
+  ".RRRRRRRRRRRRRRRRSSSSSSSSS",
+  "RRRRRRRRRRRRRRRRRSSS......",
+  "RDDDDDDDDDDDDDDDRSSS......",
+  "RRRRRRRRRRRRRRRRRSSSSSSSSS",
+  ".RRRRRRRRRRRRRRRRSSSSSSSSS",
+  ".................SSSSSSSSS"
+ ],
+ "frames": [
+  [
+   ".................SSSSWWSSS",
+   ".................SSSSSSSSS",
+   ".................SSSSSSSSS",
+   ".RRRRRRRRRRRRRRRRSSS......",
+   "RRRRRRRRRRRRRRRRRSSS......",
+   "RDDDDDDDDDDDDDDDRSSS......",
+   "RRRRRRRRRRRRRRRRRSSSSSSSSS",
+   ".RRRRRRRRRRRRRRRRSSSSSSSSS",
+   ".................SSSSSSSSS"
+  ],
+  [
+   "..........................",
+   ".................SSSSSSWWS",
+   ".................SSSSSSSSS",
+   ".RRRRRRRRRRRRRRRRSSSSSSSSS",
+   "RRRRRRRRRRRRRRRRRSSS......",
+   "RDDDDDDDDDDDDDDDRSSS......",
+   "RRRRRRRRRRRRRRRRRSSSSSSSSS",
+   ".RRRRRRRRRRRRRRRRSSSSSSSSS",
+   ".................SSSSSSSSS"
+  ]
+ ]
+}

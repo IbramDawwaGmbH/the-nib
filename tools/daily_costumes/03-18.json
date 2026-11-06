@@ -1,0 +1,75 @@
+{
+ "date": "03-18",
+ "name": "sorting_bin_hat",
+ "title": "Global Recycling Day",
+ "theme": "a green recycling bin worn like a hat, 18px wide, 11 rows, dark lid seam and a white chasing-arrows mark on the front; the lid flips open, a white bottle drops in, the lid closes and the arrows mark glints",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................",
+  "..................",
+  "NNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNN",
+  "NNNNNNNNNNNNNNNNNN",
+  ".DDDDDDDDDDDDDDDD.",
+  ".NNNNNNNNNNNNNNNN.",
+  ".NNNNNNNWWNNNNNNN.",
+  ".NNNNNNWWWWNNNNNN.",
+  ".NNNNNNWNNWNNNNNN.",
+  "..NNNNWWNNWWNNNN..",
+  "..NNNNWWWNWWNNNN..",
+  "..NNNNNNNNNNNNNN.."
+ ],
+ "frames": [
+  [
+   ".....WW.......NNNN",
+   ".....WW.......NNNN",
+   "....WWWW......NNNN",
+   "....WWWW......NNNN",
+   "....WWWW......NNNN",
+   ".DDDDDDDDDDDDDDDNN",
+   ".NDDDDDDDDDDDDNNN.",
+   ".NNNNNNNWWNNNNNNN.",
+   ".NNNNNNWWWWNNNNNN.",
+   ".NNNNNNWNNWNNNNNN.",
+   "..NNNNWWNNWWNNNN..",
+   "..NNNNWWWNWWNNNN..",
+   "..NNNNNNNNNNNNNN.."
+  ],
+  [
+   "..............NNNN",
+   "..............NNNN",
+   "..............NNNN",
+   ".....WW.......NNNN",
+   ".....WW.......NNNN",
+   ".DDDDDDDDDDDDDDDNN",
+   ".NDDDDDDDDDDDDNNN.",
+   ".NNNNNNNWWNNNNNNN.",
+   ".NNNNNNWWWWNNNNNN.",
+   ".NNNNNNWNNWNNNNNN.",
+   "..NNNNWWNNWWNNNN..",
+   "..NNNNWWWNWWNNNN..",
+   "..NNNNNNNNNNNNNN.."
+  ],
+  [
+   "..................",
+   "..................",
+   "NNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNN",
+   "NNNNNNNNNNNNNNNNNN",
+   ".DDDDDDDDDDDDDDDD.",
+   ".NNNNNNNNNNNNNNNN.",
+   ".NNNNNNNWWGGNNNNN.",
+   ".NNNNNNWWWGGNNNNN.",
+   ".NNNNNNWNNWNNNNNN.",
+   "..NNNNWWNNWWNNNN..",
+   "..NNNNWWWNWWNNNN..",
+   "..NNNNNNNNNNNNNN.."
+  ]
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "date": "10-24",
+ "name": "band_shako",
+ "title": "Marching Band Day",
+ "theme": "a tall blue marching-band shako with gold band and badge and a white plume that bobs",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..WW............",
+  ".WWWW...........",
+  ".WWWWBBBBBBBBBB.",
+  ".WWWWBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBGGBGGBBBB.",
+  ".BBBBBBGGGBBBBB.",
+  ".BBBBBBBGBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBB.",
+  ".GGGGGGGGGGGGGG.",
+  "DDDDDDDDDDDDDDDD"
+ ],
+ "frames": [
+  [
+   ".WW.............",
+   "WWWW............",
+   ".WWWWBBBBBBBBBB.",
+   ".WWWWBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBGGBGGBBBB.",
+   ".BBBBBBGGGBBBBB.",
+   ".BBBBBBBGBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".GGGGGGGGGGGGGG.",
+   "DDDDDDDDDDDDDDDD"
+  ],
+  [
+   "...WW...........",
+   "..WWW...........",
+   ".WWWWBBBBBBBBBB.",
+   ".WWWWBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBGGBGGBBBB.",
+   ".BBBBBBGGGBBBBB.",
+   ".BBBBBBBGBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".GGGGGGGGGGGGGG.",
+   "DDDDDDDDDDDDDDDD"
+  ],
+  [
+   ".WWWW...........",
+   ".WWWW...........",
+   ".WWWWBBBBBBBBBB.",
+   "..WWWBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBGGBGGBBBB.",
+   ".BBBBBBGWGBBBBB.",
+   ".BBBBBBBGBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBB.",
+   ".GGGGGGGGGGGGGG.",
+   "DDDDDDDDDDDDDDDD"
+  ]
+ ]
+}

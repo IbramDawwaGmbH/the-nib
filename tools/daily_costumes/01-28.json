@@ -1,0 +1,42 @@
+{
+ "date": "01-28",
+ "name": "incognito_mask",
+ "title": "Data Privacy Day",
+ "theme": "a charcoal domino mask with white eye areas and dark pupils; the eyes dart left, right, then blink shut",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  "...AAAAAA....AAAAAA...",
+  "..AAAAAAAAAAAAAAAAAA..",
+  ".AAWWWWAAAAAAAAWWWWAA.",
+  "AAAWDWWAAAAAAAAWDWWAAA",
+  ".AAWWWWAAAAAAAAWWWWAA.",
+  "..AAAAAAAAAAAAAAAAAA..",
+  "........AAAAAA........"
+ ],
+ "frames": [
+  [
+   "...AAAAAA....AAAAAA...",
+   "..AAAAAAAAAAAAAAAAAA..",
+   ".AAWWWWAAAAAAAAWWWWAA.",
+   "AAAWWDWAAAAAAAAWWDWAAA",
+   ".AAWWWWAAAAAAAAWWWWAA.",
+   "..AAAAAAAAAAAAAAAAAA..",
+   "........AAAAAA........"
+  ],
+  [
+   "...AAAAAA....AAAAAA...",
+   "..AAAAAAAAAAAAAAAAAA..",
+   ".AAAAAAAAAAAAAAAAAAAA.",
+   "AAAAAAAAAAAAAAAAAAAAAA",
+   ".AAAAAAAAAAAAAAAAAAAA.",
+   "..AAAAAAAAAAAAAAAAAA..",
+   "........AAAAAA........"
+  ]
+ ]
+}

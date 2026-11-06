@@ -1,0 +1,57 @@
+{
+ "date": "03-21",
+ "name": "green_canopy",
+ "title": "Day of Forests",
+ "theme": "a fan of five big green leaves (oak, maple, birch) spreading from a brown stem knot on his crown with dark midribs; in a breeze the outer leaves lift and the middle leaf tilts",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  14,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..............NN..............",
+  ".......NN....NDDN.............",
+  "......NDNN..NNDDNN...NN.......",
+  ".NN..NNDNNDNNNDDNNNDNNDN......",
+  "NDNN.NNDNNDNNNDDNNNDNNDNN.NNN.",
+  "NNDNDNNDNNDNNNDDNNNDNNDNNDNDNN",
+  ".NNDNDNNDNDNNNDDNNNDNDNNDNDNN.",
+  "..NNDNDNDNDNNNDDNNNDNDNDNDNN..",
+  "...NNDNDNNDNNNDDNNNDNNDNDNN...",
+  "......NNDDDNNNNNNNNDDDNN......",
+  ".............OOOO.............",
+  ".............OOOO............."
+ ],
+ "frames": [
+  [
+   "...............NN.............",
+   ".......NN.....NDDN............",
+   "NN....NDNN...NNDDNN..NN.......",
+   "DNN..NNDNNDNNNDDNNNDNNDN...NNN",
+   "NDNN.NNDNNDNNNDDNNNDNNDNN.NNDN",
+   "NNDNDNNDNNDNNNDDNNNDNNDNNDNDNN",
+   ".NNDNDNNDNDNNNDDNNNDNDNNDNDNN.",
+   "..NNDNDNDNDNNNDDNNNDNDNDNDNN..",
+   ".....NNDNNDNNNDDNNNDNNDNN.....",
+   "..........NNNNNNNNNN..........",
+   ".............OOOO.............",
+   ".............OOOO............."
+  ],
+  [
+   ".............NN...............",
+   ".......NN...NDDN..............",
+   "......NDNN.NNDDNN....NN.......",
+   "NN...NNDNNDNNNDDNNNDNNDN......",
+   "DNN..NNDNNDNNNDDNNNDNNDNN..NNN",
+   "NDNN.NNDNNDNNNDDNNNDNNDNN.NNDN",
+   "NNDNNDNNDNDNNNDDNNNDNDNNDNNDNN",
+   ".NNDNNDNDNDNNNDDNNNDNDNDNNDNN.",
+   "..NNDNNDNNDNNNDDNNNDNNDNNDNN..",
+   ".....NNNDDNNNNNNNNNNDDNNN.....",
+   ".............OOOO.............",
+   ".............OOOO............."
+  ]
+ ]
+}

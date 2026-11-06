@@ -1,0 +1,67 @@
+{
+ "date": "03-15",
+ "name": "hip_basketball",
+ "title": "Hoops Season",
+ "theme": "a brown basketball with curved dark seams tucked against his hip; it spins and dips",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  1,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "........ODDODO..",
+  ".......ODODOODO.",
+  "......ODOODOOODO",
+  "......ODOODOOODO",
+  "......DDDDDDDDDD",
+  "......ODOODOOODO",
+  "......ODOODOOODO",
+  "......ODOODOOODO",
+  ".......ODODOODO.",
+  "........ODDODO..",
+  "................"
+ ],
+ "frames": [
+  [
+   "................",
+   "........OODDOO..",
+   ".......OODODDOO.",
+   "......OODOODODOO",
+   "......OODOODODOO",
+   "......DDDDDDDDDD",
+   "......OODOODODOO",
+   "......OODOODODOO",
+   "......OODOODODOO",
+   ".......OODODDOO.",
+   "........OODDOO.."
+  ],
+  [
+   "........OODDOO..",
+   ".......OOODDOOO.",
+   "......OOODDODOOO",
+   "......OOODDODOOO",
+   "......DDDDDDDDDD",
+   "......OOODDODOOO",
+   "......OOODDODOOO",
+   "......OOODDODOOO",
+   ".......OOODDOOO.",
+   "........OODDOO..",
+   "................"
+  ],
+  [
+   "................",
+   "........ODDDOO..",
+   ".......OODOODOO.",
+   "......OODDOOODOO",
+   "......OODDOOODOO",
+   "......DDDDDDDDDD",
+   "......OODDOOODOO",
+   "......OODDOOODOO",
+   "......OODDOOODOO",
+   ".......OODOODOO.",
+   "........ODDDOO.."
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "02-07",
+ "name": "element_tile",
+ "title": "Periodic Table Day",
+ "theme": "a square periodic-table tile worn like a flat cap, teal with a dark inner border seam and a big white letter N; the tile steps teal, purple, green like element groups while a white glint crosses the top edge",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".TWWWTTTTTTTTTT.",
+  "TDDDDDDDDDDDDDDT",
+  "TDTTTTTTTTTTTTDT",
+  "TDTTTTTTTTTTTTDT",
+  "TDTTTWTTTWTTTTDT",
+  "TDTTTWWTTWTTTTDT",
+  "TDTTTWTWTWTTTTDT",
+  "TDTTTWTTWWTTTTDT",
+  "TDTTTWTTTWTTTTDT",
+  "TDTTTTTTTTTTTTDT",
+  "TDDDDDDDDDDDDDDT",
+  ".TTTTTTTTTTTTTT."
+ ],
+ "frames": [
+  [
+   ".PPPPPWWWPPPPPP.",
+   "PDDDDDDDDDDDDDDP",
+   "PDPPPPPPPPPPPPDP",
+   "PDPPPPPPPPPPPPDP",
+   "PDPPPWPPPWPPPPDP",
+   "PDPPPWWPPWPPPPDP",
+   "PDPPPWPWPWPPPPDP",
+   "PDPPPWPPWWPPPPDP",
+   "PDPPPWPPPWPPPPDP",
+   "PDPPPPPPPPPPPPDP",
+   "PDDDDDDDDDDDDDDP",
+   ".PPPPPPPPPPPPPP."
+  ],
+  [
+   ".NNNNNNNNNWWWNN.",
+   "NDDDDDDDDDDDDDDN",
+   "NDNNNNNNNNNNNNDN",
+   "NDNNNNNNNNNNNNDN",
+   "NDNNNWNNNWNNNNDN",
+   "NDNNNWWNNWNNNNDN",
+   "NDNNNWNWNWNNNNDN",
+   "NDNNNWNNWWNNNNDN",
+   "NDNNNWNNNWNNNNDN",
+   "NDNNNNNNNNNNNNDN",
+   "NDDDDDDDDDDDDDDN",
+   ".NNNNNNNNNNNNNN."
+  ]
+ ]
+}

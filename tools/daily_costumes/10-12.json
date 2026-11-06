@@ -1,0 +1,79 @@
+{
+ "date": "10-12",
+ "name": "rain_souwester",
+ "title": "Autumn Downpour",
+ "theme": "a yellow sou'wester rain hat with a short front brim and a long sloping back, drops dripping off the edge one after another",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "........GGGGGGGGGG........",
+  "......GGGGGGGGGGGGGG......",
+  ".....GGGGGGGGGGGGGGGG.....",
+  ".....GGGGGGGGGGGGGGGG.....",
+  ".....GGGGGGGGGGGGGGGG.....",
+  ".....DDDDDDDDDDDDDDDD.....",
+  ".GGGGGGGGGGGGGGGGGGGGGG...",
+  ".B...............GGGGGGGG.",
+  "....................GGGGGG",
+  ".....................BGGGG",
+  ".....................B....",
+  ".........................B",
+  ".........................B",
+  ".........................."
+ ],
+ "frames": [
+  [
+   "........GGGGGGGGGG........",
+   "......GGGGGGGGGGGGGG......",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....DDDDDDDDDDDDDDDD.....",
+   ".GGGGGGGGGGGGGGGGGGGGGG...",
+   ".B...............GGGGGGGG.",
+   ".B..................GGGGGG",
+   "......................GGGG",
+   ".....................B....",
+   ".....................B....",
+   ".........................B",
+   ".........................B"
+  ],
+  [
+   "........GGGGGGGGGG........",
+   "......GGGGGGGGGGGGGG......",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....DDDDDDDDDDDDDDDD.....",
+   ".GGGGGGGGGGGGGGGGGGGGGG...",
+   ".................GGGGGGGG.",
+   ".B..................GGGGGG",
+   ".B....................GGGG",
+   ".........................B",
+   ".....................B....",
+   ".....................B....",
+   ".........................."
+  ],
+  [
+   "........GGGGGGGGGG........",
+   "......GGGGGGGGGGGGGG......",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....GGGGGGGGGGGGGGGG.....",
+   ".....DDDDDDDDDDDDDDDD.....",
+   ".GGGGGGGGGGGGGGGGGGGGGG...",
+   ".................GGGGGGGG.",
+   "....................GGGGGG",
+   ".B...................BGGGG",
+   ".B.......................B",
+   ".........................B",
+   "..........................",
+   ".........................."
+  ]
+ ]
+}

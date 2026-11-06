@@ -1,0 +1,71 @@
+{
+ "date": "10-23",
+ "name": "lab_flask",
+ "title": "Mole Day",
+ "theme": "a teal lab flask with green liquid; bubbles rise through the neck and pop",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".....TTTTTT.....",
+  ".....WWWWWW.....",
+  ".....WWWWWW.....",
+  ".....WWNWWW.....",
+  ".....TWWWWT.....",
+  "....TWWWWWWT....",
+  "...TWWWWWWWWT...",
+  "..TWWWWWWNWWWT..",
+  ".TNNNNNNNNNNNNT.",
+  "TNNNNNNNNNNNNNNT",
+  "TNNNNNNNNNNNNNNT",
+  "TNNNNNNNNNNNNNNT"
+ ],
+ "frames": [
+  [
+   ".....TTTTTT.....",
+   ".....WWWWWW.....",
+   ".....WWNWWW.....",
+   ".....WWWWWW.....",
+   ".....TWWWWT.....",
+   "....TWWWWWWT....",
+   "...TWWWWWNWWT...",
+   "..TWWWWWWWWWWT..",
+   ".TNNNNNNNNNNNNT.",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT"
+  ],
+  [
+   ".....TTTTTT.....",
+   ".....WWNWWW.....",
+   ".....WWWWWW.....",
+   ".....WWWWWW.....",
+   ".....TWWWWT.....",
+   "....TWWWWNWT....",
+   "...TWWWWWWWWT...",
+   "..TWWWWWWWWWWT..",
+   ".TWWNNNNNNNNNNT.",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT"
+  ],
+  [
+   ".....TTWWTT.....",
+   ".....WWWWWW.....",
+   ".....WWWWWW.....",
+   ".....WWWWWW.....",
+   ".....TWWWNT.....",
+   "....TWWWWWWT....",
+   "...TWWWWWWWWT...",
+   "..TWWWWWWWWWWT..",
+   ".TNNNNNNNNNNNNT.",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT",
+   "TNNNNNNNNNNNNNNT"
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "06-17",
+ "name": "cactus_bloom",
+ "title": "Desert Bloom",
+ "theme": "a little saguaro cactus standing on his head with a pink flower that opens and closes",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......MMMM.......",
+  ".......MMMM.......",
+  ".......NNNN.......",
+  "......NNNNNN......",
+  "......NNNNNN......",
+  "NNN...NDNNNN...NNN",
+  "NNN...NNNNNN...NNN",
+  "NNNNNNNNNNDNNNNNNN",
+  "NNNNNNNNNNNNNNNNNN",
+  "......NDNNNN......",
+  "......NNNNNN......",
+  "......NNNNNN......"
+ ],
+ "frames": [
+  [
+   "......MMMMMM......",
+   "......MMMMMM......",
+   ".......NNNN.......",
+   "......NNNNNN......",
+   "......NNNNNN......",
+   "NNN...NDNNNN...NNN",
+   "NNN...NNNNNN...NNN",
+   "NNNNNNNNNNDNNNNNNN",
+   "NNNNNNNNNNNNNNNNNN",
+   "......NDNNNN......",
+   "......NNNNNN......",
+   "......NNNNNN......"
+  ],
+  [
+   "......MMMMMM......",
+   "......MMGGMM......",
+   "......MMMMMM......",
+   "......NNNNNN......",
+   "......NNNNNN......",
+   "NNN...NDNNNN...NNN",
+   "NNN...NNNNNN...NNN",
+   "NNNNNNNNNNDNNNNNNN",
+   "NNNNNNNNNNNNNNNNNN",
+   "......NDNNNN......",
+   "......NNNNNN......",
+   "......NNNNNN......"
+  ]
+ ]
+}

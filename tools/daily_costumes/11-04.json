@@ -1,0 +1,71 @@
+{
+ "date": "11-04",
+ "name": "lollipop_specs",
+ "title": "Candy Day",
+ "theme": "Two round red lollipops held up as lenses, a white swirl arc turning a quarter each beat in both, sticks angled down and out.",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  12,
+  2
+ ],
+ "layer": "over",
+ "pattern": [
+  "....RRRRR.......RRRRR....",
+  "...RRRRRRR.....RRRRRRR...",
+  "..RRRRWWRRRWWWRRRWWRRRR..",
+  "..RRRRRRWRR...RRWRRRRRR..",
+  "..RRRWRRWRR...RRWRRWRRR..",
+  "..RRRRWWRRR...RRRWWRRRR..",
+  "..RRRRRRRRR...RRRRRRRRR..",
+  "...RRRRRRR.....RRRRRRR...",
+  "....RRRRR.......RRRRR....",
+  "...WW...............WW...",
+  "..WW.................WW..",
+  ".WW...................WW."
+ ],
+ "frames": [
+  [
+   "....RRRRR.......RRRRR....",
+   "...RRRRRRR.....RRRRRRR...",
+   "..RRRRRRRRRWWWRRRRRRRRR..",
+   "..RRRRWRRRR...RRRRWRRRR..",
+   "..RRRWRRWRR...RRWRRWRRR..",
+   "..RRRWRRWRR...RRWRRWRRR..",
+   "..RRRRWWRRR...RRRWWRRRR..",
+   "...RRRRRRR.....RRRRRRR...",
+   "....RRRRR.......RRRRR....",
+   "...WW...............WW...",
+   "..WW.................WW..",
+   ".WW...................WW."
+  ],
+  [
+   "....RRRRR.......RRRRR....",
+   "...RRRRRRR.....RRRRRRR...",
+   "..RRRRRRRRRWWWRRRRRRRRR..",
+   "..RRRWWRRRR...RRRRWWRRR..",
+   "..RRWRRWRRR...RRRWRRWRR..",
+   "..RRWRRRRRR...RRRRRRWRR..",
+   "..RRRWWRRRR...RRRRWWRRR..",
+   "...RRRRRRR.....RRRRRRR...",
+   "....RRRRR.......RRRRR....",
+   "...WW...............WW...",
+   "..WW.................WW..",
+   ".WW...................WW."
+  ],
+  [
+   "....RRRRR.......RRRRR....",
+   "...RRRRRRR.....RRRRRRR...",
+   "..RRRWWRRRRWWWRRRRWWRRR..",
+   "..RRWRRWRRR...RRRWRRWRR..",
+   "..RRWRRWRRR...RRRWRRWRR..",
+   "..RRRRWRRRR...RRRRWRRRR..",
+   "..RRRRRRRRR...RRRRRRRRR..",
+   "...RRRRRRR.....RRRRRRR...",
+   "....RRRRR.......RRRRR....",
+   "...WW...............WW...",
+   "..WW.................WW..",
+   ".WW...................WW."
+  ]
+ ]
+}

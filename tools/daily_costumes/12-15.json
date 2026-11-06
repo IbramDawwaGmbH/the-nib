@@ -1,0 +1,51 @@
+{
+  "date": "12-15",
+  "name": "mistletoe_sprig",
+  "title": "Mistletoe Day",
+  "theme": "a green mistletoe sprig hanging above his head from a red ribbon, oval leaves in pairs and three white berries; the sprig swings and the berries glint in turn",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    9,
+    9
+  ],
+  "layer": "over",
+  "pattern": [
+    "........RR........",
+    "......RRRRRR......",
+    "..NNN...NN...NNN..",
+    ".NNNNN..NN..NNNNN.",
+    "..NNN...NN...NNN..",
+    "........NN........",
+    "........WWW.......",
+    "....WWW.WWW.WWW...",
+    "....WWW.WWW.WWW...",
+    "....WWW.....WWW..."
+  ],
+  "frames": [
+    [
+      "........RR........",
+      "......RRRRRR......",
+      "...NNN...NN...NNN.",
+      "..NNNNN..NN..NNNNN",
+      "...NNN...NN...NNN.",
+      ".........NN.......",
+      ".........WWW......",
+      ".....WWW.WWW.WWW..",
+      ".....WKW.WWW.WWW..",
+      ".....WWW.....WWW.."
+    ],
+    [
+      "........RR........",
+      "......RRRRRR......",
+      ".NNN...NN...NNN...",
+      "NNNNN..NN..NNNNN..",
+      ".NNN...NN...NNN...",
+      ".......NN.........",
+      ".......WWW........",
+      "...WWW.WWW.WWW....",
+      "...WWW.WWW.WKW....",
+      "...WWW.....WWW...."
+    ]
+  ]
+}

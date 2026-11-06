@@ -105,9 +105,10 @@ outranks everything above except those three, and it lands in the wardrobe's rec
 ### The costume of the day
 
 On top of the fifty-three, he has a **calendar**: one costume for every date of the year, 366 of
-them with the twenty-ninth of February, and every one of them moves. A heart that beats on
-Valentine's Day, a pi hat on the fourteenth of March, a jack-o'-lantern that flickers on
-Halloween; the days between are themed on the season they fall in.
+them with the twenty-ninth of February, and every one of them moves. Hearts bobbing on spring
+antennae on Valentine's Day, a pi party cone on the fourteenth of March, a leap frog on the
+twenty-ninth of February, a ghost peeking over his shoulder on Halloween; the days between are
+themed on the season they fall in, and no two days share an idea.
 
 It is the season rule made more specific, not a timer. The same date always gets the same
 costume, so it is still something you can reason about — "it's the fourteenth of March, so he's

@@ -1,0 +1,63 @@
+{
+ "date": "12-10",
+ "name": "laureate_medal",
+ "title": "Nobel Prize Day",
+ "theme": "a gold medal on a blue V ribbon with a laurel arc; a white glint sweeps across the disc",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  5,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "BBB.....BBB",
+  ".BBB...BBB.",
+  "..BBGGGBB..",
+  "..GGGGGGG..",
+  ".GGWGGGGGG.",
+  ".GDGGGGGDG.",
+  ".GDGGGGGDG.",
+  ".GGDGGGDGG.",
+  ".GGGDDDGGG.",
+  "..GGGGGGG.."
+ ],
+ "frames": [
+  [
+   "BBB.....BBB",
+   ".BBB...BBB.",
+   "..BBGGGBB..",
+   "..GGGGGGG..",
+   ".GGGWGGGGG.",
+   ".GDGGGGGDG.",
+   ".GDGGGGGDG.",
+   ".GGDGGGDGG.",
+   ".GGGDDDGGG.",
+   "..GGGGGGG.."
+  ],
+  [
+   "BBB.....BBB",
+   ".BBB...BBB.",
+   "..BBGGGBB..",
+   "..GGGGGGG..",
+   ".GGGGGGGGG.",
+   ".GDGGGGGDG.",
+   ".GDGGWGGDG.",
+   ".GGDGGGDGG.",
+   ".GGGDDDGGG.",
+   "..GGGGGGG.."
+  ],
+  [
+   "BBB.....BBB",
+   ".BBB...BBB.",
+   "..BBGGGBB..",
+   "..GGGGGGG..",
+   ".GGGGGGGGG.",
+   ".GDGGGGGDG.",
+   ".GDGGGGGDG.",
+   ".GGDGGWDGG.",
+   ".GGGDDDGGG.",
+   "..GGGGGGG.."
+  ]
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "date": "03-07",
+ "name": "cereal_bowl",
+ "title": "Cereal Day",
+ "theme": "a blue cereal bowl on his head with a white milk surface dotted with gold, pink and purple cereal rings and a grey spoon sticking up; the rings bob out of sync and the spoon tilts",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "...................KK.",
+  "..................KKKK",
+  "...................KK.",
+  "....GG...MM...PP...KK.",
+  "..WWGGWWWMMWWWPPWWWKK.",
+  "..WWWWWWWWWWWWWWWWWKK.",
+  ".WWWWWWWWWWWWWWWWWWWW.",
+  ".BBBBBBBBBBBBBBBBBBBB.",
+  ".BBBBBBBBBBBBBBBBBBBB.",
+  "..BBBBBBBBBBBBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBB..",
+  "....BBBBBBBBBBBBBB....",
+  "....BBBBBBBBBBBBBB...."
+ ],
+ "frames": [
+  [
+   "..................KK..",
+   ".................KKKK.",
+   "....GG............KK..",
+   "....GG........PP..KK..",
+   "..WWWWWWWMMWWWPPWWWKK.",
+   "..WWWWWWWMMWWWWWWWWKK.",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "....BBBBBBBBBBBBBB....",
+   "....BBBBBBBBBBBBBB...."
+  ],
+  [
+   "...................KK.",
+   "..................KKKK",
+   "..............PP...KK.",
+   "....GG...MM...PP...KK.",
+   "..WWGGWWWMMWWWWWWWWKK.",
+   "..WWWWWWWWWWWWWWWWWKK.",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "....BBBBBBBBBBBBBB....",
+   "....BBBBBBBBBBBBBB...."
+  ],
+  [
+   "..................KK..",
+   ".................KKKK.",
+   ".........MM.......KK..",
+   ".........MM...PP..KK..",
+   "..WWGGWWWWWWWWPPWWWKK.",
+   "..WWGGWWWWWWWWWWWWWKK.",
+   ".WWWWWWWWWWWWWWWWWWWW.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   ".BBBBBBBBBBBBBBBBBBBB.",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBB..",
+   "....BBBBBBBBBBBBBB....",
+   "....BBBBBBBBBBBBBB...."
+  ]
+ ]
+}

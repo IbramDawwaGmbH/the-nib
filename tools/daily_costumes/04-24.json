@@ -1,0 +1,51 @@
+{
+ "date": "04-24",
+ "name": "pig_ears",
+ "title": "Pigs in a Blanket Day",
+ "theme": "floppy pink pig ears on a headband whose tips flop and perk in turn",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "MMM................MMM",
+  "MMM................MMM",
+  ".MDM..............MDM.",
+  ".MMMMM..........MMMMM.",
+  ".MMMMMMM......MMMMMMM.",
+  "PPPPPPPPPPPPPPPPPPPPPP",
+  "PPPPPPPPPPPPPPPPPPPPPP"
+ ],
+ "frames": [
+  [
+   "...................MMM",
+   "MMM................MMM",
+   "MMDM..............MDM.",
+   ".MMMMM..........MMMMM.",
+   ".MMMMMMM......MMMMMMM.",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP"
+  ],
+  [
+   "MMM...................",
+   "MMM................MMM",
+   ".MDM..............MDMM",
+   ".MMMMM..........MMMMM.",
+   ".MMMMMMM......MMMMMMM.",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP"
+  ],
+  [
+   "......................",
+   "MMM................MMM",
+   "MMDM..............MDMM",
+   ".MMMMM..........MMMMM.",
+   ".MMMMMMM......MMMMMMM.",
+   "PPPPPPPPPPPPPPPPPPPPPP",
+   "PPPPPPPPPPPPPPPPPPPPPP"
+  ]
+ ]
+}

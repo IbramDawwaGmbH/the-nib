@@ -1,0 +1,71 @@
+{
+ "date": "11-28",
+ "name": "red_planet",
+ "title": "Red Planet Day",
+ "theme": "a red planet with a white polar cap, dark canyon and silver ring; a small dark moon orbits it, bumping out past the ring tip, front-left, front-right, hidden, then peeking behind",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........WWWW........",
+  "......RRRRRRRR......",
+  ".....RRRRRRRRRR.....",
+  "....RRRRRRRRRRRR....",
+  "....RRRRRRRRRRRR....",
+  "..SSRRRRRRRRRRRRSS..",
+  "DDSSRRRRRRRRRRRRSSSS",
+  "DDSSSRRRRRRRRRRSSS..",
+  "....RSSSSSSSSSSR....",
+  ".....DDDDDDDDDD.....",
+  "......RRRRRRRR......",
+  "........RRRR........"
+ ],
+ "frames": [
+  [
+   "........WWWW........",
+   "......RRRRRRRR......",
+   ".....RRRRRRRRRR.....",
+   "....RRRRRRRRRRRR....",
+   "....RRRRRRRRRRRR....",
+   "..SSRRRRRRRRRRRRSS..",
+   "DDSSRRRRRRRRRRRRSSDD",
+   "..SSSRRRRRRRRRRSSSDD",
+   "....RSSSSSSSSSSR....",
+   ".....DDDDDDDDDD.....",
+   "......RRRRRRRR......",
+   "........RRRR........"
+  ],
+  [
+   "........WSSW........",
+   "......RRRRRRRR......",
+   ".....RRRRRRRRRR.....",
+   "....RRRRRRRRRRRR....",
+   "....RRRRRRRRRRRR....",
+   "..SSRRRRRRRRRRRRSS..",
+   "DDSSRRRRRRRRRRRRSSSS",
+   "..SSSRRRRRRRRRRSSS..",
+   "....RSSSSSSSSSSR....",
+   ".....DDDDDDDDDD.....",
+   "......RRRRRRRR......",
+   "........RRRR........"
+  ],
+  [
+   "........WWWW........",
+   "......RRRRRRRR......",
+   ".....RRRRRRRRRR.....",
+   "....RRRRRRRRRRRR....",
+   "..DDRRRRRRRRRRRR....",
+   "..DDRRRRRRRRRRRRSS..",
+   "DDSSRRRRRRRRRRRRSSSS",
+   "..SSSRRRRRRRRRRSSS..",
+   "....RSSSSSSSSSSR....",
+   ".....DDDDDDDDDD.....",
+   "......RRRRRRRR......",
+   "........RRRR........"
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "03-24",
+ "name": "test_tube_rack",
+ "title": "Lab Day",
+ "theme": "a grey test-tube rack 22px wide on his head holding three glass tubes 4px wide, white rims, filled red, green and blue; a white bubble rises in one tube after another and pops at the rim",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  "......................",
+  "..WWWW...WWWW...WWWW..",
+  "..RRRR...NNNN...BBBB..",
+  "..WRRR...WNNN...WBBB..",
+  "..WRRR...WNNN...WBBB..",
+  "..WRWW...WNNN...WBBB..",
+  "..RRWW...NNNN...BBBB..",
+  "..RRRR...NNNN...BBBB..",
+  "SSSSSSSSSSSSSSSSSSSSSS",
+  "KKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKK"
+ ],
+ "frames": [
+  [
+   "......................",
+   "......................",
+   "..WWWW...WWWW...WWWW..",
+   "..RRRR...NNNN...BBBB..",
+   "..WRRR...WNWW...WBBB..",
+   "..WRRR...WNWW...WBBB..",
+   "..WRRR...WNNN...WBBB..",
+   "..RRRR...NNNN...BBBB..",
+   "..RRRR...NNNN...BBBB..",
+   "SSSSSSSSSSSSSSSSSSSSSS",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK"
+  ],
+  [
+   "......................",
+   "................W..W..",
+   "..WWWW...WWWW...WWWW..",
+   "..RRRR...NNNN...BBWW..",
+   "..WRRR...WNNN...WBWW..",
+   "..WRRR...WNNN...WBBB..",
+   "..WRRR...WNNN...WBBB..",
+   "..RRRR...NNNN...BBBB..",
+   "..RRRR...NNNN...BBBB..",
+   "SSSSSSSSSSSSSSSSSSSSSS",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK"
+  ]
+ ]
+}

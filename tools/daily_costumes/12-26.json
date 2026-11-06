@@ -1,0 +1,51 @@
+{
+  "date": "12-26",
+  "name": "candy_cane_specs",
+  "title": "Candy Cane Day",
+  "theme": "candy-cane striped round spectacles with a hooked cane temple; the red and white stripes spin like a barber pole",
+  "category": "Eyes",
+  "kind": "eyes",
+  "anchor": [
+    10,
+    4
+  ],
+  "layer": "over",
+  "pattern": [
+    "................RWR.",
+    "...............WR.WR",
+    "..................RW",
+    "..RRWWR......RRWWRRR",
+    ".R.....W....R.....WR",
+    "RW.....RRWWRW.....WW",
+    ".R.....R....R.....R.",
+    ".R.....W....R.....W.",
+    ".W.....R....W.....R.",
+    "..RRWWR......RRWWR.."
+  ],
+  "frames": [
+    [
+      "................WRW.",
+      "...............RW.RW",
+      "..................RR",
+      "..RWWRR......RWWRRWR",
+      ".W.....R....W.....RW",
+      "WR.....RWWRRR.....RR",
+      ".R.....W....R.....W.",
+      ".W.....R....W.....R.",
+      ".R.....R....R.....R.",
+      "..RRRWW......RRRWW.."
+    ],
+    [
+      "................RWR.",
+      "...............WR.WR",
+      "..................WR",
+      "..WWRRR......WWRRRRW",
+      ".R.....R....R.....RR",
+      "RR.....WWRRWR.....RR",
+      ".W.....R....W.....R.",
+      ".R.....R....R.....R.",
+      ".R.....W....R.....W.",
+      "..WRRRW......WRRRW.."
+    ]
+  ]
+}

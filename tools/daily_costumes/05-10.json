@@ -1,0 +1,67 @@
+{
+ "date": "05-10",
+ "name": "rain_snail",
+ "title": "Snail Weather",
+ "theme": "a garden snail 16px long creeps across his head: brown spiral shell, teal body, two eye stalks with white tips that wiggle",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  9,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........WW..WW...",
+  "..........WW..WW...",
+  "...OOOOO..TT..TT...",
+  "..OODDDOO.TT..TT...",
+  ".OODOOODOOTT..TT...",
+  ".OODODDDOOTT..TT...",
+  ".OODODOOOOTTTTTT...",
+  ".TOODOOOOTTTTTTT...",
+  ".TTOOOOOTTTTTTTT...",
+  ".TTTTTTTTTTTTTTT...",
+  "TTTTTTTTTTTTTTTT..."
+ ],
+ "frames": [
+  [
+   "............WW..WW.",
+   "............WW..WW.",
+   "....OOOOO..TT..TT..",
+   "...OODDDOO.TT..TT..",
+   "..OODOOODOOTT..TT..",
+   "..OODODDDOOTT..TT..",
+   "..OODODOOOOTTTTTT..",
+   "..TOODOOOOTTTTTTT..",
+   "..TTOOOOOTTTTTTTT..",
+   "..TTTTTTTTTTTTTTT..",
+   ".TTTTTTTTTTTTTTTT.."
+  ],
+  [
+   "............WW..WW.",
+   "............WW..WW.",
+   ".....OOOOO..TT..TT.",
+   "....OODDDOO.TT..TT.",
+   "...OODOOODOOTT..TT.",
+   "...OODODDDOOTT..TT.",
+   "...OODODOOOOTTTTTT.",
+   "...TOODOOOOTTTTTTT.",
+   "...TTOOOOOTTTTTTTT.",
+   "...TTTTTTTTTTTTTTT.",
+   "..TTTTTTTTTTTTTTTT."
+  ],
+  [
+   "............WW..WW.",
+   "............WW..WW.",
+   "......OOOOO..TT..TT",
+   ".....OODDDOO.TT..TT",
+   "....OODOOODOOTT..TT",
+   "....OODODDDOOTT..TT",
+   "....OODODOOOOTTTTTT",
+   "....TOODOOOOTTTTTTT",
+   "....TTOOOOOTTTTTTTT",
+   "....TTTTTTTTTTTTTTT",
+   "...TTTTTTTTTTTTTTTT"
+  ]
+ ]
+}

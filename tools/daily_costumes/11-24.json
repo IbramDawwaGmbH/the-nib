@@ -1,0 +1,71 @@
+{
+  "date": "11-24",
+  "name": "dna_helix",
+  "title": "Evolution Day",
+  "theme": "a double helix standing on his crown: two twisting blue strands joined by gold rungs; the rungs shift down each frame so it appears to rotate",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    5,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "BBGGGGGGBB",
+    ".......BB.",
+    ".......BB.",
+    ".BBGGGGBB.",
+    ".BB.......",
+    ".BB.......",
+    "BBGGGGGGBB",
+    "BBGGGGGGBB",
+    "BBGGGGGGBB",
+    ".......BB.",
+    ".......BB.",
+    "BBGGGGGGBB"
+  ],
+  "frames": [
+    [
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      ".......BB.",
+      ".......BB.",
+      ".BBGGGGBB.",
+      ".BB.......",
+      ".BB.......",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      ".......BB.",
+      "BBGGGGGGBB"
+    ],
+    [
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      ".......BB.",
+      ".......BB.",
+      ".BBGGGGBB.",
+      ".BB.......",
+      ".BB.......",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB"
+    ],
+    [
+      ".BB.......",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      ".......BB.",
+      ".......BB.",
+      ".BBGGGGBB.",
+      ".BB.......",
+      ".BB.......",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB",
+      "BBGGGGGGBB"
+    ]
+  ]
+}

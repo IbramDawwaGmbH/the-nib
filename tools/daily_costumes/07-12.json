@@ -1,0 +1,51 @@
+{
+ "date": "07-12",
+ "name": "odd_eye_specs",
+ "title": "Different Colored Eyes Day",
+ "theme": "round grey glasses with a blue left lens and a green right lens; a glint drifts across each, then the lids half-close in a blink",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...KKKK......KKKK...",
+  "..KWBBBK....KWNNNK..",
+  "KKBBBBBBKKKKNNNNNNKK",
+  ".KBBBBBBK..KNNNNNNK.",
+  ".KBBBBBBK..KNNNNNNK.",
+  "..KBBBBK....KNNNNK..",
+  "...KKKK......KKKK..."
+ ],
+ "frames": [
+  [
+   "...KKKK......KKKK...",
+   "..KBBBBK....KNNNNK..",
+   "KKBBWBBBKKKKNNWNNNKK",
+   ".KBBBBBBK..KNNNNNNK.",
+   ".KBBBBBBK..KNNNNNNK.",
+   "..KBBBBK....KNNNNK..",
+   "...KKKK......KKKK..."
+  ],
+  [
+   "...KKKK......KKKK...",
+   "..KBBBBK....KNNNNK..",
+   "KKBBBBBBKKKKNNNNNNKK",
+   ".KBBBBBBK..KNNNNNNK.",
+   ".KBBBBBBK..KNNNNNNK.",
+   "..KBBBBK....KNNNNK..",
+   "...KKKK......KKKK..."
+  ],
+  [
+   "...KKKK......KKKK...",
+   "..KDDDDK....KDDDDK..",
+   "KKBDDDDBKKKKNDDDDNKK",
+   ".KBDDDDBK..KNDDDDNK.",
+   ".KBBBBBBK..KNNNNNNK.",
+   "..KBBBBK....KNNNNK..",
+   "...KKKK......KKKK..."
+  ]
+ ]
+}

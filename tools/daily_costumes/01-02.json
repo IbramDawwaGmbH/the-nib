@@ -1,0 +1,47 @@
+{
+ "date": "01-02",
+ "name": "cyclops_visor",
+ "title": "Science Fiction Day",
+ "theme": "a wraparound teal visor with a charcoal top edge and a red scanner dot sweeping across",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "AAAAAAAAAAAAAAAAAAAA",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "TTWRRTTTTTTTTTTTTTTT",
+  "TTTRRTTTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTTTTTTTT"
+ ],
+ "frames": [
+  [
+   "AAAAAAAAAAAAAAAAAAAA",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTWRRTTTTTTTTTT",
+   "TTTTTTTTRRTTTTTTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT"
+  ],
+  [
+   "AAAAAAAAAAAAAAAAAAAA",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTWRRTTTTT",
+   "TTTTTTTTTTTTTRRTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT"
+  ],
+  [
+   "AAAAAAAAAAAAAAAAAAAA",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTTRRWTTTTTTTTT",
+   "TTTTTTTTRRTTTTTTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTTTTTTTT"
+  ]
+ ]
+}

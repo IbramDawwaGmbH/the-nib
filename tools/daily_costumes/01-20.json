@@ -1,0 +1,33 @@
+{
+ "date": "01-20",
+ "name": "penguin_tux",
+ "title": "Penguin Awareness Day",
+ "theme": "a penguin tuxedo: white belly bib, charcoal jacket edges and two flapping flippers",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  11,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "...AAAAWWWWWWWWWWAAAA...",
+  "..AAAAWWWWWWWWWWWWAAAA..",
+  ".AAAAWWWWWWWWWWWWWWAAAA.",
+  "AAAAAWWWWWWWWWWWWWWAAAAA",
+  "AAAAAWWWWWWWWWWWWWWAAAAA",
+  "...AAAWWWWWWWWWWWWAAA...",
+  "...AAAAWWWWWWWWWWAAAA..."
+ ],
+ "frames": [
+  [
+   "...AAAAWWWWWWWWWWAAAA...",
+   "AAAAAAWWWWWWWWWWWWAAAAAA",
+   "AAAAAWWWWWWWWWWWWWWAAAAA",
+   ".AAAAWWWWWWWWWWWWWWAAAA.",
+   "..AAAWWWWWWWWWWWWWWAAA..",
+   "...AAAWWWWWWWWWWWWAAA...",
+   "...AAAAWWWWWWWWWWAAAA..."
+  ]
+ ]
+}

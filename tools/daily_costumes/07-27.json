@@ -1,0 +1,54 @@
+{
+ "date": "07-27",
+ "name": "monstera_leaf",
+ "title": "Houseplant Walk Day",
+ "theme": "one big green split monstera leaf worn like a hat on a short stem with a dark midrib, notched edges and a white water drop that slides down and falls",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "......NNNN..NNNN......",
+  "...NNNNNNNDDNNWWNNN...",
+  ".NNNNNNNNNDDNNWWNNNNN.",
+  "NNNNNNNNNNDDNNNNNNNNNN",
+  "NNNN..NNNNDDNNNN..NNNN",
+  ".NNN..NNNNDDNNNN..NNN.",
+  "..NN..NNNNDDNNNN..NN..",
+  "......NNNNDDNNNN......",
+  ".......NNNDDNNN.......",
+  "..........NN..........",
+  "..........NN.........."
+ ],
+ "frames": [
+  [
+   ".....NNNN..NNNN.......",
+   "..NNNNNNNDDNNNNNNN....",
+   "NNNNNNNNNDDNNNNNNNNN..",
+   "NNNNNNNNNDDNNNNNNNNNN.",
+   "NNNN..NNNNDDNNNN..NNNN",
+   ".NNN..NNNNDDNNNWW.NNN.",
+   "..NN..NNNNDDNNNWW.NN..",
+   "......NNNNDDNNNN......",
+   ".......NNNDDNNN.......",
+   "..........NN..........",
+   "..........NN.........."
+  ],
+  [
+   ".......NNNN..NNNN.....",
+   "....NNNNNNNDDNNNNNNN..",
+   "..NNNNNNNNNDDNNNNNNNNN",
+   ".NNNNNNNNNNDDNNNNNNNNN",
+   "NNNN..NNNNDDNNNN..NNNN",
+   ".NNN..NNNNDDNNNN..NNN.",
+   "..NN..NNNNDDNNNN..NN..",
+   "......NNNNDDNNNN......",
+   ".......NNNDDNNN..WW...",
+   "..........NN.....WW...",
+   "..........NN.........."
+  ]
+ ]
+}

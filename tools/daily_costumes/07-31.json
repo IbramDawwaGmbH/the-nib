@@ -1,0 +1,71 @@
+{
+ "date": "07-31",
+ "name": "toasted_mallow",
+ "title": "Campfire Night",
+ "theme": "head: a marshmallow roasting on a grey stick standing up from his head; the flame tongue under it flickers, the toasted gold band grows and shrinks, the stick sways",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  4,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..WWWWWWW.",
+  "..WWWWWWW.",
+  "..WWWWWWW.",
+  "..WWWWWWW.",
+  "..GGGGGGG.",
+  "..GGGGGGG.",
+  "....FKG...",
+  ".....K....",
+  ".....K....",
+  "....K.....",
+  "....K.....",
+  "....K....."
+ ],
+ "frames": [
+  [
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..GGGGGGG.",
+   "..GGGGGGG.",
+   "..GGGGGGG.",
+   "....GKF...",
+   "....FK....",
+   ".....K....",
+   ".....K....",
+   "....K.....",
+   "....K....."
+  ],
+  [
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..GGGGGGG.",
+   "..GGGGGGG.",
+   "....FKF...",
+   ".....K....",
+   ".....K....",
+   "....K.....",
+   "....K.....",
+   "....K....."
+  ],
+  [
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..WWWWWWW.",
+   "..GGGGGGG.",
+   "..GGGGGGG.",
+   "..GGGGGGG.",
+   "....GKG...",
+   ".....KF...",
+   ".....K....",
+   ".....K....",
+   ".....K....",
+   "....K....."
+  ]
+ ]
+}

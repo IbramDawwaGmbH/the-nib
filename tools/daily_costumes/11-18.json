@@ -1,0 +1,75 @@
+{
+ "date": "11-18",
+ "name": "cocoa_mug",
+ "title": "Hot Cocoa Day",
+ "theme": "a steaming white mug with a red band and a marshmallow in the cocoa, worn like a hat",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "..K...K..K.......",
+  "..K..KK..KK......",
+  ".KK..K....K......",
+  ".K...K....K......",
+  "WOOOOWWOOOOOOW...",
+  "WOOOOWWOOOOOOW...",
+  "WOOOOOOOOOOOOWWWW",
+  "WWWWWWWWWWWWWW..W",
+  "RRRRRRRRRRRRRR..W",
+  "RRRRRRRRRRRRRR..W",
+  "WWWWWWWWWWWWWW.WW",
+  "WWWWWWWWWWWWWW...",
+  "WWWWWWWWWWWWWW..."
+ ],
+ "frames": [
+  [
+   ".K...K....K......",
+   ".KK..K...KK......",
+   "..K..KK..K.......",
+   "..K...K..K.......",
+   "WOOOOOOOOOOOOW...",
+   "WOOOOWWOOOOOOW...",
+   "WOOOOWWOOOOOOWWWW",
+   "WWWWWWWWWWWWWW..W",
+   "RRRRRRRRRRRRRR..W",
+   "RRRRRRRRRRRRRR..W",
+   "WWWWWWWWWWWWWW.WW",
+   "WWWWWWWWWWWWWW...",
+   "WWWWWWWWWWWWWW..."
+  ],
+  [
+   "..K...K..K.......",
+   ".KK...K..K.......",
+   ".K...KK..KK......",
+   ".K...K....K......",
+   "WOOOOWWOOOOOOW...",
+   "WOOOOWWOOOOOOW...",
+   "WOOOOOOOOOOOOWWWW",
+   "WWWWWWWWWWWWWW..W",
+   "RRRRRRRRRRRRRR..W",
+   "RRRRRRRRRRRRRR..W",
+   "WWWWWWWWWWWWWW.WW",
+   "WWWWWWWWWWWWWW...",
+   "WWWWWWWWWWWWWW..."
+  ],
+  [
+   ".K...K....K......",
+   ".K...KK...K......",
+   ".KK...K..KK......",
+   "..K...K..K.......",
+   "WOOOOOOOOOOOOW...",
+   "WOOOOWWOOOOOOW...",
+   "WOOOOWWOOOOOOWWWW",
+   "WWWWWWWWWWWWWW..W",
+   "RRRRRRRRRRRRRR..W",
+   "RRRRRRRRRRRRRR..W",
+   "WWWWWWWWWWWWWW.WW",
+   "WWWWWWWWWWWWWW...",
+   "WWWWWWWWWWWWWW..."
+  ]
+ ]
+}

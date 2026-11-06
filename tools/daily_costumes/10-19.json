@@ -1,0 +1,67 @@
+{
+ "date": "10-19",
+ "name": "maple_pile",
+ "title": "Falling Leaves",
+ "theme": "a heap of autumn leaves on his head; one loose gold leaf zigzags down and lands on the pile",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  ".................GG.....",
+  "................GGGG....",
+  ".................GDGG...",
+  "...................GG...",
+  ".RRDRRR..GGDGGG..NNDNNN.",
+  "RRRDRRRRGGGDGGGGNNNDNNNN",
+  "GGGDRNNNNNNDGRRRRRRDNGGG",
+  "GGGGNNNDNNNNRRRDRRRRGGGD",
+  "GGGGNNNDNNNNRRRDRRRRGGGD",
+  "GGGGNNNDNNNNRRRDRRRRGGGD",
+  "GGG..NNNNNN..RRRRRR..GGG"
+ ],
+ "frames": [
+  [
+   "........................",
+   "...................GG...",
+   "..................GGGG..",
+   "...................GDGG.",
+   ".RRDRRR..GGDGGG..NNDNGG.",
+   "RRRDRRRRGGGDGGGGNNNDNNNN",
+   "GGGDRNNNNNNDGRRRRRRDNGGG",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGG..NNNNNN..RRRRRR..GGG"
+  ],
+  [
+   "........................",
+   "........................",
+   ".................GG.....",
+   "................GGGG....",
+   ".RRDRRR..GGDGGG..GDGGNN.",
+   "RRRDRRRRGGGDGGGGNNNGGNNN",
+   "GGGDRNNNNNNDGRRRRRRDNGGG",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGG..NNNNNN..RRRRRR..GGG"
+  ],
+  [
+   "........................",
+   "........................",
+   "........................",
+   "...................GG...",
+   ".RRDRRR..GGDGGG..NGGGGN.",
+   "RRRDRRRRGGGDGGGGNNNGNGGN",
+   "GGGDRNNNNNNDGRRRRRRDNGGG",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGGGNNNDNNNNRRRDRRRRGGGD",
+   "GGG..NNNNNN..RRRRRR..GGG"
+  ]
+ ]
+}

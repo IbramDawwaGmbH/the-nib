@@ -1,0 +1,45 @@
+{
+ "date": "12-16",
+ "name": "jingle_collar",
+ "title": "Jingle Bells",
+ "theme": "a red collar hung with five gold jingle bells that swing",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  11,
+  1
+ ],
+ "layer": "over",
+ "pattern": [
+  ".RRR................RRR.",
+  "RRRRRRRRRRRRRRRRRRRRRRRR",
+  "RRRRRRRRRRRRRRRRRRRRRRRR",
+  "GGGG.GGGG.GGGG.GGGG.GGGG",
+  "GDDG.GDDG.GDDG.GDDG.GDDG",
+  "GGGG.GGGG.GGGG.GGGG.GGGG",
+  ".GG...GG...GG...GG...GG.",
+  "........................"
+ ],
+ "frames": [
+  [
+   ".RRR................RRR.",
+   "RRRRRRRRRRRRRRRRRRRRRRRR",
+   "RRRRRRRRRRRRRRRRRRRRRRRR",
+   "GGGGGGGG..GGGGGGGG..GGGG",
+   "GDDGGDDG..GDDGGDDG..GDDG",
+   "GGGGGGGG..GGGGGGGG..GGGG",
+   ".GG..GG....GG..GG....GG.",
+   "........................"
+  ],
+  [
+   ".RRR................RRR.",
+   "RRRRRRRRRRRRRRRRRRRRRRRR",
+   "RRRRRRRRRRRRRRRRRRRRRRRR",
+   "......GGGGGGGG..GGGG....",
+   "GGGG..GDDGGDDG..GDDGGGGG",
+   "GDDG..GGGGGGGG..GGGGGDDG",
+   "GGGG...GG..GG....GG.GGGG",
+   ".GG..................GG."
+  ]
+ ]
+}

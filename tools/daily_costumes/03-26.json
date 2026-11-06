@@ -1,0 +1,37 @@
+{
+ "date": "03-26",
+ "name": "purple_hairbow",
+ "title": "Purple Day",
+ "theme": "a big purple hair bow 22px wide and 9 rows tall on his crown with two rounded loops with dark fold seams, a silver centre knot and two short tails; the loops puff out and the tails lift",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "..PPPPP........PPPPP..",
+  ".PPPPPPPP....PPPPPPPP.",
+  ".PPPPPPPPSSSSPPPPPPPP.",
+  ".PPDDDDDPSSSSPDDDDDPP.",
+  ".PPPPPPPPSSSSPPPPPPPP.",
+  ".PPPPPPPPSSSSPPPPPPPP.",
+  "..PPPPPPPPPPPPPPPPPP..",
+  "........PP..PP........",
+  ".......PP....PP......."
+ ],
+ "frames": [
+  [
+   ".PPPPPPP......PPPPPPP.",
+   "PPPPPPPPP....PPPPPPPPP",
+   "PPPPPPPPPSSSSPPPPPPPPP",
+   "PPPDDDDDPSSSSPDDDDDPPP",
+   "PPPPPPPPPSSSSPPPPPPPPP",
+   "PPPPPPPPPSSSSPPPPPPPPP",
+   ".PPPPPPPPPPPPPPPPPPPP.",
+   "........PP..PP........",
+   "......................"
+  ]
+ ]
+}

@@ -1,0 +1,71 @@
+{
+ "date": "04-22",
+ "name": "earth_globe",
+ "title": "Earth Day",
+ "theme": "a little blue Earth with green continents and a polar cap, rotating on his head",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "....BWWB....",
+  "..BBBBBBBB..",
+  ".NNNBBBBBBB.",
+  "BNNNNNBBBBBB",
+  "BNNNNBBBBBBB",
+  "BBNNBBBBBBBB",
+  "BBBBBBBBBBBB",
+  "BBBBBBBBNNNB",
+  "BBBBBBBNNNNB",
+  ".BBBBBBBNNB.",
+  "..BBBBBBBB..",
+  "....BBBB...."
+ ],
+ "frames": [
+  [
+   "....BWWB....",
+   "..BBBBBBBB..",
+   ".BBBNNNBBBB.",
+   "BBBBNNNNNBBB",
+   "BBBBNNNNBBBB",
+   "BBBBBNNBBBBB",
+   "BBBBBBBBBBBB",
+   "NNBBBBBBBBBN",
+   "NNBBBBBBBBNN",
+   ".BBBBBBBBBB.",
+   "..BBBBBBBB..",
+   "....BBBB...."
+  ],
+  [
+   "....BWWB....",
+   "..BBBBBBBB..",
+   ".BBBBBBNNNB.",
+   "BBBBBBBNNNNN",
+   "BBBBBBBNNNNB",
+   "BBBBBBBBNNBB",
+   "BBBBBBBBBBBB",
+   "BBNNNBBBBBBB",
+   "BNNNNBBBBBBB",
+   ".BNNBBBBBBB.",
+   "..BBBBBBBB..",
+   "....BBBB...."
+  ],
+  [
+   "....BWWB....",
+   "..BBBBBBBB..",
+   ".BBBBBBBBBN.",
+   "NNNBBBBBBBNN",
+   "NNBBBBBBBBNN",
+   "NBBBBBBBBBBN",
+   "BBBBBBBBBBBB",
+   "BBBBBNNNBBBB",
+   "BBBBNNNNBBBB",
+   ".BBBBNNBBBB.",
+   "..BBBBBBBB..",
+   "....BBBB...."
+  ]
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "date": "09-24",
+ "name": "exclamation_bob",
+ "title": "Punctuation Day",
+ "theme": "a big red exclamation mark standing on his crown; the bar bobs up off the dot and drops back",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  3,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "......",
+  "RRRRRR",
+  "RRRRRR",
+  "RRRRRR",
+  ".RRRRR",
+  ".RRRRR",
+  ".RRRR.",
+  ".RRRR.",
+  "......",
+  "......",
+  ".RRRR.",
+  ".RRRR.",
+  ".RRRR."
+ ],
+ "frames": [
+  [
+   "RRRRRR",
+   "RRRRRR",
+   "RRRRRR",
+   ".RRRRR",
+   ".RRRRR",
+   ".RRRR.",
+   ".RRRR.",
+   "......",
+   "......",
+   "......",
+   ".RRRR.",
+   ".RRRR.",
+   ".RRRR."
+  ],
+  [
+   "RRRRRR",
+   "RRRRRR",
+   ".RRRRR",
+   ".RRRRR",
+   ".RRRR.",
+   ".RRRR.",
+   "......",
+   "......",
+   "......",
+   "......",
+   ".RRRR.",
+   ".RRRR.",
+   ".RRRR."
+  ]
+ ]
+}

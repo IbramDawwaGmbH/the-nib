@@ -1,0 +1,51 @@
+{
+ "date": "02-17",
+ "name": "gift_bow",
+ "title": "Random Acts of Kindness Day",
+ "theme": "a big pink gift bow with a gold knot and fluttering tails",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  8,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  ".MMMMM.....MMMMM.",
+  "MMMMMDMGGGMDMMMMM",
+  "MMMMMDMGGGMDMMMMM",
+  "MMMMMDMGGGMDMMMMM",
+  ".MMMMMMM.MMMMMMM.",
+  "......MM.MM......",
+  "......MM.MM......",
+  ".....MM..MM......",
+  ".....MM..MM......",
+  ".....MM..MM......"
+ ],
+ "frames": [
+  [
+   ".MMMMM.....MMMMM.",
+   "MMMMMDMGGGMDMMMMM",
+   "MMMMMDMGWGMDMMMMM",
+   "MMMMMDMGGGMDMMMMM",
+   ".MMMMMMM.MMMMMMM.",
+   "......MM.MM......",
+   "......MM.MM......",
+   "......MM..MM.....",
+   "......MM..MM.....",
+   "......MM..MM....."
+  ],
+  [
+   ".MMMMM.....MMMMM.",
+   "MMMMMDMGGGMDMMMMM",
+   "MMMMMDMGGGMDMMMMM",
+   "MMMMMDMGGGMDMMMMM",
+   ".MMMMMMM.MMMMMMM.",
+   "......MM.MM......",
+   "......MM.MM......",
+   "......MM.MM......",
+   "......MM.MM......",
+   "......MM.MM......"
+  ]
+ ]
+}

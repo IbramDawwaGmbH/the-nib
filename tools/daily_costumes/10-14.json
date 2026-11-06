@@ -1,0 +1,43 @@
+{
+ "date": "10-14",
+ "name": "cupcake_swirl",
+ "title": "Dessert Day",
+ "theme": "a cupcake hat: pleated wrapper, pink frosting swirl, a cherry on top and twinkling sprinkles",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  9,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "........D.........",
+  "........RR........",
+  ".......MRRM.......",
+  "....MWMMMMMMMM....",
+  "..MMMMMMMMMMBMMM..",
+  "MMMBMMMMMMWMMMMMMM",
+  "MMMMMMMMMMMMMMMMMM",
+  ".PPPDPPDPPDPPDPPP.",
+  ".PPPDPPDPPDPPDPPP.",
+  ".PPPDPPDPPDPPDPPP.",
+  ".PPPDPPDPPDPPDPPP.",
+  ".PPPDPPDPPDPPDPPP."
+ ],
+ "frames": [
+  [
+   ".........D........",
+   "........RR........",
+   ".......MRRM.......",
+   "....MMBMMMMMMM....",
+   "..MMMMMMMMMWMMMM..",
+   "MMMMWMMMMMMMMMMMMM",
+   "MMMMMMMMMMMBMMMMMM",
+   ".PPPDPPDPPDPPDPPP.",
+   ".PPPDPPDPPDPPDPPP.",
+   ".PPPDPPDPPDPPDPPP.",
+   ".PPPDPPDPPDPPDPPP.",
+   ".PPPDPPDPPDPPDPPP."
+  ]
+ ]
+}

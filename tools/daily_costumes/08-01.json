@@ -1,0 +1,67 @@
+{
+ "date": "08-01",
+ "name": "wheat_wreath",
+ "title": "Lammas Harvest",
+ "theme": "a wreath of ripe wheat ears on his head; a breeze leans the ears left then right in turn",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  12,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..D....D....D....D....D..",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  ".GGG..GGG..GGG..GGG..GGG.",
+  "OGGGOGGGOGGGOGGGOGGGOGGGO",
+  "GOGGGOGGGOGGGOGGGOGGGOGGG",
+  "GGOGGGOGGGOGGGOGGGOGGGOGG",
+  "GGGOGGGOGGGOGGGOGGGOGGGOG"
+ ],
+ "frames": [
+  [
+   "..D...D.....D....D....D..",
+   ".GGG.GGG...GGG..GGG..GGG.",
+   ".GGG.GGG...GGG..GGG..GGG.",
+   ".GGG.GGG...GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   "OGGGOGGGOGGGOGGGOGGGOGGGO",
+   "GOGGGOGGGOGGGOGGGOGGGOGGG",
+   "GGOGGGOGGGOGGGOGGGOGGGOGG",
+   "GGGOGGGOGGGOGGGOGGGOGGGOG"
+  ],
+  [
+   "..D....D....D.....D...D..",
+   ".GGG..GGG..GGG...GGG.GGG.",
+   ".GGG..GGG..GGG...GGG.GGG.",
+   ".GGG..GGG..GGG...GGG.GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   "OGGGOGGGOGGGOGGGOGGGOGGGO",
+   "GOGGGOGGGOGGGOGGGOGGGOGGG",
+   "GGOGGGOGGGOGGGOGGGOGGGOGG",
+   "GGGOGGGOGGGOGGGOGGGOGGGOG"
+  ],
+  [
+   "..D....D...D.....D....D..",
+   ".GGG..GGG.GGG...GGG..GGG.",
+   ".GGG..GGG.GGG...GGG..GGG.",
+   ".GGG..GGG.GGG...GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   ".GGG..GGG..GGG..GGG..GGG.",
+   "OGGGOGGGOGGGOGGGOGGGOGGGO",
+   "GOGGGOGGGOGGGOGGGOGGGOGGG",
+   "GGOGGGOGGGOGGGOGGGOGGGOGG",
+   "GGGOGGGOGGGOGGGOGGGOGGGOG"
+  ]
+ ]
+}

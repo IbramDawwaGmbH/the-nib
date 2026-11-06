@@ -1,0 +1,71 @@
+{
+ "date": "08-15",
+ "name": "sleep_shade",
+ "title": "National Relaxation Day",
+ "theme": "a padded sleep mask over both eyes with a drifting Z",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  13,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........................",
+  "..........................",
+  "...................WWWW...",
+  ".....................W....",
+  "....MMMMMMMMMMMMMMMMWM....",
+  "...PPPPPPPPPPPPPPPPWWWW...",
+  "..PPPPPPPPPPPPPPPPPPPPPP..",
+  "PPPPPDPPPDPPPPPPDPPPDPPPPP",
+  "PPPPPPDDDPPPPPPPPDDDPPPPPP",
+  "..PPPPPPPPPPPPPPPPPPPPPP..",
+  "..PPPPPPPPPPPPPPPPPPPPPP..",
+  "....PPPPPPPPPPPPPPPPPP...."
+ ],
+ "frames": [
+  [
+   "..........................",
+   "....................WWWW..",
+   "......................W...",
+   ".....................W....",
+   "....MMMMMMMMMMMMMMMMWWWW..",
+   "...PPPPPPPPPPPPPPPPPPPP...",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "PPPPPDPPPDPPPPPPDPPPDPPPPP",
+   "PPPPPPDDDPPPPPPPPDDDPPPPPP",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "....PPPPPPPPPPPPPPPPPP...."
+  ],
+  [
+   ".....................WWWW.",
+   ".......................W..",
+   "......................W...",
+   ".....................WWWW.",
+   "....MMMMMMMMMMMMMMMMMM....",
+   "...PPPPPPPPPPPPPPPPPPPP...",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "PPPPPDPPPDPPPPPPDPPPDPPPPP",
+   "PPPPPPDDDPPPPPPPPDDDPPPPPP",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "....PPPPPPPPPPPPPPPPPP...."
+  ],
+  [
+   "..........................",
+   "..........................",
+   "..........................",
+   "...................WWW....",
+   "....MMMMMMMMMMMMMMMMWM....",
+   "...PPPPPPPPPPPPPPPPWWWP...",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "PPPPPDPPPDPPPPPPDPPPDPPPPP",
+   "PPPPPPDDDPPPPPPPPDDDPPPPPP",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "..PPPPPPPPPPPPPPPPPPPPPP..",
+   "....PPPPPPPPPPPPPPPPPP...."
+  ]
+ ]
+}

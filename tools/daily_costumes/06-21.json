@@ -1,0 +1,48 @@
+{
+ "date": "06-21",
+ "name": "lotus_bloom",
+ "title": "Yoga Day",
+ "theme": "a pink lotus flower with pointed petals and a gold centre sitting on a green pad; the outer petals open wider each frame and the centre brightens",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  10,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".........MM.........",
+  "..MM....MMMM....MM..",
+  "..MMM..MMMMMM..MMM..",
+  "..MMMMMMMMMMMMMMMM..",
+  "..MMMMMMGGGGMMMMMM..",
+  "...MMMMMGGGGMMMMM...",
+  "..MMMMMMMMMMMMMMMM..",
+  "....NNNNNNNNNNNN....",
+  "......NNNNNNNN......"
+ ],
+ "frames": [
+  [
+   ".........MM.........",
+   ".MM.....MMMM.....MM.",
+   ".MMM...MMMMMM...MMM.",
+   ".MMMM.MMMMMMMM.MMMM.",
+   ".MMMMMMMGWWGMMMMMMM.",
+   "..MMMMMMGGGGMMMMMM..",
+   "..MMMMMMMMMMMMMMMM..",
+   "....NNNNNNNNNNNN....",
+   "......NNNNNNNN......"
+  ],
+  [
+   ".........MM.........",
+   "MM......MMMM......MM",
+   "MMM....MMMMMM....MMM",
+   "MMMM..MMMMMMMM..MMMM",
+   "MMMMMMMMGWWGMMMMMMMM",
+   ".MMMMMMMGWWGMMMMMMM.",
+   "..MMMMMMMMMMMMMMMM..",
+   "....NNNNNNNNNNNN....",
+   "......NNNNNNNN......"
+  ]
+ ]
+}

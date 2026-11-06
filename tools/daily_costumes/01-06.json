@@ -1,0 +1,48 @@
+{
+ "date": "01-06",
+ "name": "three_kings_crown",
+ "title": "Epiphany",
+ "theme": "a plain gold crown with three tall points, a dark seam band and red, blue and green jewels that glint in turn",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".GG......GG......GG.",
+  "GWRG....GBBG....GNNG",
+  "GRRG....GBBG....GNNG",
+  "GGGG....GGGG....GGGG",
+  "GGGGGGGGGGGGGGGGGGGG",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "DDDDDDDDDDDDDDDDDDDD",
+  "GGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGG"
+ ],
+ "frames": [
+  [
+   ".GG......GG......GG.",
+   "GRRG....GWBG....GNNG",
+   "GRRG....GBBG....GNNG",
+   "GGGG....GGGG....GGGG",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ],
+  [
+   ".GG......GG......GG.",
+   "GRRG....GBBG....GWNG",
+   "GRRG....GBBG....GNNG",
+   "GGGG....GGGG....GGGG",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "DDDDDDDDDDDDDDDDDDDD",
+   "GGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGG"
+  ]
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "date": "04-13",
+ "name": "blossom_sprig",
+ "title": "Spring Blossom Day",
+ "theme": "a cherry-blossom sprig across his head with three pink blossoms and two green leaves; petals drift down from the right blossom",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "..MMM.....MMM.....MMM.......",
+  ".MMMMM...MMMMM...MMMMM......",
+  ".MMGMM...MMGMM...MMGMM......",
+  ".MMMMMNNNMMMMMNNNMMMMM......",
+  ".MMMMMNNNMMMMMNNNMMMMM......",
+  "OOOOOOOOOOOOOOOOOOOOOO......",
+  "OOOOOOOOOOOOOOOOOOOOOO......",
+  "............................",
+  "...........................M",
+  "............................",
+  "............................",
+  "............................",
+  "............................"
+ ],
+ "frames": [
+  [
+   "..MMM.....MMM.....MMM.......",
+   ".MMMMM...MMMMM...MMMMM......",
+   ".MMGMM...MMGMM...MMGMM......",
+   ".MMMMMNNNMMMMMNNNMMMMM......",
+   ".MMMMMNNNMMMMMNNNMMMMM......",
+   "OOOOOOOOOOOOOOOOOOOOOO......",
+   "OOOOOOOOOOOOOOOOOOOOOO......",
+   "............................",
+   "............................",
+   "............................",
+   "...........................M",
+   "...........................M",
+   "............................"
+  ],
+  [
+   "..MMM.....MMM.....MMM.......",
+   ".MMMMM...MMMMM...MMMMM......",
+   ".MMGMM...MMGMM...MMGMM......",
+   ".MMMMMNNNMMMMMNNNMMMMM......",
+   ".MMMMMNNNMMMMMNNNMMMMM......",
+   "OOOOOOOOOOOOOOOOOOOOOO......",
+   "OOOOOOOOOOOOOOOOOOOOOO......",
+   "............................",
+   "............................",
+   "............................",
+   "............................",
+   "............................",
+   "...........................M"
+  ]
+ ]
+}

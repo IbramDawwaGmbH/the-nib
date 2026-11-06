@@ -1,0 +1,42 @@
+{
+ "date": "11-10",
+ "name": "lab_goggles",
+ "title": "World Science Day",
+ "theme": "wraparound teal lab safety goggles with a purple strap and a glint that slides across the lens",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  11,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "...KKKKKKKKKKKKKKKK...",
+  "..TWWWWTTTTTTTTTTTTT..",
+  "PPTTTTTTTTTTTTTTTTTTPP",
+  "PPTWWTTTTTTTTTTTTTTTPP",
+  "PPTWWTTTTTTTTTTTTTTTPP",
+  "..TTTTTTTTTTTTTTTTTT..",
+  "...TTTTTTTTTTTTTTTT..."
+ ],
+ "frames": [
+  [
+   "...KKKKKKKKKKKKKKKK...",
+   "..TWWWWTTTTTTTTTTTTT..",
+   "PPTTTTTTTTTTTTTTTTTTPP",
+   "PPTTTTTTTWWTTTTTTTTTPP",
+   "PPTTTTTTTWWTTTTTTTTTPP",
+   "..TTTTTTTTTTTTTTTTTT..",
+   "...TTTTTTTTTTTTTTTT..."
+  ],
+  [
+   "...KKKKKKKKKKKKKKKK...",
+   "..TWWWWTTTTTTTTTTTTT..",
+   "PPTTTTTTTTTTTTTTTTTTPP",
+   "PPTTTTTTTTTTTTTWWTTTPP",
+   "PPTTTTTTTTTTTTTWWTTTPP",
+   "..TTTTTTTTTTTTTTTTTT..",
+   "...TTTTTTTTTTTTTTTT..."
+  ]
+ ]
+}

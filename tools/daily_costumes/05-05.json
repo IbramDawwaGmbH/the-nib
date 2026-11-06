@@ -1,0 +1,51 @@
+{
+ "date": "05-05",
+ "name": "soap_bar_slide",
+ "title": "Hand Hygiene Day",
+ "theme": "a rounded blue bar of soap lying on his head with a white highlight stripe and a white foam edge along the bottom; foam bubbles rise off its corner and it slides two pixels right, then left, leaving a bubble behind",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  "......................",
+  "................WW....",
+  "................WW....",
+  "...BBBBBBBBBBBBBBBB...",
+  "..BBWWWWWWBBBBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBB..",
+  "..BBWWWWWWWWWWWWWWBB..",
+  "...WWWWWWWWWWWWWWWW..."
+ ],
+ "frames": [
+  [
+   "......................",
+   "..................WW..",
+   "..................WW..",
+   "......................",
+   ".....BBBBBBBBBBBBBBBB.",
+   "....BBWWWWWWBBBBBBBBBB",
+   "....BBBBBBBBBBBBBBBBBB",
+   "....BBBBBBBBBBBBBBBBBB",
+   "..WWBBWWWWWWWWWWWWWWBB",
+   "..WW.WWWWWWWWWWWWWWWW."
+  ],
+  [
+   "..............WW......",
+   "..............WW......",
+   "......................",
+   "......................",
+   ".BBBBBBBBBBBBBBBB.....",
+   "BBWWWWWWBBBBBBBBBB....",
+   "BBBBBBBBBBBBBBBBBB....",
+   "BBBBBBBBBBBBBBBBBB....",
+   "BBWWWWWWWWWWWWWWBBWW..",
+   ".WWWWWWWWWWWWWWWW.WW.."
+  ]
+ ]
+}

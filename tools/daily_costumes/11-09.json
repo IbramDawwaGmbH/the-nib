@@ -1,0 +1,71 @@
+{
+ "date": "11-09",
+ "name": "cog_crown",
+ "title": "Inventors Day",
+ "theme": "a headband crown of gears: a big gold cog meshing with two small silver ones, all turning",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........GG..........",
+  "..........GG..........",
+  "........GGGGGG........",
+  "........GGGGGG........",
+  "......GGGGDDGGGG......",
+  "..K...GGGGDDGGGG...K..",
+  ".KKKK...GGGGGG...KKKK.",
+  "KKKKKK..GGGGGG..KKKKKK",
+  ".KKKK.....GG.....KKKK.",
+  ".KKKK.....GG.....KKKK.",
+  ".SSSSSSSSSSSSSSSSSSSS.",
+  ".SSSSSSSSSSSSSSSSSSSS."
+ ],
+ "frames": [
+  [
+   "......................",
+   ".......GG....GG.......",
+   ".......GGGGGGGG.......",
+   "........GGGGGG........",
+   "........GGDDGG........",
+   "K....K..GGDDGG..K....K",
+   ".KKKK...GGGGGG...KKKK.",
+   ".KKKK..GGGGGGGG..KKKK.",
+   ".KKKK..GG....GG..KKKK.",
+   ".KKKK............KKKK.",
+   ".SSSSSSSSSSSSSSSSSSSS.",
+   ".SSSSSSSSSSSSSSSSSSSS."
+  ],
+  [
+   "..........WG..........",
+   "..........GG..........",
+   "........GGGGGG........",
+   "........GGGGGG........",
+   "......GGGGDDGGGG......",
+   "..K...GGGGDDGGGG...K..",
+   ".KKKK...GGGGGG...KKKK.",
+   "KKKKKK..GGGGGG..KKKKKK",
+   ".KKKK.....GG.....KKKK.",
+   ".KKKK.....GG.....KKKK.",
+   ".SSSSSSSSSSSSSSSSSSSS.",
+   ".SSSSSSSSSSSSSSSSSSSS."
+  ],
+  [
+   "......................",
+   ".......GG....WG.......",
+   ".......GGGGGGGG.......",
+   "........GGGGGG........",
+   "........GGDDGG........",
+   "K....K..GGDDGG..K....K",
+   ".KKKK...GGGGGG...KKKK.",
+   ".KKKK..GGGGGGGG..KKKK.",
+   ".KKKK..GG....GG..KKKK.",
+   ".KKKK............KKKK.",
+   ".SSSSSSSSSSSSSSSSSSSS.",
+   ".SSSSSSSSSSSSSSSSSSSS."
+  ]
+ ]
+}

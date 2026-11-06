@@ -1,0 +1,79 @@
+{
+ "date": "03-05",
+ "name": "rain_gauge",
+ "title": "Spring Showers",
+ "theme": "a clear rain gauge, a white tube with grey tick marks and blue water, standing on his head; blue drops fall in and the water rises, then it empties and refills",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  5,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  "....BB..BB",
+  "....BB....",
+  "WWW....WWW",
+  ".WW....WW.",
+  ".WW....WW.",
+  ".KK....WW.",
+  ".WW....WW.",
+  ".WW....WW.",
+  ".KK....WW.",
+  ".WW....WW.",
+  ".WW....WW.",
+  ".KKBBBBWW.",
+  ".WWBBBBWW.",
+  ".WWWWWWWW."
+ ],
+ "frames": [
+  [
+   "BB........",
+   "..........",
+   "WWW....WWW",
+   ".WW....WW.",
+   ".WW.BB.WW.",
+   ".KK.BB.WW.",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KKBBBBWW.",
+   ".WWBBBBWW.",
+   ".WWWWWWWW."
+  ],
+  [
+   "........BB",
+   "..........",
+   "WWW....WWW",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WWBBBBWW.",
+   ".WWBBBBWW.",
+   ".KKBBBBWW.",
+   ".WWBBBBWW.",
+   ".WWWWWWWW."
+  ],
+  [
+   "BB..BB....",
+   "....BB....",
+   "WWW....WWW",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WW....WW.",
+   ".WW....WW.",
+   ".KK....WW.",
+   ".WWBBBBWW.",
+   ".WWWWWWWW."
+  ]
+ ]
+}

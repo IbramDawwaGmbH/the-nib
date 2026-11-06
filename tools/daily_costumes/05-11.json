@@ -1,0 +1,54 @@
+{
+ "date": "05-11",
+ "name": "taco_shell",
+ "title": "Eat What You Want Day",
+ "theme": "a folded gold taco shell lying on his head, lettuce frill, tomato and brown filling peeking out; the frill wiggles and a tomato chunk pops up",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "......................",
+  ".N..NN..NN..RRRRNN..N.",
+  ".NNNOONNNOONRRRRONNNN.",
+  "GGGGGGGGGGGGGGGGGGGGGG",
+  "GGGGGGGGGGGGGGGGGGGGGG",
+  ".GGGGGGGGGGGGGGGGGGGG.",
+  "..GGGGGGGGGGGGGGGGGG..",
+  "...GGGGGGGGGGGGGGGG...",
+  "....GGGGGGGGGGGGGG....",
+  ".....GGGGGGGGGGGG.....",
+  ".......GGGGGGGG......."
+ ],
+ "frames": [
+  [
+   "............RRRR......",
+   "...NN..NN..NRRRRN..NN.",
+   ".NNNOONNNOONRRRRONNNN.",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   ".GGGGGGGGGGGGGGGGGGGG.",
+   "..GGGGGGGGGGGGGGGGGG..",
+   "...GGGGGGGGGGGGGGGG...",
+   "....GGGGGGGGGGGGGG....",
+   ".....GGGGGGGGGGGG.....",
+   ".......GGGGGGGG......."
+  ],
+  [
+   "......................",
+   "..NN..NN..NNRRRR..NN..",
+   ".NNNOONNNOONRRRRONNNN.",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   "GGGGGGGGGGGGGGGGGGGGGG",
+   ".GGGGGGGGGGGGGGGGGGGG.",
+   "..GGGGGGGGGGGGGGGGGG..",
+   "...GGGGGGGGGGGGGGGG...",
+   "....GGGGGGGGGGGGGG....",
+   ".....GGGGGGGGGGGG.....",
+   ".......GGGGGGGG......."
+  ]
+ ]
+}

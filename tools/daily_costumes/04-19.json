@@ -1,0 +1,45 @@
+{
+ "date": "04-19",
+ "name": "bike_bell",
+ "title": "Bicycle Day",
+ "theme": "a charcoal headband with a silver dome bicycle bell and a grey lever; the lever flicks, the bell shakes and white ring ticks pop out either side",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  12,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........SSSS..........",
+  ".........SSSSSS.........",
+  "........SSSSSSSS........",
+  ".......SSSSSSSSSS.......",
+  ".......SSSSSSSSSSKKK....",
+  ".......DDDDDDDDDDKKK....",
+  "AAAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "..........SSSS..........",
+   ".........SSSSSS.........",
+   "........SSSSSSSS.KKK....",
+   ".......SSSSSSSSSSKKK....",
+   ".......SSSSSSSSSS.......",
+   ".......DDDDDDDDDD.......",
+   "AAAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAAA"
+  ],
+  [
+   "...........SSSS.........",
+   "...WW.....SSSSSS.....WW.",
+   ".........SSSSSSSS.......",
+   "..WW....SSSSSSSSSS..WW..",
+   "........SSSSSSSSSSKKK...",
+   "........DDDDDDDDDDKKK...",
+   "AAAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+  "date": "07-03",
+  "name": "straw_sunhat",
+  "title": "Beach Day",
+  "theme": "a wide floppy gold straw sun hat with a red ribbon; the brim edges ripple and the ribbon tail flutters",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    15,
+    8
+  ],
+  "layer": "over",
+  "pattern": [
+    ".........GGGGGGGGGGGG.........",
+    ".......GGGGGGGGGGGGGGGG.......",
+    ".......GGGGGGGGGGGGGGGG.......",
+    ".......GGGGGGGGGGGGGGGG.......",
+    ".......RRRRRRRRRRRRRRRR.......",
+    ".......RRRRRRRRRRRRRRRR.......",
+    ".......DDDDDDDDDDDDDDDD.......",
+    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+    "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+    "............................R.",
+    "............................RR",
+    ".............................."
+  ],
+  "frames": [
+    [
+      ".........GGGGGGGGGGGG.........",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......RRRRRRRRRRRRRRRR.......",
+      ".......RRRRRRRRRRRRRRRR.......",
+      ".......DDDDDDDDDDDDDDDD.......",
+      "....GGGGGGGGGGGGGGGGGGGGGG....",
+      "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "GGGG......................GGGG",
+      "............................RR",
+      ".............................R"
+    ],
+    [
+      ".........GGGGGGGGGGGG.........",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......GGGGGGGGGGGGGGGG.......",
+      ".......RRRRRRRRRRRRRRRR.......",
+      ".......RRRRRRRRRRRRRRRR.......",
+      "GGGG...DDDDDDDDDDDDDDDD...GGGG",
+      "GGGGGGGGGGGGGGGGGGGGGGGGGGGGGG",
+      "....GGGGGGGGGGGGGGGGGGGGGG..R.",
+      "...........................RR.",
+      "..............................",
+      ".............................."
+    ]
+  ]
+}

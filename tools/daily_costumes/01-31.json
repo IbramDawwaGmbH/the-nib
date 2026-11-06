@@ -1,0 +1,51 @@
+{
+ "date": "01-31",
+ "name": "backwards_cap",
+ "title": "Backward Day",
+ "theme": "A blue cap worn backwards: a brim ledge peeks over the back of the crown above a seam, silver snapback strap at the front; the ledge bobs and the strap shifts",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "...BBBBBBBBBBBBBB...",
+  "...BBBBBBBBBBBBBB...",
+  "...DDDDDDDDDDDDDD...",
+  ".....BBBBDDBBBB.....",
+  "...BBBBBBBBBBBBBB...",
+  ".BBBBBBBBBBBBBBBBBB.",
+  "BBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBDSSSSSSDBBBBBB",
+  "......DSSSSSSD......"
+ ],
+ "frames": [
+  [
+   "..BBBBBBBBBBBBBB....",
+   "..BBBBBBBBBBBBBB....",
+   "..DDDDDDDDDDDDDD....",
+   ".....BBBBDDBBBB.....",
+   "...BBBBBBBBBBBBBB...",
+   ".BBBBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBDSSSSSSDBBBBB",
+   ".......DSSSSSSD....."
+  ],
+  [
+   "....BBBBBBBBBBBBBB..",
+   "....BBBBBBBBBBBBBB..",
+   "....DDDDDDDDDDDDDD..",
+   ".....BBBBDDBBBB.....",
+   "...BBBBBBBBBBBBBB...",
+   ".BBBBBBBBBBBBBBBBBB.",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBDSSSSSSDBBBBBBB",
+   ".....DSSSSSSD......."
+  ]
+ ]
+}

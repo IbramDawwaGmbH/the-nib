@@ -1,0 +1,48 @@
+{
+ "date": "06-25",
+ "name": "seafarer_cap",
+ "title": "Day of the Seafarer",
+ "theme": "a round white sailor's cap with a blue band and a gold anchor; the ribbon tails ripple and the anchor glints",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  14,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......WWWWWWWWWWWWWW....",
+  ".....WWWWWWWWWWWWWWWWWW..",
+  ".BBWWWWWWWWWWWWWWWWWWWWWW",
+  ".BBWWWWWWWWWWWWWWWWWWWWWW",
+  ".BBWWWWWWWWWWWWWWWWWWWWWW",
+  ".BBWWWWWWWWWWGWWWWWWWWWWW",
+  ".BBWWWWWWWWWGGGWWWWWWWWWW",
+  "...BBBBBBBBBBGBBBBBBBBBBB",
+  "...BBBBBBBBBGGGBBBBBBBBBB"
+ ],
+ "frames": [
+  [
+   ".......WWWWWWWWWWWWWW....",
+   ".....WWWWWWWWWWWWWWWWWW..",
+   ".BBWWWWWWWWWWWWWWWWWWWWWW",
+   "BBWWWWWWWWWWWWWWWWWWWWWWW",
+   ".BBWWWWWWWWWWWWWWWWWWWWWW",
+   "BBWWWWWWWWWWWGWWWWWWWWWWW",
+   ".BBWWWWWWWWWGWGWWWWWWWWWW",
+   "...BBBBBBBBBBGBBBBBBBBBBB",
+   "...BBBBBBBBBGGGBBBBBBBBBB"
+  ],
+  [
+   ".......WWWWWWWWWWWWWW....",
+   ".....WWWWWWWWWWWWWWWWWW..",
+   "BBWWWWWWWWWWWWWWWWWWWWWWW",
+   ".BBWWWWWWWWWWWWWWWWWWWWWW",
+   "BBWWWWWWWWWWWWWWWWWWWWWWW",
+   ".BBWWWWWWWWWWGWWWWWWWWWWW",
+   "BBWWWWWWWWWWGGGWWWWWWWWWW",
+   "...BBBBBBBBBBGBBBBBBBBBBB",
+   "...BBBBBBBBBGGGBBBBBBBBBB"
+  ]
+ ]
+}

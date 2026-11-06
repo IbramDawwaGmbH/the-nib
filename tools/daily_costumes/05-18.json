@@ -1,0 +1,47 @@
+{
+ "date": "05-18",
+ "name": "gilt_frames",
+ "title": "Museum Day",
+ "theme": "ornate gilt picture-frame glasses with dark inner lines and corner knobs; a white glint travels round the frames",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  10,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "WWGGGGGGG..GGGGGGGGG",
+  ".GD.....G..G.....DG.",
+  ".GD.....GGGG.....DG.",
+  ".GD.....G..G.....DG.",
+  ".GD.....G..G.....DG.",
+  "GGGGGGGGG..GGGGGGGGG"
+ ],
+ "frames": [
+  [
+   "GGGGGGGGG..GGGGGGGWW",
+   ".GD.....G..G.....DG.",
+   ".GD.....GGGG.....DG.",
+   ".GD.....G..G.....DG.",
+   ".GD.....G..G.....DG.",
+   "GGGGGGGGG..GGGGGGGGG"
+  ],
+  [
+   "GGGGGGGGG..GGGGGGGGG",
+   ".GD.....G..G.....DG.",
+   ".GD.....GGGG.....DG.",
+   ".GD.....G..G.....DG.",
+   ".GD.....G..G.....DG.",
+   "GGGGGGGGG..GGGGGGGWW"
+  ],
+  [
+   "GGGGGGGGG..GGGGGGGGG",
+   ".GD.....G..G.....DG.",
+   ".GD.....GGGG.....DG.",
+   ".GD.....G..G.....DG.",
+   ".GD.....G..G.....DG.",
+   "WWGGGGGGG..GGGGGGGGG"
+  ]
+ ]
+}

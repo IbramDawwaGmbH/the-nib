@@ -1,0 +1,48 @@
+{
+ "date": "05-02",
+ "name": "tuna_tin",
+ "title": "World Tuna Day",
+ "theme": "a round silver tin worn like a hat with a blue label band, a dark seam and a lid peeling up at the right with a gold pull ring; the lid peels one more row each frame while a white glint crosses the rim",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  10,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "....................",
+  "....................",
+  "............SSSSSSGG",
+  ".SSSSSSSSSSSSSSSSSGG",
+  "SSWWSSSSSSSSSSSSSSSS",
+  "BBBBBBBBBBBBBBBBBBBB",
+  "BBBBBBBBDBBBBBBBBBBB",
+  "SSSSSSSSSSSSSSSSSSSS",
+  ".SSSSSSSSSSSSSSSSSS."
+ ],
+ "frames": [
+  [
+   "....................",
+   "...............SSSGG",
+   "............SSSDDDGG",
+   ".SSSSSSSSSSSSSSSSSS.",
+   "SSSSSSSSSWWSSSSSSSSS",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBDBBBBBBBBBBB",
+   "SSSSSSSSSSSSSSSSSSSS",
+   ".SSSSSSSSSSSSSSSSSS."
+  ],
+  [
+   "................SSGG",
+   "..............SSDDGG",
+   "............SSDDDD..",
+   ".SSSSSSSSSSSSSSSSSS.",
+   "SSSSSSSSSSSSSSSWWSSS",
+   "BBBBBBBBBBBBBBBBBBBB",
+   "BBBBBBBBDBBBBBBBBBBB",
+   "SSSSSSSSSSSSSSSSSSSS",
+   ".SSSSSSSSSSSSSSSSSS."
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "12-20",
+ "name": "choir_ruff",
+ "title": "Go Caroling Day",
+ "theme": "a white pleated choir ruff with scalloped seams and a gold music note floating up beside his left shoulder",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  16,
+  7
+ ],
+ "layer": "over",
+ "pattern": [
+  "..............................",
+  "..............................",
+  "..............................",
+  ".GG...........................",
+  "..G...........................",
+  "..G...........................",
+  "GGG...........................",
+  "GG...WWWWWWWWWWWWWWWWWWWWWWWW.",
+  "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+  "....WWDWWDWWDWWDWWDWWDWWDWWDWW"
+ ],
+ "frames": [
+  [
+   "..............................",
+   "..............................",
+   ".GG...........................",
+   "..G...........................",
+   "..G...........................",
+   "GGG...........................",
+   "GG............................",
+   ".....WWWWWWWWWWWWWWWWWWWWWWWW.",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....WDWWDWWDWWDWWDWWDWWDWWDWWD"
+  ],
+  [
+   "..............................",
+   ".GG...........................",
+   "..G...........................",
+   "..G...........................",
+   "GGG...........................",
+   "GG............................",
+   "..............................",
+   ".....WWWWWWWWWWWWWWWWWWWWWWWW.",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....WWWWWWWWWWWWWWWWWWWWWWWWWW",
+   "....DWWDWWDWWDWWDWWDWWDWWDWWDW"
+  ]
+ ]
+}

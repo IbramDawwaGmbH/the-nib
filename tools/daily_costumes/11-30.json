@@ -1,0 +1,43 @@
+{
+  "date": "11-30",
+  "name": "tam_o_shanter",
+  "title": "St Andrew's Day",
+  "theme": "a blue tartan tam o' shanter with green lines, red crossings and a red pom-pom; the pom-pom bobs and the brim lifts",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    13,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    "..........................",
+    "...........RRRR...........",
+    "...........RRRR...........",
+    "...........RRRR...........",
+    ".....BBBBBBRRRRBBBBBB.....",
+    "..NRNNNRNNNRNNNRNNNRNNNR..",
+    "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+    "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+    "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+    "NNNRNNNRNNNRNNNRNNNRNNNRNN",
+    "...DDDDDDDDDDDDDDDDDDDD...",
+    "...DDDDDDDDDDDDDDDDDDDD..."
+  ],
+  "frames": [
+    [
+      "...........RRRR...........",
+      "...........RRRR...........",
+      "...........RRRR...........",
+      "...........RRRR...........",
+      ".....BBBBBBBBBBBBBBBB.....",
+      "..NRNNNRNNNRNNNRNNNRNNNR..",
+      "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+      "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+      "BBBNBBBNBBBNBBBNBBBNBBBNBB",
+      "..NRNNNRNNNRNNNRNNNRNNNR..",
+      "...DDDDDDDDDDDDDDDDDDDD...",
+      "...DDDDDDDDDDDDDDDDDDDD..."
+    ]
+  ]
+}

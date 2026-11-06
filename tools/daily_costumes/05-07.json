@@ -1,0 +1,47 @@
+{
+ "date": "05-07",
+ "name": "finish_tape",
+ "title": "World Athletics Day",
+ "theme": "a finish-line tape stretched across his chest: a white band with red checks and dark end posts; it bows, snaps in the middle, flutters apart and resets",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  14,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "............................",
+  "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+  "DDWWRRWWRRWWRRWWRRWWRRWWRRDD",
+  "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+  "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+  "........WWWWWWWWWWWWWWWW...."
+ ],
+ "frames": [
+  [
+   "............................",
+   "DDWWWWWWWW........WWWWWWWWDD",
+   "DDWWRRWWRRWW....RRWWRRWWRRDD",
+   "DDWWWWWWWWWW....WWWWWWWWWWDD",
+   "DDWWWWWWWWWW....WWWWWWWWWWDD",
+   "..........WW....WW.........."
+  ],
+  [
+   "..WWWWWWWW..................",
+   "DDWWWWWWWW................DD",
+   "DDWWRRWWRR........WWRRWWRRDD",
+   "DDWWWWWWWW........WWWWWWWWDD",
+   "DD................WWWWWWWWDD",
+   "..................WWWWWWWW.."
+  ],
+  [
+   "............................",
+   "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+   "DDWWRRWWRRWWRRWWRRWWRRWWRRDD",
+   "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+   "DDWWWWWWWWWWWWWWWWWWWWWWWWDD",
+   "............................"
+  ]
+ ]
+}

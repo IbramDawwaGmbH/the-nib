@@ -1,0 +1,47 @@
+{
+    "date":  "08-05",
+    "name":  "oyster_pearl",
+    "title":  "Oyster Day",
+    "theme":  "a wide grey oyster half-shell resting on his chest with one big white pearl; the pearl glints",
+    "category":  "Neck",
+    "kind":  "neck",
+    "anchor":  [
+                   5,
+                   0
+               ],
+    "layer":  "over",
+    "pattern":  [
+                    "...........",
+                    "....WWW....",
+                    "....WSW....",
+                    ".KKKWWWKKK.",
+                    ".KDKKDKKDK.",
+                    "..DKKDKKD.."
+                ],
+    "frames":  [
+                   [
+                       "...........",
+                       "....SSS....",
+                       "....SWS....",
+                       ".KKKSSSKKK.",
+                       ".KDKKDKKDK.",
+                       "..DKKDKKD.."
+                   ],
+                   [
+                       "...........",
+                       "....WWW.W..",
+                       "....WWW....",
+                       ".KKKWWWKKK.",
+                       ".KDKKDKKDK.",
+                       "..DKKDKKD.."
+                   ],
+                   [
+                       "...........",
+                       "....WSS....",
+                       "....SWS....",
+                       ".KKKSSSKKK.",
+                       ".KDKKDKKDK.",
+                       "..DKKDKKD.."
+                   ]
+               ]
+}

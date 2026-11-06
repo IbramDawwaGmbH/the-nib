@@ -1,0 +1,63 @@
+{
+ "date": "03-13",
+ "name": "gem_pendant",
+ "title": "Jewel Day",
+ "theme": "a gold chain necklace with a pink hexagonal gem; the white facet twinkles across it and the gem swings on the chain",
+ "category": "Neck",
+ "kind": "neck",
+ "anchor": [
+  7,
+  0
+ ],
+ "layer": "over",
+ "pattern": [
+  "GG...........GG",
+  "..G.........G..",
+  "...GG.....GG...",
+  ".....GMMMG.....",
+  ".....WWMMM.....",
+  "....MMMMMMM....",
+  "....MMMMMMM....",
+  "....MMMMMMM....",
+  ".....MMMMM.....",
+  "......MMM......"
+ ],
+ "frames": [
+  [
+   "GG...........GG",
+   "..G.........G..",
+   "...GG.....GG...",
+   ".....MMM.G.....",
+   "....MMMMM......",
+   "...MMMWWMM.....",
+   "...MMMMMMM.....",
+   "...MMMMMMM.....",
+   "....MMMMM......",
+   ".....MMM......."
+  ],
+  [
+   "GG...........GG",
+   "..G.........G..",
+   "...GG.....GG...",
+   ".....GMMMG.....",
+   ".....MMMWW.....",
+   "....MMMMMMM....",
+   "....MMMMMMM....",
+   "....MMMMMMM....",
+   ".....MMMMM.....",
+   "......MMM......"
+  ],
+  [
+   "GG...........GG",
+   "..G.........G..",
+   "...GG.....GG...",
+   ".....G.MMM.....",
+   "......MMMMM....",
+   ".....MMMWWMM...",
+   ".....MMMMMMM...",
+   ".....MMMMMMM...",
+   "......MMMMM....",
+   ".......MMM....."
+  ]
+ ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "10-07",
+ "name": "toy_rocket",
+ "title": "World Space Week",
+ "theme": "a little toy rocket standing upright on the crown of his head: red nose cone, white body with a blue porthole, red fins, and a flickering gold and orange flame",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".......RR.......",
+  "......RRRR......",
+  ".....RRRRRR.....",
+  "....DDDDDDDD....",
+  "....WWWWWWWW....",
+  "....WWBBBBWW....",
+  "....WWBBBBWW....",
+  "..RRWWWWWWWWRR..",
+  "RRRRWWWWWWWWRRRR",
+  "......FGG.......",
+  ".....FFGG.......",
+  "................"
+ ],
+ "frames": [
+  [
+   ".......RR.......",
+   "......RRRR......",
+   ".....RRRRRR.....",
+   "....DDDDDDDD....",
+   "....WWWWWWWW....",
+   "....WWWBBBWW....",
+   "....WWBBBBWW....",
+   "..RRWWWWWWWWRR..",
+   "RRRRWWWWWWWWRRRR",
+   ".......GGG......",
+   ".......GGGFF....",
+   ".......GGGF....."
+  ],
+  [
+   ".......RR.......",
+   "......RRRR......",
+   ".....RRRRRR.....",
+   "....DDDDDDDD....",
+   "....WWWWWWWW....",
+   "....WWBBBBWW....",
+   "....WWBBBBWW....",
+   "..RRWWWWWWWWRR..",
+   "RRRRWWWWWWWWRRRR",
+   ".......GG.......",
+   "......FGGF......",
+   "................"
+  ]
+ ]
+}

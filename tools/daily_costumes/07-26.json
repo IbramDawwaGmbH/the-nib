@@ -1,0 +1,71 @@
+{
+ "date": "07-26",
+ "name": "firefly_jar",
+ "title": "Firefly Night",
+ "theme": "a glass jar of blinking fireflies balanced on his head",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  6,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".SSSSSSSSSSSS.",
+  ".SSSSSSSSSSSS.",
+  "TTTTTTTTTTTTTT",
+  "TTTTTTTTTGTTTT",
+  "TTTGTTTTTTTTTT",
+  "TTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTT",
+  "TTTTTGTTTTGTTT",
+  "TTTTTTTTTTTTTT",
+  "TTTTTTTTTTTTTT",
+  ".TTTTTTTTTTTT."
+ ],
+ "frames": [
+  [
+   ".SSSSSSSSSSSS.",
+   ".SSSSSSSSSSSS.",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTWTTTTGTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTGTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   ".TTTTTTTTTTTT."
+  ],
+  [
+   ".SSSSSSSSSSSS.",
+   ".SSSSSSSSSSSS.",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTWTTTTT",
+   "TTTTGTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTGTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   ".TTTTTTTTTTTT."
+  ],
+  [
+   ".SSSSSSSSSSSS.",
+   ".SSSSSSSSSSSS.",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTGTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTTTTTTTTT",
+   "TTTTTTWTTTTTTT",
+   "TTTTTTTTTTGTTT",
+   "TTTTTTTTTTTTTT",
+   ".TTTTTTTTTTTT."
+  ]
+ ]
+}

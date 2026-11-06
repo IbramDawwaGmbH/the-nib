@@ -1,0 +1,83 @@
+{
+ "date": "05-22",
+ "name": "butterfly_mask",
+ "title": "Biodiversity Day",
+ "theme": "A purple butterfly mask with two-lobed wings and gold wing spots around his eyes; the wings flap and the spots blink",
+ "category": "Eyes",
+ "kind": "eyes",
+ "anchor": [
+  18,
+  4
+ ],
+ "layer": "over",
+ "pattern": [
+  "......PPP......AA..AA......PPP......",
+  "....PPPPPP.......AA.......PPPPPP....",
+  "...PPPPPPP.......AA.......PPPPPPP...",
+  "..PPPPPPPPPPPPPPPAAPPPPPPPPPPPPPPP..",
+  ".PPGGPPPPP.....PPAAPP.....PPPPPGGPP.",
+  ".PPGGPPPPP.....PPAAPP.....PPPPPGGPP.",
+  ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+  ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+  "..PPPPPPPP.....PPAAPP.....PPPPPPPP..",
+  "....PPPPPP.....PPAAPP.....PPPPPP....",
+  "...PPPPPPPPPPPPPPAAPPPPPPPPPPPPPP...",
+  "...PPGPPP..................PPPGPP...",
+  "...PPPPPP..................PPPPPP...",
+  "....PPPP....................PPPP....",
+  ".....PPP....................PPP....."
+ ],
+ "frames": [
+  [
+   "......PPP......AA..AA......PPP......",
+   ".....PPPPP.......AA.......PPPPP.....",
+   "....PPPPPP.......AA.......PPPPPP....",
+   "..PPPPPPPPPPPPPPPAAPPPPPPPPPPPPPPP..",
+   "..PGGPPPPP.....PPAAPP.....PPPPPGGP..",
+   "..PGGPPPPP.....PPAAPP.....PPPPPGGP..",
+   "..PPPPPPPP.....PPAAPP.....PPPPPPPP..",
+   "..PPPPPPPP.....PPAAPP.....PPPPPPPP..",
+   "...PPPPPPP.....PPAAPP.....PPPPPPP...",
+   ".....PPPPP.....PPAAPP.....PPPPP.....",
+   "...PPPPPPPPPPPPPPAAPPPPPPPPPPPPPP...",
+   "....PGPPP..................PPPGP....",
+   "....PPPPP..................PPPPP....",
+   ".....PPP....................PPP.....",
+   "......PP....................PP......"
+  ],
+  [
+   "......PPP......AA..AA......PPP......",
+   "....PPPPPP.......AA.......PPPPPP....",
+   "...PPPPPPP.......AA.......PPPPPPP...",
+   "..PPPPPPPPPPPPPPPAAPPPPPPPPPPPPPPP..",
+   ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+   ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+   ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+   ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+   "..PPPPPPPP.....PPAAPP.....PPPPPPPP..",
+   "....PPPPPP.....PPAAPP.....PPPPPP....",
+   "...PPPPPPPPPPPPPPAAPPPPPPPPPPPPPP...",
+   "...PPPPPP..................PPPPPP...",
+   "...PPPPPP..................PPPPPP...",
+   "....PPPP....................PPPP....",
+   ".....PPP....................PPP....."
+  ],
+  [
+   "......PPP......AA..AA......PPP......",
+   "...PPPPPPP.......AA.......PPPPPPP...",
+   "..PPPPPPPP.......AA.......PPPPPPPP..",
+   "..PPPPPPPPPPPPPPPAAPPPPPPPPPPPPPPP..",
+   "PPPGGPPPPP.....PPAAPP.....PPPPPGGPPP",
+   "PPPGGPPPPP.....PPAAPP.....PPPPPGGPPP",
+   "PPPPPPPPPP.....PPAAPP.....PPPPPPPPPP",
+   "PPPPPPPPPP.....PPAAPP.....PPPPPPPPPP",
+   ".PPPPPPPPP.....PPAAPP.....PPPPPPPPP.",
+   "...PPPPPPP.....PPAAPP.....PPPPPPP...",
+   "...PPPPPPPPPPPPPPAAPPPPPPPPPPPPPP...",
+   "..PPPGPPP..................PPPGPPP..",
+   "..PPPPPPP..................PPPPPPP..",
+   "...PPPPP....................PPPPP...",
+   "....PPPP....................PPPP...."
+  ]
+ ]
+}

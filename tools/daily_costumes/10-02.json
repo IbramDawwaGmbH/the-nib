@@ -1,0 +1,41 @@
+{
+  "date": "10-02",
+  "name": "toadstool_cap",
+  "title": "Mushroom Season",
+  "theme": "a red toadstool dome with five white spots, a gill band and a short stem; the spots twinkle",
+  "category": "Hats",
+  "kind": "head",
+  "anchor": [
+    12,
+    10
+  ],
+  "layer": "over",
+  "pattern": [
+    ".......RRRRRRRRRR.......",
+    "....RRRRRRWWRRRRRRRR....",
+    "..RRRRRRRRWWRRRRRRRRRR..",
+    ".RRWWRRRRRRRRRRRRRWWRRR.",
+    "RRRWWRRRRRRRRRRRRRWWRRRR",
+    "RRRRRRRRWWRRRRWWRRRRRRRR",
+    "RRRRRRRRWWRRRRWWRRRRRRRR",
+    "RRRRRRRRRRRRRRRRRRRRRRRR",
+    "WWWWWWWWWWWWWWWWWWWWWWWW",
+    ".........WWWWWW.........",
+    ".........WWWWWW........."
+  ],
+  "frames": [
+    [
+      ".......RRRRRRRRRR.......",
+      "....RRRRRRWRRRRRRRRR....",
+      "..RRRRRRRRRRRRRRRRRRRR..",
+      ".RRWRRRRRRRRRRRRRRWRRRR.",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRWRRRRRWRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "RRRRRRRRRRRRRRRRRRRRRRRR",
+      "WWWWWWWWWWWWWWWWWWWWWWWW",
+      ".........WWWWWW.........",
+      ".........WWWWWW........."
+    ]
+  ]
+}

@@ -1,0 +1,57 @@
+{
+ "date": "07-21",
+ "name": "ice_lolly",
+ "title": "Ice Lolly Day",
+ "theme": "a striped red, pink and white ice lolly on its stick; a pink drip runs down and a frost glint blinks",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  5,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  "..RRRRRR..",
+  "RRRRRRRRRR",
+  "RRRRRRRRRR",
+  "MMMMMMMMMM",
+  "MMMMMMMMMM",
+  "MMMMMMMMMM",
+  "WWWWWWWWWW",
+  "WWWWWWWWWW",
+  "WWWWWWWWWM",
+  "....GG....",
+  "....GG....",
+  "....GG...."
+ ],
+ "frames": [
+  [
+   "..RRRRRR..",
+   "RWRRRRRRRR",
+   "RRRRRRRRRR",
+   "MMMMMMMMMM",
+   "MMMMMMMMMM",
+   "MMMMMMMMMM",
+   "WWWWWWWWWW",
+   "WWWWWWWWWW",
+   "WWWWWWWWWW",
+   "....GG...M",
+   "....GG....",
+   "....GG...."
+  ],
+  [
+   "..RRRRRR..",
+   "RRRRRRRRRR",
+   "RRRRRRRRRR",
+   "MMMMMMMMMM",
+   "MMMMMMMMMM",
+   "MMMMMMMMMM",
+   "WWWWWWWWWW",
+   "WWWWWWWWWW",
+   "WWWWWWWWWM",
+   "....GG....",
+   "....GG...M",
+   "....GG...."
+  ]
+ ]
+}

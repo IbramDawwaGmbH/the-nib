@@ -1,0 +1,43 @@
+{
+ "date": "06-12",
+ "name": "red_rose_tuck",
+ "title": "Red Rose Day",
+ "theme": "a red rose with green leaves tucked at the side of his head; the bloom opens and a leaf lifts",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  4,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "........RRRRR...",
+  ".......RRRRRRR..",
+  "......RRRRRRRRR.",
+  "......RRRDDRRRR.",
+  ".NNNNNRRRRDDRRR.",
+  ".NNNNNRRRRRRRRR.",
+  ".NNNNN.RRRRRRR..",
+  "........RRRRR...",
+  "..NNN.N.........",
+  "..NNN.N.........",
+  "..NNNN..........",
+  ".....N.........."
+ ],
+ "frames": [
+  [
+   "........RRRRR...",
+   "......RRRRRRRRR.",
+   ".....RRRRRRRRRRR",
+   ".NNNNNRRRRDDRRRR",
+   ".NNNNNRRRRRDDRRR",
+   ".NNNNNRRRRRRRRRR",
+   "......RRRRRRRRR.",
+   "........RRRRR...",
+   "..NNN.N.........",
+   "..NNN.N.........",
+   "..NNNN..........",
+   ".....N.........."
+  ]
+ ]
+}

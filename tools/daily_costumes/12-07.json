@@ -1,0 +1,51 @@
+{
+ "date": "12-07",
+ "name": "pilot_peak_cap",
+ "title": "Civil Aviation Day",
+ "theme": "an airline captain's peaked cap: blue crown, gold band, charcoal visor and a winged gold badge whose wings flare and gleam",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  9
+ ],
+ "layer": "over",
+ "pattern": [
+  "...BBBBBBBBBBBBBBBBB...",
+  "..BBBBBBBBBBBBBBBBBBB..",
+  "..BBBBBBBBBGBBBBBBBBB..",
+  "..BBBBBBBGGGGGBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBBB..",
+  "..BBBBBBBBBBBBBBBBBBB..",
+  "..GGGGGGGGGGGGGGGGGGG..",
+  "AAAAAAAAAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAAAAAAAAA"
+ ],
+ "frames": [
+  [
+   "...BBBBBBBBBBBBBBBBB...",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBGBBBBBBBBB..",
+   "..BBBBBBGGGGGGGBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..GGGGGGGGGGGGGGGGGGG..",
+   "AAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAA"
+  ],
+  [
+   "...BBBBBBBBBBBBBBBBB...",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBGBBBBBBBBB..",
+   "..BBBBBBBGGWGGBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..BBBBBBBBBBBBBBBBBBB..",
+   "..GGGGGGGGGGGGGGGGGGG..",
+   "AAAAAAAAAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAAAAAAAAA"
+  ]
+ ]
+}

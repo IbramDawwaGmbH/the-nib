@@ -1,0 +1,41 @@
+{
+ "date": "04-07",
+ "name": "yoga_mat_roll",
+ "title": "World Health Day",
+ "theme": "a rolled teal yoga mat carried across his front on a charcoal strap, dark spiral end and white highlight; it bobs and the buckle glints",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  11,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "......AA..............",
+  ".....AA...............",
+  "....AA................",
+  "...AA.................",
+  "WWWAAWWWWWWWWWWWWWWWWW",
+  "TTTAATTTTTTTTTTTTTTDDD",
+  "TTTAATTTTTTTTTTTTTTDTD",
+  "TTTAATTTTTTTTTTTTTTDDD",
+  "TTTAATTTTTTTTTTTTTTTTT",
+  "TTTAATTTTTTTTTTTTTTTTT",
+  "......................"
+ ],
+ "frames": [
+  [
+   "......AA..............",
+   ".....AA...............",
+   "....AA................",
+   "...AA.................",
+   "......................",
+   "WWWAAWWWWWWWWWWWWWWWWW",
+   "TTTAATTTTTTTTTTTTTTDDD",
+   "TTTWWTTTTTTTTTTTTTTDTD",
+   "TTTWWTTTTTTTTTTTTTTDDD",
+   "TTTAATTTTTTTTTTTTTTTTT",
+   "TTTAATTTTTTTTTTTTTTTTT"
+  ]
+ ]
+}

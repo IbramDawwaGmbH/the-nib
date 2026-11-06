@@ -1,0 +1,54 @@
+{
+ "date": "02-15",
+ "name": "hippo_hood",
+ "title": "World Hippo Day",
+ "theme": "a grey hippo hood with wiggling pink-centred ears, eye dots and snorting nostrils",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  13,
+  5
+ ],
+ "layer": "over",
+ "pattern": [
+  "..KKK................KKK..",
+  "..KMK................KMK..",
+  ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKWWKKKKKKKKKKWWKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+  "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+  ".......KKMMKKKKMMKK.......",
+  ".......KKMMKKKKMMKK......."
+ ],
+ "frames": [
+  [
+   ".KKK.................KKK..",
+   ".KMK.................KMK..",
+   ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKWWKKKKKKKKKKWWKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   ".......KKMMKKKKMMKK.......",
+   ".......KKMMKKKKMMKK......."
+  ],
+  [
+   "..KKK.................KKK.",
+   "..KMK.................KMK.",
+   ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKWWKKKKKKKKKKWWKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKKKKKK",
+   ".......KMMMKKKKMMMK.......",
+   ".......KMMMKKKKMMMK......."
+  ]
+ ]
+}

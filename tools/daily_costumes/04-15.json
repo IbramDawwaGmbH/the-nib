@@ -1,0 +1,60 @@
+{
+ "date": "04-15",
+ "name": "paint_palette",
+ "title": "World Art Day",
+ "theme": "an artist's brown palette with five paint blobs and a silver brush with a red tip; a blue drip falls below the rim",
+ "category": "Body",
+ "kind": "body",
+ "anchor": [
+  10,
+  6
+ ],
+ "layer": "over",
+ "pattern": [
+  "......OOOOOOOO.......S.....",
+  "...OOOOOONNNOOOOO....S.....",
+  ".OOOOGGGONNNOPPPOOO...S....",
+  "OOOOOGGGONNNOPPPOOOO..S....",
+  "OOOOOGGGOOOOOPPPOOOO...S...",
+  "OORRROOOOOOOOOOOBBBO...S...",
+  "OORRROOOOOOOOOOOBBBO....S..",
+  "OORRROOOOOOOOOOOBBBO....S..",
+  "OOOOODDDOOOOOOOOOOOO.....S.",
+  ".OOOODDDOOOOOOOOOOO......S.",
+  "...OOOOOOOOOOOOOOB......RR.",
+  "......OOOOOOOO..........RR.",
+  "..........................."
+ ],
+ "frames": [
+  [
+   "......OOOOOOOO.......S.....",
+   "...OOOOOONNNOOOOO....S.....",
+   ".OOOOGGGONNNOPPPOOO...S....",
+   "OOOOOGGGONNNOPPPOOOO..S....",
+   "OOOOOGGGOOOOOPPPOOOO...S...",
+   "OORRROOOOOOOOOOOBBBO...S...",
+   "OORRROOOOOOOOOOOBBBO....S..",
+   "OORRROOOOOOOOOOOBBBO....S..",
+   "OOOOODDDOOOOOOOOOOOO.....S.",
+   ".OOOODDDOOOOOOOOOOO......S.",
+   "...OOOOOOOOOOOOOO.......RR.",
+   "......OOOOOOOO...B......RR.",
+   "..........................."
+  ],
+  [
+   "......OOOOOOOO.......S.....",
+   "...OOOOOONNNOOOOO....S.....",
+   ".OOOOGGGONNNOPPPOOO...S....",
+   "OOOOOGGGONNNOPPPOOOO..S....",
+   "OOOOOGGGOOOOOPPPOOOO...S...",
+   "OORRROOOOOOOOOOOBBBO...S...",
+   "OORRROOOOOOOOOOOBBBO....S..",
+   "OORRROOOOOOOOOOOBBBO....S..",
+   "OOOOODDDOOOOOOOOOOOO.....S.",
+   ".OOOODDDOOOOOOOOOOO......S.",
+   "...OOOOOOOOOOOOOO.......RR.",
+   "......OOOOOOOO..........RR.",
+   ".................B........."
+  ]
+ ]
+}

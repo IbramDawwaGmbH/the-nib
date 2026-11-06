@@ -1,0 +1,54 @@
+{
+ "date": "08-07",
+ "name": "beacon_tower",
+ "title": "Lighthouse Day",
+ "theme": "a lighthouse on his head: white tower with two red bands, grey lamp room, gold lamp that blinks and flares a beam",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  7,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "....AAAAAA....",
+  "...KGGGGGGK...",
+  "...KGGGGGGK...",
+  "..KKKKKKKKKK..",
+  "...RRRRRRRR...",
+  "...RRRRRRRR...",
+  "...WWWWWWWW...",
+  "..RRRRRRRRRR..",
+  "..RRRRRRRRRR..",
+  "..WWWWWWWWWW..",
+  "..WWWWWWWWWW.."
+ ],
+ "frames": [
+  [
+   "....AAAAAA....",
+   "...KKKKKKKK...",
+   "...KKKKKKKK...",
+   "..KKKKKKKKKK..",
+   "...RRRRRRRR...",
+   "...RRRRRRRR...",
+   "...WWWWWWWW...",
+   "..RRRRRRRRRR..",
+   "..RRRRRRRRRR..",
+   "..WWWWWWWWWW..",
+   "..WWWWWWWWWW.."
+  ],
+  [
+   "....AAAAAA....",
+   ".GGKGGGGGGKGG.",
+   ".GGKGGGGGGKGG.",
+   "..KKKKKKKKKK..",
+   "...RRRRRRRR...",
+   "...RRRRRRRR...",
+   "...WWWWWWWW...",
+   "..RRRRRRRRRR..",
+   "..RRRRRRRRRR..",
+   "..WWWWWWWWWW..",
+   "..WWWWWWWWWW.."
+  ]
+ ]
+}

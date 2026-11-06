@@ -1,0 +1,60 @@
+{
+ "date": "09-02",
+ "name": "coconut_sipper",
+ "title": "World Coconut Day",
+ "theme": "Half a coconut shell worn as a cap with a pink bendy straw and a bubble rising up it.",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  12
+ ],
+ "layer": "over",
+ "pattern": [
+  "..........MMMM..",
+  "..........MMMM..",
+  "..........MM....",
+  "..........MM....",
+  ".......WW.MM....",
+  ".......WW.MM....",
+  "WWWWWWWWWWWWWWWW",
+  "AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA",
+  "AAAAAAAAAAAAAAAA",
+  ".AAAAAAAAAAAAAA.",
+  "...AAAAAAAAAA...",
+  ".....AAAAAA....."
+ ],
+ "frames": [
+  [
+   "..........MMM...",
+   "..........MMMM..",
+   ".......WW.MM....",
+   ".......WW.MM....",
+   "..........MM....",
+   "..........MM....",
+   "WWWWWWWWWWWWWWWW",
+   "AAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAA",
+   ".AAAAAAAAAAAAAA.",
+   "...AAAAAAAAAA...",
+   ".....AAAAAA....."
+  ],
+  [
+   ".........WMMMM..",
+   "..........MMMM..",
+   "..........MM....",
+   "..........MM....",
+   "..........MM....",
+   "..........MM....",
+   "WWWWWWWWWWWWWWWW",
+   "AAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAA",
+   "AAAAAAAAAAAAAAAA",
+   ".AAAAAAAAAAAAAA.",
+   "...AAAAAAAAAA...",
+   ".....AAAAAA....."
+  ]
+ ]
+}

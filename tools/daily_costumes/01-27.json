@@ -1,0 +1,54 @@
+{
+ "date": "01-27",
+ "name": "choc_cake_slice",
+ "title": "Chocolate Cake Day",
+ "theme": "a pink-iced cake wedge with brown sponge seams on his head, topped by a white candle whose flame flickers",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  8,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "......F.........",
+  "......GG........",
+  ".......WW.......",
+  ".......WW.......",
+  ".......WW.......",
+  ".MMMMMMMMMMMMMM.",
+  "OOOOOOOOOOOOOOOO",
+  "MMMMMMMMMMMMMMMM",
+  "MMMMMMMMMMMMMMMM",
+  "OOOOOOOOOOOOOOOO",
+  "MMMMMMMMMMMMMMMM"
+ ],
+ "frames": [
+  [
+   ".......G........",
+   ".......FG.......",
+   ".......WW.......",
+   ".......WW.......",
+   ".......WW.......",
+   ".MMMMMMMMMMMMMM.",
+   "OOOOOOOOOOOOOOOO",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "OOOOOOOOOOOOOOOO",
+   "MMMMMMMMMMMMMMMM"
+  ],
+  [
+   "........F.......",
+   "........GG......",
+   ".......WW.......",
+   ".......WW.......",
+   ".......WW.......",
+   ".MMMMMMMMMMMMMM.",
+   "OOOOOOOOOOOOOOOO",
+   "MMMMMMMMMMMMMMMM",
+   "MMMMMMMMMMMMMMMM",
+   "OOOOOOOOOOOOOOOO",
+   "MMMMMMMMMMMMMMMM"
+  ]
+ ]
+}

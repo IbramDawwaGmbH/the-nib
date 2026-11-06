@@ -1,0 +1,41 @@
+{
+ "date": "04-04",
+ "name": "rat_ears",
+ "title": "World Rat Day",
+ "theme": "two round grey mouse ears with pink insides standing on a grey headband; they twitch and tilt in turn",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  13,
+  10
+ ],
+ "layer": "over",
+ "pattern": [
+  "..................KKKKK...",
+  "..KKKKK..........KKKKKKK..",
+  ".KKKKKKK........KKKMMMKKK.",
+  "KKKMMMKKK.......KKMMMMMKK.",
+  "KKMMMMMKK.......KKMMMMMKK.",
+  ".KKMMMMMKK......KKMMMMMKK.",
+  ".KKMMMMMKK......KKKMMMKKK.",
+  ".KKKMMMKKK.......KKKKKKK..",
+  ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+  ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+  ".KKKKKKKKKKKKKKKKKKKKKKKK."
+ ],
+ "frames": [
+  [
+   "...KKKKK..................",
+   "..KKKKKKK..........KKKKK..",
+   ".KKKMMMKKK........KKKKKKK.",
+   ".KKMMMMMKK.......KKKMMMKKK",
+   ".KKMMMMMKK.......KKMMMMMKK",
+   ".KKMMMMMKK......KKMMMMMKK.",
+   ".KKKMMMKKK......KKMMMMMKK.",
+   "..KKKKKKK.......KKKMMMKKK.",
+   ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+   ".KKKKKKKKKKKKKKKKKKKKKKKK.",
+   ".KKKKKKKKKKKKKKKKKKKKKKKK."
+  ]
+ ]
+}

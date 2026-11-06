@@ -1,0 +1,63 @@
+{
+ "date": "04-10",
+ "name": "inkwell_quill",
+ "title": "Young Writer Day",
+ "theme": "a blue inkwell on his crown holding a white quill; the quill dips and lifts and a blue ink drop falls",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  5,
+  13
+ ],
+ "layer": "over",
+ "pattern": [
+  "...........KW.",
+  "..........KW..",
+  ".........WKW..",
+  "........WKW...",
+  ".......WKW....",
+  ".......WKW....",
+  "......WKW.....",
+  "......WKW.....",
+  "..BBBBBB......",
+  "..BBBBBB......",
+  "BBDDDDDDBB....",
+  "BBBBBBBBBB....",
+  "BBBBBBBBBB....",
+  "BBBBBBBBBB...."
+ ],
+ "frames": [
+  [
+   "..............",
+   "..............",
+   "..............",
+   "...........KW.",
+   "..........KW..",
+   ".........WKW..",
+   "........WKW...",
+   ".......WKW....",
+   "..BBBBBBKW....",
+   "..BBBBBBW.....",
+   "BBDDDDDDBB....",
+   "BBBBBBBBBB....",
+   "BBBBBBBBBB....",
+   "BBBBBBBBBB...."
+  ],
+  [
+   "..............",
+   "...........KW.",
+   "..........KW..",
+   ".........WKWBB",
+   "........WKW.BB",
+   ".......WKW....",
+   ".......WKW....",
+   "......WKW.....",
+   "..BBBBBBW.....",
+   "..BBBBBB......",
+   "BBDDDDDDBB....",
+   "BBBBBBBBBB....",
+   "BBBBBBBBBB....",
+   "BBBBBBBBBB...."
+  ]
+ ]
+}

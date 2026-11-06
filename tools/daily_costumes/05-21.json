@@ -1,0 +1,71 @@
+{
+ "date": "05-21",
+ "name": "teacup_hat",
+ "title": "International Tea Day",
+ "theme": "A white teacup with a teal band and handle on a saucer; two wisps of steam rise and drift",
+ "category": "Hats",
+ "kind": "head",
+ "anchor": [
+  11,
+  11
+ ],
+ "layer": "over",
+ "pattern": [
+  ".............K........",
+  ".........K............",
+  "........K.............",
+  "...WWWWWWWWWWWWWWWW...",
+  "...TTTTTTTTTTTTTTTTWWW",
+  "...TTTTTTTTTTTTTTTT..W",
+  "...WWWWWWWWWWWWWWWW..W",
+  "....WWWWWWWWWWWWWW..WW",
+  ".....WWWWWWWWWWWW.....",
+  "......WWWWWWWWWW......",
+  "WWWWWWWWWWWWWWWWWWWWWW",
+  "WWWWWWWWWWWWWWWWWWWWWW"
+ ],
+ "frames": [
+  [
+   "........K.............",
+   ".........K............",
+   ".............K........",
+   "...WWWWWWWWWWWWWWWW...",
+   "...TTTTTTTTTTTTTTTTWWW",
+   "...TTTTTTTTTTTTTTTT..W",
+   "...WWWWWWWWWWWWWWWW..W",
+   "....WWWWWWWWWWWWWW..WW",
+   ".....WWWWWWWWWWWW.....",
+   "......WWWWWWWWWW......",
+   "WWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWW"
+  ],
+  [
+   "........K.............",
+   "............K.........",
+   ".............K........",
+   "...WWWWWWWWWWWWWWWW...",
+   "...TTTTTTTTTTTTTTTTWWW",
+   "...TTTTTTTTTTTTTTTT..W",
+   "...WWWWWWWWWWWWWWWW..W",
+   "....WWWWWWWWWWWWWW..WW",
+   ".....WWWWWWWWWWWW.....",
+   "......WWWWWWWWWW......",
+   "WWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWW"
+  ],
+  [
+   ".............K........",
+   "............K.........",
+   "........K.............",
+   "...WWWWWWWWWWWWWWWW...",
+   "...TTTTTTTTTTTTTTTTWWW",
+   "...TTTTTTTTTTTTTTTT..W",
+   "...WWWWWWWWWWWWWWWW..W",
+   "....WWWWWWWWWWWWWW..WW",
+   ".....WWWWWWWWWWWW.....",
+   "......WWWWWWWWWW......",
+   "WWWWWWWWWWWWWWWWWWWWWW",
+   "WWWWWWWWWWWWWWWWWWWWWW"
+  ]
+ ]
+}

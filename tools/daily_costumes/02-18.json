@@ -1,0 +1,48 @@
+{
+ "date": "02-18",
+ "name": "battery_cell",
+ "title": "Battery Day",
+ "theme": "a fat cylinder battery lying across his head: green body, charcoal end cap, silver nub terminal and dark seam bands; a white spark pops at the terminal then gold bolts flick along the body",
+ "category": "Head",
+ "kind": "head",
+ "anchor": [
+  11,
+  8
+ ],
+ "layer": "over",
+ "pattern": [
+  "AAANNDNNNNNNNNNNNNNDNN....",
+  "AAANNDNNNNNNNNNNNNNDNN....",
+  "AAANNDNNNNNNNNNNNNNDNNSSWW",
+  "AAANNDNNNNNNNNNNNNNDNNSSWW",
+  "AAANNDNNNNNNNNNNNNNDNNSS..",
+  "AAANNDNNNNNNNNNNNNNDNNSS..",
+  "AAANNDNNNNNNNNNNNNNDNNSS..",
+  "AAANNDNNNNNNNNNNNNNDNN....",
+  "AAANNDNNNNNNNNNNNNNDNN...."
+ ],
+ "frames": [
+  [
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNGGNNNNNNNNDNNSS..",
+   "AAANNDNNGGNNNNNNNNNDNNSS..",
+   "AAANNDNNNGGNNNNNNNNDNNSS..",
+   "AAANNDNNGGNNNNNNNNNDNNSS..",
+   "AAANNDNNNNNNNNNNNNNDNNSS..",
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNNNNNNNNNNNDNN...."
+  ],
+  [
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNNNNNNGGNNNDNNSS..",
+   "AAANNDNNNNNNNGGNNNNDNNSS..",
+   "AAANNDNNNNNNNNGGNNNDNNSS..",
+   "AAANNDNNNNNNNGGNNNNDNNSS..",
+   "AAANNDNNNNNNNNNNNNNDNNSS..",
+   "AAANNDNNNNNNNNNNNNNDNN....",
+   "AAANNDNNNNNNNNNNNNNDNN...."
+  ]
+ ]
+}

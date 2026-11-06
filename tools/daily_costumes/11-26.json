@@ -1,0 +1,60 @@
+{
+  "date": "11-26",
+  "name": "piping_bag",
+  "title": "Cake Day",
+  "theme": "a tilted white piping bag with a silver nozzle squeezing a pink frosting swirl onto his crown; the swirl grows a coil each frame as the bag slides up",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    6,
+    12
+  ],
+  "layer": "over",
+  "pattern": [
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+    ".......WWWWWWWWW",
+    "......WWWWWWWW..",
+    "......WWWWWW....",
+    ".....WWWWW......",
+    ".....SSSS.......",
+    ".....SSSS.......",
+    ".MMMMMMMMMMMM...",
+    ".MMMMMMMMMMMM..."
+  ],
+  "frames": [
+    [
+      "................",
+      "................",
+      ".......WWWWWWWWW",
+      "......WWWWWWWW..",
+      "......WWWWWW....",
+      ".....WWWWW......",
+      ".....SSSS.......",
+      ".....SSSS.......",
+      "...MMMMMMMM.....",
+      "...MMMMMMMM.....",
+      "...DDDDDDDD.....",
+      ".MMMMMMMMMMMM...",
+      ".MMMMMMMMMMMM..."
+    ],
+    [
+      ".......WWWWWWWWW",
+      "......WWWWWWWW..",
+      "......WWWWWW....",
+      ".....WWWWW......",
+      ".....SSSS.......",
+      ".....SSSS.......",
+      ".....MMMM.......",
+      ".....DDDD.......",
+      "...MMMMMMMM.....",
+      "...MMMMMMMM.....",
+      "...DDDDDDDD.....",
+      ".MMMMMMMMMMMM...",
+      ".MMMMMMMMMMMM..."
+    ]
+  ]
+}

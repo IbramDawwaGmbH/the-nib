@@ -1,0 +1,71 @@
+{
+  "date": "02-20",
+  "name": "goldfish_bowl",
+  "title": "Love Your Pet Day",
+  "theme": "a round glass fish bowl with blue water, a white rim and highlight, a gold fish with a red tail swimming and flipping, grey pebbles and a rising bubble",
+  "category": "Head",
+  "kind": "head",
+  "anchor": [
+    10,
+    11
+  ],
+  "layer": "over",
+  "pattern": [
+    ".....WWWWWWWWWW.....",
+    "..WWWBBBBBBBBBBWWW..",
+    ".WBBBBBBBBBBBBBBBBW.",
+    "WBBBBBBBBBBBBBBBBBBW",
+    "WBBWBBBBBBBBBBBBBBBW",
+    "WBBWRBGGGBBBBBBBBBBW",
+    "WBBWRRGGDGBBBBBBBBBW",
+    "WBBBRBGGGBBBBBBBWWBW",
+    "WBBBBBBBBBBBBBBBWWBW",
+    ".WWKKBBKKBBKKBBKKWW.",
+    "...WWKKKKKKKKKKWW...",
+    ".....WWWWWWWWWW....."
+  ],
+  "frames": [
+    [
+      ".....WWWWWWWWWW.....",
+      "..WWWBBBBBBBBBBWWW..",
+      ".WBBBBBBBBBBBBBBBBW.",
+      "WBBBBBBBBBBBBBBBBBBW",
+      "WBBWBBBBBBBBBBBBBBBW",
+      "WBBWBBBBBRBGGGBBBBBW",
+      "WBBWBBBBBRRGGDGBWWBW",
+      "WBBBBBBBBRBGGGBBWWBW",
+      "WBBBBBBBBBBBBBBBBBBW",
+      ".WWKKBBKKBBKKBBKKWW.",
+      "...WWKKKKKKKKKKWW...",
+      ".....WWWWWWWWWW....."
+    ],
+    [
+      ".....WWWWWWWWWW.....",
+      "..WWWBBBBBBBBBBWWW..",
+      ".WBBBBBBBBBBBBBBBBW.",
+      "WBBBBBBBBBBBBBBBBBBW",
+      "WBBWBBBBBBBBBBBBWWBW",
+      "WBBWBBBBBBGGGBRBWWBW",
+      "WBBWBBBBBGDGGRRBBBBW",
+      "WBBBBBBBBBGGGBRBBBBW",
+      "WBBBBBBBBBBBBBBBBBBW",
+      ".WWKKBBKKBBKKBBKKWW.",
+      "...WWKKKKKKKKKKWW...",
+      ".....WWWWWWWWWW....."
+    ],
+    [
+      ".....WWWWWWWWWW.....",
+      "..WWWBBBBBBBBBBWWW..",
+      ".WBBBBBBBBBBBBBBBBW.",
+      "WBBBBBBBBBBBBBBBWWBW",
+      "WBBWBBBBBBBBBBBBWWBW",
+      "WBBWBGGGBRBBBBBBBBBW",
+      "WBBWGDGGRRBBBBBBBBBW",
+      "WBBBBGGGBRBBBBBBBBBW",
+      "WBBBBBBBBBBBBBBBBBBW",
+      ".WWKKBBKKBBKKBBKKWW.",
+      "...WWKKKKKKKKKKWW...",
+      ".....WWWWWWWWWW....."
+    ]
+  ]
+}
