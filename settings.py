@@ -107,7 +107,8 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
-        "memory_enabled", "memory_routine_enabled", "needs_enabled", "chatter_level",
+        "memory_enabled", "memory_routine_enabled", "needs_enabled", "nap_enabled",
+        "chatter_level",
     )),
     ("Look and sound", (
         "sprite_scale", "costume", "skin", "shadow_enabled",
@@ -159,9 +160,12 @@ HELP: dict[str, str] = {
     "personality": "A lens over the numbers on this page. Your own values are kept.",
     "mood_enabled": "Let a good or bad stretch carry over between sessions.",
     "mood_half_life_h": "How long a good or bad turn takes to half fade.",
-    "memory_enabled": "Count the days, pets, prompts and focus sessions you share. Counts only.",
+    "memory_enabled": "Count the days, pets, prompts and focus sessions you share, and learn "
+                      "which of his antics you like. No app names, times or text.",
     "memory_routine_enabled": "Learn roughly what time you usually arrive. An hourly tally.",
     "needs_enabled": "Energy, affection and boredom that colour what he does.",
+    "nap_enabled": "Doze off late at night when worn out and you've stepped away. Wakes when "
+                   "you're back.",
     "chatter_level": "How often he says a line in a toast. Rare: at most 6 a day, 45 min apart.",
     "sprite_scale": "0 picks an integer scale from your monitor's DPI.",
     "shadow_enabled": "The soft contact shadow under his feet.",
@@ -359,8 +363,8 @@ class SettingsWindow(QDialog):
         self._now_label.setWordWrap(True)
         form.addRow("Right now", self._now_label)
         form.addRow(self._hint(
-            "The same words are on the tray icon's tooltip. They change with how the day has "
-            "gone - pet him, then come back to this tab."
+            "The mood's word is the one on the tray icon's tooltip. It changes with how the day "
+            "has gone - pet him, then come back to this tab."
         ))
         self._memory_label = QLabel(self)
         self._memory_label.setWordWrap(True)
@@ -373,8 +377,9 @@ class SettingsWindow(QDialog):
         row.addStretch(1)
         form.addRow("", row)
         form.addRow(self._hint(
-            "Counts only, kept on this machine in memory.json next to config.json: no app names, "
-            "no times, no text. Forgetting deletes that file and lets his mood start fresh. "
+            "Counts, and which of his antics you seem to like, kept on this machine in "
+            "memory.json next to config.json: no app names, no times, no text. Forgetting "
+            "deletes that file and lets his mood start fresh. "
             "Your settings, costume and prompt history are not touched."
         ))
         return page
@@ -406,7 +411,8 @@ class SettingsWindow(QDialog):
         answer = QMessageBox.question(
             self, "Nib",
             "Forget everything he remembers about you two?\n\n"
-            "The days, the counts and the usual time all go, and his mood starts fresh. "
+            "The days, the counts, the usual time and his tastes all go, and his mood starts "
+            "fresh. "
             "It is only stored on this machine, in memory.json. Your settings, costume and "
             "prompt history are not touched.",
             QMessageBox.Yes | QMessageBox.No,

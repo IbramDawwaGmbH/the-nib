@@ -261,8 +261,13 @@ for label, setup in (("asleep", lambda x: x._enter(State.SLEEP)),
 print("\n--- 4/5. the involuntary two are scheduled, not rolled ---")
 _cfg, b = fresh("sched")
 check("a sneeze is scheduled ahead", 0 < b._sneeze_due_ms < 3_600_000, f"{b._sneeze_due_ms:.0f}ms")
+# The window is the scheduler's own spread around the mean, not a guess at it: this runs before the
+# file seeds random, and a fixed 1,000,000 ms floor sat above the lowest draw (0.55 x 30 min =
+# 990,000 ms), which failed about one run in 160.
+sneeze_every_ms = 3_600_000.0 / B.SNEEZES_PER_HOUR
 check("...roughly half an hour out",
-      1_000_000 < b._sneeze_due_ms < 2_800_000, f"{b._sneeze_due_ms/60000:.1f} min")
+      B.QUIRK_SPREAD[0] * sneeze_every_ms <= b._sneeze_due_ms <= B.QUIRK_SPREAD[1] * sneeze_every_ms,
+      f"{b._sneeze_due_ms/60000:.1f} min")
 check("a trip is scheduled too", 0 < b._trip_due_ms < 3_600_000, f"{b._trip_due_ms/60000:.1f} min")
 
 _cfg, b = fresh("sneeze")

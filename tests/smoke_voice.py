@@ -246,6 +246,10 @@ check("a big week", lines_for("big_week", {}) == ["big_week"])
 check("tired, fond and bored each say their own line",
       [lines_for(kind, {}) for kind in ("tired", "fond", "bored")]
       == [["tired"], ["fond"], ["bored"]])
+check("up from a nap, the nap's own line", lines_for("nap_wake", {}) == ["nap_wake"])
+check("a treat, and one too many, each their own line",
+      [lines_for(kind, {}) for kind in ("treat", "treat_full")]
+      == [["treat"], ["treat_full"]])
 check("an event nobody wrote lines for says nothing", lines_for("tick", {"n": 1}) == [])
 
 print("\n--- a refused remark falls back to the greeting ---")

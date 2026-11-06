@@ -1,15 +1,15 @@
-> **Status:** WP1–WP5 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
-> Continue from **WP6**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP1–WP9 are implemented, reviewed and committed on this branch (`wip/living-creature`); every test passes at each commit.
+> All nine packages are done: only the deferred art (section 3) is left, to be drawn after WP5–WP7 have been watched for a week. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP1 name + mood
 > - [x] WP2 memory + Forget
 > - [x] WP3 greetings/milestones
 > - [x] WP4 voice/phrases
 > - [x] WP5 needs (energy, affection, boredom)
-> - [ ] WP6 bond/gentle/play
-> - [ ] WP7 nap
-> - [ ] WP8 treat
-> - [ ] WP9 learned taste
+> - [x] WP6 bond/gentle/play
+> - [x] WP7 nap
+> - [x] WP8 treat
+> - [x] WP9 learned taste
 
 # Nib "living creature" — engineering spec for branch `feat/living-creature`
 

@@ -1,4 +1,4 @@
-"""Petting, coming when called, the personality presets, and the fidget switch."""
+"""Petting, coming when called, the personality presets, the fidget switch, and the bond."""
 
 import os
 import sys
@@ -20,6 +20,7 @@ import world as W  # noqa: E402
 from animator import SpriteSheet  # noqa: E402
 from behavior import Behavior, State  # noqa: E402
 from config import Config  # noqa: E402
+from memory import Memory  # noqa: E402
 
 SCRATCH = _scratch()
 BASELINE, X_MIN, X_MAX = 1392, 0, 2560
@@ -32,7 +33,17 @@ def check(label, cond, detail=""):
         fails.append(label)
 
 
-def fresh(tag, pin=True, **overrides):
+def long_memory(cfg):
+    """Thirty days seen and a few hundred pets: a bond of about 0.9, as in day_rate.py."""
+    mem = Memory(None, cfg)
+    for back in range(29, -1, -1):
+        mem.first_sight(f"2026-07-{31 - back:02d}", 9.0)
+    for event, n in (("pets", 900), ("prompts", 400), ("focus_done", 80)):
+        mem.record(event, "2026-07-30", n=n)
+    return mem
+
+
+def fresh(tag, pin=True, remember=False, **overrides):
     path = SCRATCH / f"pet_{tag}.json"
     path.unlink(missing_ok=True)
     cfg = Config(path)
@@ -47,7 +58,7 @@ def fresh(tag, pin=True, **overrides):
     for k, v in overrides.items():
         cfg[k] = v
     sheet = SpriteSheet(SRC / "assets" / "nib_sheet.png", SRC / "assets" / "frames.json", 2)
-    b = Behavior(cfg, sheet)
+    b = Behavior(cfg, sheet, memory=long_memory(cfg) if remember else None)
     b.set_strip(BASELINE, X_MIN, X_MAX)
     b.place_at(1200)
     b.set_world(W.WorldState(hour=14.0, weekday=4, date_key="2026-07-31", week_key="2026-W31",
@@ -183,7 +194,7 @@ check("petting begins", b.state is State.PET)
 hold(b, B.PET_DRAIN_MS * 2 + 200, resting_hand(b))
 check("...and forgives a poke as it goes", b.annoyance < before, f"{before} -> {b.annoyance}")
 
-print("\n--- and it is the only kindness the mood has ---")
+print("\n--- and it is the biggest kindness the mood has ---")
 _cfg, b = fresh("mood")
 start = b.mood.spirits
 hold(b, 1200, resting_hand(b))
@@ -192,6 +203,10 @@ _cfg, b3 = fresh("mood3")
 b3.prompt_sent("hello")
 check("...more than sending a prompt does", b.mood.spirits > b3.mood.spirits,
       f"pet {b.mood.spirits:+.3f} vs prompt {b3.mood.spirits:+.3f}")
+_cfg, b4 = fresh("mood4")
+b4.treat()
+check("...and more than a treat, the other kindness", b.mood.spirits > b4.mood.spirits > start,
+      f"pet {b.mood.spirits:+.3f} vs treat {b4.mood.spirits:+.3f}")
 
 _cfg, b2 = fresh("mood2")
 b2.bubble_dismissed()
@@ -333,6 +348,73 @@ _cfg, b = fresh("fidget_off", fidgets_enabled=False)
 picks = {b._pick_antic(None)[0] for _ in range(600)}
 check("fidgets_enabled=false removes them", not (pool & picks), str(sorted(pool & picks)))
 check("...without leaving him with nothing to do", len(picks) >= 6, str(len(picks)))
+
+print("\n--- the bond: somebody he knows is forgiven faster ---")
+
+
+def forgiven(b, pet_ms):
+    """Three pokes, then ``pet_ms`` of actual petting. Returns (pokes left, state).
+
+    Timed from the tick the pet begins, not from when the hand arrives, so both mascots get
+    exactly the same petting whatever the hold took. All of it is well inside the 15s poke window.
+    """
+    for _ in range(3):
+        b.bubble_dismissed()
+    hand = resting_hand(b)
+    guard = 0
+    while b.state is not State.PET and guard < 60:
+        b.update(50.0, hand)
+        guard += 1
+    hold(b, pet_ms, hand)
+    return b.annoyance, b.state
+
+
+_cfg, stranger = fresh("bond_stranger", annoyance_threshold=99)
+check("on a fresh memory a pet forgives one poke per 1.2s, exactly as ever",
+      stranger._pet_forgive_every_ms() == B.PET_DRAIN_MS, str(stranger._pet_forgive_every_ms()))
+# The 30-day party is spent up front: this is about the pet, not about a milestone in the middle.
+cfg_friend, friend = fresh("bond_friend", remember=True, annoyance_threshold=99,
+                           last_milestone_days="30")
+bond = friend.memory.bond()
+every = friend._pet_forgive_every_ms()
+check("a month of days and pets is a bond near the top", bond > 0.85, f"{bond:.3f}")
+check("...and his pets forgive by the bond's share faster",
+      abs(every - B.PET_DRAIN_MS * (1.0 - B.FORGIVE_BOND_SPEEDUP * bond)) < 1e-9
+      and every < 0.7 * B.PET_DRAIN_MS, f"{every:.0f}ms")
+left_stranger, state_stranger = forgiven(stranger, 2000.0)
+left_friend, state_friend = forgiven(friend, 2000.0)
+check("two seconds of petting forgive the stranger one poke of three",
+      left_stranger == 2 and state_stranger is State.PET, f"{left_stranger} {state_stranger.value}")
+check("...and the friend two", left_friend == 1 and state_friend is State.PET,
+      f"{left_friend} {state_friend.value}")
+cfg_friend["memory_enabled"] = False
+check("with memory off it is the stranger's 1.2s again",
+      friend._pet_forgive_every_ms() == B.PET_DRAIN_MS)
+
+print("\n--- a week of hard landings, and the warm looks thin out ---")
+cfg_wary, b = fresh("wary")
+mem = b.memory
+mem.record("hurts", "2026-07-31", n=3)
+mem.record("hurts", "2026-07-25")            # six days back: still this week
+check("four hard landings in a week: not wary yet", b._mood_weights() == {"dance": 3.0},
+      str(b._mood_weights()))
+mem.record("hurts", "2026-07-24", n=4)       # seven days back: last week, and it does not count
+check("...and older ones do not count towards it", b._mood_weights() == {"dance": 3.0},
+      str(b._mood_weights()))
+WARY = {"dance": 3.0, "heart_eyes": 0.5, "sparkle": 0.7}
+mem.record("hurts", "2026-07-28")
+check("the fifth makes him wary: heart eyes x0.5, sparkles x0.7", b._mood_weights() == WARY,
+      str(b._mood_weights()))
+check("...a lean, above the 0.4 floor every lean keeps", min(B.WARY_WEIGHTS.values()) >= 0.4)
+mem.record("pets", "2026-07-30", n=5)
+check("...but not when he has been petted as often as hurt", b._mood_weights() == {"dance": 3.0},
+      str(b._mood_weights()))
+mem.record("hurts", "2026-07-31")
+check("...one more hurt than pets and he is wary again", b._mood_weights() == WARY,
+      str(b._mood_weights()))
+cfg_wary["memory_enabled"] = False
+check("...and never with memory off", b._mood_weights() == {"dance": 3.0},
+      str(b._mood_weights()))
 
 print("\n" + "=" * 62)
 print("FAILURES: " + ", ".join(fails) if fails else "petting, calling and presets OK")

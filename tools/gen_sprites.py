@@ -1362,9 +1362,10 @@ def frame_startle(index: int) -> tuple[Grid, Anchors]:
 
 # --- being petted --------------------------------------------------------------------
 #
-# The only animation in the whole set that is a response to KINDNESS. Everything else he does to
-# you or about you; this one is done to him. So it is deliberately the softest thing he has - no
-# props flying about, no bounce, just a lean, shut eyes and a heart.
+# The first of the two animations in the set that answer KINDNESS (the treat's, below, is the
+# other). Everything else he does to you or about you; this one is done to him. So it is
+# deliberately the softest thing he has - no props flying about, no bounce, just a lean, shut eyes
+# and a heart.
 
 #: (body dx, grow, heart y or None). He presses UP into the hand, which is why grow rises rather
 #: than the body sinking - being petted from above should look like leaning into it, not cowering.
@@ -1396,6 +1397,86 @@ def frame_pet(index: int) -> tuple[Grid, Anchors]:
         # Bordered, unlike the heart-eyes: those sit on his face where the body backs them, and
         # this one floats over whatever the taskbar happens to be.
         stamp_prop(grid, PET_HEART_X, heart_y, HEART)
+    return grid, anchors
+
+
+# --- a treat -------------------------------------------------------------------------
+#
+# The second kindness, and the one thing in the set he is GIVEN. A biscuit lands beside him, he
+# spots it, holds it up to his mouth, takes a bite, and is pleased with himself. Plays once: a
+# biscuit that loops is a biscuit that never runs out, which is the opposite of a treat.
+
+#: Cream with brown chips, rather than a biscuit-coloured disc: every warm tone in the body palette
+#: is one of HIS colours, and it is held right against his face. Bordered by ``stamp_prop`` like
+#: every floating prop, so it reads on a light taskbar too.
+BISCUIT = [".LLLL.", "LLFLLL", "LLLLFL", "LFLLLL", ".LLLL."]
+#: The same biscuit with a wedge out of the side nearest his mouth. Of a one-pixel notch, a crescent
+#: and this wedge, rendered side by side at 2x, the wedge is the one that reads as bitten.
+BISCUIT_BITTEN = [".LLLL.", "..LLFL", "...LLL", "..LFLL", ".LLLL."]
+#: Where the biscuit sits while he eats it: its left edge against his mouth, below his right eye,
+#: with a row of face between. One row higher and its border runs into the bottom of that eye,
+#: which then reads a row taller than the other.
+BISCUIT_AT_MOUTH = (27, 34)
+#: Where it lands, on the floor to his right - the side his arm is on, as with the coffee mug.
+BISCUIT_ON_FLOOR = (39, 41)
+#: The forearm that holds it, as (x, y, w, h): out from his right side and in across his front.
+#: His usual arm only reaches up and out, never across. Drawn first the coffee's way - the biscuit
+#: beside his face, under the raised hand - it was nowhere near his mouth and read as a wave.
+EAT_ARM = (33, 35, 8, 4)
+
+#: (grow, eyes, mouth, biscuit, crumbs on his front). ``biscuit`` is None (eaten), "floor",
+#: "whole" or "bitten"; the last two are held at his mouth, by the forearm above.
+EAT_KEYS = (
+    (0, "glint", None, "floor", ()),
+    (1, "open", "o", "whole", ()),
+    (1, "closed", "flat", "bitten", ((23, 39), (24, 39), (29, 40))),
+    (0, "half", "smile", None, ((21, 39), (31, 38), (26, 40))),
+)
+
+
+def draw_eat_arm(grid: Grid) -> None:
+    """The forearm across his front, bordered all round.
+
+    Drawn after the anchors are measured, not before the outline like the cover-eyes hands. Those
+    stay inside his silhouette; this one sticks out past his right side on the rows the ``neck``
+    and ``body`` anchors are read from, and measured with it in place both moved two pixels right
+    (x 23 -> 25) - a scarf that would jump sideways for two frames and back. So it borders itself
+    here instead, against his body and the background alike, which is the same one-pixel ring
+    ``outline`` would give it.
+    """
+    x0, y0, w, h = EAT_ARM
+    cells = {(x, y) for y in range(y0, y0 + h) for x in range(x0, x0 + w)}
+    for x, y in cells:
+        # Light along the top, shadow along the underside, as on the cover-eyes limbs.
+        put(grid, x, y, "H" if y == y0 else "S" if (x, y + 1) not in cells else "B")
+    for x, y in cells:
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if (nx, ny) not in cells and 0 <= nx < FRAME and 0 <= ny <= BASELINE_ROW:
+                grid[ny][nx] = "O"
+
+
+def frame_eat(index: int) -> tuple[Grid, Anchors]:
+    grow, eyes, mouth, biscuit, crumbs = EAT_KEYS[index]
+    held = biscuit in ("whole", "bitten")
+    grid = blank()
+    draw_body(grid, grow=grow)
+    draw_legs(grid, BODY_BOTTOM)
+    draw_eyes(grid, mode=eyes)
+    if mouth:
+        draw_mouth(grid, mouth)
+    if not held:
+        draw_arm(grid, BODY_BOTTOM, 0)
+    # Crumbs down his front, in the light tone. On the body they need no border - the body backs
+    # them, as it does the bandage - and they are what is left once the biscuit has gone.
+    for x, y in crumbs:
+        put(grid, x, y, "L")
+    outline(grid)
+    anchors = measure_anchors(grid)
+    if held:
+        draw_eat_arm(grid)
+        stamp_prop(grid, *BISCUIT_AT_MOUTH, BISCUIT if biscuit == "whole" else BISCUIT_BITTEN)
+    elif biscuit == "floor":
+        stamp_prop(grid, *BISCUIT_ON_FLOOR, BISCUIT)
     return grid, anchors
 
 
@@ -1721,6 +1802,9 @@ def build_frames() -> dict[int, tuple[Grid, Anchors]]:
     # being petted, and the micro-fidgets that fill the gaps between everything else
     for i in range(4):
         frames[320 + i] = frame_pet(i)
+    # a treat - the four cells left over at the end of the pet's row
+    for i in range(4):
+        frames[324 + i] = frame_eat(i)
     for i in range(4):
         frames[330 + i] = frame_scratch(i)
     for i in range(4):
@@ -3379,6 +3463,9 @@ MANIFEST_STATES = {
     # --- being petted. The slowest loop in the set: every other frame rate here is tuned to read
     # as energy, and this one is tuned to read as the absence of it.
     "pet": {"loop": True, "frames": [[320, 300], [321, 420], [322, 520], [323, 420]]},
+    # --- a treat. Once through and stop, with the longest hold on the last frame: the biscuit is
+    # gone, and being pleased about it is the point.
+    "eat": {"loop": False, "frames": [[324, 320], [325, 300], [326, 260], [327, 520]]},
     # --- micro-fidgets. Short and unshowy on purpose - a fidget you notice is not a fidget.
     "scratch": {"loop": True, "frames": [[330, 190], [331, 130], [332, 130], [333, 150]]},
     "foot_tap": {"loop": True, "frames": [[340, 220], [341, 110], [342, 130], [343, 160]]},

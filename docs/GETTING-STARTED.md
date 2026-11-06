@@ -126,6 +126,7 @@ need nothing extra.
 | **Flick him sideways** | He flies and bounces off the end of the taskbar |
 | **Scroll the wheel over him** | He spins |
 | **Right-click the tray icon → Do something** | One of his rarer animations, now |
+| **→ Give a treat** | He eats a biscuit. Three a day count |
 | **→ Costume → Surprise me** | A random one of his 53 outfits |
 
 ---

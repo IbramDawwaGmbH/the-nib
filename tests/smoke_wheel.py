@@ -314,12 +314,12 @@ check("fractional slots sit exactly on the integer ones",
 check("...and halfway between neighbours, halfway between their angles",
       abs(mid.angle_at(2.5) - (mid.angles[2] + mid.angles[3]) / 2) < 1e-9)
 
-for name in ("sparkle", "costume", "wardrobe", "hide", "wander", "pause", "resume", "ghost",
-             "mode", "settings", "tips", "home"):
+for name in ("sparkle", "treat", "costume", "wardrobe", "hide", "wander", "pause", "resume",
+             "ghost", "mode", "settings", "tips", "home"):
     check(f"new icon '{name}' is drawn in code", name in W.ICONS)
-painted = [WheelItem(n, n, n, group="Him") for n in ("sparkle", "costume", "wardrobe", "hide",
-                                                     "wander", "pause", "resume", "ghost", "mode",
-                                                     "settings", "tips", "home")]
+painted = [WheelItem(n, n, n, group="Him") for n in ("sparkle", "treat", "costume", "wardrobe",
+                                                     "hide", "wander", "pause", "resume", "ghost",
+                                                     "mode", "settings", "tips", "home")]
 wheel, _ = fresh_wheel(items=painted)
 wheel._progress = 1.0
 check("all of them paint without raising", not wheel.grab().isNull())
@@ -548,8 +548,8 @@ check("...and when the mic indicator is on at all", 'self.config["mic_indicator_
 check("focus is labelled with what it will do now", '"Stop focus" if focusing else "Start focus"'
       in src_items)
 
-for key in ("do_something", "costume", "wardrobe", "hide", "wander", "pause", "ghost", "mode",
-            "settings", "tips", "reset"):
+for key in ("do_something", "treat", "costume", "wardrobe", "hide", "wander", "pause", "ghost",
+            "mode", "settings", "tips", "reset"):
     check(f"the ring offers '{key}'", f'"{key}"' in src_items)
     check(f"...and picking '{key}' does something", f'key == "{key}"' in src_chosen)
 check("the tools come before everything else, so they are all on the arc at open",
@@ -839,8 +839,8 @@ import re  # noqa: E402
 for name in [anim for anim, _ms in Bh.TOOL_BEATS.values()] + [Bh.WHEEL_CANCEL_ANIM]:
     check(f"the sheet has '{name}'", sheet.has_state(name))
 # Tools whose handlers already give him something to do, or take him away: no beat on top.
-EXEMPT = {"ask", "again", "read", "focus", "pocket", "do_something", "costume", "wardrobe",
-          "more", "hide", "guard", "update"}
+EXEMPT = {"ask", "again", "read", "focus", "pocket", "do_something", "treat", "costume",
+          "wardrobe", "more", "hide", "guard", "update"}
 ring = re.findall(r'WheelItem\("(\w+)"', inspect.getsource(M.NibApp._wheel_items))
 check("set up: the ring's keys were found", len(ring) >= 18, ring)
 for key in ring:

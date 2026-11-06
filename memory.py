@@ -1,4 +1,4 @@
-"""What he remembers about the two of you - counts, and nothing else.
+"""What he remembers about the two of you - counts, and his tastes.
 
 :mod:`mood` carries one number across a restart: how the day has gone. This carries the longer
 story: the day you first ran him, how many days he has seen you since, and running counts of the
@@ -6,11 +6,13 @@ things you do together - pets, prompts, focus sessions finished, treats, throws,
 rolling window of the last few days keeps the same counts per day, plus how many minutes you were
 at the machine and how many it was busy, so "yesterday was a long one" is something he can know.
 
-**Counts only.** No app names, no times of anything, no text. The one thing close to a time is an
-optional 24-slot tally of the *hour* he first saw you each day (``memory_routine_enabled``), which
-is how he can know you are usually in around eight without keeping a single timestamp. Everything
-here is listed, key by key, in ``docs/PRIVACY.md`` - and that page has to stay exactly true, which
-is why the file holds nothing that page does not name.
+**Counts, and a taste.** No app names, no times of anything, no text. The one thing close to a time
+is an optional 24-slot tally of the *hour* he first saw you each day (``memory_routine_enabled``),
+which is how he can know you are usually in around eight without keeping a single timestamp. The
+one thing that is not a count is his **taste**: a number between 0.7 and 1.4 for each of his own
+antics you have rewarded or ignored, which leans how often he picks it (see ``Behavior`` - "learned
+taste"). Everything here is listed, key by key, in ``docs/PRIVACY.md`` - and that page has to stay
+exactly true, which is why the file holds nothing that page does not name.
 
 **It lives in its own file**, ``memory.json`` next to ``config.json``, rather than in the config.
 The config is flat scalars on purpose (``Config._coerce`` shapes every value to its default, and
@@ -49,8 +51,27 @@ MAX_DAYS = 8
 #: Learned taste is a gentle lean on how often an antic is picked, never a switch. Bounded both
 #: ways so no amount of rewarding or ignoring one can make it dominate the pool or vanish from it.
 TASTE_MIN, TASTE_MAX = 0.7, 1.4
-#: How far an unrewarded taste drifts back towards neutral per day.
+#: How far an unrewarded taste drifts back towards neutral per day. Per *calendar* day: a week
+#: away fades it by a week's worth (see :meth:`Memory.first_sight`).
 TASTE_DECAY_PER_DAY = 0.01
+#: Closer to 1.0 than this is neutral, and a neutral taste is no entry at all rather than a 1.0 -
+#: so a taste that has come back round leaves the antic weights exactly as a fresh install has them.
+TASTE_NEUTRAL_BAND = 0.005
+#: How many decimal places of a taste memory.json keeps. It has to be far finer than one day's
+#: fade of the faintest taste there is - 1% of the 0.005 band, 0.00005 - or the round on each save
+#: undoes that day's fade. Three places did exactly that for anyone who shuts the machine down at
+#: night: every taste within about 0.05 of neutral stopped fading at all, and one +0.03 stayed
+#: 1.03 for good. Six still let the rounding pile up enough to move a taste's last day by one.
+#: At eight, a taste saved and reloaded every day fades on the same days as one that never was
+#: (measured from the ceiling, the floor and +0.03; see "He develops tastes" in BEHAVIOUR.md).
+TASTE_PLACES = 8
+#: What Settings → About him calls a like and a dislike, compared at the precision the file keeps
+#: so the panel says the same before and after a restart - which also keeps the float noise of
+#: five 0.03s (1.1500000000000001) from passing for a like. Six rewards make one (1.0 + 6 x 0.03);
+#: at most ``TASTE_SHOWN`` of each are named, strongest first.
+TASTE_LIKED_ABOVE = 1.15
+TASTE_DISLIKED_BELOW = 0.85
+TASTE_SHOWN = 2
 
 #: The counters that also keep a lifetime total. The two minute counters are per-day only: "you
 #: have been at your desk for 31,000 minutes since March" is not something anyone wants told.
@@ -124,6 +145,8 @@ def _count(value) -> int:
     """A stored count, forced to a non-negative int. Anything unreadable is a zero."""
     try:
         number = int(value)
+        # Too big for a float is unreadable too: bond() takes a log of it, and would raise.
+        float(number)
     except (TypeError, ValueError, OverflowError):
         return 0
     return max(0, number)
@@ -144,7 +167,7 @@ def _bond_term(count: int, k: int) -> float:
 
 
 class Memory:
-    """The counters, the 7-day window and the arrival tally, and the file they live in.
+    """The counters, the 7-day window, the arrival tally and his tastes, and the file they live in.
 
     ``path`` is where ``memory.json`` goes; ``None`` keeps everything in memory only, which is what
     a test - or a ``Behavior`` built without one - gets. ``config`` is read for ``memory_enabled``
@@ -238,10 +261,13 @@ class Memory:
             for name, value in taste.items():
                 try:
                     number = float(value)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError, OverflowError):
                     continue
                 if isinstance(name, str) and math.isfinite(number):
-                    self._taste[name] = max(TASTE_MIN, min(TASTE_MAX, number))
+                    number = max(TASTE_MIN, min(TASTE_MAX, number))
+                    # A hand-written 1.0 is the same as no entry, and kept as none.
+                    if abs(number - 1.0) >= TASTE_NEUTRAL_BAND:
+                        self._taste[name] = number
 
     def _payload(self) -> dict:
         payload = {
@@ -257,9 +283,10 @@ class Memory:
         if self.routine_enabled:
             payload["arrival_hours"] = list(self._arrival_hours)
         # Only once there is something in it, so a file written before anything learned a taste
-        # holds exactly the keys the privacy page lists.
+        # holds exactly the keys the privacy page lists. At TASTE_PLACES, not fewer: see there.
         if self._taste:
-            payload["taste"] = {name: round(value, 3) for name, value in sorted(self._taste.items())}
+            payload["taste"] = {name: round(value, TASTE_PLACES)
+                                for name, value in sorted(self._taste.items())}
         return payload
 
     def save_if_dirty(self) -> bool:
@@ -349,11 +376,20 @@ class Memory:
         machine left running overnight with away detection off, would otherwise file "00:00" as
         your arrival every single day. It then reports the real arrival later through
         :meth:`tally_arrival`. The tally is only ever touched while ``memory_routine_enabled`` is on.
+
+        A new day is also when his tastes fade, by **every calendar day since the last one he
+        saw** rather than by one: ``TASTE_DECAY_PER_DAY`` is per day, and a fortnight away is a
+        fortnight of nothing rewarded. Fading by sightings instead would freeze a taste for as long
+        as you were gone, so someone who opens him once a month would keep a liking for years.
         """
-        if not self.enabled or _parse_day(date_key) is None:
+        today = _parse_day(date_key)
+        if not self.enabled or today is None:
             return False
         if self._last_seen and date_key <= self._last_seen:
             return False
+        before = _parse_day(self._last_seen)
+        if before is not None:
+            self.decay_taste((today - before).days)
         self._last_seen = date_key
         self._days_seen += 1
         if not self._first_met:
@@ -411,6 +447,26 @@ class Memory:
             return None
         key = (today - timedelta(days=1)).isoformat()
         return self.day(key) if key in self._days else None
+
+    def recent(self, date_key: str, days: int = 7) -> DayRecord:
+        """Every count summed over ``date_key`` and the ``days - 1`` calendar days before it.
+
+        "The last seven days" by default: today and the six before it, which the window always
+        holds (it keeps one more, so yesterday's heavy-day judgement has a full week behind it).
+        A day missing from the window adds nothing. All zeros while memory is off, so whatever
+        leans on it behaves as on day one - the same stance as :meth:`bond`.
+        """
+        total = DayRecord()
+        today = _parse_day(date_key)
+        if not self.enabled or today is None or not self._days:
+            return total
+        for back in range(max(0, min(int(days), MAX_DAYS))):
+            record = self._days.get((today - timedelta(days=back)).isoformat())
+            if record is None:
+                continue
+            for key in DAY_KEYS:
+                setattr(total, key, getattr(total, key) + getattr(record, key))
+        return total
 
     def usual_hour(self) -> float | None:
         """The hour he most often first sees you, once there are enough days to say so.
@@ -519,15 +575,27 @@ class Memory:
 
     @property
     def taste(self) -> dict[str, float]:
-        """Multipliers for antics he has learned you like or don't. A copy; 1.0 when absent."""
+        """Multipliers for antics he has learned you like or don't. A copy; 1.0 when absent.
+
+        Empty while memory is off, whatever the file holds: off means a taste is neither learned
+        nor leant on, so he picks exactly as a fresh install does.
+        """
         return dict(self._taste) if self.enabled else {}
 
     def adjust_taste(self, antic: str, delta: float) -> None:
+        """Lean ``antic`` by ``delta``, clamped to ``TASTE_MIN..TASTE_MAX``.
+
+        Landing back within ``TASTE_NEUTRAL_BAND`` of 1.0 drops the entry, the same rule the
+        decay uses, so a reward and a snub that cancel out leave no trace in the weights.
+        """
         if not self.enabled or not antic:
             return
         current = self._taste.get(antic, 1.0)
         value = max(TASTE_MIN, min(TASTE_MAX, current + float(delta)))
-        if value != current:
+        if abs(value - 1.0) < TASTE_NEUTRAL_BAND:
+            if self._taste.pop(antic, None) is not None:
+                self.dirty = True
+        elif value != current:
             self._taste[antic] = value
             self.dirty = True
 
@@ -539,10 +607,26 @@ class Memory:
         faded = {}
         for name, value in self._taste.items():
             value = 1.0 + (value - 1.0) * keep
-            if abs(value - 1.0) >= 0.005:   # close enough to neutral is neutral, and dropped
+            if abs(value - 1.0) >= TASTE_NEUTRAL_BAND:   # close enough to neutral is neutral
                 faded[name] = value
         self._taste = faded
         self.dirty = True
+
+    def taste_words(self, words: dict[str, str]) -> tuple[list[str], list[str]]:
+        """What he seems to like and what he is not keen on, as ``words`` names them.
+
+        At most ``TASTE_SHOWN`` of each, strongest first (ties alphabetical, so the panel does not
+        reshuffle between two looks). An antic ``words`` has no name for is left out rather than
+        shown by its sprite-sheet name: nobody should be told he likes ``sit_dangle``.
+        """
+        known = [(round(value, TASTE_PLACES), name)
+                 for name, value in self.taste.items() if name in words]
+        liked = sorted((item for item in known if item[0] > TASTE_LIKED_ABOVE),
+                       key=lambda item: (-item[0], item[1]))
+        unkeen = sorted((item for item in known if item[0] < TASTE_DISLIKED_BELOW),
+                        key=lambda item: (item[0], item[1]))
+        return ([words[name] for _v, name in liked[:TASTE_SHOWN]],
+                [words[name] for _v, name in unkeen[:TASTE_SHOWN]])
 
     # --- forgetting -----------------------------------------------------------------
 
@@ -563,8 +647,16 @@ class Memory:
     def _plural(n: int, one: str, many: str | None = None) -> str:
         return f"{n:,} {one if n == 1 else (many or one + 's')}"
 
-    def summary_lines(self, name: str) -> list[str]:
-        """What Settings → About him shows, in plain English. Empty when there is nothing yet."""
+    @staticmethod
+    def _joined(items: list[str], last: str) -> str:
+        return items[0] if len(items) == 1 else f"{', '.join(items[:-1])} {last} {items[-1]}"
+
+    def summary_lines(self, name: str, words: dict[str, str] | None = None) -> list[str]:
+        """What Settings → About him shows, in plain English. Empty when there is nothing yet.
+
+        ``words`` names his antics for the taste lines - ``behavior.ANTIC_WORDS``, passed in
+        because this module does not know what he can do. Without it there are no taste lines.
+        """
         lines: list[str] = []
         if self._days_seen:
             line = f"{name} has known you {self._plural(self._days_seen, 'day')}"
@@ -588,4 +680,9 @@ class Memory:
         today = time.strftime("%Y-%m-%d", time.localtime(self._clock()))
         if self.heavy_yesterday(today):
             lines.append("Yesterday was a heavy one.")
+        liked, unkeen = self.taste_words(words or {})
+        if liked:
+            lines.append(f"Seems to like {self._joined(liked, 'and')}.")
+        if unkeen:
+            lines.append(f"Not keen on {self._joined(unkeen, 'or')}.")
         return lines

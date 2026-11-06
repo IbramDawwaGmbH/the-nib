@@ -452,13 +452,19 @@ nib.config["camera_indicator_enabled"] = False
 if nib.behavior.focus_active:
     nib.behavior.set_focus(False)
 nib.mood.reset()
+nib.memory.forget()          # a run before this one may have left a file in scratch
 nib._update_presence()
-check("a fresh mood reads as fine in the tray", nib.tray._tray.toolTip() == "Nib — fine",
-      nib.tray._tray.toolTip())
+check("a fresh mood reads as fine in the tray, with the bond's word after it",
+      nib.tray._tray.toolTip() == "Nib — fine, just met", nib.tray._tray.toolTip())
 nib.mood.nudge("petted")
 nib._update_presence()
-check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits",
+check("...and a pet shows there", nib.tray._tray.toolTip() == "Nib — in good spirits, just met",
       nib.tray._tray.toolTip())
+nib.config["memory_enabled"] = False
+nib._update_presence()
+check("...and no bond word with memory off, where it would always say 'just met'",
+      nib.tray._tray.toolTip() == "Nib — in good spirits", nib.tray._tray.toolTip())
+nib.config["memory_enabled"] = True
 nib.needs.reset()
 check("the status line says the same, with a word for each need",
       nib._status_text()["line"] == "Nib is in good spirits — okay, fine, busy.",
@@ -535,10 +541,17 @@ status = nib._status_text()
 check("About him gets his memory in words", any("1 prompt" in line for line in status["memory"]),
       str(status))
 check("...and may forget it", status["can_forget"] is True)
+# A taste for hopping, past what counts as a like: the app has to hand memory the antics' words,
+# or there is no line about it at all.
+nib.memory.adjust_taste("hop", 0.2)
+check("About him says what he seems to like, in words",
+      "Seems to like hopping." in nib._status_text()["memory"], str(nib._status_text()))
 nib._on_settings()
 about_page = nib._settings
 about_page._tabs.setCurrentIndex(about_page._about_index)
 check("the panel lists it", "Pip has known you 1 day" in about_page._memory_label.text(),
+      about_page._memory_label.text())
+check("...and the taste", "Seems to like hopping." in about_page._memory_label.text(),
       about_page._memory_label.text())
 check("...with Forget everything enabled", about_page._forget_button.isEnabled())
 asked = []
@@ -629,7 +642,11 @@ check("after Forget, today counts again as the day you met",
 check("...but forgetting at three is not arriving at three", not any(nib.memory._arrival_hours),
       str(nib.memory._arrival_hours))
 nib.memory.forget()
-nib.config["away_after_s"] = cfg_module.DEFAULTS["away_after_s"]
+# Left at 0 rather than put back to the default: every _update_presence from here on would read
+# the real machine's idle clock, and a run started after nobody had touched the machine for
+# away_after_s (an unattended CI runner, a suite left to itself) saw him step away mid-suite - the
+# focus tooltip below read "paused (away)" and every line after it was blocked as away.
+nib.config["away_after_s"] = 0
 nib.behavior.set_away(False)
 window_no_forget = S.SettingsWindow(fresh_config("about-noforget"), costumes=[], skins=["default"],
                                     status=lambda: {"line": "x", "memory": ["a"],
@@ -644,6 +661,57 @@ nib._update_presence()
 check("...and the focus countdown", nib.tray._tray.toolTip().startswith("Pip - focusing"),
       nib.tray._tray.toolTip())
 nib.behavior.set_focus(False)
+
+# A nap, put in place by hand: the real one needs night on the machine's own clock, which
+# _update_presence reads. away_after_s is still 0, so the poll cannot wake him by reading the idle
+# clock either - his away is only ever what this suite tells him.
+nib.behavior.set_away(True)
+nib.behavior._napping = True
+nib.behavior._enter(M.State.SLEEP)
+nib._update_presence()
+check("napping, the tooltip says so instead of his mood",
+      nib.tray._tray.toolTip() == "Pip — napping", nib.tray._tray.toolTip())
+nib.behavior.set_away(False)
+nib._update_presence()
+check("...and you coming back wakes him out of it", not nib.behavior.napping
+      and not nib.tray._tray.toolTip().endswith("napping"), nib.tray._tray.toolTip())
+for _ in range(40):
+    nib.behavior.update(50.0, None)
+nib.behavior.take_events()   # the greeting's line is not what this part is about
+presence = inspect.getsource(M.NibApp._update_presence)
+check("...below the focus, device and pin tooltips, above the mood and the bond",
+      presence.index("self._perch_pinned") < presence.index("self.behavior.napping")
+      < presence.index("label_for(self.mood.spirits)"))
+
+print("\n--- paused, a drop still lands ---")
+# Pausing freezes what he does, never a drop already under way: update() lands it either way. So
+# the app has to keep ticking him at the moving rate while he is in the air - at the paused 250ms
+# a bounce never dies out, and he thuds on every tick until you unpause. Driven at whatever
+# interval the app's own timer is set to, as _tick would be.
+nib._on_pause_toggled(True)
+b = nib.behavior
+b.drag_start()
+for _ in range(5):
+    b.drag_to(b.x, b.rest_top() - 20)  # a gentle set-down, the easy one to get stuck on
+    b.update(16.0, None)
+b.drag_end()
+b.take_sounds()
+nib._update_tick_rate()
+flying = nib._tick_timer.interval()
+thuds = 0
+for _ in range(240):                    # a minute, at the paused rate
+    if not b.airborne:
+        break
+    b.update(float(nib._tick_timer.interval()), None)
+    thuds += b.take_sounds().count("land")
+    nib._update_tick_rate()
+check("paused, he is still ticked at the moving rate while in the air",
+      flying < M.IDLE_TICK_MS, f"{flying}ms")
+check("...so he lands, with a thud or two rather than one every tick",
+      not b.airborne and thuds <= 3, f"airborne={b.airborne}, {thuds} thuds")
+check("...and once he is down the paused rate is back",
+      nib._tick_timer.interval() == M.IDLE_TICK_MS, f"{nib._tick_timer.interval()}ms")
+nib._on_pause_toggled(False)
 
 print("\n--- the lines he says: when they are shown, and what a click does ---")
 if nib.config["ghost_mode"]:
