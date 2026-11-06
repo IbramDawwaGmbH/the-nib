@@ -18,7 +18,7 @@ Run with `python` rather than `pythonw` while developing — you get a console. 
 to `%APPDATA%\NibMascot\nib.log` either way.
 
 ```bash
-python tests/run_all.py            # 19 suites, about 16 seconds
+python tests/run_all.py            # 30 suites, about a minute
 python tests/run_all.py --rates    # plus the slow behavioural rate measurements
 ```
 

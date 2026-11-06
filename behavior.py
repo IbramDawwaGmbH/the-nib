@@ -562,6 +562,24 @@ NAP_ENERGY_BELOW = TIRED_ENERGY_BELOW
 #: one a share of it, so dozing off for a minute is not worth two hours' sleep.
 NAP_FULL_H = 2.0
 
+# --- a treat ---------------------------------------------------------------------------------
+#
+# The second kindness, from the tray or the wheel. Only ever because you gave one: nothing here is
+# scheduled, so no rate moves, and "eat" is deliberately in neither ANTICS nor ON_DEMAND - a
+# biscuit he finds by himself, or one Do something hands out, would not be a treat from you.
+
+EAT_ANIM = "eat"
+EAT_MS = 1400.0
+#: A sheet without the eat frames - an older custom skin - shows the heart eyes instead, which is
+#: the same fallback the pet uses, and says the same thing with art every sheet has.
+EAT_FALLBACK_ANIM = "heart_eyes"
+#: Treats a day that count. Past this he is full: he sits down with a polite no-thank-you, and the
+#: mood, needs and memory are left as they were - otherwise the menu would be a button for pumping
+#: his spirits up. Counted per WorldState day, like every other count.
+TREATS_PER_DAY = 3
+TREAT_FULL_ANIM = "sit_dangle"
+TREAT_FULL_MS = 1500.0
+
 # --- dressing himself --------------------------------------------------------------------
 #
 # He owns fifty-odd costumes and, left alone, wears none of them. The fix is NOT to cycle them at
@@ -786,8 +804,9 @@ WHEEL_CANCEL_ANIM = "scratch"
 WHEEL_CANCEL_MS = 600.0
 
 #: A beat for each wheel tool whose handler gives him nothing to do, in whole cycles. The rest are
-#: left out on purpose: ask, again, read, focus, pocket, do_something and costume already set his
-#: state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus);
+#: left out on purpose: ask, again, read, focus, pocket, do_something, treat and costume already set
+#: his state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus;
+#: nor does a treat he refuses, and a beat would read as him taking it after all);
 #: hide and guard take him off screen; more opens a menu whose own items have handlers. Mic is
 #: foot_tap and never wave: wave in earmuffs is the muted-mic tell, and this is not that. Settings
 #: is typing rather than a scratch, because the scratch is what a cancel looks like.
@@ -901,6 +920,10 @@ class Behavior:
         #: WAKE, and computing it early would raise the "greeted" event while he is still asleep,
         #: where nothing may be said. _tick_wake plays it, through the same _greet as set_away.
         self._nap_greeting: tuple[float | None] | None = None
+        #: Treats given today, as ``(date_key, count)`` - the cap's own count, kept whatever memory
+        #: says. memory.json is the count that survives a restart, but with memory_enabled off it
+        #: records nothing and reads 0, and the cap would never bite. This one forgets on restart.
+        self._treats_today: tuple[str, int] = ("", 0)
         #: How long you have been present but not interacted with HIM. Distinct from the system
         #: idle clock, which only knows whether you are at the machine at all.
         self._neglect_ms = 0.0
@@ -1306,6 +1329,67 @@ class Behavior:
         log.info("on demand: %s", name)
         return name
 
+    def treat(self) -> bool:
+        """You gave him a treat, from the tray or the wheel. Returns whether he took it.
+
+        "Took it" includes being too full for it: past ``TREATS_PER_DAY`` he sits down with a polite
+        no-thank-you (``treat_full``), with no "treated" nudge to mood or needs and nothing counted
+        - offering it is still noticing him, which knocks boredom down as anything you do does.
+        Otherwise it is counted, nudges the mood and needs (both "treated"), makes a small noise,
+        raises a ``treat`` event, and he eats it.
+
+        Refused, returning False, wherever a biscuit cannot be handed over: in your hand, hidden,
+        mid-air or rolling, and paused - update() would freeze him on the first frame, and the count
+        would go up for a treat he never ate. Refused while he is cross, too, exactly as click() is:
+        asleep after a sulk he grumbles and stays put, and the tantrum and the storm-off before it
+        are refused the same way, or a biscuit would be the way round every sulk. A nap is not a
+        sulk: he is woken with no grumble (``_wake_from_nap``) and eats it straight away, so the
+        biscuit replaces the WAKE beat. The greeting that nap owed goes with it, which loses
+        nothing - napping means you still read as away, so _tick_wake would drop it too, and
+        set_away greets you the ordinary way when you are back. Mid-way up from a nap he is left
+        to finish getting up, as with a second click. Landed on his head, he takes it - the eat cuts
+        the daze short, as Do something and a costume's opinion already do.
+        """
+        if self._state in (State.DRAG, State.HIDDEN) or self._falling or self._rolling:
+            return False
+        if self.paused:
+            return False
+        self.noticed()
+        if self.napping:
+            self._wake_from_nap()
+        elif self._waking_from_nap:
+            return False
+        elif self._state in (State.SLEEP, State.WAKE):
+            # As at a click: a grumble, and he is not getting up for you. The click time also keeps
+            # _tick_sleep's near-the-end hover wake off him for a moment, as wheel_opened does.
+            self._last_click_ms = self._clock_ms
+            self._grumble_ms = GRUMBLE_MS
+            return False
+        if self._state == State.ANGRY or self._pending_sleep:
+            return False
+        key = self._date_key()
+        given = self._treats_today[1] if self._treats_today[0] == key else 0
+        # Whichever count is higher: memory's survives a restart, this one counts with memory off.
+        if max(self.memory.day(key).treats, given) >= TREATS_PER_DAY:
+            log.info("offered a treat, but he has had %d today", TREATS_PER_DAY)
+            self._event("treat_full")
+            self._begin_sequence([(TREAT_FULL_ANIM, TREAT_FULL_MS)])
+            return True
+        self._treats_today = (key, given + 1)
+        self.memory.record("treats", key)
+        self.mood.nudge("treated")
+        self.needs.nudge("treated")
+        self._sound("nom")
+        self._event("treat")
+        anim = EAT_ANIM if self._sheet.has_state(EAT_ANIM) else EAT_FALLBACK_ANIM
+        log.info("a treat (%d today)", max(self.memory.day(key).treats, given + 1))
+        self._begin_antic(anim, EAT_MS)
+        # From the first frame, as in quick_change: ANTIC -> ANTIC does not restart the animation,
+        # so a second treat from the tray while he is still eating the first would carry on from
+        # wherever that one had got to - often the last frame, with no biscuit left in it.
+        self.animator.set_state(anim, restart=True)
+        return True
+
     def costume_chosen(self, costume: str) -> bool:
         """You just put something on him. He has an opinion about it; returns whether he showed it.
 
@@ -1439,9 +1523,11 @@ class Behavior:
         them. Left alone, the 7th day after a wipe would get no party whenever 7 was the last count
         celebrated - the latch is the count, and the count starts again. The focus streak's goes
         too, so three sessions after a mid-day wipe are a streak again, just as today's count says.
+        So does the treat cap's own count, for the same reason: today's treats read 0 again.
         """
         self._config["last_milestone_days"] = ""
         self._config["last_focus_streak_date"] = ""
+        self._treats_today = ("", 0)
 
     # --- the personality preset ---------------------------------------------------
 

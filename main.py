@@ -560,6 +560,7 @@ class NibApp:
         self.tray.personality_chosen.connect(self._on_personality_chosen)
         self.tray.surprise_requested.connect(self._on_surprise_costume)
         self.tray.do_something_requested.connect(self._on_do_something)
+        self.tray.treat_requested.connect(self._on_treat)
         self.tray.measure_requested.connect(self._on_measure_requested)
         self.tray.mic_toggle_requested.connect(self._on_mic_toggle)
         self.tray.guard_requested.connect(self._on_guard_requested)
@@ -1404,6 +1405,7 @@ class NibApp:
         items.append(WheelItem("more", "More…", "more", group=tools))
 
         items.append(WheelItem("do_something", "Do something", "sparkle", group=him))
+        items.append(WheelItem("treat", "Give him a treat", "treat", group=him))
         items.append(WheelItem("costume", "Surprise costume", "costume", group=him))
         items.append(WheelItem("wardrobe", "Wardrobe…", "wardrobe", group=him))
         items.append(WheelItem("hide", "Hide for 10 minutes", "hide", group=him))
@@ -1509,6 +1511,8 @@ class NibApp:
             self.tray.popup_for_mascot(self._wheel_position, self._mascot_menu_extras())
         elif key == "do_something":
             self._on_do_something()
+        elif key == "treat":
+            self._on_treat()
         elif key == "costume":
             self._on_surprise_costume()
             self._refresh_tray()
@@ -2135,6 +2139,19 @@ class NibApp:
         did = self.behavior.do_something()
         if not did:
             log.debug("asked him to do something, but he is busy")
+
+    def _on_treat(self) -> None:
+        """Tray or wheel: give him a treat. Behavior.treat decides whether he takes it.
+
+        Snoozed, he comes back for it first, as for Do something - a menu entry that silently does
+        nothing would look broken. Behind a fullscreen app or the guard he stays hidden, and the
+        treat is refused. Unlike Do something there is no walking him out of a sleep here: asleep
+        after a sulk he grumbles at a biscuit as he would at a click (a nap he wakes from himself).
+        """
+        if self._snoozed:
+            self._wake_from_snooze()
+        if not self.behavior.treat():
+            log.debug("offered him a treat, but he did not take it")
 
     def _on_surprise_costume(self) -> None:
         """Put a random costume on him. The fastest way to actually see fifty-three of them.

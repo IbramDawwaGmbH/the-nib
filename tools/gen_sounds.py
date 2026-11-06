@@ -172,6 +172,14 @@ SOUNDS: dict[str, Sample] = {
         tone(523, 523, 160, "triangle", attack=0.05, decay=0.6, gain=0.36),
         tone(784, 784, 280, "triangle", attack=0.05, decay=0.7, gain=0.4),
     ),
+    # Eating a treat: "nom, nom" - two short soft triangle notes with a breath between, each
+    # sagging a little. Low and quiet, because it is a mouthful and not an announcement; the second
+    # is lower than the first so the pair settles, the way send's pair rises.
+    "nom": chain(
+        tone(330, 300, 60, "triangle", attack=0.08, decay=0.6, gain=0.3),
+        silence(40),
+        tone(294, 262, 70, "triangle", attack=0.08, decay=0.6, gain=0.3),
+    ),
 }
 
 
