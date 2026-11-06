@@ -16,10 +16,10 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 - A fifth first-run tip: that you can rename him, and where to see how he's doing.
 - **He remembers you.** He keeps count of the days you've shared and the pets, prompts and focus
   sessions along the way (and the throws and hard landings), plus the same counts day by day for
-  the last week — counts only, no app names, times or text, in a new `memory.json` next to
-  `config.json`. **Settings → About him** shows it in plain words, and **Forget everything…**
-  there deletes it. Two new settings on the Personality tab: `memory_enabled`, and
-  `memory_routine_enabled` for the hourly tally of when you usually arrive.
+  the last week — counts, and later his tastes (below), but no app names, times or text — in a
+  new `memory.json` next to `config.json`. **Settings → About him** shows it in plain words, and
+  **Forget everything…** there deletes it. Two new settings on the Personality tab:
+  `memory_enabled`, and `memory_routine_enabled` for the hourly tally of when you usually arrive.
   [Privacy](docs/PRIVACY.md) lists every key in the file.
 - **He acts on what he remembers.** A party — the task-finished celebration, hat and cheer — on
   the 7th, 30th, 100th and 365th day he has seen you, and on your third finished focus session of
@@ -70,6 +70,17 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   hand, in the air, behind a fullscreen app or the guard, paused or cross: asleep after a sulk he
   grumbles at it as at a click, but a biscuit wakes him from a nap, and brings him back from
   **Hide for 10 minutes**.
+- **He develops tastes.** Pet him, or click him open, within ten seconds of something he chose to
+  do on his own — a hop, a dance, a look around — and he does it a little more often; ignore him
+  until he gives up waiting, within five minutes of one, and he does it a little less. Only his own
+  picks count, never a moment, a quirk, a treat or a reply to you; each counts once, and a click
+  whose bubble you then close without sending counts for less. A lean, never a switch: 0.7× to
+  1.4×, which at the ceiling takes hop from about 12% of his own picks to 15% (on a spring
+  afternoon). Tastes fade back a little every day, by every calendar day since he last saw you — a
+  liking at the ceiling, left alone, is still named about three months later. **About him** names
+  the strongest in words (`Seems to like hopping and dancing.`, `Not keen on press-ups.`). Kept in
+  `memory.json` as `taste`; Forget everything clears it, and with `memory_enabled` off nothing is
+  learned or used.
 
 ### Changed
 

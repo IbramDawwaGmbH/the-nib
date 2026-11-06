@@ -541,10 +541,17 @@ status = nib._status_text()
 check("About him gets his memory in words", any("1 prompt" in line for line in status["memory"]),
       str(status))
 check("...and may forget it", status["can_forget"] is True)
+# A taste for hopping, past what counts as a like: the app has to hand memory the antics' words,
+# or there is no line about it at all.
+nib.memory.adjust_taste("hop", 0.2)
+check("About him says what he seems to like, in words",
+      "Seems to like hopping." in nib._status_text()["memory"], str(nib._status_text()))
 nib._on_settings()
 about_page = nib._settings
 about_page._tabs.setCurrentIndex(about_page._about_index)
 check("the panel lists it", "Pip has known you 1 day" in about_page._memory_label.text(),
+      about_page._memory_label.text())
+check("...and the taste", "Seems to like hopping." in about_page._memory_label.text(),
       about_page._memory_label.text())
 check("...with Forget everything enabled", about_page._forget_button.isEnabled())
 asked = []

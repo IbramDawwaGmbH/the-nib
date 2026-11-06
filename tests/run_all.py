@@ -31,7 +31,7 @@ SUITES = [
     ("smoke_attention", "being ignored: the three stages and everything that resets them"),
     ("smoke_pet", "petting, the bond, being wary, coming when called, and the personality presets"),
     ("smoke_mood", "the persistent mood: decay, headroom, hostile clocks, disk writes"),
-    ("smoke_memory", "what he remembers: counters, the 7-day window, bond, forget"),
+    ("smoke_memory", "what he remembers: counters, the 7-day window, bond, tastes, forget"),
     ("smoke_needs", "energy, affection and boredom: drift, nudges, the two moments, disk writes"),
     ("smoke_voice", "the lines he says: gap, daily cap, launch quiet, the phrase table"),
     ("smoke_treat", "a treat: eating it, three a day, the sulk and the nap, the wheel and tray"),

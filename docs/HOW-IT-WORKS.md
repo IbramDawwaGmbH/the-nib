@@ -99,7 +99,7 @@ the-nib/
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
   mood.py               how the day went - the one thing that survives a restart (Qt-free)
   needs.py              energy, affection and boredom - leans on what he does, two moments (Qt-free)
-  memory.py             what he remembers about you two: counts, a 7-day window, memory.json (Qt-free)
+  memory.py             what he remembers: counts, a 7-day window, tastes, memory.json (Qt-free)
   voice.py              whether he may say a line now - the gap, the daily cap - and which (Qt-free)
   phrases.py            shuffle bags and phrase-file loading, for the guard and for voice.py (Qt-free)
   animator.py           sprite slicing, skins, costume compositing, frame clock
@@ -146,9 +146,9 @@ headlessly without a display. `mood.py`, `needs.py`, `memory.py` and `voice.py` 
 injectable clock, so a week of moods can be simulated in a millisecond.
 
 Your data lives in `%APPDATA%\NibMascot`: `config.json` (settings and the little state he writes
-for himself) and, next to it, `memory.json` (the counts `memory.py` keeps; see
-[Privacy](PRIVACY.md) for every key). Both are written atomically, from the same ten-second flush,
-and only when something in them changed.
+for himself) and, next to it, `memory.json` (the counts and learned tastes `memory.py` keeps;
+see [Privacy](PRIVACY.md) for every key). Both are written atomically, from the same ten-second
+flush, and only when something in them changed.
 
 `behavior.py` never touches the audio layer either — it raises named *events* into a small queue
 and something else decides whether that makes a noise. Things worth a line (a greeting, a
