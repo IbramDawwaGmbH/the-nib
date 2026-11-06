@@ -411,11 +411,12 @@ def check(specs: list[tuple[Path, dict]], stage: Stage) -> dict[str, dict]:
 
 
 def main(argv: list[str]) -> int:
-    args = [a for a in argv if not a.startswith("--")]
     out = None
-    if "--preview" in argv:
+    if "--preview" in argv and argv.index("--preview") + 1 < len(argv):
         out = Path(argv[argv.index("--preview") + 1])
-        args.remove(str(out)) if str(out) in args else None
+    # Skipped by position: the preview path is never a spec, however its slashes were written.
+    args = [a for i, a in enumerate(argv)
+            if not a.startswith("--") and not (i and argv[i - 1] == "--preview")]
     quiet = "--quiet" in argv
     if not args:
         print(__doc__)

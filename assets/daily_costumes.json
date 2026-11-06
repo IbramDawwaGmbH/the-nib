@@ -170,11 +170,11 @@
   "06-15": "camera_tripod",
   "06-16": "kelp_fronds",
   "06-17": "cactus_bloom",
-  "06-18": "maki_roll",
+  "06-18": "salmon_nigiri",
   "06-19": "strawberry_moon",
   "06-20": "lightning_rod",
   "06-21": "lotus_bloom",
-  "06-22": "sloth_hug",
+  "06-22": "rainforest_toucan",
   "06-23": "blueprint_tube",
   "06-24": "gossamer_wings",
   "06-25": "seafarer_cap",
@@ -3759,12 +3759,12 @@
    ],
    "shadow": true
   },
-  "maki_roll": {
+  "salmon_nigiri": {
    "index": 17,
    "kind": "head",
    "anchor": [
-    11,
-    13
+    9,
+    6
    ],
    "layer": "over",
    "category": "Hats",
@@ -3775,7 +3775,8 @@
    "frames": [
     17,
     62,
-    63
+    63,
+    64
    ],
    "shadow": true
   },
@@ -3794,8 +3795,8 @@
    "title": "Strawberry Moon",
    "frames": [
     18,
-    64,
-    65
+    65,
+    66
    ],
    "shadow": true
   },
@@ -3814,8 +3815,8 @@
    "title": "Summer Storm",
    "frames": [
     19,
-    66,
-    67
+    67,
+    68
    ],
    "shadow": true
   },
@@ -3834,29 +3835,30 @@
    "title": "Yoga Day",
    "frames": [
     20,
-    68,
-    69
+    69,
+    70
    ],
    "shadow": true
   },
-  "sloth_hug": {
+  "rainforest_toucan": {
    "index": 21,
-   "kind": "body",
+   "kind": "head",
    "anchor": [
-    1,
-    27
+    9,
+    12
    ],
    "layer": "over",
-   "category": "Behind",
+   "category": "Head",
    "group": "Calendar/June",
    "sheet": "daily/costumes-06.png",
    "date": "06-22",
    "title": "World Rainforest Day",
    "frames": [
     21,
-    70,
-    71
-   ]
+    71,
+    72
+   ],
+   "shadow": true
   },
   "blueprint_tube": {
    "index": 22,
@@ -3873,7 +3875,7 @@
    "title": "Women in Engineering Day",
    "frames": [
     22,
-    72
+    73
    ]
   },
   "gossamer_wings": {
@@ -3891,8 +3893,8 @@
    "title": "Fairy Day",
    "frames": [
     23,
-    73,
-    74
+    74,
+    75
    ]
   },
   "seafarer_cap": {
@@ -3910,8 +3912,8 @@
    "title": "Day of the Seafarer",
    "frames": [
     24,
-    75,
-    76
+    76,
+    77
    ],
    "shadow": true
   },
@@ -3930,9 +3932,9 @@
    "title": "Canoe Day",
    "frames": [
     25,
-    77,
     78,
-    79
+    79,
+    80
    ]
   },
   "visor_shades": {
@@ -3950,8 +3952,8 @@
    "title": "National Sunglasses Day",
    "frames": [
     26,
-    80,
-    81
+    81,
+    82
    ]
   },
   "full_turn_specs": {
@@ -3969,9 +3971,9 @@
    "title": "Tau Day",
    "frames": [
     27,
-    82,
     83,
-    84
+    84,
+    85
    ]
   },
   "tropic_lei": {
@@ -3989,8 +3991,8 @@
    "title": "Day of the Tropics",
    "frames": [
     28,
-    85,
-    86
+    86,
+    87
    ]
   },
   "asteroid_streak": {
@@ -4008,8 +4010,8 @@
    "title": "Asteroid Day",
    "frames": [
     29,
-    87,
-    88
+    88,
+    89
    ],
    "shadow": true
   },

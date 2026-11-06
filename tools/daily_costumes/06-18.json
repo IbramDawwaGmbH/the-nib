@@ -1,60 +1,47 @@
 {
  "date": "06-18",
- "name": "maki_roll",
+ "name": "salmon_nigiri",
  "title": "International Sushi Day",
- "theme": "a fat maki roll lying on his head, nori ring and rice round salmon and cucumber; it rocks side to side and its glint slides",
+ "theme": "a salmon nigiri on his head: a striped orange-and-white salmon slab on a white rice pillow, tied with a charcoal nori band; the fat stripes shimmer along the slab",
  "category": "Hats",
  "kind": "head",
  "anchor": [
-  10,
-  12
+  8,
+  5
  ],
  "layer": "over",
  "pattern": [
-  "....AAAAAAAAAAAA....",
-  ".AAAAAAAAAAAAAAAAAA.",
-  ".AAWWWWWWWWWWWWWWAA.",
-  ".AAWWWWWWWWWWWWWWAA.",
-  ".AAWWWMMMMNNNNWWWAA.",
-  ".AAWWWMWWMNNNNWWWAA.",
-  ".AAWWWMMMMNNNNWWWAA.",
-  ".AAWWWMMMMNNNNWWWAA.",
-  ".AAWWWMMMMNNNNWWWAA.",
-  ".AAWWWWWWWWWWWWWWAA.",
-  ".AAWWWWWWWWWWWWWWAA.",
-  ".AAAAAAAAAAAAAAAAAA.",
-  "....AAAAAAAAAAAA...."
+  "...FWFFAAFFFW...",
+  ".FFWFFFAAFFWFFF.",
+  "FFWFFFWAAFWFFFWF",
+  ".WWWWWWAAWWWWWW.",
+  ".WWWWWWAAWWWWWW.",
+  "..WWWWWAAWWWWW.."
  ],
  "frames": [
   [
-   "...AAAAAAAAAAAA.....",
-   "AAAAAAAAAAAAAAAAAA..",
-   "AAWWWWWWWWWWWWWWAA..",
-   "AAWWWWWWWWWWWWWWAA..",
-   "AAWWWMMMMNNNNWWWAA..",
-   "AAWWWWWMMNNNNWWWAA..",
-   "AAWWWMMMMNNNNWWWAA..",
-   "AAWWWMMMMNNNNWWWAA..",
-   "AAWWWMMMMNNNNWWWAA..",
-   "AAWWWWWWWWWWWWWWAA..",
-   "AAWWWWWWWWWWWWWWAA..",
-   "AAAAAAAAAAAAAAAAAA..",
-   "...AAAAAAAAAAAA....."
+   "...WFFFAAFFWF...",
+   ".FWFFFWAAFWFFFW.",
+   "FWFFFWFAAWFFFWFF",
+   ".WWWWWWAAWWWWWW.",
+   ".WWWWWWAAWWWWWW.",
+   "..WWWWWAAWWWWW.."
   ],
   [
-   ".....AAAAAAAAAAAA...",
-   "..AAAAAAAAAAAAAAAAAA",
-   "..AAWWWWWWWWWWWWWWAA",
-   "..AAWWWWWWWWWWWWWWAA",
-   "..AAWWWMMMMNNNNWWWAA",
-   "..AAWWWMMWWNNNNWWWAA",
-   "..AAWWWMMMMNNNNWWWAA",
-   "..AAWWWMMMMNNNNWWWAA",
-   "..AAWWWMMMMNNNNWWWAA",
-   "..AAWWWWWWWWWWWWWWAA",
-   "..AAWWWWWWWWWWWWWWAA",
-   "..AAAAAAAAAAAAAAAAAA",
-   ".....AAAAAAAAAAAA..."
+   "...FFFWAAFWFF...",
+   ".WFFFWFAAWFFFWF.",
+   "WFFFWFFAAFFFWFFF",
+   ".WWWWWWAAWWWWWW.",
+   ".WWWWWWAAWWWWWW.",
+   "..WWWWWAAWWWWW.."
+  ],
+  [
+   "...FFWFAAWFFF...",
+   ".FFFWFFAAFFFWFF.",
+   "FFFWFFFAAFFWFFFW",
+   ".WWWWWWAAWWWWWW.",
+   ".WWWWWWAAWWWWWW.",
+   "..WWWWWAAWWWWW.."
   ]
  ]
 }
