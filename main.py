@@ -755,6 +755,12 @@ class NibApp:
             # window can cover him entirely once it is the thing pinned on top, so the tray - icon
             # badge and all - is the only place left this is visible from.
             self.tray.set_tooltip(f"{name} - pinned a window on top; grab him to let it go")
+        elif self.behavior.napping:
+            # Asleep because he was worn out and you were away - not the sulk, which says nothing
+            # here. Below the three above (a nap never overlaps a session or a perch, and a live
+            # microphone at two in the morning is still the more pressing news) and above his mood:
+            # "fine" over a mascot who is fast asleep would be saying the wrong thing.
+            self.tray.set_tooltip(f"{name} — napping")
         else:
             # Nothing more pressing to say, so say how he is - the one place the mood is
             # readable at a glance without opening anything. The same mood word as Settings →

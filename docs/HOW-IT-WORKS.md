@@ -164,8 +164,10 @@ Key transitions: `IDLE ⇄ WALK` on the wander beat and at the strip bounds; `ID
 weighted random antic; `→ HOVER_WAVE` when the cursor is close; `→ PET` when it comes to rest *on*
 him, which the wave defers to; `→ ASK` on click; `ASK → WORKING` on send, and `WORKING → ANTIC` if
 the prompt had a shape worth commenting on; pokes over the threshold → `ANGRY` → storm-off `WALK` →
-`SLEEP` → `WAKE` → `IDLE`; fullscreen or snooze → `HIDDEN`; mouse-down → `DRAG`, release → tumbling
-gravity fall → `INJURED` if it was a real drop, else `IDLE`.
+`SLEEP` → `WAKE` → `IDLE`; worn out and away late at night, the away-sit `ANTIC` → `SLEEP` with
+`_napping` set (the nap: no clock) → `WAKE` when you're back → the greeting `ANTIC`; fullscreen or
+snooze → `HIDDEN`; mouse-down → `DRAG`, release → tumbling gravity fall → `INJURED` if it was a
+real drop, else `IDLE`.
 
 ---
 

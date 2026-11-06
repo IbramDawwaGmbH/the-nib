@@ -107,7 +107,8 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
         "sleep_cooldown_s", "mood_enabled", "mood_half_life_h",
-        "memory_enabled", "memory_routine_enabled", "needs_enabled", "chatter_level",
+        "memory_enabled", "memory_routine_enabled", "needs_enabled", "nap_enabled",
+        "chatter_level",
     )),
     ("Look and sound", (
         "sprite_scale", "costume", "skin", "shadow_enabled",
@@ -161,6 +162,8 @@ HELP: dict[str, str] = {
     "memory_enabled": "Count the days, pets, prompts and focus sessions you share. Counts only.",
     "memory_routine_enabled": "Learn roughly what time you usually arrive. An hourly tally.",
     "needs_enabled": "Energy, affection and boredom that colour what he does.",
+    "nap_enabled": "Doze off late at night when worn out and you've stepped away. Wakes when "
+                   "you're back.",
     "chatter_level": "How often he says a line in a toast. Rare: at most 6 a day, 45 min apart.",
     "sprite_scale": "0 picks an integer scale from your monitor's DPI.",
     "shadow_enabled": "The soft contact shadow under his feet.",

@@ -55,14 +55,20 @@ how he is, and how well you two know each other: `Nib — fine, just met`,
 within a second. It is the same word his mood uses everywhere, and the second is
 [the bond](BEHAVIOUR.md#the-bond), which only ever grows — words, never numbers. With
 `memory_enabled` off there is no bond to speak of, and the tooltip stops after the mood. It steps
-aside for the things that matter more right then: a focus countdown, a live microphone or camera,
-a pinned window. **Settings → About him** says the same thing in a sentence, followed by a word
+aside for the things that matter more right then — a focus countdown, a live microphone or
+camera, a pinned window — and while he is napping it just says so: `Nib — napping`.
+**Settings → About him** says the same thing in a sentence, followed by a word
 each for how rested, how loved and how bored he is — `Nib is fine — tired, loved, busy.` See
 [How the day went](BEHAVIOUR.md#how-the-day-went) for what moves the mood, and
 [Energy, affection and boredom](BEHAVIOUR.md#energy-affection-and-boredom) for the rest: a long
 day leaves him tired by the evening, a lot of petting makes him fond, and nothing happening makes
 him bored. They only lean on what he already does, and never nag; `needs_enabled` switches them
 off.
+
+**He naps.** Worn out and left alone late at night, he dozes off where he sat waiting for you,
+and when you're back he wakes and greets you. It isn't the sulk: there's no clock on it, and
+clicking him awake earns no grumble. See [the nap](BEHAVIOUR.md#the-nap); `nap_enabled` switches
+it off.
 
 **He has a name, and you can change it.** `name` (Settings → Personality, first on the tab) is
 what the tray tooltip, his toasts and the lines he says call him. It applies as soon as you click
@@ -104,7 +110,8 @@ does that.
 Now and then he says one short line in the toast above his head — `Morning. I kept the desk
 warm.` when you come in, `Oh, you're back.` after a break of ten minutes or more, `30 days
 together. That's something.` on a milestone, `Big week. You asked a lot of me.` on a Friday
-after one, or a word when he is tired in the evening, feeling fond, or bored. After a heavy
+after one, or a word when he is tired in the evening, feeling fond, or bored. Woken from a
+[nap](BEHAVIOUR.md#the-nap), he may insist he was only resting his eyes. After a heavy
 day he may mention it once the next morning, and once he has learned
 when you usually arrive he may notice that you're in early, or late — once a day each, and
 never as a question or a telling-off. Click the line to make it go away; he likes that.
@@ -242,7 +249,8 @@ whose file picker you cancel leaves him as he was; Hide and Guard
 take him off screen, Update and restart says how it went, and More… and Wardrobe… open something
 else. Right-click him while he's asleep and the wheel still
 opens — nothing on it needs him awake — but he grumbles the way a click would, and won't react to
-picks until he's up. Standing on a window he isn't held by the wheel, so he doesn't watch it or
+picks until he's up. If he is only [napping](BEHAVIOUR.md#the-nap), the right-click wakes him
+instead, with no grumble. Standing on a window he isn't held by the wheel, so he doesn't watch it or
 react to picks there either.
 
 **He lives on the taskbar, so the wheel opens toward the middle of the screen** — straight up with

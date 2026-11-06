@@ -10,7 +10,8 @@ Everything he does on his own, and everything he does about you.
 
 He is busy by default: **roughly 90% of his time** is spent walking or doing something, with only a
 sub-second beat in between. Two things genuinely stop him: **sleeping off a sulk**, and **sitting
-down to wait when you step away** — and being briefly dazed if you drop him. Nothing else.
+down to wait when you step away** — which, worn out late at night, can turn into
+[a nap](#the-nap) — and being briefly dazed if you drop him. Nothing else.
 
 Between walks he picks a random antic, weighted, never the same one twice in a row:
 
@@ -420,6 +421,9 @@ past 0.6 he may only *say* so, once per that same 90 minutes, through the
 (`tests/day_rate.py`): **8 tired yawns**, all in the evening or the small hours and at least 90
 minutes apart; held at the starting point, none.
 
+Energy decides one thing more, and it is not a moment: worn out late at night, with you gone ten
+minutes, he dozes off — [the nap](#the-nap).
+
 **It is not a Tamagotchi.** Nothing here can be failed, and nothing asks to be topped up. A
 neglected mascot is a bit lonely and a bit bored — he looks about and checks his watch — and he
 gets over it on his own, on a half-life, whether you do anything or not. He never stops doing
@@ -440,9 +444,9 @@ minutes at most. A clock that jumps backwards ages nothing.
 *lonely*, *fine* or *loved*; boredom *busy*, *fine* or *bored*. Never a number.
 **Forget everything** resets them to the starting point with the mood.
 
-Set `needs_enabled` to `false` and all of it — the leans, the two moments, the bored line — is
-gone, and the stored values are left exactly as they were (until you **Forget everything**, which
-resets them whether they are on or off).
+Set `needs_enabled` to `false` and all of it — the leans, the two moments, the bored line, the
+nap — is gone, and the stored values are left exactly as they were (until you **Forget
+everything**, which resets them whether they are on or off).
 
 ---
 
@@ -592,10 +596,11 @@ Set `play_with_windows` to `false` to switch both off.
   dangles his legs, then greets you when you come back — sized by how long you were gone: a quick
   wave under 10 minutes, the hop up to four hours, and after a night away a stretch, a yawn and
   then the hop. (Gone *at least* `away_after_s` to count, so with the default 150 the wave covers
-  2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — only being pestered puts him
-  to sleep. Two things he [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on
-  a morning after a heavy day the overnight wake-up finishes with a coffee, and once he knows you
-  well — a month or so of days together and a few hundred pets, the [bond](#the-bond) at
+  2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — unless he is worn out and it
+  is late, when after ten minutes of it he dozes off: [the nap](#the-nap), below. Two things he
+  [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on a morning after a heavy
+  day the overnight wake-up finishes with a coffee, and once he knows you well — a month or so
+  of days together and a few hundred pets, the [bond](#the-bond) at
   *close* — the hop is followed by heart eyes. The wave never changes: a coffee break is not a
   reunion.
 - **He watches the wheel.** His eyes follow the tool you're aiming at, the tools that give him
@@ -603,6 +608,50 @@ Set `play_with_windows` to `false` to switch both off.
   head scratch. See [the tool wheel](USING-HIM.md#the-tool-wheel).
 - **He notices being ignored.** See below — that's the other case: you're right here, and none of
   what you're doing involves him.
+
+### The nap
+
+Sleep that isn't a punishment. Three things together, and he dozes off where he sat waiting for
+you:
+
+- **He's worn out** — energy under 0.25 (see
+  [Energy, affection and boredom](#energy-affection-and-boredom)).
+- **It's night** — 22:00 to 05:00.
+- **You've been away ten minutes** — counted from when he notices you've gone, so
+  `away_after_s` and then ten more minutes of not touching the machine.
+
+Time away rests him (+0.5 energy an hour), so by the ten-minute mark he has to have been well
+under that edge when you left: leave him at 0.16 and he naps, at 0.17 he never does
+(`tests/smoke_attention.py`). That takes a long day at the machine, or a late night. He never naps
+in a focus session (even one your absence has paused), standing on a window, in your hand or in
+the air, while he is hidden or paused, or with `nap_enabled`, `needs_enabled` or `world_enabled`
+off — without the clock there is no night.
+
+**It ends when you come back.** He wakes — the same wake-up as at the end of a sulk, without the
+scowl — and then greets you exactly as he would have for that absence: the wave, the hop, or after
+a night away the stretch, the yawn and the hop. He may
+[say a line](USING-HIM.md#he-says-things-rarely) about having been asleep (he wasn't; he was
+resting his eyes). A click or a right-click wakes him too, with no grumble, and anything else that
+gets him up — being called, a focus session started from the tray — ends it. Waking rests him a
+little more on top of what the time away gave him: up to +0.3 energy, in full after a two-hour nap
+and a share of it for a shorter one. Being clicked awake restarts the ten minutes, so he does not
+nod straight back off before the app has noticed you are back.
+
+**How it differs from the sulk's sleep:**
+
+| | The sulk | The nap |
+| --- | --- | --- |
+| **Why** | You pestered him | He's worn out, it's late, and you've gone |
+| **How it starts** | A glare, then he turns his back and stomps off | He dozes off where he sat |
+| **How long** | `sleep_cooldown_s` (60s), then he gets up by himself | No clock — until you're back |
+| **A hover near him** | Near the end, wakes him early | Nothing |
+| **A click** | A grumble, and he stays asleep | Wakes him, no grumble |
+| **The tray** | His mood, as ever | `Nib — napping` |
+| **Waking up** | Forgets what he was cross about | Forgets what he was cross about, then greets you |
+
+Underneath, both are the same sleep: no petting, no sneezes, nothing said while he's out, and you
+can still pick him up — throw him and he lands back in it unhurt, still with no clock on it. Pick
+him up mid-nap *because* you're back and he wakes as he lands, then greets you.
 
 ### Petting him
 
@@ -806,14 +855,16 @@ Two measures drive it:
 When either trips: he plays the angry animation for ~2.5s ignoring clicks, turns away from your
 cursor, stomps off a short distance, and sleeps for `sleep_cooldown_s` (default 60s). While asleep,
 clicking or right-clicking only earns a grumble (the tool wheel still opens). A gentle hover near
-the end of the nap wakes him early. Waking resets everything.
+the end of the sulk wakes him early. Waking resets everything.
 
 Reacting **consumes** the accumulated annoyance, so he sulks once per accumulation rather than
 re-triggering on every further poke.
 
-He does **not** fall asleep from idleness — sleep is only ever a consequence of pestering. You
-*can* still pick him up mid-nap (refusing to be moved for a whole minute reads as the app having
-hung), and he resumes the rest of the nap once he lands.
+He does **not** fall asleep from idleness. Pestering is one of only two ways to put him to sleep,
+and the other — worn out, late at night, with you gone — is [the nap](#the-nap), which is none of
+this: no clock, no grumble, and a greeting at the end of it. You *can* still pick him up mid-sulk
+(refusing to be moved for a whole minute reads as the app having hung), and he sleeps off the
+rest of it once he lands.
 
 Petting him is the **only** thing besides sending a prompt that takes accumulated annoyance back
 off, and the only one that works while he is already cross. See [Petting him](#petting-him).

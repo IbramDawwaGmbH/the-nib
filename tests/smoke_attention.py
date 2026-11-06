@@ -17,6 +17,7 @@ from PySide6.QtWidgets import QApplication  # noqa: E402
 app = QApplication([])
 
 import behavior as B  # noqa: E402
+import needs as N  # noqa: E402
 import world as W  # noqa: E402
 from animator import SpriteSheet  # noqa: E402
 from behavior import Behavior, State  # noqa: E402
@@ -323,6 +324,246 @@ b.paused = True
 b.launch_failed()
 check("paused, no double-take, but the bubble's ASK still ends", b.state is State.IDLE,
       f"{b.state.value} {b._antic}")
+
+print("\n--- worn out, late, and you have gone: he naps ---")
+
+
+def night_at(hour=23.5):
+    return W.WorldState(hour=hour, weekday=4, date_key="2026-07-31", week_key="2026-W31",
+                        part_of_day=W.part_of_day(hour), season=W.SEASON_SPRING,
+                        cpu_percent=8.0, cpu_busy=False)
+
+
+def napper(tag, *, hour=23.5, energy=0.1, **overrides):
+    """Worn out at half eleven at night. Quirks off: a sneeze is the one thing that could knock
+    him out of the away-sit he naps from, and it would land at random. Away is set by hand
+    through set_away - never the machine's own idle clock, which an unattended runner fills."""
+    cfg, b = fresh(tag, need_energy=energy, quirks_enabled=False, **overrides)
+    b.set_world(night_at(hour))
+    return cfg, b
+
+
+def wait(b, seconds, cursor=None):
+    for _ in range(int(seconds * 4)):
+        b.update(250.0, cursor)
+
+
+def until(b, done, seconds=5.0, step=16.0):
+    """Tick until ``done(b)``, for at most ``seconds`` - longer than WAKE and a landing take."""
+    for _ in range(int(seconds * 1000 / step)):
+        if done(b):
+            return True
+        b.update(step, None)
+    return done(b)
+
+
+def napping_after_away(tag, **kw):
+    cfg, b = napper(tag, **kw)
+    b.set_away(True)
+    wait(b, 11 * 60)
+    return cfg, b
+
+
+cfg, b = napper("nap")
+b.set_away(True)
+wait(b, 9.5 * 60)
+check("nine and a half minutes away he is still sitting up for you",
+      b.state is State.ANTIC and b._antic == B.AWAY_ANTIC and not b.napping,
+      f"{b.state.value} {b._antic}")
+wait(b, 90.0)
+check("eleven minutes away at half eleven, worn out (energy 0.1): asleep, and napping",
+      b.state is State.SLEEP and b.napping, f"{b.state.value} napping={b.napping}")
+check("...the same SLEEP as the sulk, not a new state", b.animator.state == "sleep",
+      b.animator.state)
+near = (int(b._x + b.sprite_w + 40), b.top + b.sprite_h // 2)
+wait(b, 2 * cfg["sleep_cooldown_s"], near)
+check("a pointer hovering by him for twice the sulk's length does not wake him, nor any timer",
+      b.napping, f"{b.state.value}")
+b.take_events()
+rested = b.needs.energy
+napped_h = (b._clock_ms - b._nap_since_ms) / 3_600_000.0
+b.set_away(False, gone_s=700.0)
+check("coming back wakes him: WAKE, and the nap is over",
+      b.state is State.WAKE and not b._napping, b.state.value)
+check("...with no grumble", b._grumble_ms == 0 and b.animator.state == "wake", b.animator.state)
+# A few minutes' nap, so a share of nap_woke - well clear of the energy cap - and the sum exact:
+# below neutral, a nudge back up lands in full (Needs.nudge).
+gain, owed = b.needs.energy - rested, N.NEED_NUDGES["nap_woke"][0] * min(1.0, napped_h / 2.0)
+check("...rested for the nap in proportion to its length (nap_woke, whole at two hours)",
+      0 < gain < 0.05 and abs(gain - owed) < 1e-3,
+      f"{napped_h * 60:.1f} min: {rested:.4f} -> {b.needs.energy:.4f}, owed {owed:.4f}")
+check("...and nothing to say yet - he is still getting up", b.take_events() == [])
+until(b, lambda x: x.state is not State.WAKE)
+check("...then, on his feet, the greeting the absence earned",
+      b.state is State.ANTIC and b._antic == B.GREET_ANTIC, f"{b.state.value} {b._antic}")
+events = b.take_events()
+check("...with the nap's line raised ahead of the greeting's",
+      [kind for kind, _data in events] == ["nap_wake", "greeted"], str(events))
+check("...and the greeting sized by how long you were gone", events[-1][1].get("gone_s") == 700.0,
+      str(events[-1:]))
+
+cfg, b = napping_after_away("nap_overnight")
+b.set_away(False, gone_s=8 * 3600.0)
+until(b, lambda x: x.state is not State.WAKE)
+events = dict(b.take_events())
+check("back after a night away: up from the nap into the overnight greeting, stretch first",
+      b._antic == B.GREET_OVERNIGHT[0][0] and events.get("greeted", {}).get("overnight") is True,
+      f"{b.state.value} {b._antic} {events}")
+
+# The sulk's sleep, by contrast, ends on its clock and early to a hovering pointer - so the hover
+# above really did meet a sleep that would have woken for it.
+cfg, b = fresh("sulk_hover", quirks_enabled=False)
+b._enter(State.SLEEP)
+wait(b, cfg["sleep_cooldown_s"] * 0.9, (int(b._x + b.sprite_w + 40), b.top + b.sprite_h // 2))
+check("(an ordinary sleep does wake for that hover)", b.state is not State.SLEEP, b.state.value)
+
+cfg, b = napping_after_away("nap_click")
+opened = b.click()
+check("a click wakes him from a nap", b.state is State.WAKE and not b._napping, b.state.value)
+check("...with no grumble and no bubble", b._grumble_ms == 0 and not opened
+      and b.animator.state == "wake", f"grumble={b._grumble_ms} opened={opened}")
+b.click()
+check("...nor a scowl for a second click while he gets up", b._grumble_ms == 0,
+      str(b._grumble_ms))
+b.set_away(False, gone_s=700.0)  # the app sees you back a poll later, while he is getting up
+until(b, lambda x: x.state is not State.WAKE)
+check("...and once he is up, the greeting", b.state is State.ANTIC
+      and b._antic == B.GREET_ANTIC, f"{b.state.value} {b._antic}")
+
+cfg, b = napping_after_away("nap_wheel")
+b.wheel_opened()
+check("a right-click wakes him from a nap too, with no grumble - the wheel still opens",
+      b.state is State.WAKE and not b._napping and b._grumble_ms == 0,
+      f"{b.state.value} napping={b._napping} grumble={b._grumble_ms}")
+
+cfg, b = napping_after_away("nap_click_away")
+b.click()
+wait(b, 60.0)
+check("clicked awake while you still read as away, he does not nod straight off again",
+      not b.napping and b._antic == B.AWAY_ANTIC, f"{b.state.value} {b._antic}")
+
+cfg, b = napper("sulk", annoyance_threshold=1)
+b.bubble_dismissed()
+until(b, lambda x: x.state is State.SLEEP, seconds=20.0)
+check("a sulk at the same hour, just as worn out, is asleep but not napping",
+      b.state is State.SLEEP and not b.napping, f"{b.state.value} napping={b.napping}")
+b.click()
+check("...still grumbles at a click, exactly as before", b._grumble_ms == B.GRUMBLE_MS
+      and b.state is State.SLEEP, f"{b._grumble_ms} {b.state.value}")
+wait(b, 1.0)  # the grumble passes
+b.wheel_opened()
+check("...and at a right-click", b._grumble_ms == B.GRUMBLE_MS and b.state is State.SLEEP,
+      f"{b._grumble_ms} {b.state.value}")
+wait(b, cfg["sleep_cooldown_s"] + 1.0)
+check("...and still ends on its own clock", b.state is not State.SLEEP, b.state.value)
+
+PERCH_RECT = (900, 1100, 1700, 1300)
+for label, overrides, setup in (
+    ("with nap_enabled off", {"nap_enabled": False}, None),
+    ("with needs switched off", {"needs_enabled": False}, None),
+    ("in the day", {"hour": 14.0}, None),
+    ("at energy 0.3", {"energy": 0.3}, None),
+    ("in a focus session", {}, lambda b: b.set_focus(True)),
+    ("standing on a window", {}, lambda b: b.perch_on(PERCH_RECT)),
+):
+    cfg, b = napper("nonap_" + label.replace(" ", "_"), **overrides)
+    if setup is not None:
+        setup(b)
+    b.set_away(True)
+    wait(b, 11 * 60)
+    # Still in the pose he naps from, so it is the one thing changed that kept him awake.
+    check(f"no nap {label}", not b.napping and b.state is State.ANTIC
+          and b._antic == B.AWAY_ANTIC, f"{b.state.value} {b._antic}")
+check("...and on the window he is still standing on it", b.perched)
+
+cfg, b = napping_after_away("nap_throw")
+lift_y = int(b.rest_top()) - 150
+b.drag_start()
+check("picked up mid-nap, the nap goes with him", b._napping and b.state is State.DRAG,
+      b.state.value)
+for i in range(10):
+    b.drag_to(1200 + i * 40, lift_y)
+    b.update(16.0, None)
+b.drag_end()
+until(b, lambda x: not (x._falling or x._rolling))
+check("thrown mid-nap he lands back in it, unhurt", b.napping, f"{b.state.value}")
+wait(b, 2 * cfg["sleep_cooldown_s"])
+check("...still with no clock on it, the throw has not made it a sulk", b.napping,
+      b.state.value)
+
+cfg, b = napping_after_away("nap_carried")
+b.drag_start()
+for _ in range(5):
+    b.drag_to(1200, int(b.rest_top()) - 30)
+    b.update(16.0, None)
+b.set_away(False, gone_s=900.0)  # you are back while he is in your hand
+check("you coming back cannot wake him in your hand", b._napping and b.state is State.DRAG,
+      b.state.value)
+b.drag_end()
+until(b, lambda x: x.state is State.ANTIC)
+check("...so he wakes as he lands, and greets you - not left asleep with you sat there",
+      not b._napping and b._antic == B.GREET_ANTIC, f"{b.state.value} {b._antic}")
+
+# Set down on a window instead, the nap is over - and the cooldown drag_start owed a carried sleep
+# must go with it, or the next ordinary landing puts him to sleep for a sulk's length.
+cfg, b = napping_after_away("nap_perched")
+b.drag_start()
+for _ in range(5):
+    b.drag_to(1200, int(b.rest_top()) - 300)  # held still, so let go slowly enough to perch
+    b.update(16.0, None)
+b.drag_end(PERCH_RECT)
+check("set down asleep on a window, he wakes standing on it",
+      b.state is State.PERCH and not b._napping, b.state.value)
+check("...owing no sleep for later", b._resume_sleep_ms == 0, str(b._resume_sleep_ms))
+b.set_away(False, gone_s=700.0)
+for _ in range(int(10_000 / 16)):
+    if not b.perched and not (b._falling or b._rolling):
+        break
+    b.update_perch(None)  # the window has closed, as main.py's poll would say
+    b.update(16.0, None)
+check("...so when the window goes and he steps down, he lands awake",
+      not b.perched and b.state is not State.SLEEP and not b._napping, b.state.value)
+
+# The greeting a nap owes lasts through the WAKE after it and no further: picked up mid-wake it
+# is dropped, and a later sulk's wake-up must not find it and greet you for nothing.
+cfg, b = napping_after_away("nap_greeting_dropped")
+b.set_away(False, gone_s=700.0)
+b.drag_start()
+check("picked up while he gets up from a nap, the greeting it owed is dropped",
+      b._nap_greeting is None, str(b._nap_greeting))
+b.drag_end()
+until(b, lambda x: not (x._falling or x._rolling))
+b.take_events()
+cfg["annoyance_threshold"] = 1
+b.bubble_dismissed()
+sulked = until(b, lambda x: x.state is State.SLEEP and not x._napping, seconds=20.0)
+wait(b, cfg["sleep_cooldown_s"] + 1.0)
+until(b, lambda x: x.state is not State.WAKE)
+kinds = [kind for kind, _data in b.take_events()]
+check("...so a sulk later wakes to no stale nap greeting", sulked and "nap_wake" not in kinds
+      and "greeted" not in kinds and b._nap_greeting is None, f"sulked={sulked} {kinds}")
+
+cfg, b = napping_after_away("nap_hidden")
+b.set_hidden(True)
+wait(b, 30.0)
+b.set_hidden(False, greet=True)
+check("hidden mid-nap (fullscreen, the snooze, the guard), he comes back awake",
+      not b._napping and b.state is not State.SLEEP, b.state.value)
+
+cfg, b = napper("nap_world_off", world_enabled=False)
+b.set_away(True)
+wait(b, 11 * 60)
+check("with world awareness off there is no night, so no nap", not b.napping, b.state.value)
+
+# Exactly how worn out he has to be: energy rests at +0.5 an hour while you are away, so at the
+# ten-minute mark it must still be under 0.25. The edge, measured - BEHAVIOUR.md quotes it.
+edge = []
+for start in (0.16, 0.17):
+    cfg, b = napper(f"nap_edge_{int(start * 100)}", energy=start)
+    b.set_away(True)
+    wait(b, 20 * 60)
+    edge.append(b.napping)
+check("left at energy 0.16 he naps; at 0.17 he never does", edge == [True, False], str(edge))
 
 print("\n--- the reset list is complete in main.py too ---")
 import main as M  # noqa: E402

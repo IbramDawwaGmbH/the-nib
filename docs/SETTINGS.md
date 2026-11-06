@@ -97,12 +97,13 @@ rather than being silently rewritten to a time you never chose.
 | `annoyance_threshold` | `4` | Pokes needed to anger him |
 | `annoyance_window_s` | `15` | Burst window for those pokes |
 | `annoyance_decay_s` | `20` | Seconds per point of residual decay |
-| `sleep_cooldown_s` | `60` | Nap length |
+| `sleep_cooldown_s` | `60` | How long he sleeps off a sulk. Not the [nap](BEHAVIOUR.md#the-nap) he takes when you're away late, which has no clock |
 | `mood_enabled` | `true` | Let a good or bad stretch carry over between sessions |
 | `mood_half_life_h` | `6.0` | Hours for a good or bad turn to half fade |
 | `memory_enabled` | `true` | Counts the days, pets, prompts and focus sessions you share. Counts only, kept in `memory.json` next to `config.json` — see [Privacy](PRIVACY.md). Off: nothing is counted and no file is written; one already there is kept until you **Forget everything** |
 | `memory_routine_enabled` | `true` | Lets him learn roughly what time you usually arrive (an hourly tally, nothing else). Off drops the tally from `memory.json` |
 | `needs_enabled` | `true` | Energy, affection and boredom that colour what he does: tired in the evening after a long day, fond after a lot of petting, bored when nothing happens. They only lean on what he already does, never nag. Off: all of it is gone and the stored values are left as they are, until you **Forget everything**. See [Energy, affection and boredom](BEHAVIOUR.md#energy-affection-and-boredom) |
+| `nap_enabled` | `true` | Dozes off late at night when he's worn out and you've stepped away, and wakes when you're back — never a sulk, no grumble, and the tray says *napping*. Needs `needs_enabled` too, since it is his energy that decides. See [The nap](BEHAVIOUR.md#the-nap) |
 | `chatter_level` | `"rare"` | How often he says a line in a toast: `"rare"` is at most 6 a day, 45 min apart; `"normal"` at most 14, 20 min apart; `"off"` never. A greeting may skip the gap, never the daily cap. See [He says things, rarely](USING-HIM.md#he-says-things-rarely) |
 
 ### Appearance

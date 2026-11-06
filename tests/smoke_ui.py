@@ -655,6 +655,27 @@ check("...and the focus countdown", nib.tray._tray.toolTip().startswith("Pip - f
       nib.tray._tray.toolTip())
 nib.behavior.set_focus(False)
 
+# A nap, put in place by hand: the real one needs night on the machine's own clock, which
+# _update_presence reads. away_after_s is still 0, so the poll cannot wake him by reading the idle
+# clock either - his away is only ever what this suite tells him.
+nib.behavior.set_away(True)
+nib.behavior._napping = True
+nib.behavior._enter(M.State.SLEEP)
+nib._update_presence()
+check("napping, the tooltip says so instead of his mood",
+      nib.tray._tray.toolTip() == "Pip — napping", nib.tray._tray.toolTip())
+nib.behavior.set_away(False)
+nib._update_presence()
+check("...and you coming back wakes him out of it", not nib.behavior.napping
+      and not nib.tray._tray.toolTip().endswith("napping"), nib.tray._tray.toolTip())
+for _ in range(40):
+    nib.behavior.update(50.0, None)
+nib.behavior.take_events()   # the greeting's line is not what this part is about
+presence = inspect.getsource(M.NibApp._update_presence)
+check("...below the focus, device and pin tooltips, above the mood and the bond",
+      presence.index("self._perch_pinned") < presence.index("self.behavior.napping")
+      < presence.index("label_for(self.mood.spirits)"))
+
 print("\n--- the lines he says: when they are shown, and what a click does ---")
 if nib.config["ghost_mode"]:
     nib._on_ghost_toggled(False)

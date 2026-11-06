@@ -70,7 +70,7 @@ NEED_NUDGES: dict[str, tuple[float, float, float]] = {
     "hurt": (-0.05, 0.0, 0.0),
     "interacted": (0.0, 0.0, -0.5),      # anything at all you did with him - see Behavior.noticed
     "world_event": (0.0, 0.0, -0.2),     # something happened around him: a moment, an app reaction
-    "nap_woke": (0.30, 0.0, 0.0),        # (the nap arrives later)
+    "nap_woke": (0.30, 0.0, 0.0),        # up from a nap; Behavior scales it by how long it was
 }
 
 # --- drift, per hour -------------------------------------------------------------------------

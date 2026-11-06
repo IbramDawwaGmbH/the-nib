@@ -243,7 +243,8 @@ MUTED_COSTUME = "earmuffs"
 MUTED_MS = 2000.0
 
 #: While you are away he settles down to wait, and greets you when you come back. This is
-#: deliberately *sitting*, not sleeping - only being pestered puts him to sleep.
+#: deliberately *sitting*, not sleeping. Two things put him to sleep: being pestered (the sulk),
+#: and being worn out while he waits for you late at night (the nap - see NAP_AFTER_AWAY_MS).
 AWAY_ANTIC = "sit_dangle"
 GREET_ANTIC = "hop"
 GREET_MS = 1500.0
@@ -542,6 +543,24 @@ FOND_MS = (1400.0, 2100.0)
 #: Whenever it is on hold (asleep, away, the machine pinned, or the attention arc switched off)
 #: boredom stops building and fades instead - see update.
 INTERACTING_WITHIN_MS = 1000.0
+
+# --- the nap ---------------------------------------------------------------------------------
+#
+# Sleep that is not a punishment. The sulk is something you did to him; this is something he does
+# because he is worn out, it is late, and you have gone. So it is State.SLEEP with a flag
+# (_napping) rather than a new state - the same frames, every SLEEP rule (no petting, no quirks,
+# nothing said) - but none of the sulk's edges: no clock, no hover-wake, no grumble, no turning
+# away. It ends when you come back, and then he gets up and greets you as he would have anyway.
+
+#: How long you have been away - on his own clock, from set_away(True) - before he may drop off.
+#: Long enough that a trip to the kettle at midnight finds him still sitting up for you.
+NAP_AFTER_AWAY_MS = 600000.0  # 10 min
+#: And how worn out he has to be: the same edge as the tired yawn. Energy rests at +0.5 an hour
+#: while you are away, so at the ten-minute mark this means under ~0.17 when you left.
+NAP_ENERGY_BELOW = TIRED_ENERGY_BELOW
+#: A nap this long or longer earns the whole of needs' "nap_woke" nudge when he wakes; a shorter
+#: one a share of it, so dozing off for a minute is not worth two hours' sleep.
+NAP_FULL_H = 2.0
 
 # --- dressing himself --------------------------------------------------------------------
 #
@@ -870,6 +889,18 @@ class Behavior:
         #: its own - main.py uses it to fire an OS notification, since he might be hidden behind a
         #: fullscreen app when it happens.
         self._focus_finished = False
+        #: When you went away, on the behaviour clock - None while you are here. Only the nap reads
+        #: it (NAP_AFTER_AWAY_MS); the greeting is sized by the app's own wall-clock gone_s.
+        self._away_since_ms: float | None = None
+        #: A nap rather than a sulk: State.SLEEP that ends when you come back. See the nap section
+        #: above, _maybe_nap, and _enter for every way it ends.
+        self._napping = False
+        self._nap_since_ms = 0.0
+        #: The greeting owed once he is up from a nap, as ``(gone_s,)`` - or None for none owed.
+        #: Kept here rather than queued as antics: _enter empties _antic_queue on the way into
+        #: WAKE, and computing it early would raise the "greeted" event while he is still asleep,
+        #: where nothing may be said. _tick_wake plays it, through the same _greet as set_away.
+        self._nap_greeting: tuple[float | None] | None = None
         #: How long you have been present but not interacted with HIM. Distinct from the system
         #: idle clock, which only knows whether you are at the machine at all.
         self._neglect_ms = 0.0
@@ -1479,12 +1510,19 @@ class Behavior:
         """Handle a click on the mascot. Returns True if the ask bubble should open."""
         self._last_click_ms = self._clock_ms
         self.noticed()
+        if self.napping:
+            # Woken, not pestered: he gets up, with no grumble - that is the sulk's. No bubble
+            # either; the greeting comes once he is on his feet, if you are back (see _tick_wake).
+            self._wake_from_nap()
+            return False
+        if self._waking_from_nap:
+            return False  # a second click while he is getting up is not worth a scowl
         if self._state in (State.SLEEP, State.WAKE):
             self._grumble_ms = GRUMBLE_MS  # a grumble, but he is not getting up for you
             return False
         if self._state in (State.ANGRY, State.HIDDEN) or self._pending_sleep:
             # _pending_sleep means he is mid-storm-off. That walk is part of the angry beat, so a
-            # click must not hijack it into a bubble and cancel the nap.
+            # click must not hijack it into a bubble and cancel the sulk.
             return False
         # WORKING is deliberately interruptible: the brief only blocks clicks while he is asleep,
         # angry, or hidden, and making the user wait out the animation to send a second prompt
@@ -1505,7 +1543,10 @@ class Behavior:
         self.noticed()
         self._wheel_hold = False
         self._wheel_look = None
-        if self._state in (State.SLEEP, State.WAKE):
+        if self.napping:
+            # Same as a click: up from a nap with no grumble. The wheel still opens round him.
+            self._wake_from_nap()
+        elif self._state in (State.SLEEP, State.WAKE) and not self._waking_from_nap:
             # Same as a click: a grumble, and he is not getting up for you - the wheel still opens.
             # The click time also keeps _tick_sleep's near-the-end hover wake off him meanwhile.
             self._last_click_ms = self._clock_ms
@@ -1722,9 +1763,11 @@ class Behavior:
         if self._state == State.HIDDEN:
             return
         self.noticed()
-        # A napping mascot can still be picked up. He ignores *clicks* while asleep, but refusing
-        # to be moved at all for the whole cooldown reads as the app having hung. The nap is not
-        # cancelled - the remaining time is restored once he lands.
+        # A sleeping mascot can still be picked up. He ignores *clicks* while sulking, but refusing
+        # to be moved at all for the whole cooldown reads as the app having hung. The sleep is not
+        # cancelled - the remaining time is restored once he lands. A nap keeps its flag through
+        # the carry and the fall (see _enter), and never counts its _sleep_ms down, so it lands
+        # back as the same nap with no clock rather than as a sulk-length sleep.
         if self._state == State.SLEEP:
             self._resume_sleep_ms = max(self._resume_sleep_ms, self._sleep_ms)
         # Grabbing him off a perch is the "remove it" gesture - deliberately un-graceful, the same
@@ -2062,6 +2105,15 @@ class Behavior:
             # Same reasoning as _pending_sleep: leaving the walk-then-act sequence by any other
             # route must drop the action, or it fires after some unrelated later walk.
             self._pending_action = None
+        # A nap is SLEEP, carried through a drag and the fall after it - both land back in SLEEP
+        # (_settle) - and nothing else. Every other way out ends it here, so none of the dozen
+        # routes out of SLEEP (a send, a call, a hide, a focus session) can leave the flag behind.
+        if (self._napping and state not in (State.SLEEP, State.DRAG)
+                and not (self._falling or self._rolling)):
+            self._end_nap()
+        # The greeting a nap owes lives through the nap and the WAKE after it, and no further.
+        if state != State.WAKE and not self._napping:
+            self._nap_greeting = None
         if state != State.ANTIC:
             self._persona_costume = ""  # the hat belongs to the antic, not to him
             self._antic_queue = []      # and the rest of a sequence belongs to the sequence
@@ -2151,7 +2203,7 @@ class Behavior:
         if self._focus_active:
             # The storm-off walk below bypasses _choose_next_action entirely, which is the only
             # place the working-pose hold gets reasserted. Left running, focus_active would keep
-            # reading True while he stomps off and naps - contradicting both his posture and the
+            # reading True while he stomps off and sleeps - contradicting both his posture and the
             # tray tooltip. Cancelled outright rather than paused: same as stopping it yourself,
             # no completion reward for a session you got angry through.
             self.set_focus(False)
@@ -2168,7 +2220,7 @@ class Behavior:
         self._enter(State.ANGRY)
 
     def _storm_off(self, cursor: tuple[int, int] | None) -> None:
-        """Turn away from the pest and walk a short distance before napping."""
+        """Turn away from the pest and walk a short distance before sleeping it off."""
         distance = random.uniform(STORM_OFF_MIN_PX, STORM_OFF_MAX_PX)
         centre = self._x + self.sprite_w / 2
         away_left = cursor is not None and cursor[0] > centre
@@ -2177,7 +2229,7 @@ class Behavior:
             target = self._x + distance if away_left else self._x - distance
         self._begin_walk(min(max(target, self.x_min), self.x_max))
         if self._state != State.WALK:
-            # Cornered at the end of the strip with nowhere to storm off to - nap on the spot.
+            # Cornered at the end of the strip with nowhere to storm off to - sleep on the spot.
             self._pending_sleep = False
             self._enter(State.SLEEP)
 
@@ -2301,10 +2353,21 @@ class Behavior:
         if away == self._away:
             return
         self._away = away
+        # Ahead of the state check below: he can be asleep or in your hand as you leave, and the
+        # ten minutes the nap waits for still start now.
+        self._away_since_ms = self._clock_ms if away else None
         if not away:
             # You have just come back. Whatever he had worked himself up to before you left is
             # stale; start the clock again rather than carrying on where he left off.
             self.noticed()
+            if self._napping or self._nap_greeting is not None:
+                # Back to him mid-nap, or while he is still getting up from one. The greeting
+                # waits until he is on his feet (_tick_wake): this one's absence replaces any owed.
+                # Carried or mid-air, he wakes once he has landed back in it - see _tick_sleep.
+                self._nap_greeting = (gone_s,)
+                if self.napping:
+                    self._wake_from_nap()
+                return
         if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
             return
         if away:
@@ -2312,10 +2375,14 @@ class Behavior:
                 log.debug("user away - settling down to wait")
                 self._begin_antic(AWAY_ANTIC, 1e9)  # held until you come back
         else:
-            log.debug("user back - greeting")
-            self.mood.nudge("greeted")
-            self.needs.nudge("greeted")
-            self._begin_sequence(self._greeting_for(gone_s))
+            self._greet(gone_s)
+
+    def _greet(self, gone_s: float | None) -> None:
+        """Greet you back - from set_away, or once he is up from a nap (_tick_wake)."""
+        log.debug("user back - greeting")
+        self.mood.nudge("greeted")
+        self.needs.nudge("greeted")
+        self._begin_sequence(self._greeting_for(gone_s))
 
     def _greeting_for(self, gone_s: float | None) -> list[tuple[str, float]]:
         """The greeting for coming back after ``gone_s`` seconds, sized by the absence.
@@ -2358,6 +2425,77 @@ class Behavior:
     @property
     def away(self) -> bool:
         return self._away
+
+    # --- the nap ------------------------------------------------------------------------
+
+    @property
+    def napping(self) -> bool:
+        """Asleep because he was worn out and you were away - not sulking. The tray says so.
+
+        Only while actually in SLEEP: carried or mid-air the flag survives (he lands back in the
+        nap), but he is not lying there asleep, so nothing outside should say he is.
+        """
+        return self._napping and self._state == State.SLEEP
+
+    @property
+    def _waking_from_nap(self) -> bool:
+        """In the WAKE that ends a nap, rather than the one that ends a sulk."""
+        return self._state == State.WAKE and self._nap_greeting is not None
+
+    def _maybe_nap(self, part_of_day: str | None) -> None:
+        """Doze off, if he is worn out, it is night, and you have been gone ten minutes.
+
+        Only from his away pose - sitting waiting for you - so never mid-antic, in your hand, on a
+        window, mid-air, or mid-tantrum. A focus session needs its own check: away outranks focus
+        in _choose_next_action, so a session paused by your absence *is* in the away pose. Hidden
+        (a fullscreen app, the snooze, the guard) and paused never get here: update has returned.
+        """
+        if not self._away or self._away_since_ms is None:
+            return
+        if self._state != State.ANTIC or self._antic != AWAY_ANTIC:
+            return
+        if not bool(self._config.get("nap_enabled", True)) or not self.needs.enabled:
+            return
+        if part_of_day != PART_NIGHT or self.needs.energy >= NAP_ENERGY_BELOW:
+            return
+        if self._clock_ms - self._away_since_ms < NAP_AFTER_AWAY_MS:
+            return
+        if self._focus_active or self._perch_rect is not None or self._falling or self._rolling:
+            return
+        log.info("worn out, late, and you have gone - dozing off")
+        self._napping = True
+        self._nap_since_ms = self._clock_ms
+        self._enter(State.SLEEP)
+
+    def _wake_from_nap(self) -> None:
+        """Up from a nap: no grumble, and a greeting owed for once he is on his feet.
+
+        A greeting already owed (set_away stored this absence) is kept. One that is not - a click
+        woke him - is owed with no length, and _tick_wake drops it if you still read as away by
+        then: set_away(False) greets you the ordinary way when you are.
+        """
+        if self._nap_greeting is None:
+            self._nap_greeting = (None,)
+        self._enter(State.WAKE)  # ends the nap - see _enter
+
+    def _end_nap(self) -> None:
+        """The nap is over, however it ended - called from _enter, the one way out of SLEEP.
+
+        Rested in proportion to how long it lasted (needs' "nap_woke", whole at NAP_FULL_H). The
+        ten minutes before he may drop off again start over: you just woke him, so a click from a
+        hand nobody has registered as back yet must not see him nod straight off again.
+        """
+        self._napping = False
+        # drag_start owes a carried nap the whole cooldown back. A throw has already spent that
+        # in _settle, which zeroes it before landing him back in SLEEP; any other end - set down
+        # on a window, or hidden or a focus session started mid-carry - must drop it here, or the
+        # next ordinary landing would put him down for a sulk-length sleep he never earned.
+        self._resume_sleep_ms = 0.0
+        napped_h = max(0.0, self._clock_ms - self._nap_since_ms) / 3_600_000.0
+        self.needs.nudge("nap_woke", scale=min(1.0, napped_h / NAP_FULL_H))
+        if self._away:
+            self._away_since_ms = self._clock_ms
+        log.info("up from a %.0f-minute nap", napped_h * 60.0)
 
     # --- focus sessions -------------------------------------------------------------
 
@@ -3354,14 +3492,18 @@ class Behavior:
         # mid-build, the arc switched off) that clock is frozen at whatever it had reached, which
         # would otherwise keep boredom climbing all the way through a pinned build or a sleep.
         neglect_running = self._neglect_step_ms() > 0 and not self._neglect_suppressed()
+        part_of_day = (world.part_of_day if world is not None
+                       and bool(self._config.get("world_enabled", True)) else None)
         self.needs.tick(
             dt_ms,
             away=self._away,
-            part_of_day=(world.part_of_day if world is not None
-                         and bool(self._config.get("world_enabled", True)) else None),
+            part_of_day=part_of_day,
             present_interacting=(not neglect_running
                                  or self._neglect_ms < INTERACTING_WITHIN_MS),
         )
+        # Straight after the needs, so it reads this tick's energy. Night as the needs see it:
+        # with the world switched off there is no night, and so no nap.
+        self._maybe_nap(part_of_day)
         self._tick_quirks(dt_ms)
         self._tick_neglect(dt_ms)
         if self._grumble_ms > 0:
@@ -3391,7 +3533,7 @@ class Behavior:
 
         # Ahead of every state handler, because it has to beat _maybe_wave - which fires at 120px
         # and would otherwise consume every pointer that came to rest on him. Only from the states
-        # where stopping to be petted makes sense: not mid-nap, mid-tantrum or mid-throw.
+        # where stopping to be petted makes sense: not asleep, mid-tantrum or mid-throw.
         if self._state in (State.IDLE, State.WALK, State.ANTIC) and self._maybe_pet(cursor):
             self._sync_animation()
             return
@@ -3529,7 +3671,7 @@ class Behavior:
             hit, self._vx = abs(self._vx), -abs(self._vx) * WALL_RESTITUTION
         # A single huge step could reflect straight past the other end; the clamp is the backstop.
         self._x = min(max(self._x, self.x_min), self.x_max)
-        # Not while a nap is pending: being moved mid-sleep never hurts him, and a wall is no
+        # Not while a sleep is pending: being moved mid-sleep never hurts him, and a wall is no
         # different from the floor in that respect.
         if (
             hit >= WALL_IMPACT_HURT_PX_MS
@@ -3580,14 +3722,16 @@ class Behavior:
         self._settle()
 
     def _settle(self) -> None:
-        """Everything has stopped moving: pick up the nap, sit up hurt, or answer how he landed."""
+        """Everything has stopped moving: go back to sleep, sit up hurt, or answer how he landed."""
         self._vx = self._vy = 0.0
         self._rolling = False
         # Read and cleared first, so no branch below can leave one set for the next landing.
         gentle, thrown = self._gentle_pending, self._throw_pending
         self._gentle_pending = self._throw_pending = False
         if self._resume_sleep_ms > 0:
-            # He was thrown mid-nap: now that he has stopped, serve out the rest of the cooldown.
+            # He was thrown asleep: now that he has stopped, back to sleep. A sulk serves out the
+            # rest of its cooldown; a nap lands back in the nap, whose flag rode the throw and
+            # whose _tick_sleep never reads the clock set here.
             remaining = self._resume_sleep_ms
             self._resume_sleep_ms = 0.0
             self._pending_injury = False
@@ -3610,7 +3754,7 @@ class Behavior:
         Only from IDLE, where drag_end left him: a click that opened the bubble mid-flight is not
         overridden by it. Never while paused - _settle runs on the near side of the pause check so
         that a drop still lands, but an antic started there would sit frozen on its first frame.
-        A nap resumed and an injury have already returned before this; a perch never gets here.
+        A sleep resumed and an injury have already returned before this; a perch never gets here.
         """
         if self.paused or self._state != State.IDLE:
             return
@@ -3859,11 +4003,18 @@ class Behavior:
 
     def _tick_sleep(self, dt_ms: float, cursor) -> None:
         self._advance(dt_ms)
+        if self._napping:
+            # No clock and no hover-wake: a nap ends when you come back, or click him. This is the
+            # one place that sees a nap you came back to while he was in your hand or in the air -
+            # set_away could not wake him there, and _settle has just put him back down in it.
+            if not self._away:
+                self._wake_from_nap()
+            return
         self._sleep_ms -= dt_ms
         if self._sleep_ms <= 0:
             self._enter(State.WAKE)
             return
-        # A gentle hover near the end of the nap - and no recent poking - wakes him early.
+        # A gentle hover near the end of the sulk - and no recent poking - wakes him early.
         total = max(1.0, float(self._config["sleep_cooldown_s"]) * 1000.0)
         quiet = self._clock_ms - self._last_click_ms > 3000
         if self._sleep_ms < total * 0.25 and quiet and self._cursor_is_near(cursor):
@@ -3873,6 +4024,14 @@ class Behavior:
         self._advance(dt_ms)
         if self.animator.finished:
             self._clear_annoyance()
+            owed, self._nap_greeting = self._nap_greeting, None
+            if owed is not None and not self._away:
+                # Up from a nap and you are here: the greeting set_away would have given, now he
+                # can give it. The nap's own line first, so it is the one that gets said - main
+                # says at most one line at a time, and the greeting's is the fallback.
+                self._event("nap_wake")
+                self._greet(owed[0])
+                return
             self._enter(State.IDLE)
 
 
