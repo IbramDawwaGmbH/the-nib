@@ -731,6 +731,67 @@ set-down — are left alone. Like the [needs](#energy-affection-and-boredom), it
 nothing stops — and it mends by itself, as the hard landings age out of the week or as soon as
 the pets catch up with them. The bond is not touched by it either way.
 
+### He develops tastes
+
+Each Nib drifts towards what its owner rewards. When you **pet him**, or **click him and the
+bubble opens**, within **10 seconds** of the start of something he chose to do on his own, he gets
+a little keener on it: his taste for it, a multiplier on how often he picks it, goes up by 0.03
+(1.0 to 1.03 the first time). When he **gives up waiting for you** — the third stage of
+[being ignored](#when-youre-here-and-ignoring-him) — the last thing he tried in the five minutes
+before, since you last did anything with him, goes down by 0.02.
+
+**Only his own picks count**: the antics in the [table at the top](#what-he-does-on-his-own),
+chosen on a wander beat. A moment, a sneeze or a trip, an app persona, a greeting, a treat, the
+beat after a tool or a costume, the away and give-up sits, the wave he gives when you have ignored
+him a while, a peek over the taskbar, being picked up (however he lands), the sparkle for a gentle
+set-down or a throw, and anything from **Do something** are things that happened to him or that
+you asked for — and once one of them has played, a pet is about *that*, not about what he did
+before it. His eyes following your pointer in, and his wave as it comes near, are the exceptions,
+since that is how most pets begin.
+
+**Each antic counts once.** The first pet or click after it settles it — inside the ten seconds
+that is the reward, later it is nothing — so a run of pets, or clicking him open over and over,
+cannot pump one antic up. The one thing that can revise it is the bubble that click opened: close
+it without sending anything and 0.02 of the 0.03 comes back off (a click that ended in brushing
+him off is a weaker yes); send a prompt, or get a sum answered, and it keeps the lot. A bubble he
+did not open — the hotkey's, at your pointer — changes no taste when you close it, because he was
+not what it was about. (One overlap: if the hotkey put away the bubble a click opened, closing the
+next one unsent still counts as closing that click's — the same 0.02, once.)
+
+**It is a lean, never a switch.** Every taste stays between **0.7×** and **1.4×**, multiplied in
+with the time of day, the mood and the rest (see
+[Mood](#mood--things-that-change-how-he-already-behaves)), so nothing he can do ever becomes all
+he does or disappears. Worked out from the real picker's weights on a simulated spring afternoon
+(the season and the hour lean the pool too, so another season or hour gives other shares), with
+no taste learned hop is about **12%** of his own picks; at the ceiling **15%**, at the floor
+**9%**. Six simulated hours of the whole scheduler on that same afternoon with hop at the ceiling:
+**37 hops an hour instead of 26**.
+
+**How fast it moves.** On the same spring afternoon, a simulated owner who pets him a couple of
+seconds after every hop took hop to the ceiling **22 minutes** into the day. The pets that landed
+after he had already moved on to something else gave a few other antics a stray +0.03 or two —
+after eight hours sparkles were at 1.12 and dancing and heart eyes at 1.09 — but only hop was
+named. Petting at random moments spreads out instead: **38–50%** of random pets landed within ten
+seconds of one of his picks, and a week of them (64 pets) left eleven antics between 1.03 and
+1.17 — enough for **About him** to name two, and a reminder that he learns what you *did*,
+whether or not you meant it.
+
+**And how fast it fades.** On every new day he sees you, each taste drifts back towards 1.0 by
+1% of the way for **every calendar day since the last one**, so a fortnight away is a fortnight's
+fading. Measured from the ceiling with nothing rewarded: 1.37 after a week, 1.30 after a month,
+no longer a like after **98 days**, gone entirely after **437**. From the floor: no longer a
+dislike after **69 days**, gone after **408**. A single reward (1.03) is gone after **179**. Those
+days are the same whether he runs throughout or is shut down every night: `memory.json` keeps a
+taste to eight decimal places, so a day's fade survives being saved and read back (kept to three,
+a taste within about 0.05 of neutral would never fade at all).
+
+**Settings → About him** says it in words, once there is something to say: `Seems to like hopping
+and dancing.` for the two strongest above 1.15 (six rewards with nothing taken off), and
+`Not keen on press-ups.` for the two lowest under 0.85 — never the sprite-sheet names, and nothing
+at all before then. The tastes live in `memory.json` (see [Privacy](PRIVACY.md)), written with
+everything else he remembers and never on their own; **Forget everything** wipes them, and with
+`memory_enabled` off nothing is learned and what was learned leans nothing.
+
 ### The inline calculator
 
 Type an arithmetic expression or a unit conversion into the bubble — `12 * 7`, `sqrt(16)`,

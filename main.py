@@ -58,7 +58,7 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox  # noqa: E4
 
 import ocr  # noqa: E402
 from animator import SpriteSheet, available_skins  # noqa: E402
-from behavior import PERSONALITIES, Behavior, State  # noqa: E402
+from behavior import ANTIC_WORDS, PERSONALITIES, Behavior, State  # noqa: E402
 from billboard import Billboard  # noqa: E402
 from bubble import AskBubble, Toast  # noqa: E402
 from focus_timer import FocusTimer  # noqa: E402
@@ -1998,7 +1998,7 @@ class NibApp:
         """
         name = str(self.config["name"])
         if self.memory.enabled:
-            lines = self.memory.summary_lines(name)
+            lines = self.memory.summary_lines(name, words=ANTIC_WORDS)
         else:
             lines = [f"{name} isn't keeping count - memory is switched off on the Personality tab."]
             if not self.memory.is_empty:

@@ -121,6 +121,23 @@ ANTICS: tuple[tuple[str, float, float, float, str], ...] = (
     ("check_watch", 0.8, 900, 1400, "fidget"),
 )
 FIDGET_CATEGORY = "fidget"
+#: Every antic above in words, for Settings → About him ("Seems to like hopping and dancing"). The
+#: names above are the sprite sheet's, and ``sit_dangle`` means nothing to anyone else; these follow
+#: the tables in docs/BEHAVIOUR.md. An antic added above needs a word here (smoke_memory checks).
+ANTIC_WORDS = {
+    "look_around": "looking around",
+    "wink": "winking",
+    "sparkle": "sparkling",
+    "heart_eyes": "heart eyes",
+    "football": "football",
+    "dance": "dancing",
+    "pushups": "press-ups",
+    "hop": "hopping",
+    "sit_dangle": "sitting and swinging his legs",
+    "scratch": "scratching his head",
+    "foot_tap": "tapping his foot",
+    "check_watch": "checking his watch",
+}
 #: Multiplier applied to "eyes" antics while the pointer is close - he plays to an audience.
 EYES_ANTIC_AUDIENCE_BOOST = 2.5
 #: An antic asked for longer than this is a hold - the away-sit, the sign, the focus pose, the
@@ -418,6 +435,46 @@ PLAY_AFFECTION_ABOVE = 0.6
 WARY_DAYS = 7
 WARY_MIN_HURTS = 5
 WARY_WEIGHTS = {"heart_eyes": 0.5, "sparkle": 0.7}
+
+# --- learned taste ----------------------------------------------------------------------
+#
+# Each install drifts towards what its owner rewards. Only the **ambient** pool counts: the antics
+# _pick_antic chooses for himself on a wander beat, and nothing else. A moment, a quirk, a persona,
+# a greeting, a treat, a reply to a tool or a costume, the away and give-up sits, the gentle and
+# play sparkles and "Do something" are things that happened or that you asked for, not his own
+# choices, and a pet after one of them is about that. So _choose_next_action says ambient=True
+# explicitly and every other _begin_antic leaves it off, and clears the record: the newest thing he
+# did was not his own pick. The eye-track and the wave when your pointer comes near are the
+# exceptions - his eyes following your pointer in is how most pets begin, not something new to
+# answer. Three things that are not antics clear it the same way: a peek, his stage-2 wave for
+# attention, and being picked up, whatever the landing - a pet that consoles a hard one is about
+# that, not about what he was grabbed out of.
+#
+# **Each ambient antic is settled once.** The first pet, or click that opens the bubble, after it
+# answers it: inside TASTE_WINDOW_MS that is the reward, later it is nothing, and either way the
+# record is gone - so a run of pets, or click-dismiss-click, cannot farm one antic up to the clamp.
+# The one revision allowed is the click's own: a bubble it opened and you then closed without
+# sending takes TASTE_DISMISS_BACK of its reward back - a click that ended in brushing him off is a
+# weaker yes - once, and never below where the antic was. A bubble that was not opened by a
+# rewarding click (the hotkey's, at your pointer) changes nothing on closing: he was not what it
+# was about. The one overlap: the hotkey putting a click's bubble away does it silently and leaves
+# him in ASK, credit and all, so closing the next bubble unsent still counts as that click's - at
+# most the same 0.02, once. Being given up on (the stage-3 sit) is the other answer, for an antic
+# you let go by.
+#
+# All of it goes through memory.adjust_taste, so it is clamped, saved only from the app's flush,
+# and a no-op with memory_enabled off.
+
+#: How soon after an ambient antic starts a pet or a click still counts as an answer to it.
+TASTE_WINDOW_MS = 10000.0
+#: What a pet, or a click that opens the bubble, adds to that antic's taste.
+TASTE_REWARD = 0.03
+#: Taken back from a click's reward when the bubble it opened is closed without sending anything.
+TASTE_DISMISS_BACK = 0.02
+#: What being given up on - the stage-3 sit - takes off the antic before it...
+TASTE_IGNORED = 0.02
+#: ...if it started at most this long before, and after the last thing you did with him.
+TASTE_IGNORED_WINDOW_MS = 300000.0  # 5 min
 
 # --- world awareness ------------------------------------------------------------------
 #
@@ -855,9 +912,9 @@ class Behavior:
         #: How the day has gone - the only part of him that survives a restart. Constructed here
         #: when the caller does not supply one, so a test can build a Behavior on its own.
         self.mood = mood if mood is not None else Mood(config)
-        #: What he remembers about the two of you - counts only. The default keeps them in memory
-        #: and never writes a file, so every test that builds a Behavior on its own stays
-        #: off the disk; the app passes one that saves to memory.json.
+        #: What he remembers about the two of you - counts, and his tastes. The default keeps
+        #: them in memory and never writes a file, so every test that builds a Behavior on its own
+        #: stays off the disk; the app passes one that saves to memory.json.
         self.memory = memory if memory is not None else Memory(None, config)
         #: Energy, affection and boredom. The default reads the config but is never persisted -
         #: only the app calls persist() - so a test's Behavior cannot write anything back.
@@ -959,6 +1016,14 @@ class Behavior:
         #: Antics still to play, in order, after this one - see _begin_sequence.
         self._antic_queue: list[tuple[str, float]] = []
         self._last_antic: str | None = None
+        #: The newest ambient antic still waiting to be answered, as ``(name, clock_ms)`` at its
+        #: start - or None. See "learned taste" above: set only by the ambient pick, cleared by
+        #: any other antic, a peek, the attention wave or being picked up, and by the first answer.
+        self._last_ambient: tuple[str, float] | None = None
+        #: What the click that opened the bubble rewarded, as ``(name, change made)``, until that
+        #: bubble's fate is known: closed without sending takes some of it back (bubble_dismissed).
+        #: Dropped on leaving ASK.
+        self._ask_credit: tuple[str, float] | None = None
         self._working_ms = 0.0
         self._sleep_ms = 0.0
         self._grumble_ms = 0.0
@@ -1528,6 +1593,10 @@ class Behavior:
         self._config["last_milestone_days"] = ""
         self._config["last_focus_streak_date"] = ""
         self._treats_today = ("", 0)
+        # And the antic waiting to be answered: a pet straight after a wipe should not hand the
+        # new, empty memory a taste for something he did before it.
+        self._last_ambient = None
+        self._ask_credit = None
 
     # --- the personality preset ---------------------------------------------------
 
@@ -1615,6 +1684,14 @@ class Behavior:
         # would be worse than cutting it short.
         self._sound("open")
         self._enter(State.ASK)
+        # Here, after every refusal above: only a click that actually opens the bubble answers
+        # what he just did. Kept until the bubble closes, which may take some of it back. Set
+        # here, and only ever cleared elsewhere: outside ASK it is already None (_enter drops it),
+        # and a second click while the bubble is up answers nothing new - it must not wipe the
+        # first click's pending take-back.
+        answered = self._answer_ambient(TASTE_REWARD, TASTE_WINDOW_MS)
+        if answered is not None and answered[1] > 0:
+            self._ask_credit = answered
         return True
 
     def wheel_opened(self) -> bool:
@@ -1710,7 +1787,18 @@ class Behavior:
         return True
 
     def bubble_dismissed(self) -> None:
-        """The bubble closed without sending - that is a poke."""
+        """The bubble closed without sending - that is a poke.
+
+        Only ever a close with nothing sent: a send, a calculator answer and the app's own closes
+        (``close_silently``) never raise it. If a click on him opened this bubble and rewarded an
+        antic, part of that comes back off - never more than the click actually added, so nothing
+        ends below where it was. A bubble opened any other way changes no taste - short of the
+        one overlap with the hotkey described under "learned taste".
+        """
+        if self._ask_credit is not None:
+            name, added = self._ask_credit
+            self._ask_credit = None
+            self.memory.adjust_taste(name, -min(TASTE_DISMISS_BACK, added))
         self.noticed()
         self._register_poke()
         self._sound("poke")
@@ -1751,6 +1839,7 @@ class Behavior:
         """
         self.noticed()
         self._post_prompt = None
+        self._ask_credit = None  # you did send something: not a dismissal, whatever happened next
         if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
             return
         if self._pending_sleep:
@@ -1799,6 +1888,8 @@ class Behavior:
         animation of its own.
         """
         self.noticed()
+        # An answer is not walking away: the click that opened the bubble keeps what it gave.
+        self._ask_credit = None
         if not ok or self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
             return
         if not self._sheet.has_state(CALCULATED_ANIM):
@@ -1866,6 +1957,9 @@ class Behavior:
         self._pending_injury = False
         # Caught again mid-flight: the landing that was on its way never happens.
         self._gentle_pending = self._throw_pending = False
+        # Nor is what he picked for himself before you grabbed him the newest thing he did: a pet
+        # once he is down - consoling a hard landing, most likely - is about this (learned taste).
+        self._last_ambient = None
         self._vx = self._vy = 0.0
         self._drag_samples.clear()
         self._drag_last = None
@@ -2067,6 +2161,9 @@ class Behavior:
         self.mood.nudge("petted")
         self.needs.nudge("petted")
         self.memory.record("pets", self._date_key())
+        # A pet is the plainest "more of that": it answers the antic he has just picked for
+        # himself, if there is one in time - see "learned taste".
+        self._answer_ambient(TASTE_REWARD, TASTE_WINDOW_MS)
         log.info("being petted")
         self._enter(State.PET)
         return True
@@ -2200,6 +2297,11 @@ class Behavior:
         # The greeting a nap owes lives through the nap and the WAKE after it, and no further.
         if state != State.WAKE and not self._napping:
             self._nap_greeting = None
+        # The bubble a click opened is over once he is out of ASK, however it went - a send, a
+        # sum, a hide - so nothing later can take back that click's reward. bubble_dismissed reads
+        # it before it moves him on.
+        if state != State.ASK:
+            self._ask_credit = None
         if state != State.ANTIC:
             self._persona_costume = ""  # the hat belongs to the antic, not to him
             self._antic_queue = []      # and the rest of a sequence belongs to the sequence
@@ -2215,6 +2317,8 @@ class Behavior:
             # cooldown. Leaving that to the caller let him peek, land back in idle, and duck
             # straight down again a beat later.
             self._peek_cooldown_ms = PEEK_COOLDOWN_MS
+            # A set piece of his own that is not from the pool: a pet now is about the peek.
+            self._last_ambient = None
         elif state == State.PET:
             self._pet_drain_ms = 0.0
         elif state in (State.PERCH, State.ASK):
@@ -2332,11 +2436,20 @@ class Behavior:
 
     # --- antics -------------------------------------------------------------------
 
-    def _begin_antic(self, name: str, duration_ms: float, costume: str = "") -> None:
+    def _begin_antic(
+        self, name: str, duration_ms: float, costume: str = "", *, ambient: bool = False
+    ) -> None:
         self._flush_quick_change()  # any other antic cutting in mid-hop shows the costume now
         self._antic = name
         self._antic_ms = duration_ms
         self._last_antic = name
+        # Only the ambient pick says ambient=True - see "learned taste". Anything else he does is
+        # now the newest thing to be answered, and is not his own choice, so a pet after it must
+        # not land on the antic before. His eyes following your pointer in are not a new thing.
+        if ambient:
+            self._last_ambient = (name, self._clock_ms)
+        elif name != EYE_TRACK_STATE:
+            self._last_ambient = None
         # Assigned on every antic, not only the ones that want a hat: entering ANTIC from ANTIC is
         # a no-op in _enter, so a stale value here would leave him wearing the last persona's
         # glasses through whatever he does next.
@@ -3089,13 +3202,15 @@ class Behavior:
         return moment
 
     def _mood_weights(self) -> dict[str, float]:
-        """Multipliers for the ambient pool.
+        """Multipliers for the ambient pool - and only for it: _pick_antic is the one caller, so
+        nothing here can lean a moment, a quirk or a reply.
 
-        Six independent sources, composed **multiplicatively** rather than by replacement: the
+        Seven independent sources, composed **multiplicatively** rather than by replacement: the
         time of day, the season, the persistent mood, his needs, a week of rough handling (see
-        _wary), and the personality preset - plus the attention arc's boost. Every one of them
-        means something different, and letting any one overwrite the others would produce
-        nonsense like a good mood cancelling the fact that it is two in the morning.
+        _wary), what he has learned you like (his taste), and the personality preset - plus the
+        attention arc's boost. Every one of them means something different, and letting any one
+        overwrite the others would produce nonsense like a good mood cancelling the fact that it
+        is two in the morning.
         """
         weights: dict[str, float] = {}
         for name, factor in self.mood.weights().items():
@@ -3109,6 +3224,11 @@ class Behavior:
         if self._wary():
             for name, factor in WARY_WEIGHTS.items():
                 weights[name] = weights.get(name, 1.0) * factor
+        # His taste, the same way: only the antics he has one for, never a 1.0 for the rest (a
+        # neutral taste is no entry - see memory.TASTE_NEUTRAL_BAND), and nothing at all with
+        # memory off. Clamped to 0.7..1.4: above the 0.4 floor every lean keeps.
+        for name, factor in self.memory.taste.items():
+            weights[name] = weights.get(name, 1.0) * factor
         for name, factor in self._preset().get("weights", {}).items():
             weights[name] = weights.get(name, 1.0) * float(factor)
 
@@ -3134,6 +3254,23 @@ class Behavior:
             # afternoon instead of firing once and clashing with the knocking-off dance.
             weights["dance"] = weights.get("dance", 1.0) * FRIDAY_DANCE_BOOST
         return weights
+
+    def _answer_ambient(self, delta: float, within_ms: float) -> tuple[str, float] | None:
+        """Settle the newest ambient antic: ``delta`` on its taste if it began within ``within_ms``.
+
+        Returns ``(name, change actually made)`` - less than ``delta`` at the clamp, 0.0 with
+        memory off - or None when there was nothing in time to answer. Either way the record is
+        gone: answered late is still answered, and once is all an antic gets (see "learned taste").
+        """
+        last, self._last_ambient = self._last_ambient, None
+        if last is None:
+            return None
+        name, started_ms = last
+        if self._clock_ms - started_ms > within_ms:
+            return None
+        before = self.memory.taste.get(name, 1.0)
+        self.memory.adjust_taste(name, delta)
+        return name, self.memory.taste.get(name, 1.0) - before
 
     def _wary(self) -> bool:
         """Hurt at least WARY_MIN_HURTS times in the last WARY_DAYS days, and more than petted.
@@ -3206,6 +3343,11 @@ class Behavior:
                 # Charged once, on the transition, not on every re-seat: he returns to this sit
                 # after each glance, and nudging there would grind him down all afternoon.
                 self.mood.nudge("ignored")
+                # And whatever he last picked for himself fell flat: a little less of that. Only
+                # an antic since the last thing you did with him - one from before it was not
+                # ignored, which matters when attention_after_s is short - and only once.
+                self._answer_ambient(-TASTE_IGNORED,
+                                     min(TASTE_IGNORED_WINDOW_MS, self._neglect_ms))
             self._neglect_stage = 3
             if not self._sheet.has_state(NEGLECT_SIT_ANTIC):
                 return False
@@ -3219,6 +3361,9 @@ class Behavior:
         if elapsed >= step * NEGLECT_WAVE_AT and self._neglect_stage < 2:
             self._neglect_stage = 2
             log.debug("ignored for %.0fs - waving", elapsed / 1000.0)
+            # His "notice me" is not his own pick: a pet that answers it is about the wave, and so
+            # is a give-up sit that follows it - not the antic before (see "learned taste").
+            self._last_ambient = None
             self._enter(State.HOVER_WAVE)
             return True
 
@@ -3451,7 +3596,9 @@ class Behavior:
         if antics_on and random.random() < chance:
             chosen = self._pick_antic(cursor)
             if chosen is not None:
-                self._begin_antic(*chosen)
+                # The one ambient pick, and so the one antic a pet or a click can teach him to
+                # like - see "learned taste".
+                self._begin_antic(*chosen, ambient=True)
                 return
 
         # Holding the sign up, or a focus session: he finishes whatever he was already doing but
