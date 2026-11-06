@@ -192,10 +192,10 @@ check("...labelled by its date", tray._costume_actions[march].text().startswith(
 
 print("\n--- every costume, on the frames that catch them out ---")
 #: Standing, walking, both arm-raised poses, a stretch, sitting, napping, the hop's take-off and
-#: landing. Upside down (injured, tumble) and mid-air are exempt, as smoke_costumes makes them.
+#: landing, and eating a treat (his hand comes up to his mouth, past a scarf). Upside down (injured, tumble) and mid-air are exempt, as smoke_costumes makes them.
 SAMPLE = [("idle", i) for i in range(4)] + [("walk_right", i) for i in range(6)] + [
     ("wave", 1), ("wave", 2), ("scratch", 1), ("stretch", 2), ("sit_dangle", 1), ("sleep", 0),
-    ("hop", 0), ("hop", 4), ("dance", 1), ("pushups", 2)]
+    ("hop", 0), ("hop", 4), ("dance", 1), ("pushups", 2)] + [("eat", i) for i in range(4)]
 SAMPLE = [(s, i) for s, i in SAMPLE if bare.has_state(s) and i < bare.frame_count(s)]
 EYE_TOP, EYE_BOTTOM, FACE = 26, 31, range(15, 33)
 BODY_BOTTOM, HANG = 41, 4
