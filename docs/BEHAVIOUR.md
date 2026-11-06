@@ -10,7 +10,8 @@ Everything he does on his own, and everything he does about you.
 
 He is busy by default: **roughly 90% of his time** is spent walking or doing something, with only a
 sub-second beat in between. Two things genuinely stop him: **sleeping off a sulk**, and **sitting
-down to wait when you step away** — and being briefly dazed if you drop him. Nothing else.
+down to wait when you step away** — which, worn out late at night, can turn into
+[a nap](#the-nap) — and being briefly dazed if you drop him. Nothing else.
 
 Between walks he picks a random antic, weighted, never the same one twice in a row:
 
@@ -315,12 +316,15 @@ Everything above is **derived**. The time of day, the season, whether the machin
 it is recomputed from your clock on every launch, which means two sessions an hour apart are
 identical in every respect that matters. Nothing you did in the first one reaches the second.
 
-This is the exception, and the only part of him that is. One number — **spirits**, from −1 to +1 —
+This is the exception, though not the only one: so are
+[energy, affection and boredom](#energy-affection-and-boredom) and
+[what he remembers](USING-HIM.md#what-he-remembers). One number — **spirits**, from −1 to +1 —
 moved by the things you do to him and fading back to neutral on a half-life:
 
 | What you do | Which way |
 | --- | --- |
-| Pet him | **+0.22** — the big one, and the only kindness he has |
+| Pet him | **+0.22** — the big one |
+| [Give him a treat](USING-HIM.md#treats) | +0.12 — three a day; a fourth changes nothing |
 | Send a prompt | +0.10 |
 | Come back after being away | +0.05 |
 | Dismiss the bubble without sending | −0.09 |
@@ -357,9 +361,9 @@ Set `mood_enabled` to `false` and it reports a flat zero, contributing nothing a
 
 **Where you can read it.** As a word, never the number: *delighted*, *in good spirits*, *fine*,
 *a bit flat* or *thoroughly fed up*. It is the tray icon's tooltip whenever nothing more pressing
-(a focus countdown, a live mic or camera, a pinned window) has it — `Nib — fine` — and the
-"Right now" line on **Settings → About him**. Both use his `name`. With `mood_enabled` off the
-word is always *fine*.
+(a focus countdown, a live mic or camera, a pinned window) has it — the first word in
+`Nib — fine, friends`, ahead of [the bond](#the-bond) — and the "Right now" line on
+**Settings → About him**. Both use his `name`. With `mood_enabled` off the word is always *fine*.
 
 **What he remembers is separate.** The mood is one number about *today*; the longer story — the
 days you have shared and how many pets, prompts and focus sessions — is kept in `memory.json` by
@@ -386,14 +390,15 @@ by `needs.py` and written to `config.json` next to the mood:
 
 | Need | Goes up | Goes down |
 | --- | --- | --- |
-| **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
-| **Affection** — lonely to doted on | A pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
+| **Energy** — worn out to bright-eyed | While you are away or he is closed: **+0.5 an hour**, so two hours off is a full tank; a [treat](USING-HIM.md#treats) (+0.05) | While you are at the machine: **−0.08 an hour**, and −0.15 more at night |
+| **Affection** — lonely to doted on | A treat (+0.08), a pet (+0.06), a finished focus session (+0.04), coming back (+0.03), a prompt (+0.02), being set down gently (+0.018, at most every 30 seconds), half a pet for clicking one of his lines | Drifts back to the middle on a **12-hour** half-life |
 | **Boredom** — kept busy to bored stiff | **+0.1 an hour** while you are here and doing nothing with him | Anything you do with him knocks **0.5** off; something happening around him (a moment, an app reaction) 0.2; otherwise it fades on a 2-hour half-life |
 
-A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, about three hours at
-the machine makes him tired, so an ordinary working day ends in a tired evening — and lunch away
-from the desk perks him up again. A night off has him rested in the morning. Kindness is tapered
-the same way the mood's is (squared headroom), so no amount of petting pins affection at the top.
+A fresh mascot sits at energy 0.5, affection 0.5, boredom 0. From there, just under two hours at
+the machine makes him tired and about three wears him out (energy under 0.25), so an ordinary
+working day ends in a tired evening — and lunch away from the desk perks him up again. A night
+off has him rested in the morning. Kindness is tapered the same way the mood's is (squared
+headroom), so no amount of petting pins affection at the top.
 
 **They never fire anything, with two small exceptions.** Like the mood, they only lean on what
 he already does:
@@ -412,13 +417,16 @@ mascot behaves precisely as he did before any of this existed (`tests/fidget_rat
 `tests/quirk_rate.py` and `tests/day_rate.py` are the check).
 
 The two exceptions are [moments](#moments--things-he-does-once), and wait their turn like every
-other: a **tired** yawn and heavy blink, only in the evening or at night, and **fond** heart eyes
-when he is doted on (affection over 0.85) and your pointer is near. They share one 90-minute
-cooldown on top of the 45-second budget every moment shares. Boredom gets no moment at all —
-past 0.6 he may only *say* so, once per that same 90 minutes, through the
-[lines he says](USING-HIM.md#he-says-things-rarely). Measured over a simulated day held worn out
-(`tests/day_rate.py`): **8 tired yawns**, all in the evening or the small hours and at least 90
-minutes apart; held at the starting point, none.
+other: a **tired** yawn and heavy blink when he is worn out (energy under 0.25), only in the
+evening or at night, and **fond** heart eyes when he is doted on (affection over 0.85) and your
+pointer is near. They share one 90-minute cooldown on top of the 45-second budget every moment
+shares. Boredom gets no moment at all — past 0.6 he may only *say* so, once per that same 90
+minutes, through the [lines he says](USING-HIM.md#he-says-things-rarely). Measured over a
+simulated day held worn out (`tests/day_rate.py`): **8 tired yawns**, all in the evening or the
+small hours and at least 90 minutes apart; held at the starting point, none.
+
+Energy decides one thing more, and it is not a moment: worn out late at night, with you gone ten
+minutes, he dozes off — [the nap](#the-nap).
 
 **It is not a Tamagotchi.** Nothing here can be failed, and nothing asks to be topped up. A
 neglected mascot is a bit lonely and a bit bored — he looks about and checks his watch — and he
@@ -432,17 +440,22 @@ and fades on its half-life instead.
 
 **While he is closed** the stored values are aged on the wall clock as if you had been away:
 energy comes back, affection drifts to the middle, boredom fades. They are stored to two
-decimals, so energy draining while you work rewrites `config.json` about once every seven
-minutes at most. A clock that jumps backwards ages nothing.
+decimals, but energy is always on the move, so they rewrite `config.json` about every 7.5
+minutes while you work by day, every 2.6 at night and every 70 seconds while he rests back to
+full with you away — more often while boredom builds as well (every 3.3 minutes on average by
+day) — and never more than once per ten-second flush; once he is rested with you gone, not at
+all. Held anywhere else with nothing moving — worn out at the machine, say — only the time stamp
+changes, every ten minutes, so a restart never counts more than ten minutes of you being there as
+rest. A clock that jumps backwards ages nothing.
 
 **Where you can read them.** As words on **Settings → About him**, after the mood:
 `Nib is in good spirits — rested, loved, busy.` Energy is *tired*, *okay* or *rested*; affection
 *lonely*, *fine* or *loved*; boredom *busy*, *fine* or *bored*. Never a number.
 **Forget everything** resets them to the starting point with the mood.
 
-Set `needs_enabled` to `false` and all of it — the leans, the two moments, the bored line — is
-gone, and the stored values are left exactly as they were (until you **Forget everything**, which
-resets them whether they are on or off).
+Set `needs_enabled` to `false` and all of it — the leans, the two moments, the bored line, the
+nap — is gone, and the stored values are left exactly as they were (until you **Forget
+everything**, which resets them whether they are on or off).
 
 ---
 
@@ -592,10 +605,11 @@ Set `play_with_windows` to `false` to switch both off.
   dangles his legs, then greets you when you come back — sized by how long you were gone: a quick
   wave under 10 minutes, the hop up to four hours, and after a night away a stretch, a yawn and
   then the hop. (Gone *at least* `away_after_s` to count, so with the default 150 the wave covers
-  2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — only being pestered puts him
-  to sleep. Two things he [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on
-  a morning after a heavy day the overnight wake-up finishes with a coffee, and once he knows you
-  well — a month or so of days together and a few hundred pets, the bond `memory.py` calls
+  2½ to 10 minutes.) This is deliberately *sitting*, not sleeping — unless he is worn out and it
+  is late, when after ten minutes of it he dozes off: [the nap](#the-nap), below. Two things he
+  [remembers](USING-HIM.md#what-he-remembers) add a beat at the end: on a morning after a heavy
+  day the overnight wake-up finishes with a coffee, and once he knows you well — a month or so
+  of days together and a few hundred pets, the [bond](#the-bond) at
   *close* — the hop is followed by heart eyes. The wave never changes: a coffee break is not a
   reunion.
 - **He watches the wheel.** His eyes follow the tool you're aiming at, the tools that give him
@@ -603,6 +617,50 @@ Set `play_with_windows` to `false` to switch both off.
   head scratch. See [the tool wheel](USING-HIM.md#the-tool-wheel).
 - **He notices being ignored.** See below — that's the other case: you're right here, and none of
   what you're doing involves him.
+
+### The nap
+
+Sleep that isn't a punishment. Three things together, and he dozes off where he sat waiting for
+you:
+
+- **He's worn out** — energy under 0.25 (see
+  [Energy, affection and boredom](#energy-affection-and-boredom)).
+- **It's night** — 22:00 to 05:00.
+- **You've been away ten minutes** — counted from when he notices you've gone, so
+  `away_after_s` and then ten more minutes of not touching the machine.
+
+Time away rests him (+0.5 energy an hour), so by the ten-minute mark he has to have been well
+under that edge when you left: leave him at 0.16 and he naps, at 0.17 he never does
+(`tests/smoke_attention.py`). That takes a long day at the machine, or a late night. He never naps
+in a focus session (even one your absence has paused), standing on a window, in your hand or in
+the air, while he is hidden or paused, or with `nap_enabled`, `needs_enabled` or `world_enabled`
+off — without the clock there is no night.
+
+**It ends when you come back.** He wakes — the same wake-up as at the end of a sulk, without the
+scowl — and then greets you exactly as he would have for that absence: the wave, the hop, or after
+a night away the stretch, the yawn and the hop. He may
+[say a line](USING-HIM.md#he-says-things-rarely) about having been asleep (he wasn't; he was
+resting his eyes). A click or a right-click wakes him too, with no grumble, and anything else that
+gets him up — being called, a focus session started from the tray — ends it. Waking rests him a
+little more on top of what the time away gave him: up to +0.3 energy, in full after a two-hour nap
+and a share of it for a shorter one. Being clicked awake restarts the ten minutes, so he does not
+nod straight back off before the app has noticed you are back.
+
+**How it differs from the sulk's sleep:**
+
+| | The sulk | The nap |
+| --- | --- | --- |
+| **Why** | You pestered him | He's worn out, it's late, and you've gone |
+| **How it starts** | A glare, then he turns his back and stomps off | He dozes off where he sat |
+| **How long** | `sleep_cooldown_s` (60s), then he gets up by himself | No clock — until you're back |
+| **A hover near him** | Near the end, wakes him early | Nothing |
+| **A click** | A grumble, and he stays asleep | Wakes him, no grumble |
+| **The tray** | His mood, as ever | `Nib — napping`, though reaching for it is you coming back, and wakes him |
+| **Waking up** | Forgets what he was cross about | Forgets what he was cross about, then greets you |
+
+Underneath, both are the same sleep: no petting, no sneezes, nothing said while he's out, and you
+can still pick him up — throw him and he lands back in it unhurt, still with no clock on it. Pick
+him up mid-nap *because* you're back and he wakes as he lands, then greets you.
 
 ### Petting him
 
@@ -617,8 +675,9 @@ There was **no way to be kind to him at all**.
 
 So it does the two things that matters:
 
-- **It forgives a poke** every 1.2 seconds it runs. It is the only thing besides sending a prompt
-  that takes accumulated annoyance back off, and the only one that works while he is already cross
+- **It forgives a poke** every 1.2 seconds it runs — sooner once he knows you, down to every 0.72
+  seconds at the top of [the bond](#the-bond). It is the only thing besides sending a prompt that
+  takes accumulated annoyance back off, and the only one that works while he is already cross
   about something.
 - **It is worth twice a sent prompt** to [how the day went](#how-the-day-went).
 
@@ -643,6 +702,103 @@ coordinates, so it is already satisfied by the time he arrives.
 
 Not while he is asleep, cross, hidden, in your hand, mid-throw, or while you are away. Set
 `petting_enabled` to `false` to switch it off.
+
+### The bond
+
+How well he knows you, worked out from what he [remembers](USING-HIM.md#what-he-remembers) and
+always said in one of five words, low to high: **just met**, **warming up**, **friends**,
+**close**, **inseparable**. Never a number, for the same reason the mood has none: a number
+invites optimising, a word just describes. With `memory_enabled` on it is the last word of the
+tray tooltip — `Nib — fine, friends` — whenever nothing more pressing is showing there.
+
+It grows with the days he has seen you, which weigh the most — turning up matters more than any
+one thing done — and with pets, prompts and finished focus sessions. Each of those saturates on
+its own scale, so the first weeks move it most: a month or so of days and a few hundred pets is
+*close*. It is made of counts that only go up, so **it never goes down** — not after a bad day,
+not after a throw.
+
+It changes three things, each a lean on something he already does:
+
+- **He squirms less in your hand** — down to 40% of a stranger's wriggle at the top.
+- **A pet forgives faster** — a poke every 0.72 seconds at the top, rather than every 1.2.
+- **Coming back gets heart eyes** after the hop, from *close* up (see
+  [How he reacts to you](#how-he-reacts-to-you)).
+
+With `memory_enabled` off, each of them is exactly what it was before the bond existed. A new
+mascot is very nearly there, but not quite: the first sighting of day one is already a little
+bond, enough for 4% less squirm, and the first pet forgives 4% sooner — it is counted before it
+starts forgiving — and each pet after it adds a little more.
+
+**How you handle him counts too, in both directions.** Set him down gently and he sparkles as he
+lands; throw him while he is fond of you and he sparkles for another go (see
+[Picking him up](USING-HIM.md#picking-him-up-throwing-him-and-dropping-him)). Hurt him at least
+five times in the last seven days, and more often than you petted him in them, and he goes
+**wary**: among the antics he picks between walks, heart eyes are weighted 0.5× and sparkles
+0.7×. His moments and his answers to you — the heart eyes after the hop, the sparkle for a gentle
+set-down — are left alone. Like the [needs](#energy-affection-and-boredom), it only leans —
+nothing stops — and it mends by itself, as the hard landings age out of the week or as soon as
+the pets catch up with them. The bond is not touched by it either way.
+
+### He develops tastes
+
+Each Nib drifts towards what its owner rewards. When you **pet him**, or **click him and the
+bubble opens**, within **10 seconds** of the start of something he chose to do on his own, he gets
+a little keener on it: his taste for it, a multiplier on how often he picks it, goes up by 0.03
+(1.0 to 1.03 the first time). When he **gives up waiting for you** — the third stage of
+[being ignored](#when-youre-here-and-ignoring-him) — the last thing he tried in the five minutes
+before, since you last did anything with him, goes down by 0.02.
+
+**Only his own picks count**: the antics in the [table at the top](#what-he-does-on-his-own),
+chosen on a wander beat. A moment, a sneeze or a trip, an app persona, a greeting, a treat, the
+beat after a tool or a costume, the away and give-up sits, the wave he gives when you have ignored
+him a while, a peek over the taskbar, being picked up (however he lands), the sparkle for a gentle
+set-down or a throw, and anything from **Do something** are things that happened to him or that
+you asked for — and once one of them has played, a pet is about *that*, not about what he did
+before it. His eyes following your pointer in, and his wave as it comes near, are the exceptions,
+since that is how most pets begin.
+
+**Each antic counts once.** The first pet or click after it settles it — inside the ten seconds
+that is the reward, later it is nothing — so a run of pets, or clicking him open over and over,
+cannot pump one antic up. The one thing that can revise it is the bubble that click opened: close
+it without sending anything and 0.02 of the 0.03 comes back off (a click that ended in brushing
+him off is a weaker yes); send a prompt, or get a sum answered, and it keeps the lot. A bubble he
+did not open — the hotkey's, at your pointer — changes no taste when you close it, because he was
+not what it was about. (One overlap: if the hotkey put away the bubble a click opened, closing the
+next one unsent still counts as closing that click's — the same 0.02, once.)
+
+**It is a lean, never a switch.** Every taste stays between **0.7×** and **1.4×**, multiplied in
+with the time of day, the mood and the rest (see
+[Mood](#mood--things-that-change-how-he-already-behaves)), so nothing he can do ever becomes all
+he does or disappears. Worked out from the real picker's weights on a simulated spring afternoon
+(the season and the hour lean the pool too, so another season or hour gives other shares), with
+no taste learned hop is about **12%** of his own picks; at the ceiling **15%**, at the floor
+**9%**. Six simulated hours of the whole scheduler on that same afternoon with hop at the ceiling:
+**37 hops an hour instead of 26**.
+
+**How fast it moves.** On the same spring afternoon, a simulated owner who pets him a couple of
+seconds after every hop took hop to the ceiling **22 minutes** into the day. The pets that landed
+after he had already moved on to something else gave a few other antics a stray +0.03 or two —
+after eight hours sparkles were at 1.12 and dancing and heart eyes at 1.09 — but only hop was
+named. Petting at random moments spreads out instead: **38–50%** of random pets landed within ten
+seconds of one of his picks, and a week of them (64 pets) left eleven antics between 1.03 and
+1.17 — enough for **About him** to name two, and a reminder that he learns what you *did*,
+whether or not you meant it.
+
+**And how fast it fades.** On every new day he sees you, each taste drifts back towards 1.0 by
+1% of the way for **every calendar day since the last one**, so a fortnight away is a fortnight's
+fading. Measured from the ceiling with nothing rewarded: 1.37 after a week, 1.30 after a month,
+no longer a like after **98 days**, gone entirely after **437**. From the floor: no longer a
+dislike after **69 days**, gone after **408**. A single reward (1.03) is gone after **179**. Those
+days are the same whether he runs throughout or is shut down every night: `memory.json` keeps a
+taste to eight decimal places, so a day's fade survives being saved and read back (kept to three,
+a taste within about 0.05 of neutral would never fade at all).
+
+**Settings → About him** says it in words, once there is something to say: `Seems to like hopping
+and dancing.` for the two strongest above 1.15 (six rewards with nothing taken off), and
+`Not keen on press-ups.` for the two lowest under 0.85 — never the sprite-sheet names, and nothing
+at all before then. The tastes live in `memory.json` (see [Privacy](PRIVACY.md)), written with
+everything else he remembers and never on their own; **Forget everything** wipes them, and with
+`memory_enabled` off nothing is learned and what was learned leans nothing.
 
 ### The inline calculator
 
@@ -769,14 +925,16 @@ Two measures drive it:
 When either trips: he plays the angry animation for ~2.5s ignoring clicks, turns away from your
 cursor, stomps off a short distance, and sleeps for `sleep_cooldown_s` (default 60s). While asleep,
 clicking or right-clicking only earns a grumble (the tool wheel still opens). A gentle hover near
-the end of the nap wakes him early. Waking resets everything.
+the end of the sulk wakes him early. Waking resets everything.
 
 Reacting **consumes** the accumulated annoyance, so he sulks once per accumulation rather than
 re-triggering on every further poke.
 
-He does **not** fall asleep from idleness — sleep is only ever a consequence of pestering. You
-*can* still pick him up mid-nap (refusing to be moved for a whole minute reads as the app having
-hung), and he resumes the rest of the nap once he lands.
+He does **not** fall asleep from idleness. Pestering is one of only two ways to put him to sleep,
+and the other — worn out, late at night, with you gone — is [the nap](#the-nap), which is none of
+this: no clock, no grumble, and a greeting at the end of it. You *can* still pick him up mid-sulk
+(refusing to be moved for a whole minute reads as the app having hung), and he sleeps off the
+rest of it once he lands.
 
 Petting him is the **only** thing besides sending a prompt that takes accumulated annoyance back
 off, and the only one that works while he is already cross. See [Petting him](#petting-him).

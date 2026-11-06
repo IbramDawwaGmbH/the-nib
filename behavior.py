@@ -122,6 +122,23 @@ ANTICS: tuple[tuple[str, float, float, float, str], ...] = (
     ("check_watch", 0.8, 900, 1400, "fidget"),
 )
 FIDGET_CATEGORY = "fidget"
+#: Every antic above in words, for Settings → About him ("Seems to like hopping and dancing"). The
+#: names above are the sprite sheet's, and ``sit_dangle`` means nothing to anyone else; these follow
+#: the tables in docs/BEHAVIOUR.md. An antic added above needs a word here (smoke_memory checks).
+ANTIC_WORDS = {
+    "look_around": "looking around",
+    "wink": "winking",
+    "sparkle": "sparkling",
+    "heart_eyes": "heart eyes",
+    "football": "football",
+    "dance": "dancing",
+    "pushups": "press-ups",
+    "hop": "hopping",
+    "sit_dangle": "sitting and swinging his legs",
+    "scratch": "scratching his head",
+    "foot_tap": "tapping his foot",
+    "check_watch": "checking his watch",
+}
 #: Multiplier applied to "eyes" antics while the pointer is close - he plays to an audience.
 EYES_ANTIC_AUDIENCE_BOOST = 2.5
 #: An antic asked for longer than this is a hold - the away-sit, the sign, the focus pose, the
@@ -244,7 +261,8 @@ MUTED_COSTUME = "earmuffs"
 MUTED_MS = 2000.0
 
 #: While you are away he settles down to wait, and greets you when you come back. This is
-#: deliberately *sitting*, not sleeping - only being pestered puts him to sleep.
+#: deliberately *sitting*, not sleeping. Two things put him to sleep: being pestered (the sulk),
+#: and being worn out while he waits for you late at night (the nap - see NAP_AFTER_AWAY_MS).
 AWAY_ANTIC = "sit_dangle"
 GREET_ANTIC = "hop"
 GREET_MS = 1500.0
@@ -379,6 +397,86 @@ STRUGGLE_X_RATE = 0.019
 STRUGGLE_X_BURST_RATE = 0.0068
 STRUGGLE_Y_RATE = 0.0131
 
+# --- how he is handled, and how well he knows you --------------------------------------------
+#
+# The bond is memory.bond(): 0..1, from days together, pets, prompts and focus sessions, and it only
+# ever grows. Here it softens the two things that are about trust - how hard he fights being held,
+# and how quickly a pet takes the sting out of being poked. At a bond of 0 - memory switched off,
+# or a fresh memory before he has first seen you - both are exactly the constants above. Not quite
+# on day one: that first sighting is already a little bond, so he squirms 4% less, and the first pet
+# forgives 4% sooner, since it is counted before it starts forgiving. Each pet after adds a little.
+
+#: How much of the squirm a full bond takes away: at 1.0 he wriggles at 40% of a stranger's
+#: amplitude. Never all of it - being hoisted about is undignified however well he knows you.
+SQUIRM_BOND_CALM = 0.6
+#: How much quicker a full bond lets a pet forgive: at 1.0, one poke every 0.72s rather than 1.2s.
+FORGIVE_BOND_SPEEDUP = 0.4
+
+#: Faster than this sideways at the release and a let-go is a throw: counted, and played with.
+THROWN_ABOVE_PX_MS = 0.4
+#: Set down gently - slowly enough to perch (PERCH_MAX_RELEASE_SPEED_PX_MS), not thrown, and from
+#: lower than the drop that hurts - and he sparkles: you put him down carefully. Worth a fraction
+#: of a pet to his affection, once per GENTLE_COOLDOWN_MS on the behaviour clock: without the
+#: cooldown, shuffling him along the taskbar would be a way to farm it.
+GENTLE_ANIM = "sparkle"
+GENTLE_MS = 900.0
+GENTLE_COOLDOWN_MS = 30000.0
+GENTLE_PET_SCALE = 0.3
+#: Thrown, landed unhurt, and fond of you right now: the same sparkle, meaning "again!". No
+#: cooldown - every throw is one you made on purpose - and no nudge of its own, because drag_end
+#: has already nudged "thrown" for the throw itself.
+PLAY_ANIM = "sparkle"
+PLAY_MS = 900.0
+PLAY_AFFECTION_ABOVE = 0.6
+
+#: Hurt a lot lately, and more often than petted: he goes wary, and the warm looks thin out. Over
+#: the last WARY_DAYS days, at least WARY_MIN_HURTS hard landings AND more of them than pets - so a
+#: bad afternoon from somebody who pets him every day is not enough. A lean like the needs', never
+#: a switch, and above the 0.4 floor every lean keeps.
+WARY_DAYS = 7
+WARY_MIN_HURTS = 5
+WARY_WEIGHTS = {"heart_eyes": 0.5, "sparkle": 0.7}
+
+# --- learned taste ----------------------------------------------------------------------
+#
+# Each install drifts towards what its owner rewards. Only the **ambient** pool counts: the antics
+# _pick_antic chooses for himself on a wander beat, and nothing else. A moment, a quirk, a persona,
+# a greeting, a treat, a reply to a tool or a costume, the away and give-up sits, the gentle and
+# play sparkles and "Do something" are things that happened or that you asked for, not his own
+# choices, and a pet after one of them is about that. So _choose_next_action says ambient=True
+# explicitly and every other _begin_antic leaves it off, and clears the record: the newest thing he
+# did was not his own pick. The eye-track and the wave when your pointer comes near are the
+# exceptions - his eyes following your pointer in is how most pets begin, not something new to
+# answer. Three things that are not antics clear it the same way: a peek, his stage-2 wave for
+# attention, and being picked up, whatever the landing - a pet that consoles a hard one is about
+# that, not about what he was grabbed out of.
+#
+# **Each ambient antic is settled once.** The first pet, or click that opens the bubble, after it
+# answers it: inside TASTE_WINDOW_MS that is the reward, later it is nothing, and either way the
+# record is gone - so a run of pets, or click-dismiss-click, cannot farm one antic up to the clamp.
+# The one revision allowed is the click's own: a bubble it opened and you then closed without
+# sending takes TASTE_DISMISS_BACK of its reward back - a click that ended in brushing him off is a
+# weaker yes - once, and never below where the antic was. A bubble that was not opened by a
+# rewarding click (the hotkey's, at your pointer) changes nothing on closing: he was not what it
+# was about. The one overlap: the hotkey putting a click's bubble away does it silently and leaves
+# him in ASK, credit and all, so closing the next bubble unsent still counts as that click's - at
+# most the same 0.02, once. Being given up on (the stage-3 sit) is the other answer, for an antic
+# you let go by.
+#
+# All of it goes through memory.adjust_taste, so it is clamped, saved only from the app's flush,
+# and a no-op with memory_enabled off.
+
+#: How soon after an ambient antic starts a pet or a click still counts as an answer to it.
+TASTE_WINDOW_MS = 10000.0
+#: What a pet, or a click that opens the bubble, adds to that antic's taste.
+TASTE_REWARD = 0.03
+#: Taken back from a click's reward when the bubble it opened is closed without sending anything.
+TASTE_DISMISS_BACK = 0.02
+#: What being given up on - the stage-3 sit - takes off the antic before it...
+TASTE_IGNORED = 0.02
+#: ...if it started at most this long before, and after the last thing you did with him.
+TASTE_IGNORED_WINDOW_MS = 300000.0  # 5 min
+
 # --- world awareness ------------------------------------------------------------------
 #
 # Two quite different mechanisms, and keeping them apart is what stops this turning into a dozen
@@ -503,6 +601,42 @@ FOND_MS = (1400.0, 2100.0)
 #: Whenever it is on hold (asleep, away, the machine pinned, or the attention arc switched off)
 #: boredom stops building and fades instead - see update.
 INTERACTING_WITHIN_MS = 1000.0
+
+# --- the nap ---------------------------------------------------------------------------------
+#
+# Sleep that is not a punishment. The sulk is something you did to him; this is something he does
+# because he is worn out, it is late, and you have gone. So it is State.SLEEP with a flag
+# (_napping) rather than a new state - the same frames, every SLEEP rule (no petting, no quirks,
+# nothing said) - but none of the sulk's edges: no clock, no hover-wake, no grumble, no turning
+# away. It ends when you come back, and then he gets up and greets you as he would have anyway.
+
+#: How long you have been away - on his own clock, from set_away(True) - before he may drop off.
+#: Long enough that a trip to the kettle at midnight finds him still sitting up for you.
+NAP_AFTER_AWAY_MS = 600000.0  # 10 min
+#: And how worn out he has to be: the same edge as the tired yawn. Energy rests at +0.5 an hour
+#: while you are away, so at the ten-minute mark this means under ~0.17 when you left.
+NAP_ENERGY_BELOW = TIRED_ENERGY_BELOW
+#: A nap this long or longer earns the whole of needs' "nap_woke" nudge when he wakes; a shorter
+#: one a share of it, so dozing off for a minute is not worth two hours' sleep.
+NAP_FULL_H = 2.0
+
+# --- a treat ---------------------------------------------------------------------------------
+#
+# The second kindness, from the tray or the wheel. Only ever because you gave one: nothing here is
+# scheduled, so no rate moves, and "eat" is deliberately in neither ANTICS nor ON_DEMAND - a
+# biscuit he finds by himself, or one Do something hands out, would not be a treat from you.
+
+EAT_ANIM = "eat"
+EAT_MS = 1400.0
+#: A sheet without the eat frames - an older custom skin - shows the heart eyes instead, which is
+#: the same fallback the pet uses, and says the same thing with art every sheet has.
+EAT_FALLBACK_ANIM = "heart_eyes"
+#: Treats a day that count. Past this he is full: he sits down with a polite no-thank-you, and the
+#: mood, needs and memory are left as they were - otherwise the menu would be a button for pumping
+#: his spirits up. Counted per WorldState day, like every other count.
+TREATS_PER_DAY = 3
+TREAT_FULL_ANIM = "sit_dangle"
+TREAT_FULL_MS = 1500.0
 
 # --- dressing himself --------------------------------------------------------------------
 #
@@ -728,8 +862,9 @@ WHEEL_CANCEL_ANIM = "scratch"
 WHEEL_CANCEL_MS = 600.0
 
 #: A beat for each wheel tool whose handler gives him nothing to do, in whole cycles. The rest are
-#: left out on purpose: ask, again, read, focus, pocket, do_something and costume already set his
-#: state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus);
+#: left out on purpose: ask, again, read, focus, pocket, do_something, treat and costume already set
+#: his state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus;
+#: nor does a treat he refuses, and a beat would read as him taking it after all);
 #: hide and guard take him off screen; more opens a menu whose own items have handlers. Mic is
 #: foot_tap and never wave: wave in earmuffs is the muted-mic tell, and this is not that. Settings
 #: is typing rather than a scratch, because the scratch is what a cancel looks like.
@@ -775,12 +910,12 @@ class Behavior:
         self._config = config
         self._sheet = sheet
         self.animator = Animator(sheet, "idle")
-        #: How the day has gone - the only part of him that survives a restart. Constructed here
+        #: How the day has gone - one number, kept across a restart. Constructed here
         #: when the caller does not supply one, so a test can build a Behavior on its own.
         self.mood = mood if mood is not None else Mood(config)
-        #: What he remembers about the two of you - counts only. The default keeps them in memory
-        #: and never writes a file, so every test that builds a Behavior on its own stays
-        #: off the disk; the app passes one that saves to memory.json.
+        #: What he remembers about the two of you - counts, and his tastes. The default keeps
+        #: them in memory and never writes a file, so every test that builds a Behavior on its own
+        #: stays off the disk; the app passes one that saves to memory.json.
         self.memory = memory if memory is not None else Memory(None, config)
         #: Energy, affection and boredom. The default reads the config but is never persisted -
         #: only the app calls persist() - so a test's Behavior cannot write anything back.
@@ -831,6 +966,22 @@ class Behavior:
         #: its own - main.py uses it to fire an OS notification, since he might be hidden behind a
         #: fullscreen app when it happens.
         self._focus_finished = False
+        #: When you went away, on the behaviour clock - None while you are here. Only the nap reads
+        #: it (NAP_AFTER_AWAY_MS); the greeting is sized by the app's own wall-clock gone_s.
+        self._away_since_ms: float | None = None
+        #: A nap rather than a sulk: State.SLEEP that ends when you come back. See the nap section
+        #: above, _maybe_nap, and _enter for every way it ends.
+        self._napping = False
+        self._nap_since_ms = 0.0
+        #: The greeting owed once he is up from a nap, as ``(gone_s,)`` - or None for none owed.
+        #: Kept here rather than queued as antics: _enter empties _antic_queue on the way into
+        #: WAKE, and computing it early would raise the "greeted" event while he is still asleep,
+        #: where nothing may be said. _tick_wake plays it, through the same _greet as set_away.
+        self._nap_greeting: tuple[float | None] | None = None
+        #: Treats given today, as ``(date_key, count)`` - the cap's own count, kept whatever memory
+        #: says. memory.json is the count that survives a restart, but with memory_enabled off it
+        #: records nothing and reads 0, and the cap would never bite. This one forgets on restart.
+        self._treats_today: tuple[str, int] = ("", 0)
         #: How long you have been present but not interacted with HIM. Distinct from the system
         #: idle clock, which only knows whether you are at the machine at all.
         self._neglect_ms = 0.0
@@ -866,6 +1017,14 @@ class Behavior:
         #: Antics still to play, in order, after this one - see _begin_sequence.
         self._antic_queue: list[tuple[str, float]] = []
         self._last_antic: str | None = None
+        #: The newest ambient antic still waiting to be answered, as ``(name, clock_ms)`` at its
+        #: start - or None. See "learned taste" above: set only by the ambient pick, cleared by
+        #: any other antic, a peek, the attention wave or being picked up, and by the first answer.
+        self._last_ambient: tuple[str, float] | None = None
+        #: What the click that opened the bubble rewarded, as ``(name, change made)``, until that
+        #: bubble's fate is known: closed without sending takes some of it back (bubble_dismissed).
+        #: Dropped on leaving ASK.
+        self._ask_credit: tuple[str, float] | None = None
         self._working_ms = 0.0
         self._sleep_ms = 0.0
         self._grumble_ms = 0.0
@@ -875,6 +1034,16 @@ class Behavior:
         self._rolling = False
         self._pending_injury = False
         self._fall_from_y = 0.0
+        #: What the landing in progress means, judged at the release - by the time he stops, a
+        #: bounce has replaced both the speed and the height. Set by drag_end, read and cleared by
+        #: _settle, and dropped by anything that cuts the fall short (a catch, a perch, a hide).
+        #: See GENTLE_ANIM and PLAY_ANIM.
+        self._gentle_pending = False
+        self._throw_pending = False
+        #: When he last sparkled at being set down gently, on the behaviour clock. A timestamp
+        #: rather than a countdown, the same pattern as _back_at_ms: _settle runs on the near side
+        #: of the pause check, and the cooldown loop does not.
+        self._gentle_at_ms = -1e9
         #: (dt, dx, dy) over the tail of the current drag - see THROW_SAMPLE_MS.
         self._drag_samples: deque[tuple[float, float, float]] = deque()
         self._drag_last: tuple[float, float] | None = None
@@ -1226,6 +1395,69 @@ class Behavior:
         log.info("on demand: %s", name)
         return name
 
+    def treat(self) -> bool:
+        """You gave him a treat, from the tray or the wheel. Returns whether he took it.
+
+        "Took it" includes being too full for it: past ``TREATS_PER_DAY`` he sits down with a polite
+        no-thank-you (``treat_full``), with no "treated" nudge to mood or needs and nothing counted
+        - offering it is still noticing him, which knocks boredom down as anything you do does.
+        Otherwise it is counted, nudges the mood and needs (both "treated"), makes a small noise,
+        raises a ``treat`` event, and he eats it.
+
+        Refused, returning False, wherever a biscuit cannot be handed over: in your hand, hidden,
+        mid-air or rolling, and paused - update() would freeze him on the first frame, and the count
+        would go up for a treat he never ate. Refused while he is cross, too, exactly as click() is:
+        asleep after a sulk he grumbles and stays put, and the tantrum and the storm-off before it
+        are refused the same way, or a biscuit would be the way round every sulk. A nap is not a
+        sulk: he is woken with no grumble (``_wake_from_nap``) and eats it straight away, so the
+        biscuit replaces the WAKE beat. The greeting that nap owed goes with it, which loses
+        nothing - napping means you still read as away, so _tick_wake would drop it too, and
+        set_away greets you the ordinary way when you are back. Mid-way up from a nap he is left
+        to finish getting up, as with a second click. Landed on his head, he takes it - the eat cuts
+        the daze short, as Do something and a costume's opinion already do.
+        """
+        if self._state in (State.DRAG, State.HIDDEN) or self._falling or self._rolling:
+            return False
+        if self.paused:
+            return False
+        self.noticed()
+        if self.napping:
+            self._wake_from_nap()
+        elif self._waking_from_nap:
+            return False
+        elif self._state in (State.SLEEP, State.WAKE):
+            # As at a click: a grumble, and he is not getting up for you. The click time also keeps
+            # _tick_sleep's near-the-end hover wake off him for a moment, as wheel_opened does.
+            self._last_click_ms = self._clock_ms
+            self._grumble_ms = GRUMBLE_MS
+            return False
+        if self._state == State.ANGRY or self._pending_sleep:
+            return False
+        key = self._date_key()
+        given = self._treats_today[1] if self._treats_today[0] == key else 0
+        # Whichever count is higher: memory's survives a restart, this one counts with memory off.
+        # Not memory's while it is off, though: what the file still holds is not used then.
+        stored = self.memory.day(key).treats if self.memory.enabled else 0
+        if max(stored, given) >= TREATS_PER_DAY:
+            log.info("offered a treat, but he has had %d today", TREATS_PER_DAY)
+            self._event("treat_full")
+            self._begin_sequence([(TREAT_FULL_ANIM, TREAT_FULL_MS)])
+            return True
+        self._treats_today = (key, given + 1)
+        self.memory.record("treats", key)
+        self.mood.nudge("treated")
+        self.needs.nudge("treated")
+        self._sound("nom")
+        self._event("treat")
+        anim = EAT_ANIM if self._sheet.has_state(EAT_ANIM) else EAT_FALLBACK_ANIM
+        log.info("a treat (%d today)", max(stored, given) + 1)
+        self._begin_antic(anim, EAT_MS)
+        # From the first frame, as in quick_change: ANTIC -> ANTIC does not restart the animation,
+        # so a second treat from the tray while he is still eating the first would carry on from
+        # wherever that one had got to - often the last frame, with no biscuit left in it.
+        self.animator.set_state(anim, restart=True)
+        return True
+
     def costume_chosen(self, costume: str) -> bool:
         """You just put something on him. He has an opinion about it; returns whether he showed it.
 
@@ -1359,9 +1591,15 @@ class Behavior:
         them. Left alone, the 7th day after a wipe would get no party whenever 7 was the last count
         celebrated - the latch is the count, and the count starts again. The focus streak's goes
         too, so three sessions after a mid-day wipe are a streak again, just as today's count says.
+        So does the treat cap's own count, for the same reason: today's treats read 0 again.
         """
         self._config["last_milestone_days"] = ""
         self._config["last_focus_streak_date"] = ""
+        self._treats_today = ("", 0)
+        # And the antic waiting to be answered: a pet straight after a wipe should not hand the
+        # new, empty memory a taste for something he did before it.
+        self._last_ambient = None
+        self._ask_credit = None
 
     # --- the personality preset ---------------------------------------------------
 
@@ -1430,18 +1668,33 @@ class Behavior:
         """Handle a click on the mascot. Returns True if the ask bubble should open."""
         self._last_click_ms = self._clock_ms
         self.noticed()
+        if self.napping:
+            # Woken, not pestered: he gets up, with no grumble - that is the sulk's. No bubble
+            # either; the greeting comes once he is on his feet, if you are back (see _tick_wake).
+            self._wake_from_nap()
+            return False
+        if self._waking_from_nap:
+            return False  # a second click while he is getting up is not worth a scowl
         if self._state in (State.SLEEP, State.WAKE):
             self._grumble_ms = GRUMBLE_MS  # a grumble, but he is not getting up for you
             return False
         if self._state in (State.ANGRY, State.HIDDEN) or self._pending_sleep:
             # _pending_sleep means he is mid-storm-off. That walk is part of the angry beat, so a
-            # click must not hijack it into a bubble and cancel the nap.
+            # click must not hijack it into a bubble and cancel the sulk.
             return False
         # WORKING is deliberately interruptible: the brief only blocks clicks while he is asleep,
         # angry, or hidden, and making the user wait out the animation to send a second prompt
         # would be worse than cutting it short.
         self._sound("open")
         self._enter(State.ASK)
+        # Here, after every refusal above: only a click that actually opens the bubble answers
+        # what he just did. Kept until the bubble closes, which may take some of it back. Set
+        # here, and only ever cleared elsewhere: outside ASK it is already None (_enter drops it),
+        # and a second click while the bubble is up answers nothing new - it must not wipe the
+        # first click's pending take-back.
+        answered = self._answer_ambient(TASTE_REWARD, TASTE_WINDOW_MS)
+        if answered is not None and answered[1] > 0:
+            self._ask_credit = answered
         return True
 
     def wheel_opened(self) -> bool:
@@ -1456,7 +1709,10 @@ class Behavior:
         self.noticed()
         self._wheel_hold = False
         self._wheel_look = None
-        if self._state in (State.SLEEP, State.WAKE):
+        if self.napping:
+            # Same as a click: up from a nap with no grumble. The wheel still opens round him.
+            self._wake_from_nap()
+        elif self._state in (State.SLEEP, State.WAKE) and not self._waking_from_nap:
             # Same as a click: a grumble, and he is not getting up for you - the wheel still opens.
             # The click time also keeps _tick_sleep's near-the-end hover wake off him meanwhile.
             self._last_click_ms = self._clock_ms
@@ -1534,7 +1790,18 @@ class Behavior:
         return True
 
     def bubble_dismissed(self) -> None:
-        """The bubble closed without sending - that is a poke."""
+        """The bubble closed without sending - that is a poke.
+
+        Only ever a close with nothing sent: a send, a calculator answer and the app's own closes
+        (``close_silently``) never raise it. If a click on him opened this bubble and rewarded an
+        antic, part of that comes back off - never more than the click actually added, so nothing
+        ends below where it was. A bubble opened any other way changes no taste - short of the
+        one overlap with the hotkey described under "learned taste".
+        """
+        if self._ask_credit is not None:
+            name, added = self._ask_credit
+            self._ask_credit = None
+            self.memory.adjust_taste(name, -min(TASTE_DISMISS_BACK, added))
         self.noticed()
         self._register_poke()
         self._sound("poke")
@@ -1575,6 +1842,7 @@ class Behavior:
         """
         self.noticed()
         self._post_prompt = None
+        self._ask_credit = None  # you did send something: not a dismissal, whatever happened next
         if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
             return
         if self._pending_sleep:
@@ -1623,6 +1891,8 @@ class Behavior:
         animation of its own.
         """
         self.noticed()
+        # An answer is not walking away: the click that opened the bubble keeps what it gave.
+        self._ask_credit = None
         if not ok or self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN):
             return
         if not self._sheet.has_state(CALCULATED_ANIM):
@@ -1673,9 +1943,11 @@ class Behavior:
         if self._state == State.HIDDEN:
             return
         self.noticed()
-        # A napping mascot can still be picked up. He ignores *clicks* while asleep, but refusing
-        # to be moved at all for the whole cooldown reads as the app having hung. The nap is not
-        # cancelled - the remaining time is restored once he lands.
+        # A sleeping mascot can still be picked up. He ignores *clicks* while sulking, but refusing
+        # to be moved at all for the whole cooldown reads as the app having hung. The sleep is not
+        # cancelled - the remaining time is restored once he lands. A nap keeps its flag through
+        # the carry and the fall (see _enter), and never counts its _sleep_ms down, so it lands
+        # back as the same nap with no clock rather than as a sulk-length sleep.
         if self._state == State.SLEEP:
             self._resume_sleep_ms = max(self._resume_sleep_ms, self._sleep_ms)
         # Grabbing him off a perch is the "remove it" gesture - deliberately un-graceful, the same
@@ -1686,6 +1958,11 @@ class Behavior:
         self._falling = False
         self._rolling = False
         self._pending_injury = False
+        # Caught again mid-flight: the landing that was on its way never happens.
+        self._gentle_pending = self._throw_pending = False
+        # Nor is what he picked for himself before you grabbed him the newest thing he did: a pet
+        # once he is down - consoling a hard landing, most likely - is about this (learned taste).
+        self._last_ambient = None
         self._vx = self._vy = 0.0
         self._drag_samples.clear()
         self._drag_last = None
@@ -1726,11 +2003,25 @@ class Behavior:
         self._fall_from_y = self._y  # remembered so the landing knows how far he fell
         self._drag_samples.clear()
         self._drag_last = None
-        if abs(self._vx) > 0.4:
+        self._throw_pending = abs(self._vx) > THROWN_ABOVE_PX_MS
+        # Never both. A release between 0.4 and 0.5 px/ms sideways is slow enough to perch, but it
+        # is still a flick, and a flick is play rather than care. Under the drop that hurts is the
+        # injury rule's own figure, so a gentle set-down can never also be a hard landing.
+        self._gentle_pending = (
+            not self._throw_pending
+            and math.hypot(vx, vy) <= PERCH_MAX_RELEASE_SPEED_PX_MS
+            and self.rest_top() - self._y < INJURY_FALL_PX
+        )
+        if self._throw_pending:
             log.debug("thrown at %.2f,%.2f px/ms", self._vx, self._vy)
             self.memory.record("throws", self._date_key())
             self.needs.nudge("thrown")
         self._enter(State.IDLE)
+
+    @property
+    def airborne(self) -> bool:
+        """Still falling or rolling from a drop - which update() finishes even while paused."""
+        return self._falling or self._rolling
 
     # --- perching on a window -------------------------------------------------------
 
@@ -1762,6 +2053,8 @@ class Behavior:
         self._falling = False
         self._rolling = False
         self._pending_injury = False
+        # Standing on a window is a landing of its own, and never reaches _settle: no sparkle.
+        self._gentle_pending = self._throw_pending = False
         self._vx = self._vy = 0.0
         self._enter(State.PERCH)
         self._reposition_perch()
@@ -1876,18 +2169,31 @@ class Behavior:
         self.mood.nudge("petted")
         self.needs.nudge("petted")
         self.memory.record("pets", self._date_key())
+        # A pet is the plainest "more of that": it answers the antic he has just picked for
+        # himself, if there is one in time - see "learned taste".
+        self._answer_ambient(TASTE_REWARD, TASTE_WINDOW_MS)
         log.info("being petted")
         self._enter(State.PET)
         return True
+
+    def _pet_forgive_every_ms(self) -> float:
+        """How long a pet takes to forgive one poke: less, the better he knows you.
+
+        Exactly ``PET_DRAIN_MS`` at a bond of 0. Read on every pet tick rather than cached when
+        the pet begins: the bond is four logarithms, and the pet that started it has just been
+        counted towards it.
+        """
+        return PET_DRAIN_MS * (1.0 - FORGIVE_BOND_SPEEDUP * self.memory.bond())
 
     def _tick_pet(self, dt_ms: float, cursor) -> None:
         """Lean into it for as long as the hand stays, forgiving a poke as he goes."""
         self._advance(dt_ms)
         # Draining the annoyance is the entire point of the feature: until this existed there was
         # no way at all to take it back off, only to wait it out.
+        every = self._pet_forgive_every_ms()
         self._pet_drain_ms += dt_ms
-        while self._pet_drain_ms >= PET_DRAIN_MS:
-            self._pet_drain_ms -= PET_DRAIN_MS
+        while self._pet_drain_ms >= every:
+            self._pet_drain_ms -= every
             if self._pokes:
                 self._pokes.popleft()
             self._residual = max(0.0, self._residual - 1.0)
@@ -1939,6 +2245,9 @@ class Behavior:
         if hidden and self._state != State.HIDDEN:
             self._prev_state = self._state
             self._hidden_since_ms = self._clock_ms
+            # A fall cut short here finishes when he comes back, which can be hours later: by then
+            # a sparkle for how he was let go would answer nothing anybody remembers doing.
+            self._gentle_pending = self._throw_pending = False
             self._enter(State.HIDDEN)
         elif not hidden and self._state == State.HIDDEN:
             # Only resume states that still make sense after an arbitrary gap. A fullscreen game
@@ -1987,6 +2296,26 @@ class Behavior:
             # Same reasoning as _pending_sleep: leaving the walk-then-act sequence by any other
             # route must drop the action, or it fires after some unrelated later walk.
             self._pending_action = None
+        # A nap is SLEEP, carried through a drag and the fall after it - both land back in SLEEP
+        # (_settle) - and nothing else. Every other way out ends it here, so none of the dozen
+        # routes out of SLEEP (a send, a call, a hide, a focus session) can leave the flag behind.
+        if (self._napping and state not in (State.SLEEP, State.DRAG)
+                and not (self._falling or self._rolling)):
+            self._end_nap()
+        # Likewise the sleep drag_start owes a carried sulk or nap. A drop spends it in _settle,
+        # which zeroes it before landing him back in SLEEP; any other end - set down on a window,
+        # or hidden or a focus session started mid-carry - must drop it here, or the next ordinary
+        # landing, minutes later, would put him down for a sulk-length sleep he never earned.
+        if state not in (State.SLEEP, State.DRAG) and not (self._falling or self._rolling):
+            self._resume_sleep_ms = 0.0
+        # The greeting a nap owes lives through the nap and the WAKE after it, and no further.
+        if state != State.WAKE and not self._napping:
+            self._nap_greeting = None
+        # The bubble a click opened is over once he is out of ASK, however it went - a send, a
+        # sum, a hide - so nothing later can take back that click's reward. bubble_dismissed reads
+        # it before it moves him on.
+        if state != State.ASK:
+            self._ask_credit = None
         if state != State.ANTIC:
             self._persona_costume = ""  # the hat belongs to the antic, not to him
             self._antic_queue = []      # and the rest of a sequence belongs to the sequence
@@ -2002,6 +2331,8 @@ class Behavior:
             # cooldown. Leaving that to the caller let him peek, land back in idle, and duck
             # straight down again a beat later.
             self._peek_cooldown_ms = PEEK_COOLDOWN_MS
+            # A set piece of his own that is not from the pool: a pet now is about the peek.
+            self._last_ambient = None
         elif state == State.PET:
             self._pet_drain_ms = 0.0
         elif state in (State.PERCH, State.ASK):
@@ -2076,7 +2407,7 @@ class Behavior:
         if self._focus_active:
             # The storm-off walk below bypasses _choose_next_action entirely, which is the only
             # place the working-pose hold gets reasserted. Left running, focus_active would keep
-            # reading True while he stomps off and naps - contradicting both his posture and the
+            # reading True while he stomps off and sleeps - contradicting both his posture and the
             # tray tooltip. Cancelled outright rather than paused: same as stopping it yourself,
             # no completion reward for a session you got angry through.
             self.set_focus(False)
@@ -2093,7 +2424,7 @@ class Behavior:
         self._enter(State.ANGRY)
 
     def _storm_off(self, cursor: tuple[int, int] | None) -> None:
-        """Turn away from the pest and walk a short distance before napping."""
+        """Turn away from the pest and walk a short distance before sleeping it off."""
         distance = random.uniform(STORM_OFF_MIN_PX, STORM_OFF_MAX_PX)
         centre = self._x + self.sprite_w / 2
         away_left = cursor is not None and cursor[0] > centre
@@ -2102,7 +2433,7 @@ class Behavior:
             target = self._x + distance if away_left else self._x - distance
         self._begin_walk(min(max(target, self.x_min), self.x_max))
         if self._state != State.WALK:
-            # Cornered at the end of the strip with nowhere to storm off to - nap on the spot.
+            # Cornered at the end of the strip with nowhere to storm off to - sleep on the spot.
             self._pending_sleep = False
             self._enter(State.SLEEP)
 
@@ -2119,11 +2450,20 @@ class Behavior:
 
     # --- antics -------------------------------------------------------------------
 
-    def _begin_antic(self, name: str, duration_ms: float, costume: str = "") -> None:
+    def _begin_antic(
+        self, name: str, duration_ms: float, costume: str = "", *, ambient: bool = False
+    ) -> None:
         self._flush_quick_change()  # any other antic cutting in mid-hop shows the costume now
         self._antic = name
         self._antic_ms = duration_ms
         self._last_antic = name
+        # Only the ambient pick says ambient=True - see "learned taste". Anything else he does is
+        # now the newest thing to be answered, and is not his own choice, so a pet after it must
+        # not land on the antic before. His eyes following your pointer in are not a new thing.
+        if ambient:
+            self._last_ambient = (name, self._clock_ms)
+        elif name != EYE_TRACK_STATE:
+            self._last_ambient = None
         # Assigned on every antic, not only the ones that want a hat: entering ANTIC from ANTIC is
         # a no-op in _enter, so a stale value here would leave him wearing the last persona's
         # glasses through whatever he does next.
@@ -2226,10 +2566,21 @@ class Behavior:
         if away == self._away:
             return
         self._away = away
+        # Ahead of the state check below: he can be asleep or in your hand as you leave, and the
+        # ten minutes the nap waits for still start now.
+        self._away_since_ms = self._clock_ms if away else None
         if not away:
             # You have just come back. Whatever he had worked himself up to before you left is
             # stale; start the clock again rather than carrying on where he left off.
             self.noticed()
+            if self._napping or self._nap_greeting is not None:
+                # Back to him mid-nap, or while he is still getting up from one. The greeting
+                # waits until he is on his feet (_tick_wake): this one's absence replaces any owed.
+                # Carried or mid-air, he wakes once he has landed back in it - see _tick_sleep.
+                self._nap_greeting = (gone_s,)
+                if self.napping:
+                    self._wake_from_nap()
+                return
         if self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY):
             return
         if away:
@@ -2237,10 +2588,14 @@ class Behavior:
                 log.debug("user away - settling down to wait")
                 self._begin_antic(AWAY_ANTIC, 1e9)  # held until you come back
         else:
-            log.debug("user back - greeting")
-            self.mood.nudge("greeted")
-            self.needs.nudge("greeted")
-            self._begin_sequence(self._greeting_for(gone_s))
+            self._greet(gone_s)
+
+    def _greet(self, gone_s: float | None) -> None:
+        """Greet you back - from set_away, or once he is up from a nap (_tick_wake)."""
+        log.debug("user back - greeting")
+        self.mood.nudge("greeted")
+        self.needs.nudge("greeted")
+        self._begin_sequence(self._greeting_for(gone_s))
 
     def _greeting_for(self, gone_s: float | None) -> list[tuple[str, float]]:
         """The greeting for coming back after ``gone_s`` seconds, sized by the absence.
@@ -2283,6 +2638,73 @@ class Behavior:
     @property
     def away(self) -> bool:
         return self._away
+
+    # --- the nap ------------------------------------------------------------------------
+
+    @property
+    def napping(self) -> bool:
+        """Asleep because he was worn out and you were away - not sulking. The tray says so.
+
+        Only while actually in SLEEP: carried or mid-air the flag survives (he lands back in the
+        nap), but he is not lying there asleep, so nothing outside should say he is.
+        """
+        return self._napping and self._state == State.SLEEP
+
+    @property
+    def _waking_from_nap(self) -> bool:
+        """In the WAKE that ends a nap, rather than the one that ends a sulk."""
+        return self._state == State.WAKE and self._nap_greeting is not None
+
+    def _maybe_nap(self, part_of_day: str | None) -> None:
+        """Doze off, if he is worn out, it is night, and you have been gone ten minutes.
+
+        Only from his away pose - sitting waiting for you - so never mid-antic, in your hand, on a
+        window, mid-air, or mid-tantrum. A focus session needs its own check: away outranks focus
+        in _choose_next_action, so a session paused by your absence *is* in the away pose. Hidden
+        (a fullscreen app, the snooze, the guard) and paused never get here: update has returned.
+        """
+        if not self._away or self._away_since_ms is None:
+            return
+        if self._state != State.ANTIC or self._antic != AWAY_ANTIC:
+            return
+        if not bool(self._config.get("nap_enabled", True)) or not self.needs.enabled:
+            return
+        if part_of_day != PART_NIGHT or self.needs.energy >= NAP_ENERGY_BELOW:
+            return
+        if self._clock_ms - self._away_since_ms < NAP_AFTER_AWAY_MS:
+            return
+        if self._focus_active or self._perch_rect is not None or self._falling or self._rolling:
+            return
+        log.info("worn out, late, and you have gone - dozing off")
+        self._napping = True
+        self._nap_since_ms = self._clock_ms
+        self._enter(State.SLEEP)
+
+    def _wake_from_nap(self) -> None:
+        """Up from a nap: no grumble, and a greeting owed for once he is on his feet.
+
+        A greeting already owed (set_away stored this absence) is kept. One that is not - a click
+        woke him - is owed with no length, and _tick_wake drops it if you still read as away by
+        then: set_away(False) greets you the ordinary way when you are.
+        """
+        if self._nap_greeting is None:
+            self._nap_greeting = (None,)
+        self._enter(State.WAKE)  # ends the nap - see _enter
+
+    def _end_nap(self) -> None:
+        """The nap is over, however it ended - called from _enter, the one way out of SLEEP.
+
+        Rested in proportion to how long it lasted (needs' "nap_woke", whole at NAP_FULL_H). The
+        ten minutes before he may drop off again start over: you just woke him, so a click from a
+        hand nobody has registered as back yet must not see him nod straight off again.
+        """
+        self._napping = False
+        # The cooldown drag_start owed a carried nap is dropped by _enter, under the same test.
+        napped_h = max(0.0, self._clock_ms - self._nap_since_ms) / 3_600_000.0
+        self.needs.nudge("nap_woke", scale=min(1.0, napped_h / NAP_FULL_H))
+        if self._away:
+            self._away_since_ms = self._clock_ms
+        log.info("up from a %.0f-minute nap", napped_h * 60.0)
 
     # --- focus sessions -------------------------------------------------------------
 
@@ -2798,13 +3220,15 @@ class Behavior:
         return moment
 
     def _mood_weights(self) -> dict[str, float]:
-        """Multipliers for the ambient pool.
+        """Multipliers for the ambient pool - and only for it: _pick_antic is the one caller, so
+        nothing here can lean a moment, a quirk or a reply.
 
-        Five independent sources, composed **multiplicatively** rather than by replacement: the
-        time of day, the season, the persistent mood, his needs, and the personality preset -
-        plus the attention arc's boost. Every one of them means something different, and letting
-        any one overwrite the others would produce nonsense like a good mood cancelling the fact
-        that it is two in the morning.
+        Seven independent sources, composed **multiplicatively** rather than by replacement: the
+        time of day, the season, the persistent mood, his needs, a week of rough handling (see
+        _wary), what he has learned you like (his taste), and the personality preset - plus the
+        attention arc's boost. Every one of them means something different, and letting any one
+        overwrite the others would produce nonsense like a good mood cancelling the fact that it
+        is two in the morning.
         """
         weights: dict[str, float] = {}
         for name, factor in self.mood.weights().items():
@@ -2812,6 +3236,16 @@ class Behavior:
         # Energy, affection and boredom compose the same way, and like the mood they are about him
         # rather than the clock, so they stay in even with world awareness switched off.
         for name, factor in self.needs.weights().items():
+            weights[name] = weights.get(name, 1.0) * factor
+        # Wary after a week of rough handling - about him too, so also in with the world off. The
+        # keys are absent rather than 1.0 otherwise, so a fresh install's weights are unchanged.
+        if self._wary():
+            for name, factor in WARY_WEIGHTS.items():
+                weights[name] = weights.get(name, 1.0) * factor
+        # His taste, the same way: only the antics he has one for, never a 1.0 for the rest (a
+        # neutral taste is no entry - see memory.TASTE_NEUTRAL_BAND), and nothing at all with
+        # memory off. Clamped to 0.7..1.4: above the 0.4 floor every lean keeps.
+        for name, factor in self.memory.taste.items():
             weights[name] = weights.get(name, 1.0) * factor
         for name, factor in self._preset().get("weights", {}).items():
             weights[name] = weights.get(name, 1.0) * float(factor)
@@ -2838,6 +3272,33 @@ class Behavior:
             # afternoon instead of firing once and clashing with the knocking-off dance.
             weights["dance"] = weights.get("dance", 1.0) * FRIDAY_DANCE_BOOST
         return weights
+
+    def _answer_ambient(self, delta: float, within_ms: float) -> tuple[str, float] | None:
+        """Settle the newest ambient antic: ``delta`` on its taste if it began within ``within_ms``.
+
+        Returns ``(name, change actually made)`` - less than ``delta`` at the clamp, 0.0 with
+        memory off - or None when there was nothing in time to answer. Either way the record is
+        gone: answered late is still answered, and once is all an antic gets (see "learned taste").
+        """
+        last, self._last_ambient = self._last_ambient, None
+        if last is None:
+            return None
+        name, started_ms = last
+        if self._clock_ms - started_ms > within_ms:
+            return None
+        before = self.memory.taste.get(name, 1.0)
+        self.memory.adjust_taste(name, delta)
+        return name, self.memory.taste.get(name, 1.0) - before
+
+    def _wary(self) -> bool:
+        """Hurt at least WARY_MIN_HURTS times in the last WARY_DAYS days, and more than petted.
+
+        Read off the counts memory already keeps, so it mends by itself and there is nothing to
+        reset: pet him as often as you hurt him, or let the hard landings age out of the week, and
+        it is gone. Never with memory off - no counts, no week.
+        """
+        week = self.memory.recent(self._date_key(), WARY_DAYS)
+        return week.hurts >= WARY_MIN_HURTS and week.hurts > week.pets
 
     # --- being ignored --------------------------------------------------------------
 
@@ -2900,6 +3361,11 @@ class Behavior:
                 # Charged once, on the transition, not on every re-seat: he returns to this sit
                 # after each glance, and nudging there would grind him down all afternoon.
                 self.mood.nudge("ignored")
+                # And whatever he last picked for himself fell flat: a little less of that. Only
+                # an antic since the last thing you did with him - one from before it was not
+                # ignored, which matters when attention_after_s is short - and only once.
+                self._answer_ambient(-TASTE_IGNORED,
+                                     min(TASTE_IGNORED_WINDOW_MS, self._neglect_ms))
             self._neglect_stage = 3
             if not self._sheet.has_state(NEGLECT_SIT_ANTIC):
                 return False
@@ -2913,6 +3379,9 @@ class Behavior:
         if elapsed >= step * NEGLECT_WAVE_AT and self._neglect_stage < 2:
             self._neglect_stage = 2
             log.debug("ignored for %.0fs - waving", elapsed / 1000.0)
+            # His "notice me" is not his own pick: a pet that answers it is about the wave, and so
+            # is a give-up sit that follows it - not the antic before (see "learned taste").
+            self._last_ambient = None
             self._enter(State.HOVER_WAVE)
             return True
 
@@ -3145,7 +3614,9 @@ class Behavior:
         if antics_on and random.random() < chance:
             chosen = self._pick_antic(cursor)
             if chosen is not None:
-                self._begin_antic(*chosen)
+                # The one ambient pick, and so the one antic a pet or a click can teach him to
+                # like - see "learned taste".
+                self._begin_antic(*chosen, ambient=True)
                 return
 
         # Holding the sign up, or a focus session: he finishes whatever he was already doing but
@@ -3272,14 +3743,18 @@ class Behavior:
         # mid-build, the arc switched off) that clock is frozen at whatever it had reached, which
         # would otherwise keep boredom climbing all the way through a pinned build or a sleep.
         neglect_running = self._neglect_step_ms() > 0 and not self._neglect_suppressed()
+        part_of_day = (world.part_of_day if world is not None
+                       and bool(self._config.get("world_enabled", True)) else None)
         self.needs.tick(
             dt_ms,
             away=self._away,
-            part_of_day=(world.part_of_day if world is not None
-                         and bool(self._config.get("world_enabled", True)) else None),
+            part_of_day=part_of_day,
             present_interacting=(not neglect_running
                                  or self._neglect_ms < INTERACTING_WITHIN_MS),
         )
+        # Straight after the needs, so it reads this tick's energy. Night as the needs see it:
+        # with the world switched off there is no night, and so no nap.
+        self._maybe_nap(part_of_day)
         self._tick_quirks(dt_ms)
         self._tick_neglect(dt_ms)
         if self._grumble_ms > 0:
@@ -3309,7 +3784,7 @@ class Behavior:
 
         # Ahead of every state handler, because it has to beat _maybe_wave - which fires at 120px
         # and would otherwise consume every pointer that came to rest on him. Only from the states
-        # where stopping to be petted makes sense: not mid-nap, mid-tantrum or mid-throw.
+        # where stopping to be petted makes sense: not asleep, mid-tantrum or mid-throw.
         if self._state in (State.IDLE, State.WALK, State.ANTIC) and self._maybe_pet(cursor):
             self._sync_animation()
             return
@@ -3447,7 +3922,7 @@ class Behavior:
             hit, self._vx = abs(self._vx), -abs(self._vx) * WALL_RESTITUTION
         # A single huge step could reflect straight past the other end; the clamp is the backstop.
         self._x = min(max(self._x, self.x_min), self.x_max)
-        # Not while a nap is pending: being moved mid-sleep never hurts him, and a wall is no
+        # Not while a sleep is pending: being moved mid-sleep never hurts him, and a wall is no
         # different from the floor in that respect.
         if (
             hit >= WALL_IMPACT_HURT_PX_MS
@@ -3498,11 +3973,16 @@ class Behavior:
         self._settle()
 
     def _settle(self) -> None:
-        """Everything has stopped moving: pick up the nap, or sit up hurt."""
+        """Everything has stopped moving: go back to sleep, sit up hurt, or answer how he landed."""
         self._vx = self._vy = 0.0
         self._rolling = False
+        # Read and cleared first, so no branch below can leave one set for the next landing.
+        gentle, thrown = self._gentle_pending, self._throw_pending
+        self._gentle_pending = self._throw_pending = False
         if self._resume_sleep_ms > 0:
-            # He was thrown mid-nap: now that he has stopped, serve out the rest of the cooldown.
+            # He was thrown asleep: now that he has stopped, back to sleep. A sulk serves out the
+            # rest of its cooldown; a nap lands back in the nap, whose flag rode the throw and
+            # whose _tick_sleep never reads the clock set here.
             remaining = self._resume_sleep_ms
             self._resume_sleep_ms = 0.0
             self._pending_injury = False
@@ -3516,6 +3996,32 @@ class Behavior:
             self.memory.record("hurts", self._date_key())
             self._injured_ms = float(self._config.get("injury_duration_s", 3.0)) * 1000.0
             self._enter(State.INJURED)
+            return
+        self._answer_landing(gentle=gentle, thrown=thrown)
+
+    def _answer_landing(self, *, gentle: bool, thrown: bool) -> None:
+        """Set down gently: a sparkle and a little affection. Thrown, and fond of you: "again!".
+
+        Only from IDLE, where drag_end left him: a click that opened the bubble mid-flight is not
+        overridden by it. Never while paused - _settle runs on the near side of the pause check so
+        that a drop still lands, but an antic started there would sit frozen on its first frame.
+        A sleep resumed and an injury have already returned before this; a perch never gets here.
+        """
+        if self.paused or self._state != State.IDLE:
+            return
+        if gentle:
+            if self._clock_ms - self._gentle_at_ms < GENTLE_COOLDOWN_MS:
+                return
+            self._gentle_at_ms = self._clock_ms
+            log.debug("set down gently")
+            # A fraction of a pet to affection, and not a pet in memory: the count says pets.
+            self.needs.nudge("petted", GENTLE_PET_SCALE)
+            if self._sheet.has_state(GENTLE_ANIM):
+                self._begin_antic(GENTLE_ANIM, GENTLE_MS)
+        elif (thrown and self.needs.affection > PLAY_AFFECTION_ABOVE
+              and self._sheet.has_state(PLAY_ANIM)):
+            log.debug("thrown, and up for another")
+            self._begin_antic(PLAY_ANIM, PLAY_MS)
 
     def _would_injure(self, fallen_px: float, *, impact_px_ms: float = 0.0) -> bool:
         """Was that hard enough to hurt? A long drop, or a hard sideways impact."""
@@ -3583,11 +4089,20 @@ class Behavior:
         self._advance(dt_ms)
         self._tick_blink(dt_ms)
 
+    def _struggle_amplitude_px(self) -> float:
+        """How hard he squirms in your hand, in screen px: less, the better he knows you.
+
+        Exactly ``STRUGGLE_AMPLITUDE_PX`` times the sprite scale at a bond of 0. Read on every drag
+        tick, like the scale already was - the bond is four logarithms, and a drag lasts seconds.
+        """
+        calm = 1.0 - SQUIRM_BOND_CALM * self.memory.bond()
+        return STRUGGLE_AMPLITUDE_PX * calm * self._sheet.scale
+
     def _tick_drag(self, dt_ms: float, cursor) -> None:
         """Squirm while held: he is trying to kick free and get back down."""
         self._struggle_ms += dt_ms
         t = self._struggle_ms
-        amplitude = STRUGGLE_AMPLITUDE_PX * self._sheet.scale
+        amplitude = self._struggle_amplitude_px()
         # Amplitude-modulated on x so the wriggling comes in bursts, and a slower, independent
         # rate on y, which keeps the motion from collapsing into a straight diagonal line.
         self._struggle_dx = amplitude * math.sin(t * STRUGGLE_X_RATE) * math.cos(
@@ -3739,11 +4254,18 @@ class Behavior:
 
     def _tick_sleep(self, dt_ms: float, cursor) -> None:
         self._advance(dt_ms)
+        if self._napping:
+            # No clock and no hover-wake: a nap ends when you come back, or click him. This is the
+            # one place that sees a nap you came back to while he was in your hand or in the air -
+            # set_away could not wake him there, and _settle has just put him back down in it.
+            if not self._away:
+                self._wake_from_nap()
+            return
         self._sleep_ms -= dt_ms
         if self._sleep_ms <= 0:
             self._enter(State.WAKE)
             return
-        # A gentle hover near the end of the nap - and no recent poking - wakes him early.
+        # A gentle hover near the end of the sulk - and no recent poking - wakes him early.
         total = max(1.0, float(self._config["sleep_cooldown_s"]) * 1000.0)
         quiet = self._clock_ms - self._last_click_ms > 3000
         if self._sleep_ms < total * 0.25 and quiet and self._cursor_is_near(cursor):
@@ -3753,6 +4275,14 @@ class Behavior:
         self._advance(dt_ms)
         if self.animator.finished:
             self._clear_annoyance()
+            owed, self._nap_greeting = self._nap_greeting, None
+            if owed is not None and not self._away:
+                # Up from a nap and you are here: the greeting set_away would have given, now he
+                # can give it. The nap's own line first, so it is the one that gets said - main
+                # says at most one line at a time, and the greeting's is the fallback.
+                self._event("nap_wake")
+                self._greet(owed[0])
+                return
             self._enter(State.IDLE)
 
 

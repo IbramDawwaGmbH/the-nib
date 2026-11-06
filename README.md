@@ -115,8 +115,8 @@ He is not a static image with a click handler.
   season.
 - **He remembers how the day went.** Pet him and he's visibly bouncier for hours — and it survives
   a restart, fading on a half-life. Hover over the tray icon and it says how he is, by name.
-  He keeps count of the days you've shared, too — counts only, readable and wipeable in
-  **Settings → About him**.
+  He keeps count of the days you've shared, too, and learns which of his antics you seem to
+  like — no app names, times or text, readable and wipeable in **Settings → About him**.
 - **He never moves your windows.** Not nudged, not resized, never brought to the front. There is
   exactly one deliberate exception — see [Drop him on a window](#drop-him-on-a-window) — and it is
   narrow enough to name in one sentence: dropping him on a window pins *that* window on top,
@@ -443,7 +443,7 @@ Windows 10 or 11, Python 3.10+, and whichever assistant you point him at. Claude
 python tests/run_all.py
 ```
 
-29 suites, about 30 seconds. They boot a real `QApplication`, build a real sprite sheet, and in
+30 suites, about a minute. They boot a real `QApplication`, build a real sprite sheet, and in
 several cases read geometry back out of Win32 to check what Windows actually believes — because
 several of the bugs worth catching were "Qt thinks one thing and Windows thinks another".
 

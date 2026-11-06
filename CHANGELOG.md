@@ -15,15 +15,16 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   the tray tooltip, his toasts and his lines call him, and a rename applies on Apply with no
   restart. Window titles still say Nib — that's the app.
 - **You can see how he is.** Hover over the tray icon: when nothing more pressing is showing, the
-  tooltip is his name and his mood in a word — `Nib — fine`, `Nib — in good spirits` — and it
-  changes as soon as you pet him. A new **About him** tab in Settings says the same in a sentence.
+  tooltip is his name and his mood in a word, then the bond's (below) — `Nib — fine, just met`,
+  `Nib — in good spirits, just met` — and the mood word changes as soon as you pet him. A new
+  **About him** tab in Settings puts the mood in a sentence.
 - A fifth first-run tip: that you can rename him, and where to see how he's doing.
 - **He remembers you.** He keeps count of the days you've shared and the pets, prompts and focus
   sessions along the way (and the throws and hard landings), plus the same counts day by day for
-  the last week — counts only, no app names, times or text, in a new `memory.json` next to
-  `config.json`. **Settings → About him** shows it in plain words, and **Forget everything…**
-  there deletes it. Two new settings on the Personality tab: `memory_enabled`, and
-  `memory_routine_enabled` for the hourly tally of when you usually arrive.
+  the last week — counts, and later his tastes (below), but no app names, times or text — in a
+  new `memory.json` next to `config.json`. **Settings → About him** shows it in plain words, and
+  **Forget everything…** there deletes it. Two new settings on the Personality tab:
+  `memory_enabled`, and `memory_routine_enabled` for the hourly tally of when you usually arrive.
   [Privacy](docs/PRIVACY.md) lists every key in the file.
 - **He acts on what he remembers.** A party — the task-finished celebration, hat and cheer — on
   the 7th, 30th, 100th and 365th day he has seen you, and on your third finished focus session of
@@ -49,6 +50,42 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   names all three in words. A new `needs_enabled` setting on the Personality tab, and four hidden
   values in `config.json` (`need_energy`, `need_affection`, `need_boredom`, `needs_saved_at`).
   Forget everything resets them.
+- **How you handle him matters.** Set him down gently — slowly, and from lower than the drop
+  that hurts — and he sparkles as he lands, a little fonder of you for it (at most every 30
+  seconds). Throw him while he's fond of you and he lands with the same sparkle, ready to go
+  again. Hurt him five times in a week, more often than you've petted him, and he goes wary:
+  fewer heart eyes and sparkles of his own accord until the week moves on or the pets catch up.
+- **The bond shows.** How well he knows you, in one of five words — *just met*, *warming up*,
+  *friends*, *close*, *inseparable* — now ends the tray tooltip: `Nib — fine, friends`. The
+  better he knows you, the less he squirms when you pick him up (down to 40% of a stranger's
+  wriggle) and the faster a pet forgives a poke (down to every 0.72 seconds from 1.2). With
+  `memory_enabled` off both are exactly as before; a new mascot starts a few percent off it.
+- **He naps.** Worn out late at night, with you gone ten minutes, he dozes off where he sat
+  waiting — and when you come back he wakes and greets you as he would have anyway, maybe with a
+  line about it. Sleep that isn't the sulk's: no clock, and no grumble when you click him awake.
+  He has to be properly tired — under about 0.17 energy when you leave, since time away rests
+  him — and never naps in a focus session or standing on a window. A new `nap_enabled` setting
+  on the Personality tab.
+- **Give him a treat.** **Give a treat** in the tray, or **Give him a treat** on the tool wheel,
+  and a biscuit lands beside him: he picks it up, eats it (a new `eat` animation, four frames) and
+  goes *nom, nom* if sound is on (a new `nom` sound). It lifts his mood a little less than a pet,
+  rests him and makes him fonder, and counts in **About him**. Three a day count; after that he
+  is full and sits down politely, and it neither lifts his mood nor counts — with
+  `memory_enabled` off the count is still kept, until he is restarted. Not while he's in your
+  hand, in the air, behind a fullscreen app or the guard, paused or cross: asleep after a sulk he
+  grumbles at it as at a click, but a biscuit wakes him from a nap, and brings him back from
+  **Hide for 10 minutes**.
+- **He develops tastes.** Pet him, or click him open, within ten seconds of something he chose to
+  do on his own — a hop, a dance, a look around — and he does it a little more often; ignore him
+  until he gives up waiting, within five minutes of one, and he does it a little less. Only his own
+  picks count, never a moment, a quirk, a treat or a reply to you; each counts once, and a click
+  whose bubble you then close without sending counts for less. A lean, never a switch: 0.7× to
+  1.4×, which at the ceiling takes hop from about 12% of his own picks to 15% (on a spring
+  afternoon). Tastes fade back a little every day, by every calendar day since he last saw you — a
+  liking at the ceiling, left alone, is still named about three months later. **About him** names
+  the strongest in words (`Seems to like hopping and dancing.`, `Not keen on press-ups.`). Kept in
+  `memory.json` as `taste`; Forget everything clears it, and with `memory_enabled` off nothing is
+  learned or used.
 
 ### Changed
 

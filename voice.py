@@ -72,8 +72,8 @@ GREET_LINE_AFTER_S = 600.0
 #: tally (08 means 08:00-08:59), so the distance is taken from the middle of the slot.
 EARLY_LATE_H = 1.5
 
-#: Every category the shipped table has. The ones nothing raises yet are for later work: treats,
-#: the nap, and a milestone for pets.
+#: Every category the shipped table has. The one nothing raises yet is for later work: a milestone
+#: for pets.
 CATEGORIES = (
     "greeting_short", "greeting_overnight", "heavy_yesterday", "early_today", "late_today",
     "milestone_days", "milestone_pets", "focus_streak", "big_week",
@@ -121,6 +121,10 @@ def lines_for(kind: str, data: dict[str, Any], *, hour: float | None = None,
       one. Early and late are only ever about the first arrival of the day, so only overnight.
     * ``milestone``, ``focus_streak``, ``big_week`` - one category each.
     * ``tired``, ``fond``, ``bored`` - from his needs (see needs.py), each its own category.
+    * ``nap_wake`` - up from a nap, raised just ahead of the ``greeted`` that follows it, so the
+      nap's line is the one said and the greeting's is the fallback.
+    * ``treat``, ``treat_full`` - a treat eaten, and one he was too full for (Behavior.treat). The
+      gap and the daily cap apply as to any other line, so not every treat gets one.
 
     Anything else is an empty list: a new kind of event says nothing until someone writes its lines.
     """
@@ -148,6 +152,10 @@ def lines_for(kind: str, data: dict[str, Any], *, hour: float | None = None,
         return ["focus_streak"]
     if kind == "big_week":
         return ["big_week"]
+    if kind == "nap_wake":
+        return ["nap_wake"]
+    if kind in ("treat", "treat_full"):
+        return [kind]
     if kind in NEEDS_EVENTS:
         return [kind]
     return []

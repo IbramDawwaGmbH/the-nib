@@ -97,9 +97,9 @@ the-nib/
   main.py               entry point, timers, wiring, tray/window/bubble glue
   behavior.py           state machine: wander, gait, antics, annoyance, sleep (Qt-free)
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
-  mood.py               how the day went - the one thing that survives a restart (Qt-free)
+  mood.py               how the day went - one number, kept across a restart (Qt-free)
   needs.py              energy, affection and boredom - leans on what he does, two moments (Qt-free)
-  memory.py             what he remembers about you two: counts, a 7-day window, memory.json (Qt-free)
+  memory.py             what he remembers: counts, a 7-day window, tastes, memory.json (Qt-free)
   voice.py              whether he may say a line now - the gap, the daily cap - and which (Qt-free)
   phrases.py            shuffle bags and phrase-file loading, for the guard and for voice.py (Qt-free)
   animator.py           sprite slicing, skins, costume compositing, frame clock
@@ -146,9 +146,9 @@ headlessly without a display. `mood.py`, `needs.py`, `memory.py` and `voice.py` 
 injectable clock, so a week of moods can be simulated in a millisecond.
 
 Your data lives in `%APPDATA%\NibMascot`: `config.json` (settings and the little state he writes
-for himself) and, next to it, `memory.json` (the counts `memory.py` keeps; see
-[Privacy](PRIVACY.md) for every key). Both are written atomically, from the same ten-second flush,
-and only when something in them changed.
+for himself) and, next to it, `memory.json` (the counts and learned tastes `memory.py` keeps;
+see [Privacy](PRIVACY.md) for every key). Both are written atomically, from the same ten-second
+flush, and only when something in them changed.
 
 `behavior.py` never touches the audio layer either — it raises named *events* into a small queue
 and something else decides whether that makes a noise. Things worth a line (a greeting, a
@@ -164,8 +164,10 @@ Key transitions: `IDLE ⇄ WALK` on the wander beat and at the strip bounds; `ID
 weighted random antic; `→ HOVER_WAVE` when the cursor is close; `→ PET` when it comes to rest *on*
 him, which the wave defers to; `→ ASK` on click; `ASK → WORKING` on send, and `WORKING → ANTIC` if
 the prompt had a shape worth commenting on; pokes over the threshold → `ANGRY` → storm-off `WALK` →
-`SLEEP` → `WAKE` → `IDLE`; fullscreen or snooze → `HIDDEN`; mouse-down → `DRAG`, release → tumbling
-gravity fall → `INJURED` if it was a real drop, else `IDLE`.
+`SLEEP` → `WAKE` → `IDLE`; worn out and away late at night, the away-sit `ANTIC` → `SLEEP` with
+`_napping` set (the nap: no clock) → `WAKE` when you're back → the greeting `ANTIC`; fullscreen or
+snooze → `HIDDEN`; mouse-down → `DRAG`, release → tumbling gravity fall → `INJURED` if it was a
+real drop, else `IDLE`.
 
 ---
 

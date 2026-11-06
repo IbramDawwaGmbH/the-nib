@@ -126,7 +126,7 @@ DEFAULTS: dict[str, Any] = {
     "mood_half_life_h": 6.0,      # how long a good or bad turn takes to half fade
     "mood_spirits": 0.0,          # -1..+1, written by him
     "mood_saved_at": 0.0,         # unix seconds at the last write, so the decay survives a restart
-    # What he remembers about the two of you - counts only, kept in memory.json next to this
+    # What he remembers about the two of you - counts and tastes, kept in memory.json next to this
     # file rather than in it. See memory.py, and docs/PRIVACY.md for the whole list of what's in it.
     "memory_enabled": True,
     #: The one part of that close to a time: a 24-slot tally of the hour he first saw you each
@@ -139,6 +139,10 @@ DEFAULTS: dict[str, Any] = {
     "need_affection": 0.5,        # 0 lonely .. 1 doted on
     "need_boredom": 0.0,          # 0 kept busy .. 1 bored stiff
     "needs_saved_at": 0.0,        # unix seconds at the last write, like mood_saved_at
+    #: Worn out, late at night, and you have been away ten minutes: he dozes off where he sat
+    #: waiting, and wakes when you are back. Never a sulk - see the nap in behavior.py. Needs
+    #: needs_enabled too, since it is his energy that decides.
+    "nap_enabled": True,
     #: How often he says a line in a toast - see voice.py. "rare" is at most 6 a day, 45 minutes
     #: apart; "normal" at most 14, 20 minutes apart; "off" never. Greetings skip the gap, not the cap.
     "chatter_level": "rare",

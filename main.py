@@ -60,7 +60,7 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox  # noqa: E4
 import costume_calendar  # noqa: E402
 import ocr  # noqa: E402
 from animator import SpriteSheet, available_skins  # noqa: E402
-from behavior import PERSONALITIES, Behavior, State  # noqa: E402
+from behavior import ANTIC_WORDS, PERSONALITIES, Behavior, State  # noqa: E402
 from billboard import Billboard  # noqa: E402
 from bubble import AskBubble, Toast  # noqa: E402
 from focus_timer import FocusTimer  # noqa: E402
@@ -567,6 +567,7 @@ class NibApp:
         self.tray.personality_chosen.connect(self._on_personality_chosen)
         self.tray.surprise_requested.connect(self._on_surprise_costume)
         self.tray.do_something_requested.connect(self._on_do_something)
+        self.tray.treat_requested.connect(self._on_treat)
         self.tray.measure_requested.connect(self._on_measure_requested)
         self.tray.mic_toggle_requested.connect(self._on_mic_toggle)
         self.tray.guard_requested.connect(self._on_guard_requested)
@@ -762,12 +763,24 @@ class NibApp:
             # window can cover him entirely once it is the thing pinned on top, so the tray - icon
             # badge and all - is the only place left this is visible from.
             self.tray.set_tooltip(f"{name} - pinned a window on top; grab him to let it go")
+        elif self.behavior.napping:
+            # Asleep because he was worn out and you were away - not the sulk, which says nothing
+            # here. Below the three above (a nap never overlaps a session or a perch, and a live
+            # microphone at two in the morning is still the more pressing news) and above his mood:
+            # "fine" over a mascot who is fast asleep would be saying the wrong thing.
+            self.tray.set_tooltip(f"{name} — napping")
         else:
             # Nothing more pressing to say, so say how he is - the one place the mood is
-            # readable at a glance without opening anything. The same words as Settings → About
-            # him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows before
-            # the first poll gets here.
-            self.tray.set_tooltip(f"{name} — {label_for(self.mood.spirits)}")
+            # readable at a glance without opening anything. The same mood word as Settings →
+            # About him, and never a number. Tray.DEFAULT_TOOLTIP stays as what the icon shows
+            # before the first poll gets here.
+            tip = f"{name} — {label_for(self.mood.spirits)}"
+            if self.memory.enabled:
+                # Then the bond's word - "Nib — fine, friends" - which is how you two are rather
+                # than how he is today. Not with memory off: the bond reads as day one's "just met"
+                # then, and that would be saying something untrue.
+                tip += f", {self.memory.bond_label()}"
+            self.tray.set_tooltip(tip)
 
     def _update_memory(self, state) -> None:
         """First sighting of the day, and the minutes you were here and the machine was busy.
@@ -910,7 +923,10 @@ class NibApp:
         """
         if self._tick_timer is None:
             return
-        if self._hidden_by_fullscreen or self._snoozed or self.behavior.paused:
+        # Paused, but not while he is still in the air: update() lands a drop even then, and a
+        # 250ms step is too coarse for the bounce to die out - he would thud on every tick.
+        if (self._hidden_by_fullscreen or self._snoozed
+                or (self.behavior.paused and not self.behavior.airborne)):
             wanted = IDLE_TICK_MS
         else:
             wanted = int(self.behavior.next_tick_ms(TICK_MS, IDLE_TICK_MS))
@@ -1399,6 +1415,7 @@ class NibApp:
         items.append(WheelItem("more", "More…", "more", group=tools))
 
         items.append(WheelItem("do_something", "Do something", "sparkle", group=him))
+        items.append(WheelItem("treat", "Give him a treat", "treat", group=him))
         items.append(WheelItem("costume", "Surprise costume", "costume", group=him))
         items.append(WheelItem("wardrobe", "Wardrobe…", "wardrobe", group=him))
         items.append(WheelItem("hide", "Hide for 10 minutes", "hide", group=him))
@@ -1504,6 +1521,8 @@ class NibApp:
             self.tray.popup_for_mascot(self._wheel_position, self._mascot_menu_extras())
         elif key == "do_something":
             self._on_do_something()
+        elif key == "treat":
+            self._on_treat()
         elif key == "costume":
             self._on_surprise_costume()
             self._refresh_tray()
@@ -1989,7 +2008,7 @@ class NibApp:
         """
         name = str(self.config["name"])
         if self.memory.enabled:
-            lines = self.memory.summary_lines(name)
+            lines = self.memory.summary_lines(name, words=ANTIC_WORDS)
         else:
             lines = [f"{name} isn't keeping count - memory is switched off on the Personality tab."]
             if not self.memory.is_empty:
@@ -2131,6 +2150,19 @@ class NibApp:
         if not did:
             log.debug("asked him to do something, but he is busy")
 
+    def _on_treat(self) -> None:
+        """Tray or wheel: give him a treat. Behavior.treat decides whether he takes it.
+
+        Snoozed, he comes back for it first, as for Do something - a menu entry that silently does
+        nothing would look broken. Behind a fullscreen app or the guard he stays hidden, and the
+        treat is refused. Unlike Do something there is no walking him out of a sleep here: asleep
+        after a sulk he grumbles at a biscuit as he would at a click (a nap he wakes from himself).
+        """
+        if self._snoozed:
+            self._wake_from_snooze()
+        if not self.behavior.treat():
+            log.debug("offered him a treat, but he did not take it")
+
     def _on_surprise_costume(self) -> None:
         """Put a random costume on him. The fastest way to actually see fifty-three of them.
 
@@ -2253,8 +2285,11 @@ class NibApp:
         # Quantised inside Mood, so this is a no-op within a hundredth of the range rather than a
         # disk write every ten seconds for as long as he is running.
         self.mood.persist()
-        # Quantised the same way. Energy drifts while you are here, so this writes about once
-        # every seven minutes at most - and nothing at all with needs_enabled off.
+        # Quantised the same way, but energy is always drifting: measured, this writes about every
+        # 7.5 minutes while you work by day, every 2.6 at night and every 70 seconds while he
+        # rests back to full with you away - more often while boredom builds too, never more than
+        # once a flush. Held still short of rested, the stamp alone is renewed every ten minutes
+        # (needs.STAMP_REFRESH_S). Nothing at all with needs_enabled off.
         self.needs.persist()
         # Dirty only when a count moved, and the most frequent count is a minute of presence - so
         # this writes memory.json at most about once a minute, and never while nothing happens.

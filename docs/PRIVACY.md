@@ -121,6 +121,9 @@ Worth being explicit, since he watches a few things in order to feel alive:
   throws and hard landings, the same counts for the eight most recent days he has counts for
   plus how many minutes the machine was busy and how many you were present on each, and — if
   `memory_routine_enabled` is on — a 24-slot tally of which hour you first turned up each day.
+  Once he has learned one, his `taste`: for each of his own antics you have rewarded with a pet or
+  a click, or let go by, the antic's name (`hop`, `dance`, …) and one number between 0.7 and 1.4
+  that leans how often he picks it ([He develops tastes](BEHAVIOUR.md#he-develops-tastes)).
   Plus a format version number. **That is the whole file.** No app names, no times of anything, no text.
   You can read it in **Settings → About him**, switch it off with `memory_enabled` (nothing is
   counted and no file is written, and one already there is left as it was), and **Forget

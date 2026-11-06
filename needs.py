@@ -52,9 +52,14 @@ NEUTRAL_EPSILON = 0.005
 
 #: Stored to two decimals, for the reason ``mood.STORE_QUANTUM`` gives: the config is flushed every
 #: ten seconds, and a raw float that moves on every tick would be a disk write every ten seconds.
-#: Energy drifts linearly while you are here, so this still writes - about once every seven
-#: minutes at the daytime rate - but never on every flush.
+#: Energy drifts linearly while you are here, so this still writes - about once every 7.5
+#: minutes at the daytime rate, 2.6 at night's - but never on every flush.
 STORE_QUANTUM = 0.01
+#: ...and the stamp beside them is renewed at least this often, even when no value has moved,
+#: while one is somewhere closed time would move it (anything but full energy and no boredom).
+#: Otherwise hours spent pinned - worn out at energy 0 at the machine, say - would leave the stamp
+#: hours old, and a restart would age all of them as closed: rest he never had.
+STAMP_REFRESH_S = 600.0
 
 #: event -> (energy, affection, boredom) deltas. Nothing is bigger than half the range, and the
 #: only half-range ones are boredom *falling*: anything you do with him is the cure for boredom, and
@@ -64,22 +69,23 @@ NEED_NUDGES: dict[str, tuple[float, float, float]] = {
     "petted": (0.0, 0.06, -0.5),
     "prompt_sent": (0.0, 0.02, -0.5),
     "greeted": (0.0, 0.03, -0.3),        # you came back
-    "treated": (0.05, 0.08, -0.3),       # (the treat itself arrives later)
+    "treated": (0.05, 0.08, -0.3),       # a treat (Behavior.treat): at most three a day count
     "focus_done": (-0.05, 0.04, -0.3),   # a whole session, run to the end: pleasing, and tiring
     "thrown": (-0.02, 0.0, -0.2),
     "hurt": (-0.05, 0.0, 0.0),
     "interacted": (0.0, 0.0, -0.5),      # anything at all you did with him - see Behavior.noticed
     "world_event": (0.0, 0.0, -0.2),     # something happened around him: a moment, an app reaction
-    "nap_woke": (0.30, 0.0, 0.0),        # (the nap arrives later)
+    "nap_woke": (0.30, 0.0, 0.0),        # up from a nap; Behavior scales it by how long it was
 }
 
 # --- drift, per hour -------------------------------------------------------------------------
 
 #: Energy comes back while you are away (or he is closed): two hours away from 0 is a full tank.
 ENERGY_REST_PER_H = 0.50
-#: ...and runs down while you are here. Slowly: from neutral it takes about three hours of you
-#: being at the machine to reach "tired", so an ordinary working day ends with a tired evening and
-#: a lunch break visibly perks him up.
+#: ...and runs down while you are here. Slowly: from neutral it takes just under two hours of you
+#: being at the machine to reach "tired" (``TIRED_BELOW``) and about three to wear him out (the
+#: yawn's and the nap's 0.25 in behavior), so an ordinary working day ends with a tired evening
+#: and a lunch break visibly perks him up.
 ENERGY_DRAIN_PER_H = 0.08
 #: Extra drain while you are here at night. Staying up late costs him too.
 ENERGY_NIGHT_DRAIN_PER_H = 0.15
@@ -171,6 +177,7 @@ class Needs:
         self._affection = NEUTRAL_AFFECTION
         self._boredom = NEUTRAL_BOREDOM
         self._stored = self._quantised_all()
+        self._saved_at = 0.0
         self._load()
 
     # --- persistence ----------------------------------------------------------------
@@ -205,6 +212,7 @@ class Needs:
         self._drift(elapsed_h, away=True, part_of_day=None, interacting=False)
         # What is in the config now, so persist() writes only once something moves past it.
         self._stored = self._quantised_all()
+        self._saved_at = saved_at
         if saved_at > 0:
             log.info("needs restored after %.1fh closed: %s", elapsed_h, ", ".join(self.labels()))
 
@@ -217,7 +225,8 @@ class Needs:
                 self._quantised(self._boredom))
 
     def persist(self) -> None:
-        """Write the three values, but only when a stored one would actually differ.
+        """Write the three values, but only when a stored one would actually differ - or when
+        the stamp beside them is ``STAMP_REFRESH_S`` old and closed time would move one.
 
         Called from the app's config flush. Switched off, it writes nothing at all - the values
         last stored stay exactly as they were, so switching back on carries on from them.
@@ -225,13 +234,17 @@ class Needs:
         if not self.enabled:
             return
         current = self._quantised_all()
-        if current == self._stored:
+        now = float(self._clock())
+        stale = (self._saved_at > 0 and now - self._saved_at >= STAMP_REFRESH_S
+                 and (current[0] < 1.0 or current[2] > NEUTRAL_BOREDOM))
+        if current == self._stored and not stale:
             return
         self._stored = current
+        self._saved_at = now
         self._config["need_energy"] = current[0]
         self._config["need_affection"] = current[1]
         self._config["need_boredom"] = current[2]
-        self._config["needs_saved_at"] = float(self._clock())
+        self._config["needs_saved_at"] = now
 
     # --- the needs themselves -------------------------------------------------------
 
@@ -332,6 +345,7 @@ class Needs:
         # No timestamp: neutral has nothing to age, and 0 is what a fresh config holds.
         self._config["needs_saved_at"] = 0.0
         self._stored = self._quantised_all()
+        self._saved_at = 0.0
 
     # --- what they actually change --------------------------------------------------
 

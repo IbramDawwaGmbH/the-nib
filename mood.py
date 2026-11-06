@@ -40,7 +40,8 @@ STORE_QUANTUM = 0.01
 #: Nothing here is bigger than a third of the range. One event should be a lean, not a verdict;
 #: a mood you can slam to either end with a single click is just a flag with extra arithmetic.
 NUDGES: dict[str, float] = {
-    "petted": 0.22,         # the big one, and deliberately so - it is the only kindness he has
+    "petted": 0.22,         # the big one, and deliberately so - the kindness he can have all day
+    "treated": 0.12,        # a treat; smaller than a pet, and at most three a day count
     "focus_done": 0.15,     # a focus session run all the way to completion, not cancelled early
     "prompt_sent": 0.10,    # you used him for what he is for
     "greeted": 0.05,        # you came back

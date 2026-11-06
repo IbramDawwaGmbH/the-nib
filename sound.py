@@ -32,6 +32,8 @@ EVENTS = frozenset({
     "cheer",
     # a focus session completing on its own - deliberately distinct from cheer, see gen_sounds.py
     "focus_done",
+    # eating a treat
+    "nom",
 })
 
 #: Shortest gap between two plays of the *same* event. He can bounce three times in half a second,
