@@ -1,9 +1,9 @@
-> **Status:** WP0 done (measurements in 1.6; architecture decided: per-cap strip windows plus a
-> flight layer that exists only while snow is airborne; the design now follows the owner's decision:
-> realistic snow, no snowfall). Continue from **WP1**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP0 and WP1 done (WP0: measurements in 1.6, architecture decided: per-cap strip
+> windows plus a flight layer that exists only while snow is airborne, realistic snow, no snowfall;
+> WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`). Continue from **WP2**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
-> - [ ] WP1 `snow.py` model
+> - [x] WP1 `snow.py` model
 > - [ ] WP2 window stack and clipping
 > - [ ] WP3 overlay, wiring and the setting
 > - [ ] WP4 growth, icicles over time, battery
@@ -288,6 +288,17 @@ the chunks' grouped bounding boxes. No flakes.
 **Tests.** Growth reaches the cap and stops; a brushed span turns into chunks with mass conserved;
 a slow pointer brushes nothing; thrown snow goes up and comes back; budget never exceeded; `step`
 reports nothing when nothing moves; deterministic under a seed.
+**Done.** `SnowField` in `snow.py`: `add_cap` / `remove_cap` / `drop_cap` / `release_span` (the
+one release primitive WP2's move, resize and close build on), `grow(now_ms)` on its own slow timer
+(one step per cap per call, so a hidden spell never catches up), `pointer(x, y, t_ms)` for samples,
+`step(now_ms, pointer=None) -> Changes` (changed caps, landings, gestures, budget fades, and dirty
+boxes per monitor index, one per stroke and merged by `guard_fx._Dirty`'s rule rather than one box
+per monitor, so two bursts at opposite ends never become a whole-monitor flush). `step` takes no
+`stack`: the window stack is WP2's, which fills `Cap.covered` and calls the cap methods. Every exit
+of snow is in `SnowField.ledger`; the growth constants are placeholders until WP4 measures them.
+A cap grows to 26 px in the middle, up to 28 at the crest of its seeded wave (within 1.3's
+24-30 px), but snow landing on it may pile up to 39 px (`CAP_MAX_PX`), so a throw visibly adds to
+a full cap; `Cap.extent()` is sized for that.
 
 ### WP2 — Window stack and clipping
 **Files.** `win_integration.py` (`list_window_stack`, extended frame bounds), `snow.py` (pure clip,

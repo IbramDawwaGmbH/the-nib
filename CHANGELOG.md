@@ -87,6 +87,11 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   `memory.json` as `taste`; Forget everything clears it, and with `memory_enabled` off nothing is
   learned or used.
 
+- The groundwork for **Christmas snow**: a new Qt-free `snow.py` that models the snow piling up on
+  your windows' top edges — growth, overhangs, icicles, snow knocked off by a fast swipe or flicked
+  into the air, where it falls and lands — with a fixed budget of airborne chunks. Nothing shows
+  yet; the windows that draw it come next.
+
 ### Changed
 
 - The tray tooltip's focus, microphone and pinned-window lines start with his name instead of a
