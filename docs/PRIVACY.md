@@ -29,9 +29,11 @@ Worth being explicit, since he watches a few things in order to feel alive:
   position and size, plus the window class name so the shell's own windows can be skipped. No
   titles, no contents, and nothing is recorded. Finding and following a window he's dropped onto
   works the same way; only what happens *after* he's found it is different — see below. The
-  Christmas snow reads the same rectangles of every window you can see, twice a second while it
-  shows, to put a pile on each and hide what other windows cover; its windows are excluded from
-  screen capture, and it never takes a click.
+  Christmas snow reads the same rectangles of every window you can see, every 2 seconds while it
+  shows and nothing changes (twice a second while something does), to put a pile on each and hide
+  what other windows cover; in between it looks only at which window is in front and its
+  rectangle, and at the pointer. It also asks Windows whether the machine is on battery. Its
+  windows are excluded from screen capture, and it never takes a click.
 - **He never moves your windows, with one named exception.** Not nudged, not resized, no title
   ever read — except that dropping him on a window pins that one window on top, a single
   `SetWindowPos` call scoped to never move it, resize it, or steal its focus, and reverted the

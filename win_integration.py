@@ -699,6 +699,48 @@ def list_window_stack() -> list[tuple[int, tuple[int, int, int, int], bool, bool
     return stack
 
 
+def foreground_glance() -> tuple[int, tuple[int, int, int, int] | None]:
+    """The foreground window's handle and ``GetWindowRect``, or ``(0, None)``.
+
+    The snow's cheap look at the desktop between two :func:`list_window_stack` passes (a few us
+    against ~2 ms at ~400 top-level windows, almost all of it the Python callback per window): a
+    window clicked to the front, opened, closed, dragged, snapped or put into fullscreen changes
+    one or the other, so the overlay walks the whole stack only when this or the pointer moved,
+    or every few seconds regardless. Read-only, rectangles only, as everything here.
+    """
+    try:
+        hwnd = int(_user32.GetForegroundWindow() or 0)
+    except Exception:
+        return 0, None
+    return hwnd, (_window_rect(hwnd) if hwnd else None)
+
+
+class _SYSTEM_POWER_STATUS(ctypes.Structure):  # noqa: N801 - the Win32 name
+    _fields_ = [
+        ("ACLineStatus", ctypes.c_ubyte),
+        ("BatteryFlag", ctypes.c_ubyte),
+        ("BatteryLifePercent", ctypes.c_ubyte),
+        ("SystemStatusFlag", ctypes.c_ubyte),
+        ("BatteryLifeTime", wintypes.DWORD),
+        ("BatteryFullLifeTime", wintypes.DWORD),
+    ]
+
+
+def on_battery() -> bool:
+    """True while the machine runs on its battery (``GetSystemPowerStatus``: ``ACLineStatus`` is
+    0). A desktop, a status Windows cannot tell (255) or a failed call all count as mains, so a
+    machine with no battery never loses anything to this. On battery the snow's piles stop
+    growing and thrown snow animates at 20 FPS instead of 30 (plan 1.4)."""
+    status = _SYSTEM_POWER_STATUS()
+    try:
+        if not ctypes.windll.kernel32.GetSystemPowerStatus(ctypes.byref(status)):
+            return False
+    except Exception:
+        log.debug("GetSystemPowerStatus failed", exc_info=True)
+        return False
+    return status.ACLineStatus == 0
+
+
 _HWND_TOPMOST = -1
 _HWND_NOTOPMOST = -2
 _SWP_NOSIZE = 0x0001

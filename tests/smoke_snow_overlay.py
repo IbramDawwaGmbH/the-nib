@@ -177,8 +177,12 @@ def cursor():
     return (int(x0 + (d if d < span else 2 * span - d)), int(y))
 
 
+# The synthetic desktop's foreground glance is its whole stack: on the real one a window opening,
+# closing, moving or coming to the front changes the foreground window or its rectangle, and that
+# is what lets the poll back off at rest (SO.STACK_SETTLE_PASSES) without missing it.
 ov = SO.SnowOverlay(stack=lambda: list(STACK), monitors=lambda: MONS,
-                    fullscreen=lambda m: STATE["fullscreen"] and m is MON, cursor=cursor)
+                    fullscreen=lambda m: STATE["fullscreen"] and m is MON, cursor=cursor,
+                    glance=lambda: (tuple(STACK), STATE["fullscreen"]))
 appeared = []
 ov.appeared.connect(lambda: appeared.append(True))
 
@@ -471,6 +475,82 @@ pump(700)
 fill(1.0)
 check("...and it comes back with that window gone", ov.strips[FAKE].isVisible())
 
+print("\n--- at rest the stack poll backs off, and snaps back ---")
+# Its own overlay, ticked by hand (the timer stopped), so the count is exact.
+BO = {"stack": [(FAKE, RECT, False, False)], "glance": 1, "cursor": (mright - 3, mbottom - 3)}
+walks = []
+
+
+def bo_stack():
+    walks.append(1)
+    return list(BO["stack"])
+
+
+bo = SO.SnowOverlay(stack=bo_stack, monitors=lambda: MONS, fullscreen=lambda m: False,
+                    cursor=lambda: BO["cursor"], glance=lambda: BO["glance"])
+bo.set_state(active=True)
+bo.stack_timer.stop()
+# Under QUIET_FRACTION, so the move below drops it quietly: nothing in the air to keep it polling.
+bo.field.add_cap(FAKE, RECT, bo._now_ms(), scale=S, fill=0.1)
+
+
+def ticks(n):
+    before = len(walks)
+    for _ in range(n):
+        bo._on_stack_timer()
+    return len(walks) - before
+
+
+ticks(SO.STACK_SETTLE_PASSES + 2)
+still = ticks(40)
+check("pointer still, nothing changing: a full pass every STACK_IDLE_EVERY-th tick",
+      still == 40 // SO.STACK_IDLE_EVERY, f"{still} passes in 40 ticks")
+BO["cursor"] = (BO["cursor"][0] - 50, BO["cursor"][1])
+check("the pointer moving: a full pass on that very tick", ticks(1) == 1)
+ticks(SO.STACK_SETTLE_PASSES + 2)
+BO["glance"] += 1
+check("another window at the front (or the front one moved): a full pass at once", ticks(1) == 1)
+moved = (RECT[0] + 40, RECT[1], RECT[2] + 40, RECT[3])
+ticks(SO.STACK_SETTLE_PASSES + 2)
+BO["stack"] = [(FAKE, moved, False, False)]
+got = 0
+for k in range(SO.STACK_IDLE_EVERY):
+    ticks(1)
+    if bo.field.caps.get(FAKE) is not None and bo.field.caps[FAKE].rect == moved:
+        got = k + 1
+        break
+check("a change neither glance sees is still found within STACK_IDLE_EVERY ticks",
+      got and got <= SO.STACK_IDLE_EVERY, str(got))
+check("...and the poll is back at every tick after it",
+      ticks(SO.STACK_SETTLE_PASSES) == SO.STACK_SETTLE_PASSES)
+ticks(SO.STACK_SETTLE_PASSES + 2)
+cap_b = bo.field.caps[FAKE]
+cap_b.next_grow_ms = bo._now_ms() - 1.0
+mass_b = cap_b.mass
+passes = ticks(SO.STACK_IDLE_EVERY)
+check("piles still grow while it is backed off", passes == 1 and cap_b.mass > mass_b,
+      f"{passes} passes, {mass_b:.0f} -> {cap_b.mass:.0f}")
+before = len(walks)
+for _ in range(20):
+    bo._tick_stack()
+check("called directly, a pass always walks the stack", len(walks) - before == 20)
+bext = bo.field.caps[FAKE].extent()
+BO["cursor"] = (bext[0] + 40, bext[1] - 20)          # near the pile, and then resting there
+ticks(1)
+check("the pointer coming to rest near a pile starts the fast sampling",
+      bo.pointer_timer.isActive())
+check("...which stops once it has rested there NEAR_LINGER_MS",
+      pump_until(lambda: not bo.pointer_timer.isActive(), SO.NEAR_LINGER_MS + 1500))
+ticks(SO.STACK_SETTLE_PASSES + 2)
+resting = ticks(40)
+check("...so a pointer resting by a window's top edge does not keep the poll at full rate",
+      resting == 40 // SO.STACK_IDLE_EVERY and not bo.pointer_timer.isActive(),
+      f"{resting} passes in 40 ticks")
+BO["cursor"] = (bext[0] + 60, bext[1] - 20)
+ticks(1)
+check("...and moving it again starts the sampling at once", bo.pointer_timer.isActive())
+bo.shutdown()
+
 print("\n--- off again ---")
 ov.set_state(active=False)
 pump(100)
@@ -545,6 +625,97 @@ check("snow 'off': none", not sn.active)
 nibapp.config["snow"] = "always"
 nibapp._update_snow()
 check("...and back on", sn.active)
+
+print("\n--- on battery ---")
+_real_battery = M.win.on_battery
+check("win.on_battery answers", isinstance(_real_battery(), bool))
+M.win.on_battery = lambda: True
+nibapp._update_snow()
+check("on battery: the piles stay, but do not grow, and snow flies at 20 FPS",
+      sn.showing and not sn.growing and sn.on_battery
+      and sn.anim_timer.interval() == snow.SnowField.frame_ms(True),
+      f"growing={sn.growing} interval={sn.anim_timer.interval()}")
+M.win.on_battery = lambda: False
+nibapp._update_snow()
+check("...and on mains they grow again, at 30 FPS",
+      sn.growing and sn.anim_timer.interval() == snow.SnowField.frame_ms(False))
+M.win.on_battery = _real_battery
+
+print("\n--- the news reaches him (WP5) ---")
+heard = []
+_b = nibapp.behavior
+_real_landed, _real_nearby = _b.snow_landed, _b.snow_nearby
+_b.snow_landed = lambda: heard.append("landed")
+_b.snow_nearby = lambda x, y: heard.append(("near", x, y))
+sn.landed.append(snow.Landing("floor", 0.0, 0.0, 1.0, "lump", mode="brush"))
+nibapp._tick_snow()
+check("snow landing elsewhere is not news to him", heard == [], str(heard))
+sn.landed.append(snow.Landing("nib", 10.0, 10.0, 1.0, "lump", mode="drop"))
+sn.landed.append(snow.Landing("nib", 10.0, 10.0, 1.0, "lump", mode="puff"))
+nibapp._tick_snow()
+check("...nor a pile falling off a window that moved above him, nor his own puff", heard == [],
+      str(heard))
+sn.landed.append(snow.Landing("nib", 10.0, 10.0, 1.0, "lump", mode="brush"))
+sn.landed.append(snow.Landing("nib", 12.0, 10.0, 1.0, "lump", mode="flick"))
+sn.gestures.append(snow.Gesture("brush", 1, 300.0, 200.0, 50.0, 0.0))
+nibapp._tick_snow()
+check("snow landing on him and a brush are handed to Behavior, once each tick",
+      heard == ["landed", ("near", 300.0, 200.0)], str(heard))
+heard.clear()
+nibapp._tick_snow()
+check("...and the queues were drained", heard == [] and not sn.landed and not sn.gestures)
+_b.snow_landed, _b.snow_nearby = _real_landed, _real_nearby
+
+
+class SnowStub:
+    """What _tick_snow asks of the overlay, recorded: the dent, the snowy check, the puff."""
+
+    showing = True
+
+    def __init__(self):
+        self.calls = []
+
+    def take_landed(self):
+        return []
+
+    def take_gestures(self):
+        return []
+
+    def set_perch(self, hwnd, span):
+        self.calls.append(("perch", hwnd, span))
+
+    def fullness(self, hwnd):
+        return 0.5
+
+    def puff(self, x, y, half_width=0.0):
+        self.calls.append(("puff", x, y, half_width))
+
+
+stub, real_snow = SnowStub(), nibapp.snow
+nibapp.snow = stub
+PERCHED = 0x7FFF0055
+_b.perch_on((mleft + 300, mtop + 400, mleft + 900, mtop + 800))
+nibapp._perched_hwnd = PERCHED
+nibapp._tick_snow()
+bx, _by, bw, _bh = _b.rect
+check("perched: the dent goes under his feet on that window's pile",
+      stub.calls == [("perch", PERCHED, (bx + bw * 0.3, bx + bw * 0.7))], str(stub.calls))
+check("...and half a pile is snowy enough to shiver about", _b._snowy_perch)
+stub.calls.clear()
+_b._snow_puff_due = True
+nibapp._tick_snow()
+puffs = [c for c in stub.calls if c[0] == "puff"]
+check("a puff is kicked up from the line his soles stand on, beside him",
+      puffs == [("puff", bx + bw / 2.0, _b.feet_y, bw * 0.45)]
+      and _b.feet_y == mtop + 400, str(puffs))
+_b._release_perch()
+_b._enter(M.State.IDLE)
+nibapp._perched_hwnd = 0
+stub.calls.clear()
+nibapp._tick_snow()
+check("off the window: no dent, nothing snowy",
+      stub.calls == [("perch", 0, None)] and not _b._snowy_perch, str(stub.calls))
+nibapp.snow = real_snow
 
 # The toast, with the polls stopped so nothing but these calls moves it on.
 nibapp._geometry_timer.stop()

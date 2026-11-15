@@ -60,7 +60,9 @@ from PySide6.QtWidgets import QApplication, QFileDialog, QMessageBox  # noqa: E4
 import costume_calendar  # noqa: E402
 import ocr  # noqa: E402
 from animator import SpriteSheet, available_skins  # noqa: E402
-from behavior import ANTIC_WORDS, PERSONALITIES, Behavior, State  # noqa: E402
+from behavior import (  # noqa: E402
+    ANTIC_WORDS, PERSONALITIES, SNOW_HIT_MODES, SNOWY_PERCH_FULL, Behavior, State,
+)
 from billboard import Billboard  # noqa: E402
 from bubble import AskBubble, Toast  # noqa: E402
 from focus_timer import FocusTimer  # noqa: E402
@@ -1043,11 +1045,12 @@ class NibApp:
         cursor = win.get_cursor_pos()
         self.behavior.update(dt_ms, cursor)
         if self.snow.showing:
-            # Where he is, for snow falling onto him (what he does about it is WP5's); nothing
-            # while he is out of sight, so snow never lands on a mascot who is not there.
+            # Where he is, for snow falling onto him; nothing while he is out of sight, so snow
+            # never lands on a mascot who is not there.
             x, y, w, h = self.behavior.rect
             hidden = self._hidden_by_fullscreen or self._snoozed or self._guarding
             self.snow.set_nib(None if hidden else (x, y, x + w, y + h))
+        self._tick_snow()
         if self.behavior.take_costume_swap():
             # Before _apply_frame, so the apex paints already dressed.
             self._apply_pending_costume()
@@ -1851,12 +1854,38 @@ class NibApp:
         if self._snow_hint_due:
             self._give_snow_hint()
 
+    def _tick_snow(self) -> None:
+        """What the snow does to him, every tick (plan 1.5): snow landing on him, snow brushed or
+        thrown near him, the dent he makes standing on a pile and whether it is snowy enough to
+        shiver about, and the puff he kicks up when he plays. Behavior decides; this only carries
+        the news both ways. The queues are drained whether or not he can react, so nothing from
+        a minute ago is reacted to later."""
+        landed = self.snow.take_landed()
+        gestures = self.snow.take_gestures()
+        # Only snow you knocked off or threw: a pile falling off a window that moved or closed
+        # above him is not something done to him.
+        if any(landing.where == "nib" and landing.mode in SNOW_HIT_MODES for landing in landed):
+            self.behavior.snow_landed()
+        for gesture in gestures:
+            self.behavior.snow_nearby(gesture.x, gesture.y)
+        if self.behavior.take_snow_puff():
+            x, _y, w, _h = self.behavior.rect
+            self.snow.puff(x + w / 2.0, self.behavior.feet_y, half_width=w * 0.45)
+        if self.behavior.perched and self._perched_hwnd and self.snow.showing:
+            # His feet are the middle of his sprite, not its padded width.
+            x, _y, w, _h = self.behavior.rect
+            self.snow.set_perch(self._perched_hwnd, (x + w * 0.3, x + w * 0.7))
+            self.behavior.set_snowy_perch(self.snow.fullness(self._perched_hwnd)
+                                          >= SNOWY_PERCH_FULL)
+        else:
+            self.snow.set_perch(0, None)
+            self.behavior.set_snowy_perch(False)
+
     @staticmethod
     def _on_battery() -> bool:
         """On battery the piles stay but stop growing, and thrown snow animates at 20 FPS (plan
-        1.4). ``win.on_battery`` is WP4's; until it is there, this machine is on mains."""
-        probe = getattr(win, "on_battery", None)
-        return bool(probe()) if probe is not None else False
+        1.4). ``GetSystemPowerStatus``, a few us, on the 700 ms poll."""
+        return win.on_battery()
 
     def _on_snow_off_today(self) -> None:
         self._snow_off_day = datetime.date.today().isoformat()

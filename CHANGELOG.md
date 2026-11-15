@@ -107,6 +107,18 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   brings a one-time toast saying so (a new hidden latch, `snow_hint_seen`). At rest it is one look
   at the window stack twice a second, about 2.5 ms each; nothing animates unless snow is in the
   air.
+- The snow grows the way it should: a fresh pile shows within a couple of minutes (6 px after
+  about 3) and is full after about 20 minutes of showing; its icicles start after about 12 and
+  are done within the hour. On battery the piles stay but stop growing, and knocked-off snow
+  animates at 20 frames a second instead of 30. At rest the snow now walks the window stack every
+  2 s instead of every 0.5 s, with a few-microsecond glance at the front window and the pointer
+  in between that snaps it back the moment anything moves: the snow alone went from 0.43-0.47 %
+  of one core to 0.14 % on a desktop of about 380 windows.
+- **He notices the snow.** Snow you knock or throw onto him makes him jump, and he wears the
+  snowcap for a minute after (not over a costume you picked); brush snow off a window next to him
+  and now and then he hops or dances in it, kicking a puff of snow up; dropped on a snowy window
+  he presses a dent into the pile with his feet and shivers now and then. None of it while he is
+  asleep, paused, in your hand, focusing or hidden.
 
 ### Changed
 

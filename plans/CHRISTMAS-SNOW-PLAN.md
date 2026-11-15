@@ -1,19 +1,21 @@
-> **Status:** WP0, WP1 and WP2 done (WP0: measurements in 1.6, architecture decided: per-cap
-> strip windows plus a flight layer that exists only while snow is airborne, realistic snow, no
-> snowfall; WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2:
-> `win.list_window_stack()`, `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`). WP3
-> is built (`snow_overlay.py`, the `snow` setting, the wiring in `main.py`,
-> `tests/smoke_snow_overlay.py`) but **not ticked**: its acceptance "idle CPU within noise of
-> today's" is not met (~0.6 % of one core at rest while snow shows, measured in WP3's Done note),
-> and needs the owner's decision - accept a measured budget instead, or lower the cost and
-> re-measure. Continue from **WP4** once that is settled. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP0, WP1, WP2, WP4 and WP5 done (WP0: measurements in 1.6, architecture decided:
+> per-cap strip windows plus a flight layer that exists only while snow is airborne, realistic
+> snow, no snowfall; WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2:
+> `win.list_window_stack()`, `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`; WP4:
+> eased growth, `win.on_battery()`, the stack poll's back-off at rest, `tests/snow_rate.py`; WP5:
+> Nib's reactions, `tests/smoke_snow_nib.py`). WP3 is built (`snow_overlay.py`, the `snow`
+> setting, the wiring in `main.py`, `tests/smoke_snow_overlay.py`) but **not ticked**: its
+> acceptance "idle CPU within noise of today's" is still not met to the letter - WP4 brought the
+> snow at rest from 0.43-0.47 % of one core to 0.14 % (WP4's Done note), against 0.002 % with no
+> snow - and needs the owner's decision: accept that measured budget, or ask for less. Continue
+> from **WP6**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
 > - [x] WP2 window stack and clipping
 > - [ ] WP3 overlay, wiring and the setting (built; idle-CPU acceptance awaits a decision)
-> - [ ] WP4 growth, icicles over time, battery
-> - [ ] WP5 Nib's reactions
+> - [x] WP4 growth, icicles over time, battery
+> - [x] WP5 Nib's reactions
 > - [ ] WP6 play mode and the snowball
 > - [ ] WP7 docs and polish
 
@@ -53,7 +55,8 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
    (WP3: the snow's own windows are not topmost, and the overlay lifts them back up with Qt's
    `raise_()` - its own windows only, no `SetWindowPos`; see WP3's Done note.)
 3. **Idle is zero ticks.** When nothing is airborne, the animation timer is stopped; only the 2 Hz
-   window stack poll and the slow growth timer run, and only while snow is showing.
+   window stack poll and the slow growth timer run, and only while snow is showing. (WP4: at rest
+   the poll walks the stack every 2 s, with a glance at the front window and the pointer between.)
 4. **Below Nib.** The snow layer sits under the mascot, his bubble, the focus timer, the tool wheel
    and the toast; it never re-asserts topmost while the wheel or bubble is open.
 5. **Hidden, not empty**, whenever it should not show (section 1.4): a visible full-screen layered
@@ -419,12 +422,89 @@ icicles lengthen every few minutes; on battery caps stay but do not grow (1.4). 
 taskbar drift.
 **Acceptance.** Measured growth and icicle rates quoted in the docs; zero animation ticks while caps
 only grow (the growth timer is slow and repaints only the caps that changed); battery rule tested.
+**Done.** Built together with WP5 (one run, at the owner's request). Rate script:
+`tests/snow_rate.py` (in `RATES`). What was done, and what differs from the text above:
+- **Growth eases out.** Even steps (WP1's placeholder, 40 x 30 s) measured 4.5 min to a 6 px
+  middle and 21.5 to full: too slow to read as snow. A column's step is now
+  `target / GROWTH_STEPS * 2 * sqrt(1 - fill)`, never under `GROWTH_MIN_PACE` (0.35) of the even
+  pace, with `GROWTH_STEPS` = 42 at the same 30 s period. Measured (800 px window at 96 DPI,
+  medians of 12 windows' seeds): the middle at 3 px after 1.3 min, 6 px after 2.8, 10 px after
+  4.3, 20 px after 11, full after 19.8-20.0 (19.4-20.5 across windows), the same whether `grow`
+  runs every 0.5 s, 2 s or 30 s. Icicles kept their 180 s / 2 px step: the first is 4 px long 12
+  minutes in, the last at full length (8-28 px) after 39-48. `QUIET_FRACTION` went from 0.1 to
+  0.2 to keep its meaning (about two and a half minutes of growth: the eased steps reach 0.1 in
+  one), and `smoke_snow`'s "half grown at ten minutes" became "about two-thirds" (0.73 measured).
+- **Battery**: `win.on_battery()` (`GetSystemPowerStatus`, `ACLineStatus == 0`; unknown or a
+  failed call is mains), called by `main._on_battery` on the 700 ms poll; the wiring test checks
+  that on battery the overlay is shown, not growing, at `FPS_BATTERY`.
+- **Idle cost** (WP3's open item). Profiled first: `list_window_stack` at 380 top-level windows
+  (19 visible) is ~2.2 ms median, 6.8 ms p90, and the bare `EnumWindows` callback into Python is
+  ~0.5 ms of it before any filter - the cost is per window, so reordering the filters would not
+  help. Instead the poll **backs off at rest**: after `STACK_SETTLE_PASSES` (4) full passes in a
+  row with nothing changed (no window opened, closed or moved, the same front window, nothing in
+  the air, the pointer not near a pile), a tick only glances at the foreground window, its
+  `GetWindowRect` and the pointer (`win.foreground_glance()` plus `get_cursor_pos`, ~3.4 us
+  together) and walks the stack only if one of them changed, or every `STACK_IDLE_EVERY` (4)
+  ticks regardless (2 s). Any change snaps it back to every tick. Growth does not count as a
+  change (thirty growing piles would otherwise keep it at full rate for 20 minutes); it still
+  happens on the 2 s passes. A dent or a puff refreshes its strip itself rather than waiting for a
+  pass. Measured, the overlay alone in its own process on the live desktop (real stack and
+  monitors, bare piles so nothing showed, `QueryProcessCycleTime` / 2.995 GHz, 20 s windows):
+  **before 0.43-0.47 % of one core** (40 passes / 20 s; WP3 had 0.6 % on a busier desktop),
+  **after 0.14 % with the pointer still** (3 runs, 10 passes / 20 s) and **0.40 % with it
+  moving** (as before: every tick sees a change), against 0.002 % with no snow. Passes per minute
+  at rest (`snow_rate`): 30, was 120. A window moved by something other than the pointer and not
+  at the front is seen up to 2 s late. Not measured: the whole app paused (WP3's 0.36 % -> 0.80 %
+  figure), which would have meant snow on the owner's live desktop.
 
 ### WP5 — Nib's reactions
 **Files.** `behavior.py`, `main.py`, tests (`tests/smoke_snow_nib.py` or an existing suite),
 `snow_rate.py`.
 **Acceptance.** As 1.5 (reactions triggered by brushed or thrown snow only); `fidget_rate` / `quirk_rate` byte-identical under the seeded comparison with
 snow on and off.
+**Done.** Suite: `tests/smoke_snow_nib.py`; rates in `tests/snow_rate.py`. `Behavior` stays
+Qt-free: `main._tick_snow` drains the overlay's `take_landed` / `take_gestures` every tick and
+hands them in as plain calls, and carries the dent and the puff back out.
+- **Hit**: `Behavior.snow_landed()` plays `startle` through `_moment(..., costume="snowcap")`, and
+  `persona_costume` keeps the snowcap for `SNOW_HAT_MS` (60 s) after it - the moment-costume path
+  only lasts as long as its antic, so the minute is a timer read through `persona_costume`, with
+  `_may_dress()` asked on every read (a costume you pick takes it off at once, and
+  `clear_persona_costume` drops the timer). One jump per shower (`SNOW_HIT_COOLDOWN_MS`, 8 s); the
+  minute is held while he is paused or hidden. Not gated on the shared moment cooldown: it is a
+  reaction to being hit, like the poke flinch, not a moment about the world.
+- **Play**: `Behavior.snow_nearby(x, y)` for each brush or flick; within `SNOW_PLAY_NEAR_PX` (200)
+  of his centre, the first gesture of a burst (`SNOW_BURST_GAP_MS`, 1.5 s) opens an ask for
+  `SNOW_PLAY_WINDOW_MS` (6 s), and an idle mascot gets to his decision in 250 ms. `_pick_moment`
+  answers it first (it lapses in seconds; everything else there waits on a latch or a window) with
+  `hop` or `dance` at `SNOW_PLAY_CHANCE` (0.6), behind the shared 45 s cooldown and its own
+  `SNOW_PLAY_COOLDOWN_MS` (2 min), and asks the app for a puff (`take_snow_puff` ->
+  `SnowOverlay.puff` -> `SnowField.puff`: five small new lumps from his feet, booked as grown,
+  flagged `misses_nib` so they never land on him and startle him mid-hop). The eye-tracking check
+  stands aside while an ask is open, since brushing near him brings the pointer near him too.
+  Measured: brushing beside him every 20 s for an hour gives 19-22 moments (3 seeds; hops and
+  dances about even). While he is perched an ask simply lapses: a perch never reaches
+  `_pick_moment`.
+- **Perched**: `SnowField.set_dent(hwnd, span)` presses the columns under his feet (the middle
+  40 % of his sprite) to `DENT_PX` (4 px) and pushes the snow into a 3-column rim either side
+  (overflow booked `vanished`); growth does not refill it while he stands there and does after.
+  Idempotent (called every tick; no version bump when nothing changed), not queued in `Changes`
+  (the overlay re-renders that strip at once, `SnowOverlay.set_perch`), and a pile replaced by a
+  move or resize comes back undented and is pressed again on the next tick. `perch_on` stands him
+  on `GetWindowRect`'s top, the same handle and top the stack keys the pile by. A pile at least
+  `SNOWY_PERCH_FULL` (0.25) full makes `set_snowy_perch(True)`; `_tick_perch` then shivers every
+  `SNOW_SHIVER_EVERY_MS` (4-8 min, drawn lazily on the first snowy perch), through the shared
+  cooldown, not while focusing or with antics off. Quirks are held off on a perch because an antic
+  ends in IDLE and `update_perch` only follows the window in PERCH; the shiver instead ends straight
+  back in PERCH (`_tick_antic`). Measured: 9.8-10.8 shivers an hour standing on a snowy window
+  (3 seeds, 4 hours each; 1.5-3 min first, which measured 26 an hour, was a tic).
+- None of it fires asleep or napping, waking, held, falling, hidden, cross, paused, focusing,
+  while you are away, holding the sign or mid-quick-change (`_snow_unreachable`). The guard and a
+  snooze hide the snow, so nothing reaches him then anyway.
+- **Byte-identical**: no random number is drawn on any snow path until snow has reached him (the
+  shiver clock is drawn on the first snowy perch, the play roll only with an ask open), checked in
+  the suite by twenty simulated minutes with and without snow about, and by `fidget_rate`,
+  `quirk_rate`, `day_rate`, `chatter_rate` and `ledge_rate` run seeded (`random.seed(12345)`,
+  `PYTHONHASHSEED=0`) on `git archive HEAD` and on this tree: identical output.
 
 ### WP6 — Play mode and the snowball
 **Files.** `snow_overlay.py`, `tool_wheel.py` (icon), `main.py`, tests.

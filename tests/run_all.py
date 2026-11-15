@@ -55,6 +55,7 @@ SUITES = [
     ("smoke_snow", "the snow model: caps grow and stop, brush and flick, landing, the budget"),
     ("smoke_snow_stack", "the snow and the window stack: piles moved, cut, dropped, clipped"),
     ("smoke_snow_overlay", "the snow on screen: never a click, below Nib, idle timers, hiding"),
+    ("smoke_snow_nib", "Nib and the snow: hit by it, playing in it, the dent, the shiver"),
     ("smoke_update", "update and restart: git fast-forward, release zip, the helper, the wait"),
     ("shadow_mask", "the contact shadow's real input region, read back from GetWindowRgn"),
 ]
@@ -67,6 +68,7 @@ RATES = [
     ("day_rate", "how often each world moment fires over a simulated day"),
     ("ledge_rate", "how often the window enumeration actually runs"),
     ("chatter_rate", "how many lines he says in a working day, at each chatter level"),
+    ("snow_rate", "how fast the snow grows, the stack poll at rest, Nib's shivers and play"),
 ]
 
 

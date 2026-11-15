@@ -50,7 +50,9 @@ All softness is baked into those pixmaps; there is no blur, live or otherwise.
 Ticks, all stopped while the snow is not showing:
 
 *   ``STACK_POLL_MS`` (2 Hz): one ``list_window_stack`` pass and :meth:`snow.SnowField.sync`, the
-    growth step, and the check whether the pointer is near a pile.
+    growth step, and the check whether the pointer is near a pile. At rest it backs off to a full
+    pass every 2 s, with a glance at the foreground window and the pointer in between that snaps
+    it back (``STACK_SETTLE_PASSES``).
 *   ``POINTER_POLL_MS`` (~60 Hz), only while the pointer is near a pile and the snow is not
     frozen: the cursor sampled for the brush and flick gestures.
 *   ``1000 / snow.FPS`` while anything is airborne, stopped the moment nothing is.
@@ -91,6 +93,16 @@ Rect = tuple[int, int, int, int]
 #: The window stack poll, the growth step and the near-a-pile check (plan 1.2: ``list_window_stack``
 #: measured 0.6-2.2 ms median, so twice a second and never per frame).
 STACK_POLL_MS = 500
+
+#: At rest the poll backs off. After ``STACK_SETTLE_PASSES`` full passes in a row that found nothing
+#: changed (no window moved, opened or closed, the same window at the front, nothing in the air, the
+#: pointer nowhere near a pile), a tick only glances at the foreground window, its rectangle and the
+#: pointer (:func:`win_integration.foreground_glance`, a few us), and walks the whole stack only if
+#: one of them changed or every ``STACK_IDLE_EVERY``-th tick regardless (every 2 s). Any change
+#: snaps it straight back to every tick. ``list_window_stack`` is ~2 ms at ~400 top-level windows,
+#: nearly all of it the Python callback per window, so this is where the idle cost was (WP4).
+STACK_SETTLE_PASSES = 4
+STACK_IDLE_EVERY = 4
 
 #: The cursor while it is near a pile: fast enough that a swipe at a few px/ms gives the gesture
 #: detector samples a stroke apart (``snow.VELOCITY_WINDOW_MS`` is 16).
@@ -637,6 +649,7 @@ class SnowOverlay(QObject):
                  monitors: Callable[[], list[Monitor]] = desktop_monitors,
                  fullscreen: Callable[[Monitor], bool] = foreground_fullscreen,
                  cursor: Callable[[], tuple[int, int]] = win.get_cursor_pos,
+                 glance: Callable[[], object] = win.foreground_glance,
                  clock: Callable[[], float] = time.monotonic,
                  rng: random.Random | None = None, parent: QObject | None = None) -> None:
         super().__init__(parent)
@@ -644,6 +657,7 @@ class SnowOverlay(QObject):
         self._monitor_source = monitors
         self._fullscreen_test = fullscreen
         self._cursor = cursor
+        self._glance = glance
         self._clock = clock
         self._rng = rng
         self.field: snow.SnowField | None = None
@@ -656,7 +670,16 @@ class SnowOverlay(QObject):
         self._front: tuple | None = None
         self._order: dict[int, int] = {}
         self._near_until = 0.0
+        self._seen_pointer: tuple | None = None   # where the pointer was at the last look
         self._appeared = False
+        #: The poll's back-off (``STACK_SETTLE_PASSES``): full passes in a row that changed
+        #: nothing, ticks skipped since the last full pass, and what the last one glanced at.
+        self._quiet_passes = 0
+        self._skipped = 0
+        self._last_glance: tuple | None = None
+        #: Counters for tests/snow_rate.py and the suite: ticks of the poll, and full passes.
+        self.ticks = 0
+        self.passes = 0
         #: Piles changed mid-flight but not re-rendered yet (``RENDER_GAP_MS``), and when each
         #: pile was last rendered.
         self._stale: set[int] = set()
@@ -676,7 +699,7 @@ class SnowOverlay(QObject):
 
         self.stack_timer = QTimer(self)
         self.stack_timer.setInterval(STACK_POLL_MS)
-        self.stack_timer.timeout.connect(self._tick_stack)
+        self.stack_timer.timeout.connect(self._on_stack_timer)
         self.anim_timer = QTimer(self)
         self.anim_timer.setTimerType(Qt.PreciseTimer)
         self.anim_timer.setInterval(snow.SnowField.frame_ms(False))
@@ -728,6 +751,7 @@ class SnowOverlay(QObject):
             return
         if not was_showing:
             self._refit_all = True
+            self._quiet_passes = 0
             self.stack_timer.start()
             self._tick_stack()
             if self.field is not None and self.field.airborne:
@@ -738,6 +762,37 @@ class SnowOverlay(QObject):
         (:attr:`landed`, ``where == "nib"``)."""
         if self.field is not None:
             self.field.set_nib(rect)
+
+    def set_perch(self, hwnd: int, span: tuple[float, float] | None) -> None:
+        """Nib stands on window ``hwnd`` between ``span``'s two x, or on none (``hwnd`` 0): the
+        pile under his feet is pressed down (:meth:`snow.SnowField.set_dent`). Called on every
+        tick of his; a strip is re-rendered only when the dent actually changed, and at once,
+        since the model does not queue it for the next stack pass."""
+        if self.field is None:
+            return
+        for h in self.field.set_dent(hwnd, span):
+            if self.showing and h in self.field.caps:
+                self._refresh(h, render=True)
+
+    def fullness(self, hwnd: int) -> float:
+        """How full window ``hwnd``'s pile is, 0..1 (more with snow thrown on): is he standing
+        on a snowy window?"""
+        return self.field.fullness(hwnd) if self.field is not None else 0.0
+
+    def puff(self, x: float, y: float, half_width: float = 0.0) -> bool:
+        """A little snow kicked up from his feet (``(x, y)`` his middle on the line his soles
+        stand on, the lumps starting ``half_width`` either side), sized for that monitor's DPI. Only while the snow shows, is not frozen, and not on a monitor whose
+        snow a fullscreen app hides."""
+        if self.field is None or not self.showing or self.frozen:
+            return False
+        if self._blocked_monitor(x, y):
+            return False
+        scale = next((m.scale for m in self.monitors
+                      if m.rect[0] <= x < m.rect[2] and m.rect[1] <= y < m.rect[3]), 1.0)
+        self.field.puff(x, y, self._now_ms(), scale, half_width)
+        self._quiet_passes = 0
+        self._start_anim()
+        return True
 
     def take_landed(self) -> list[snow.Landing]:
         out = list(self.landed)
@@ -790,11 +845,33 @@ class SnowOverlay(QObject):
             self._close_flights()   # a layer is the size of its monitor
         self.monitors = mons
 
+    def _look(self) -> tuple:
+        """What a backed-off tick glances at: the foreground window and its rectangle, and the
+        pointer. A window clicked to the front, opened, closed, dragged, snapped or made
+        fullscreen changes the first; the pointer catches a drag of a background window."""
+        return (self._glance(), tuple(self._cursor()))
+
+    def _on_stack_timer(self) -> None:
+        """The poll's tick: a full pass, unless it has backed off (``STACK_SETTLE_PASSES``) and
+        neither the glance nor the clock says it is time for one."""
+        self.ticks += 1
+        if (self._quiet_passes >= STACK_SETTLE_PASSES and self._skipped < STACK_IDLE_EVERY - 1
+                and self.field is not None and self.showing):
+            if self._look() == self._last_glance:
+                self._skipped += 1
+                return
+        self._tick_stack()
+
     def _tick_stack(self) -> None:
+        """One full pass: the window stack, the model's sync, growth, the strips, the near check.
+        Called directly, it always runs; the timer goes through :meth:`_on_stack_timer`."""
         field = self.field
         if field is None or not self.showing:
             self.stack_timer.stop()
             return
+        self.passes += 1
+        self._skipped = 0
+        self._last_glance = self._look()
         now = self._now_ms()
         self._refresh_monitors()
         stack = self._stack_source()
@@ -834,6 +911,7 @@ class SnowOverlay(QObject):
             if (hwnd in render or hwnd in sync.moved or hwnd in sync.clipped or refit
                     or hwnd not in self.strips):
                 self._refresh(hwnd, render=hwnd in render)
+        raised = False
         if front is not None:
             if front != self._front:
                 # The window at the front changed: something was clicked to the front, and it
@@ -841,9 +919,15 @@ class SnowOverlay(QObject):
                 # normal band, back-most first, so the front window's pile ends up on top.
                 self._front = front
                 self._raise_strips()
+                raised = True
         if sync.chunks or field.airborne:
             self._start_anim()
         self._check_near(now)
+        # Growth is not a change for the back-off: it is the snow's own, on its own schedule,
+        # and thirty growing piles would otherwise keep the poll at full rate for 20 minutes.
+        settled = (stack is not None and not sync and not refit and not raised
+                   and not field.airborne and not self.pointer_timer.isActive())
+        self._quiet_passes = self._quiet_passes + 1 if settled else 0
 
     def _raise_strips(self) -> None:
         shown = [(self._order.get(h, 1 << 30), strip) for h, strip in self.strips.items()
@@ -952,12 +1036,16 @@ class SnowOverlay(QObject):
     def _blocked(self, x: float, y: float) -> bool:
         """The pointer cannot brush here: it is over a window of Nib's, or on a monitor whose
         snow a fullscreen app hides."""
+        return self._blocked_monitor(x, y) or self._over_own(x, y)
+
+    def _blocked_monitor(self, x: float, y: float) -> bool:
+        """On a monitor whose snow a fullscreen app hides."""
         for idx in self.fullscreen:
             if 0 <= idx < len(self.monitors):
                 left, top, right, bottom = self.monitors[idx].rect
                 if left <= x < right and top <= y < bottom:
                     return True
-        return self._over_own(x, y)
+        return False
 
     @staticmethod
     def _over_own(x: float, y: float) -> bool:
@@ -975,11 +1063,15 @@ class SnowOverlay(QObject):
         return False
 
     def _check_near(self, now: float) -> None:
-        """From the 2 Hz tick: sample the cursor quickly only while it is near a pile."""
+        """From the 2 Hz tick: sample the cursor quickly only while it is near a pile and has
+        moved since the last look. A pointer resting near a window's top edge would otherwise be
+        sampled at 60 Hz for as long as it rests there, and keep the poll from backing off; one
+        that starts moving is picked up on the next tick, as one arriving from afar always was."""
         if self.frozen or self.field is None or not self.field.caps:
             return
         x, y = self._cursor()
-        if self._near(x, y):
+        moved, self._seen_pointer = (x, y) != self._seen_pointer, (x, y)
+        if moved and self._near(x, y):
             self._near_until = now + NEAR_LINGER_MS
             if not self.pointer_timer.isActive():
                 self.pointer_timer.start()
@@ -997,9 +1089,11 @@ class SnowOverlay(QObject):
             field.lift()
         elif field.pointer(x, y, now):
             self._start_anim()
-        if self._near(x, y):
+        moved, self._seen_pointer = (x, y) != self._seen_pointer, (x, y)
+        if moved and self._near(x, y):
             self._near_until = now + NEAR_LINGER_MS
         elif now >= self._near_until:
+            # Gone from every pile, or resting near one, for NEAR_LINGER_MS.
             self.pointer_timer.stop()
 
     # --- the flight ------------------------------------------------------------------------

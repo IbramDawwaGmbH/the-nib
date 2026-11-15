@@ -55,7 +55,10 @@ fall and a resized one's cut-off span, fills each cap's ``covered`` spans and ``
 the windows in front, and names the monitors something covers whole. :func:`clip` turns a cap's
 extent and occluders into the rectangles the view may draw.
 
-Not here yet, by design: painting (WP3), the growth timing measurement (WP4).
+Nib's side (WP5): :meth:`SnowField.set_dent` presses the pile he stands on, :meth:`SnowField.puff`
+kicks a little snow up from his feet when he plays, and :meth:`SnowField.fullness` says whether
+the window under him is snowy. Painting is :mod:`snow_overlay`'s; the growth and icicle rates are
+measured by ``tests/snow_rate.py``.
 """
 
 from __future__ import annotations
@@ -106,12 +109,21 @@ ICICLE_SUPPORT_PX = 2.0
 
 # --- growth ------------------------------------------------------------------------------------
 
-#: One growth step per cap per this, so a cap fills in ``GROWTH_STEPS`` calls: about 20 minutes of
-#: showing. Each step is one pixmap re-render; never animated, no flakes. (Placeholder until WP4
-#: measures it in a rate script.)
+#: One growth step per cap per this; each step is one pixmap re-render, never animated, no flakes.
+#: Steps ease out: a column's step is ``target / GROWTH_STEPS * 2 * sqrt(1 - fill)`` (twice the
+#: even pace when bare, slowing as it fills, never under ``GROWTH_MIN_PACE`` of it), so a fresh
+#: pile reads as snow within a few minutes and still takes about 20 to fill. Measured by
+#: ``tests/snow_rate.py`` (an 800 px window at 96 DPI, medians of 12 windows): the middle of the
+#: pile at 3 px after 1.3 min, 6 px after 2.8, 10 px after 4.3, 20 px after 11, full after
+#: 19.8-20.0 (19.4-20.5 across windows), whether ``grow`` runs every 0.5 s, 2 s or 30 s. Even
+#: steps of 40 (WP1's placeholder) took 4.5 min to 6 px and 21.5 to full.
 GROWTH_STEP_MS = 30_000
-GROWTH_STEPS = 40
+GROWTH_STEPS = 42
+GROWTH_MIN_PACE = 0.35
 GROWTH_NOISE = 0.25          # each column's step is +-25 %, so the top fills in unevenly
+#: Icicles lengthen by ``ICICLE_STEP_PX`` per this, once the overhang above them is
+#: ``ICICLE_GROW_FILL`` full: the first is 4 px long 12 minutes in, and the last is at its full
+#: length (8-28 px) after 39-48 (``tests/snow_rate.py``).
 ICICLE_STEP_MS = 180_000
 
 # --- gestures ----------------------------------------------------------------------------------
@@ -189,8 +201,9 @@ COVER_BAND_PX = CAP_PX / 2.0
 #: moves, closes or is maximised: it simply goes. That is what keeps a window dragged across the
 #: screen from spraying chunks on every 2 Hz pass - the pile it regrows at each new spot is bare
 #: (``RESPAWN_HOLD_MS``), so only the first pass, the one that tears the real pile off, throws
-#: anything. 0.1 is four growth steps, about two minutes of showing.
-QUIET_FRACTION = 0.1
+#: anything. 0.2 is about five growth steps, two and a half minutes of showing (it was 0.1 while
+#: growth went at an even pace; the eased steps reach 0.1 in a minute).
+QUIET_FRACTION = 0.2
 
 #: A pile that just moved does not grow again for this long, whatever its growth schedule was, so
 #: a slow drag does not grow a little pile at each stop and throw it at the next.
@@ -200,6 +213,20 @@ RESPAWN_HOLD_MS = GROWTH_STEP_MS
 #: switch of virtual desktop (every window cloaked at once) or a session lock, not someone closing
 #: windows: the piles go quietly instead of throwing the whole budget over the new desktop.
 MASS_EXIT_CAPS = 3
+
+# --- Nib (WP5) ---------------------------------------------------------------------------------
+
+#: Standing on a pile, Nib presses the snow under his feet down to this (96-DPI px); what he
+#: pressed out goes to a rim either side of his feet, ``DENT_RIM_COLS`` columns wide.
+DENT_PX = 4.0
+DENT_RIM_COLS = 3
+
+#: The puff of snow he kicks up when he plays in it: a few small lumps thrown up from his feet.
+#: New snow (booked as grown), and it never lands on him.
+PUFF_CHUNKS = 5
+PUFF_MASS = TYPICAL_CHUNK_MASS * 0.3
+PUFF_UP_PX_S = (260.0, 420.0)
+PUFF_SIDE_PX_S = 140.0
 
 _EPS = 1e-9
 
@@ -288,6 +315,9 @@ class Cap:
 
         self.covered: list[tuple[float, float]] = []
         self.occluders: list[Rect] = []
+        #: Where Nib stands on this pile, ``(x0, x1)`` absolute, or ``None``: the snow there is
+        #: pressed down to ``DENT_PX`` and does not grow back above it (:meth:`SnowField.set_dent`).
+        self.dent: tuple[float, float] | None = None
         self.version = 0
         self.next_grow_ms = now_ms + r.uniform(0.0, GROWTH_STEP_MS)  # caps never step together
         self.next_icicle_ms = now_ms + ICICLE_STEP_MS
@@ -308,6 +338,15 @@ class Cap:
 
     def visible(self, x: float) -> bool:
         return not any(a <= x < b for a, b in self.covered)
+
+    def dented(self, i: int) -> bool:
+        if self.dent is None:
+            return False
+        return self.dent[0] <= self.column_center(i) < self.dent[1]
+
+    def limit(self, i: int, t: float) -> float:
+        """What growth fills column ``i`` to: ``t``, or less under Nib's feet."""
+        return min(t, DENT_PX * self.scale) if self.dented(i) else t
 
     def extent(self) -> Rect:
         """Everything this cap can ever draw, fixed for its rectangle and scale: a strip window
@@ -354,6 +393,8 @@ class Chunk:
     group: int               # the stroke that released it: dirty boxes are grouped by it
     monitor: int = -1
     rect: Rect | None = None  # where it was last reported, for the dirty box
+    misses_nib: bool = False  # his own puff: thrown up past him, never a hit
+    mode: str = ""           # how it left: "brush" | "flick" | "throw" | "drop" | "puff"
 
 
 @dataclass
@@ -365,6 +406,8 @@ class Landing:
     mass: float
     kind: str
     hwnd: int = 0            # the cap it landed on
+    mode: str = ""           # the chunk's: Nib reacts to snow you knocked off ("brush", "flick",
+    #                          "throw"), not to a pile falling off a window that moved ("drop")
 
 
 @dataclass
@@ -546,9 +589,11 @@ class SnowField:
                 cap.next_grow_ms = due if due > now_ms else now_ms + GROWTH_STEP_MS
                 for i, t in enumerate(cap.target):
                     h = cap.heights[i]
+                    t = cap.limit(i, t)
                     if h < t - _EPS:
-                        step = t / GROWTH_STEPS * (1.0 + cap.rng.uniform(-GROWTH_NOISE,
-                                                                         GROWTH_NOISE))
+                        pace = max(GROWTH_MIN_PACE, 2.0 * math.sqrt(max(0.0, 1.0 - h / t)))
+                        step = t / GROWTH_STEPS * pace * (1.0 + cap.rng.uniform(-GROWTH_NOISE,
+                                                                                GROWTH_NOISE))
                         cap.heights[i] = min(t, h + step)
             if now_ms >= cap.next_icicle_ms - GROWTH_STEP_MS / 4:
                 due = cap.next_icicle_ms + ICICLE_STEP_MS
@@ -573,6 +618,89 @@ class SnowField:
             if left - margin <= x < right + margin and top - margin <= y < bottom + margin:
                 return cap.hwnd
         return None
+
+    # --- Nib on the snow (WP5) ---------------------------------------------------------------
+
+    def fullness(self, hwnd: int) -> float:
+        """How much snow a window's pile holds, as a fraction of a full one (0 with no pile):
+        whether the window Nib stands on is snowy enough to shiver about."""
+        cap = self.caps.get(hwnd)
+        if cap is None or cap.full_mass <= _EPS:
+            return 0.0
+        return cap.mass / cap.full_mass
+
+    def set_dent(self, hwnd: int, span: tuple[float, float] | None) -> set[int]:
+        """Nib stands on ``hwnd``'s pile between ``span``'s two x (absolute px), or on no pile
+        (``hwnd`` 0 or ``span`` ``None``). The snow under his feet is pressed down to
+        ``DENT_PX`` and pushed out into a rim either side; growth does not fill it back up
+        while he stands there, and does once he has gone. Cheap and idempotent - the app calls
+        it on every tick he is perched - and returns the caps whose shape changed (their
+        ``version`` is bumped; they are *not* queued in ``Changes``, so the view re-renders
+        them itself, once). A pile replaced by a move or resize comes back undented, and the
+        next call presses it again."""
+        want = (float(min(span)), float(max(span))) if hwnd and span is not None else None
+        changed: set[int] = set()
+        for cap in self.caps.values():
+            dent = want if cap.hwnd == hwnd else None
+            if cap.dent == dent:
+                continue
+            cap.dent = dent
+            if dent is not None and self._press(cap):
+                changed.add(cap.hwnd)
+        return changed
+
+    def _press(self, cap: Cap) -> bool:
+        floor = DENT_PX * cap.scale
+        limit = CAP_MAX_PX * cap.scale
+        under = [i for i in range(cap.n) if cap.dented(i)]
+        if not under:
+            return False
+        pressed = {"left": 0.0, "right": 0.0}
+        middle = (cap.dent[0] + cap.dent[1]) / 2.0
+        for i in under:
+            extra = cap.heights[i] - floor
+            if extra > _EPS:
+                cap.heights[i] = floor
+                pressed["left" if cap.column_center(i) < middle else "right"] += extra * cap.col
+        if pressed["left"] + pressed["right"] <= _EPS:
+            return False
+        rims = {"left": range(under[0] - 1, under[0] - 1 - DENT_RIM_COLS, -1),
+                "right": range(under[-1] + 1, under[-1] + 1 + DENT_RIM_COLS)}
+        for side, mass in pressed.items():
+            cols = [j for j in rims[side] if 0 <= j < cap.n]
+            for k, j in enumerate(cols):
+                share = mass / (len(cols) - k)        # even shares, the overflow passed on
+                give = min(share, max(0.0, limit - cap.heights[j]) * cap.col)
+                cap.heights[j] += give / cap.col
+                mass -= give
+            self.ledger["vanished"] += mass           # no room: packed away
+        cap.version += 1
+        return True
+
+    def puff(self, x: float, y: float, now_ms: float, scale: float = 1.0,
+             half_width: float = 0.0) -> int:
+        """Kick a little new snow up from his feet, ``y`` the line his soles stand on and ``x``
+        his middle: the lumps start ``half_width`` or a little less either side of it, beside
+        him rather than behind him (the flight layer is under his window), and fly outwards. It
+        never lands on him, and it is booked as grown snow. Returns how many chunks it made."""
+        stroke = self._new_stroke()
+        r, s = self.rng, float(scale)
+        for k in range(PUFF_CHUNKS):
+            side = -1.0 if k % 2 == 0 else 1.0
+            vx = side * r.uniform(0.3, 1.0) * PUFF_SIDE_PX_S * s
+            vy = -r.uniform(*PUFF_UP_PX_S) * s
+            size = CHUNK_PX[0] * s * r.uniform(1.0, 1.5)
+            if self._last_step is None or not self.chunks:
+                self._last_step = now_ms
+            at = x + side * half_width * r.uniform(0.7, 1.0)
+            chunk = Chunk(self._next_id, at, y - size / 2.0, vx, vy, PUFF_MASS * s * s, size, s,
+                          now_ms, 0, False, "lump", stroke, misses_nib=True, mode="puff")
+            self._next_id += 1
+            chunk.monitor = self._monitor_of(chunk.x, chunk.y)
+            self.ledger["grown"] += chunk.mass
+            self.chunks.append(chunk)
+            self._enforce_budget(self._pending)
+        return PUFF_CHUNKS
 
     # --- the window stack --------------------------------------------------------------------
 
@@ -1049,7 +1177,7 @@ class SnowField:
         if self._last_step is None or not self.chunks:
             self._last_step = now_ms   # the flight starts now, not at the last flight's end
         chunk = Chunk(self._next_id, x, y, vx, vy, mass, size, s, now_ms, cap.hwnd,
-                      lands_on_source, kind, group)
+                      lands_on_source, kind, group, mode=mode)
         self._next_id += 1
         chunk.monitor = self._monitor_of(chunk.x, chunk.y)
         self.chunks.append(chunk)
@@ -1134,8 +1262,8 @@ class SnowField:
         c.x += c.vx * dt
         c.y += c.vy * dt
         c.monitor = self._monitor_of(c.x, c.y)
-        if self.nib is not None and _segment_hits_rect((x0, y0), (c.x, c.y), self.nib,
-                                                       c.size / 2.0):
+        if (not c.misses_nib and self.nib is not None
+                and _segment_hits_rect((x0, y0), (c.x, c.y), self.nib, c.size / 2.0)):
             self._land(c, "nib", out)
             return
         if c.vy > 0 and self._land_on_cap(c, y0, out):
@@ -1171,7 +1299,7 @@ class SnowField:
             return False   # no room left on that pile: it keeps falling past
         c.y = surface - sink
         self._remove(c)
-        out.landed.append(Landing("cap", c.x, surface, c.mass, c.kind, cap.hwnd))
+        out.landed.append(Landing("cap", c.x, surface, c.mass, c.kind, cap.hwnd, c.mode))
         cap.version += 1
         out.caps.add(cap.hwnd)
         return True
@@ -1203,7 +1331,7 @@ class SnowField:
     def _land(self, c: Chunk, where: str, out: Changes) -> None:
         self._remove(c)
         self.ledger[where] += c.mass
-        out.landed.append(Landing(where, c.x, c.y, c.mass, c.kind))
+        out.landed.append(Landing(where, c.x, c.y, c.mass, c.kind, mode=c.mode))
 
     def _fade(self, c: Chunk, out: Changes) -> None:
         self._remove(c)

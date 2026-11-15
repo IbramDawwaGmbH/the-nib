@@ -675,6 +675,46 @@ SEASON_ANTICS: dict[str, str] = {
     SEASON_AUTUMN: "autumn",
 }
 
+# --- the Christmas snow (snow.py, snow_overlay.py) ------------------------------------
+#
+# What the snow does to him. None of it is in ANTICS, and none of it draws a random number until
+# snow has actually reached him: fidget_rate and quirk_rate are byte-identical with it in.
+
+#: Snow knocked or thrown off a window landing on him: a jump, then the snowcap for a minute. The
+#: hat goes on with the jump (the moment-costume path) and stays for SNOW_HAT_MS after it, unless
+#: you picked a costume yourself. One jump per shower: landings within SNOW_HIT_COOLDOWN_MS of the
+#: last jump are the same shower, and neither jump again nor restart the minute.
+SNOW_HIT_ANIM = STARTLE_ANIM
+#: What counts as snow landing on him (``snow.Landing.mode``): knocked off, flicked or thrown.
+#: Not a pile dropping off a window that moved or closed above him ("drop"), nor his own puff.
+SNOW_HIT_MODES = ("brush", "flick", "throw")
+SNOW_HIT_COSTUME = "snowcap"
+SNOW_HAT_MS = 60000.0
+SNOW_HIT_COOLDOWN_MS = 8000.0
+
+#: Snow brushed or flicked off a pile within SNOW_PLAY_NEAR_PX of his centre (either way: the
+#: box _cursor_is_near uses for the pointer) asks for a moment through _pick_moment: a hop or a
+#: dance, with a puff of snow kicked up at his feet. A burst of brushing is one ask (gestures less than
+#: SNOW_BURST_GAP_MS apart), the ask lapses after SNOW_PLAY_WINDOW_MS if he is busy, and on top
+#: of the shared REACTION_COOLDOWN_MS there is SNOW_PLAY_COOLDOWN_MS of his own, and a chance:
+#: once in a while, not every time. Measured in tests/snow_rate.py.
+SNOW_PLAY_NEAR_PX = 200.0
+SNOW_BURST_GAP_MS = 1500.0
+SNOW_PLAY_WINDOW_MS = 6000.0
+SNOW_PLAY_COOLDOWN_MS = 120000.0
+SNOW_PLAY_CHANCE = 0.6
+SNOW_PLAY_ANTICS = (("hop", 1300.0, 2100.0), ("dance", 2400.0, 3600.0))
+#: How soon an idle mascot gets to the ask, rather than at the end of his idle beat.
+SNOW_PLAY_DELAY_MS = 250.0
+
+#: Standing on a window whose pile is at least SNOWY_PERCH_FULL of a full one: a shiver now and
+#: then, SNOW_SHIVER_MS long, every SNOW_SHIVER_EVERY_MS (random between the two) of standing
+#: there, through the shared moment cooldown. Measured in tests/snow_rate.py.
+SNOWY_PERCH_FULL = 0.25
+SNOW_SHIVER_ANIM = "shiver"
+SNOW_SHIVER_MS = (1800.0, 2600.0)
+SNOW_SHIVER_EVERY_MS = (240000.0, 480000.0)
+
 #: States whose animation the mood is allowed to slow down.
 _MOOD_PACED_STATES = (State.IDLE, State.ANTIC)
 
@@ -937,6 +977,15 @@ class Behavior:
         self._blinking = False
         self._blink_state = BLINK_SINGLE
         self._startle_cooldown_ms = 0.0
+        # The snow (SNOW_* above). Plain numbers until snow reaches him: no random draw here.
+        self._snow_hat_ms = 0.0           # the snowcap's minute after a hit
+        self._snow_hit_cooldown_ms = 0.0
+        self._snow_play_ms = 0.0          # an ask to play is open for this long
+        self._snow_play_cooldown_ms = 0.0
+        self._snow_burst_ms = 0.0         # brushing near him still going on
+        self._snow_puff_due = False       # drained by take_snow_puff
+        self._snowy_perch = False
+        self._shiver_due_ms: float | None = None   # drawn on the first snowy perch
 
         self._walk_from = 0.0
         self._walk_target = 0.0
@@ -1178,6 +1227,12 @@ class Behavior:
             # taskbar mid-antic - only _step_down_from_perch clearing the rectangle is.
             return int(round(self._y))
         return self.rest_top() + self.peek_sink
+
+    @property
+    def feet_y(self) -> int:
+        """The screen y his soles stand on: the walk strip, a perched window's top, or wherever
+        he is in the air. The sprite's window reaches below it by the art's baseline offset."""
+        return self.top + (self._sheet.frame_h - self._sheet.baseline_offset) * self._sheet.scale
 
     @property
     def visible_height(self) -> int:
@@ -1938,6 +1993,81 @@ class Behavior:
             return False
         self._begin_antic(MUTED_ANIM, MUTED_MS, costume=MUTED_COSTUME)
         return True
+
+    # --- the Christmas snow -------------------------------------------------------
+
+    def _snow_unreachable(self) -> bool:
+        """Not a moment for the snow to get a reaction out of him: asleep (a nap included),
+        waking, in your hand or in the air, hidden, cross, paused, focusing, you away (he is in
+        his away posture), holding the sign up, or mid-quick-change."""
+        return (self._state in (State.SLEEP, State.WAKE, State.DRAG, State.HIDDEN, State.ANGRY)
+                or self._falling or self._rolling or self.paused or self.focus_active
+                or self._away or self.pocket_full or self._quick_change is not None)
+
+    def snow_landed(self) -> bool:
+        """Snow knocked or thrown off a window landed on him (``snow_overlay``'s landings with
+        ``where == "nib"``). A jump with the snowcap on, and the hat stays for a minute
+        (``SNOW_HAT_MS``, see ``persona_costume``) - unless you picked a costume, which always
+        wins. One jump per shower (``SNOW_HIT_COOLDOWN_MS``). Not a poke and not you noticing
+        him: the snow did it. Returns whether he reacted."""
+        if self._snow_hit_cooldown_ms > 0 or self._snow_unreachable():
+            return False
+        moment = self._moment(SNOW_HIT_ANIM, STARTLE_MS, STARTLE_MS, costume=SNOW_HIT_COSTUME)
+        if moment is None:
+            return False
+        self._snow_hit_cooldown_ms = SNOW_HIT_COOLDOWN_MS
+        self._snow_hat_ms = SNOW_HAT_MS if moment[2] else 0.0
+        log.info("snow landed on him")
+        self._begin_antic(*moment)
+        return True
+
+    def snow_nearby(self, x: float, y: float) -> None:
+        """Snow was brushed or flicked off a pile at ``(x, y)``. Near him, the first of a burst
+        of brushing opens an ask to play (``SNOW_PLAY_WINDOW_MS``) that ``_pick_moment`` may
+        answer with a hop or a dance; an idle mascot gets there in ``SNOW_PLAY_DELAY_MS``
+        rather than at the end of his idle beat. Nothing fires from here."""
+        if self._state == State.HIDDEN or not self._cursor_is_near((int(x), int(y)),
+                                                                   SNOW_PLAY_NEAR_PX):
+            return
+        burst_going = self._snow_burst_ms > 0
+        self._snow_burst_ms = SNOW_BURST_GAP_MS
+        if burst_going or self._snow_play_cooldown_ms > 0 or self._snow_unreachable():
+            return
+        self._snow_play_ms = SNOW_PLAY_WINDOW_MS
+        if self._state == State.IDLE and self._reaction_cooldown_ms <= 0:
+            self._idle_timer_ms = min(self._idle_timer_ms, SNOW_PLAY_DELAY_MS)
+
+    def take_snow_puff(self) -> bool:
+        """True once when he has just started playing in the snow: the app kicks a puff of it up
+        from his feet (``snow_overlay.SnowOverlay.puff``)."""
+        due, self._snow_puff_due = self._snow_puff_due, False
+        return due
+
+    def set_snowy_perch(self, snowy: bool) -> None:
+        """Whether the window he stands on carries a pile worth shivering about
+        (``SNOWY_PERCH_FULL``). The app says so on every tick he is perched; the shiver's clock
+        is drawn the first time it is true, and runs only while it is (``_tick_perch``)."""
+        snowy = bool(snowy)
+        if snowy and self._shiver_due_ms is None:
+            self._shiver_due_ms = random.uniform(*SNOW_SHIVER_EVERY_MS)
+        self._snowy_perch = snowy
+
+    def _snow_play_moment(self) -> tuple[str, float, str] | None:
+        """The answer to an open ask to play (``snow_nearby``), spent whatever it is. Draws
+        nothing at all while no ask is open, so a mascot the snow never reached rolls exactly the
+        numbers he always did."""
+        if self._snow_play_ms <= 0:
+            return None
+        self._snow_play_ms = 0.0
+        if self._snow_play_cooldown_ms > 0 or random.random() >= SNOW_PLAY_CHANCE:
+            return None
+        name, low, high = random.choice(SNOW_PLAY_ANTICS)
+        moment = self._moment(name, low, high)
+        if moment is not None:
+            self._snow_play_cooldown_ms = SNOW_PLAY_COOLDOWN_MS
+            self._snow_puff_due = True
+            log.info("playing in the snow - %s", name)
+        return moment
 
     def drag_start(self) -> None:
         if self._state == State.HIDDEN:
@@ -2889,8 +3019,16 @@ class Behavior:
         ~18ms even if every frame's pixmap and click mask has to be rebuilt, against a 12s
         per-app cooldown. Never set while the user has chosen a costume of their own: a hat that
         keeps vanishing reads as a bug, not as a feature.
+
+        Under the antic's own, the snowcap's minute after snow landed on him (``SNOW_HAT_MS``):
+        it outlives the jump that put it on, and ``_may_dress`` is asked again on every read, so
+        a costume you pick meanwhile takes it off at once.
         """
-        return self._persona_costume
+        if self._persona_costume:
+            return self._persona_costume
+        if self._snow_hat_ms > 0 and self._may_dress():
+            return SNOW_HIT_COSTUME
+        return ""
 
     def clear_persona_costume(self) -> None:
         """Drop any persona headwear immediately.
@@ -2901,6 +3039,7 @@ class Behavior:
         theirs-wins rule exists to prevent.
         """
         self._persona_costume = ""
+        self._snow_hat_ms = 0.0
 
     def _latch(self, key: str, token: str) -> bool:
         """True the first time ``token`` is seen for ``key``, and never again.
@@ -3030,6 +3169,12 @@ class Behavior:
             return None
         if self._reaction_cooldown_ms > 0 or self._away:
             return None
+
+        # Snow brushed or thrown near him, first: the ask lapses in seconds, where everything
+        # below waits on a latch, a window of the day or a chance that comes round again.
+        moment = self._snow_play_moment()
+        if moment is not None:
+            return moment
 
         # First sight of you today. Gated on it being properly morning, so a machine left running
         # overnight does not get its stretch the instant the date rolls over.
@@ -3566,6 +3711,9 @@ class Behavior:
             and self._eye_track_cooldown_ms <= 0
             and self._sheet.has_state(EYE_TRACK_STATE)
             and self._cursor_is_near(cursor, self._eye_track_distance())
+            # Brushing snow near him brings the pointer near him too; the ask to play, open only
+            # for seconds, goes first.
+            and self._snow_play_ms <= 0
         ):
             self._eye_track_cooldown_ms = EYE_TRACK_COOLDOWN_MS
             self._begin_antic(EYE_TRACK_STATE, random.uniform(EYE_TRACK_MIN_MS, EYE_TRACK_MAX_MS))
@@ -3777,6 +3925,11 @@ class Behavior:
             "_startle_cooldown_ms",
             "_pet_cooldown_ms",
             "_spin_cooldown_ms",
+            "_snow_hat_ms",
+            "_snow_hit_cooldown_ms",
+            "_snow_play_ms",
+            "_snow_play_cooldown_ms",
+            "_snow_burst_ms",
         ):
             remaining = getattr(self, attr)
             if remaining > 0:
@@ -4151,6 +4304,24 @@ class Behavior:
         """
         self._advance(dt_ms)
         self._tick_blink(dt_ms)
+        self._maybe_shiver_on_snow(dt_ms)
+
+    def _maybe_shiver_on_snow(self, dt_ms: float) -> None:
+        """Standing on a snowy window (``set_snowy_perch``), a shiver now and then
+        (``SNOW_SHIVER_EVERY_MS``). Through the shared moment cooldown, and not while focusing or
+        with his antics switched off. It ends straight back in PERCH (``_tick_antic``), so he
+        keeps following the window. Draws nothing unless he is on snow."""
+        if not self._snowy_perch or self._shiver_due_ms is None:
+            return
+        self._shiver_due_ms -= dt_ms
+        if (self._shiver_due_ms > 0 or self._reaction_cooldown_ms > 0 or self.focus_active
+                or not bool(self._config.get("antics_enabled", True))
+                or not self._sheet.has_state(SNOW_SHIVER_ANIM)):
+            return
+        self._shiver_due_ms = random.uniform(*SNOW_SHIVER_EVERY_MS)
+        self._reaction_cooldown_ms = REACTION_COOLDOWN_MS
+        log.debug("shivering on the snow")
+        self._begin_antic(SNOW_SHIVER_ANIM, random.uniform(*SNOW_SHIVER_MS))
 
     def _tick_antic(self, dt_ms: float, cursor) -> None:
         if self._quick_change is not None:
@@ -4176,6 +4347,7 @@ class Behavior:
         self._antic_ms -= dt_ms
         if self._antic_ms > 0 or not self._antic_settled(dt_ms, shown):
             return
+        ended = self._antic
         self._antic = None
         self._forced_look = None
         self._antic_overrun_ms = None
@@ -4183,6 +4355,12 @@ class Behavior:
             (name, ms), rest = self._antic_queue[0], self._antic_queue[1:]
             self._begin_antic(name, ms)
             self._antic_queue = rest
+            return
+        if ended == SNOW_SHIVER_ANIM and self._perch_rect is not None:
+            # Straight back onto the window, as _choose_next_action would - but now, not after an
+            # idle beat during which update_perch (PERCH only) would leave him behind a moving one.
+            self._enter(State.PERCH)
+            self._reposition_perch()
             return
         self._enter(State.IDLE)
 

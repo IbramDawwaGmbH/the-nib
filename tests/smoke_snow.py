@@ -144,7 +144,9 @@ while t <= 90 * 60_000:
     if cap.full and all(ic.length == ic.max_len for ic in cap.icicles):
         break
 full_at = t
-check("half grown at ten minutes (about 20 to full)", 0.35 <= at10 <= 0.65, f"{at10:.2f}")
+# Eased out (snow.GROWTH_STEPS): quick to show, slow to finish, so past half at ten minutes.
+check("about two-thirds grown at ten minutes (about 20 to full)", 0.55 <= at10 <= 0.8,
+      f"{at10:.2f}")
 
 
 def time_to_full(period, jitter=0.0, bias=0.0):
