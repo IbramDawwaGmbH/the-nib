@@ -171,6 +171,11 @@ check("find_window_at never reads a window title",
       "GetWindowTextW" not in inspect.getsource(win.find_window_at))
 check("track_window is read-only",
       not any(m in inspect.getsource(win.track_window) for m in MOVERS))
+# And for the snow's view of the desktop, which walks every window twice a second.
+check("list_window_stack is read-only",
+      not any(m in inspect.getsource(win.list_window_stack) for m in MOVERS))
+check("list_window_stack never reads a window title",
+      "GetWindowTextW" not in inspect.getsource(win.list_window_stack))
 check("perch_on is handed a rectangle only",
       "tuple[int, int, int, int]" in inspect.getsource(B.Behavior.perch_on))
 check("update_perch is handed a rectangle (or None) only",

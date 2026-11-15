@@ -1,10 +1,11 @@
-> **Status:** WP0 and WP1 done (WP0: measurements in 1.6, architecture decided: per-cap strip
+> **Status:** WP0, WP1 and WP2 done (WP0: measurements in 1.6, architecture decided: per-cap strip
 > windows plus a flight layer that exists only while snow is airborne, realistic snow, no snowfall;
-> WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`). Continue from **WP2**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2: `win.list_window_stack()`,
+> `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`). Continue from **WP3**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
-> - [ ] WP2 window stack and clipping
+> - [x] WP2 window stack and clipping
 > - [ ] WP3 overlay, wiring and the setting
 > - [ ] WP4 growth, icicles over time, battery
 > - [ ] WP5 Nib's reactions
@@ -306,6 +307,53 @@ per-window pile lifecycle), tests.
 **Tests.** Clip against synthetic stacks (covered, partly covered, maximised, popup on top); move,
 resize, minimise and close turn snow into chunks; `smoke_play.py` still passes; the stack helper
 filters cloaked/iconic/own windows (Win32 part may be exercised live as `smoke_play` does).
+**Done.** `win.list_window_stack()`: one `EnumWindows` pass, `find_window_at`'s filters with no
+minimum size, `(hwnd, rect, zoomed, topmost)` front to back; the rect's top is `GetWindowRect`'s,
+its left, right *and bottom* the extended frame bounds (the bottom too, so the invisible resize
+border never occludes), and `None` when the pass fails, which `sync` treats as "keep everything"
+rather than "every window closed". Measured 0.49 ms median, 0.86 ms p90 on a quiet desktop (three
+visible windows; WP0's 0.6-2.2 ms was on a busy one). `smoke_play` now also checks it is read-only
+and never reads a title. `SnowField.sync(stack, now_ms, own=())` is the pure side, returning a
+`StackSync` (added, caps, moved, removed, clipped, chunks, and `fullscreen` as state), because at
+rest nothing calls `step`; it also drains every cap change pending, so the next `step` does not
+report it twice. Rules, each in a constant and tested on synthetic stacks:
+- A cap needs 120x60 px at 96 DPI (scaled), not maximised, not covering a monitor, its top edge on
+  a monitor (the one holding most of it gives the scale: `set_monitors` takes `scales` now) and
+  above that monitor's floor (not under the taskbar), and the band `COVER_BAND_PX` above it on a
+  monitor too, so a window snapped to the top of the screen (unzoomed, top = the monitor's) gets
+  no pile that would be all off-screen. At most `MAX_CAPS` = 30 (section 5): past that, windows are
+  ranked by how much of their top edge shows (the `covered` rule: the pile is what shows), then by
+  area. A pile keeps its place unless its top edge is all covered and a window whose top shows is
+  waiting, so a maximised window over thirty piles cannot starve a visible one on another monitor,
+  and two similar windows never swap places from pass to pass. With room for all (the usual case)
+  none of this ranking runs.
+- Moved = its top, both sides, or the scale changed (a top-edge resize is a move). The pile falls,
+  a bare one starts at the new spot and does not grow for `RESPAWN_HOLD_MS` (one growth period).
+- Resized by one side: only the snow past the new end, and above the new rounded end's profile
+  (scaled to `CAP_MAX_PX`), falls, in its own stroke per end; the rest is carried by absolute x,
+  overlap-weighted when the left edge moves the grid (mass exact; the straddling sliver is booked
+  `vanished`); the unmoved side keeps its icicles, the moved side's snap. Bottom only: nothing.
+  A hidden pile, or one on a fullscreen monitor, loses its cut-off span quietly, by the same rule
+  as below: chunks would fly unclipped over the window or the game in front.
+- Closed, minimised, hidden, maximised, too small, off every monitor: the whole pile falls.
+- Quiet (no chunks) when it holds under `QUIET_FRACTION` = 0.1 of a full pile, which is the drag
+  rule (a window dragged for a minute throws once, on the first pass), when all of it was covered,
+  when its monitor is fullscreen, when `MASS_EXIT_CAPS` (3) and over half the piles go in one pass
+  (a virtual-desktop switch cloaks them all), or when it lost its place to the pool limit (only an
+  all-covered pile ever does).
+- `Cap.covered`: a window in front covers the columns it spans if it reaches into the band
+  `COVER_BAND_PX` (half a grown cap) above the window's top edge; `Cap.occluders` are the front
+  windows cut to the cap's extent, and `snow.clip(extent, occluders)` turns them into the
+  rectangles the strip may draw (checked pixel by pixel on 200 random cases).
+- `fullscreen`: monitors an unmaximised window covers whole, with `is_fullscreen_on_monitor`'s
+  1 px slack.
+WP1's open concern is fixed at the source: `remove_cap` takes the hwnd out of `Changes.caps` and
+`moved` and puts it in a new `Changes.removed`, so `caps` only ever names caps that exist (and
+`step` intersects it with them again); `version` carries on across a move or resize. A pass of
+`sync` over 100 windows and 30 caps, the ranking included, costs about 2 ms: 1.7-5.9 ms median
+over 11 runs of the suite, measured while other agents' test suites ran on the same machine, so
+the low end is the quiet-machine figure.
+Suite: `tests/smoke_snow_stack.py`.
 
 ### WP3 — Overlay, wiring and the setting
 **Files.** `snow_overlay.py`, `main.py`, `config.py`, `settings.py`, `docs/SETTINGS.md`, `world.py`

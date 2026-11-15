@@ -49,9 +49,13 @@ Coordinates are physical px, virtual-desktop absolute (a monitor may sit at a ne
 rectangles are ``(left, top, right, bottom)`` like everything in :mod:`win_integration`. Sizes
 below are at 96 DPI and scaled by each cap's ``scale``. Velocities are px/s, times ms.
 
-Not here yet, by design: the window stack and occlusion (WP2 - it fills ``Cap.covered`` and drives
-:meth:`SnowField.add_cap` / :meth:`SnowField.drop_cap` / :meth:`SnowField.release_span` as windows
-appear, move, resize and close), painting (WP3), the growth timing measurement (WP4).
+The desktop comes in through :meth:`SnowField.sync`, handed ``win_integration.list_window_stack()``
+at 2 Hz: it gives new windows caps, makes a moved, closed, minimised or maximised window's pile
+fall and a resized one's cut-off span, fills each cap's ``covered`` spans and ``occluders`` from
+the windows in front, and names the monitors something covers whole. :func:`clip` turns a cap's
+extent and occluders into the rectangles the view may draw.
+
+Not here yet, by design: painting (WP3), the growth timing measurement (WP4).
 """
 
 from __future__ import annotations
@@ -161,6 +165,42 @@ MAX_AIR_MS = 12_000          # belt and braces: nothing stays airborne forever
 FPS = 30
 FPS_BATTERY = 20
 
+# --- the window stack (:meth:`SnowField.sync`) -------------------------------------------------
+
+#: A window smaller than this gets no pile (it still hides the piles behind it): menus, tooltips
+#: and toasts come and go too fast to be worth snowing on, and a pile wider than its window would
+#: look silly. 96-DPI px, scaled by the monitor's.
+CAP_MIN_W_PX = 120.0
+CAP_MIN_H_PX = 60.0
+
+#: At most this many piles at once (plan section 5: a strip window each, ~0.8 MB). When there are
+#: more windows than that, the ones whose top edge shows most go first (the pile is what shows,
+#: not the window), then the largest; a window that already has a pile keeps it, unless all of its
+#: top edge is behind other windows and a window whose top shows is waiting for the place.
+MAX_CAPS = 30
+
+#: A window in front hides a column of a pile when it reaches down into this band above the
+#: window's top edge - the lower half of a grown pile, where the snow mostly is. One that only
+#: grazes the top of a tall pile leaves it brushable; the view clips the drawing exactly anyway
+#: (:attr:`Cap.occluders`, :func:`clip`), this is only what brushing and landing go by.
+COVER_BAND_PX = CAP_PX / 2.0
+
+#: A pile holding less than this fraction of its full grown snow does not fall when its window
+#: moves, closes or is maximised: it simply goes. That is what keeps a window dragged across the
+#: screen from spraying chunks on every 2 Hz pass - the pile it regrows at each new spot is bare
+#: (``RESPAWN_HOLD_MS``), so only the first pass, the one that tears the real pile off, throws
+#: anything. 0.1 is four growth steps, about two minutes of showing.
+QUIET_FRACTION = 0.1
+
+#: A pile that just moved does not grow again for this long, whatever its growth schedule was, so
+#: a slow drag does not grow a little pile at each stop and throw it at the next.
+RESPAWN_HOLD_MS = GROWTH_STEP_MS
+
+#: When this many piles' windows vanish in one pass, and more than half of all piles, it is a
+#: switch of virtual desktop (every window cloaked at once) or a session lock, not someone closing
+#: windows: the piles go quietly instead of throwing the whole budget over the new desktop.
+MASS_EXIT_CAPS = 3
+
 _EPS = 1e-9
 
 
@@ -183,8 +223,12 @@ class Cap:
 
     ``heights[i]`` is the snow over ``[x0 + i * col, x0 + (i + 1) * col)``, standing on the line
     ``y = top``; ``target[i]`` is what growth fills it to. ``covered`` is a list of absolute
-    ``(x0, x1)`` spans hidden behind other windows (WP2 fills it): nothing there is brushed or
-    landed on. ``version`` goes up on every change of shape, for the view's pixmap cache.
+    ``(x0, x1)`` spans hidden behind other windows (:meth:`SnowField.sync` fills it, by
+    ``COVER_BAND_PX``): nothing there is brushed or landed on. ``occluders`` are the rectangles of
+    the windows in front, cut to :meth:`extent`, for the view's clip (:func:`clip`). ``version``
+    goes up on every change of shape, for the view's pixmap cache, and carries on across a move or
+    resize of the window (a new :class:`Cap` under the same handle), so a cache keyed on
+    ``(hwnd, version)`` never serves the old shape.
     """
 
     def __init__(self, hwnd: int, rect: Rect, now_ms: float, scale: float = 1.0,
@@ -243,6 +287,7 @@ class Cap:
                 self.icicles.append(Icicle(x, width, max_len, max_len * fill, col, side))
 
         self.covered: list[tuple[float, float]] = []
+        self.occluders: list[Rect] = []
         self.version = 0
         self.next_grow_ms = now_ms + r.uniform(0.0, GROWTH_STEP_MS)  # caps never step together
         self.next_icicle_ms = now_ms + ICICLE_STEP_MS
@@ -280,6 +325,16 @@ class Cap:
     @property
     def full(self) -> bool:
         return all(h >= t - _EPS for h, t in zip(self.heights, self.target))
+
+    @property
+    def full_mass(self) -> float:
+        """The snow on it fully grown (no icicles): what ``QUIET_FRACTION`` is a fraction of."""
+        return sum(self.target) * self.col
+
+    def hidden(self) -> bool:
+        """Is every column that holds snow behind another window?"""
+        return all(h <= _EPS or not self.visible(self.column_center(i))
+                   for i, h in enumerate(self.heights))
 
 
 @dataclass
@@ -324,28 +379,60 @@ class Gesture:
 
 @dataclass
 class Changes:
-    """What one call changed, so the view repaints only that. Falsy when nothing did."""
+    """What one call changed, so the view repaints only that. Falsy when nothing did.
+
+    ``caps`` only ever names caps that exist when it is reported: a cap that went is in
+    ``removed`` (hide its strip, drop its pixmap) and nowhere else, even if it changed shape on the
+    way out; one that went and came back under the same handle (its window moved) is in ``caps``
+    and ``moved``, and a hwnd in ``caps`` always re-renders, whatever its ``version``."""
 
     caps: set[int] = field(default_factory=set)            # re-render these caps' pixmaps
     boxes: dict[int, list[Rect]] = field(default_factory=dict)  # monitor index -> dirty boxes
     landed: list[Landing] = field(default_factory=list)
     gestures: list[Gesture] = field(default_factory=list)
     faded: int = 0              # chunks dropped by the budget or after MAX_AIR_MS in the air
+    removed: set[int] = field(default_factory=set)         # caps gone: hide these strips
+    moved: set[int] = field(default_factory=set)           # new ``extent()``: move these strips
 
     def __bool__(self) -> bool:
-        return bool(self.caps or self.boxes or self.landed or self.gestures or self.faded)
+        return bool(self.caps or self.boxes or self.landed or self.gestures or self.faded
+                    or self.removed or self.moved)
+
+
+@dataclass
+class StackSync:
+    """What one :meth:`SnowField.sync` did. Falsy when the stack changed nothing the view shows.
+
+    ``fullscreen`` is state, not a change (it is there on every pass while a game runs), so it is
+    left out of the truth test: the view compares it with the last pass's."""
+
+    added: set[int] = field(default_factory=set)       # new caps (also in ``caps`` and ``moved``)
+    caps: set[int] = field(default_factory=set)        # re-render these caps' pixmaps
+    moved: set[int] = field(default_factory=set)       # new ``extent()``: move these strips
+    removed: set[int] = field(default_factory=set)     # caps gone: hide these strips
+    clipped: set[int] = field(default_factory=set)     # new ``occluders``: re-mask these strips
+    chunks: int = 0                                    # chunks the pass put in the air
+    fullscreen: set[int] = field(default_factory=set)  # monitors a window covers: hide their snow
+
+    def __bool__(self) -> bool:
+        return bool(self.added or self.caps or self.moved or self.removed or self.clipped
+                    or self.chunks)
 
 
 class SnowField:
     """Every cap and every airborne chunk, across all monitors."""
 
-    def __init__(self, rng: random.Random | None = None, budget: int = CHUNK_BUDGET) -> None:
+    def __init__(self, rng: random.Random | None = None, budget: int = CHUNK_BUDGET,
+                 max_caps: int = MAX_CAPS) -> None:
         self.rng = rng if rng is not None else random.Random()
         self.budget = int(budget)
+        self.max_caps = int(max_caps)
         self.caps: dict[int, Cap] = {}
         self.chunks: list[Chunk] = []
         self.monitors: list[Rect] = []
         self.floors: list[float] = []
+        self.scales: list[float] = []
+        self.fullscreen: set[int] = set()   # as of the last sync()
         self.nib: Rect | None = None
         #: Where all the snow went. ``grown`` is every px^2 that ever appeared (growth, icicles,
         #: ``fill``); the rest are the exits. ``mass_in_caps + mass_in_air + floor + nib + faded
@@ -360,12 +447,17 @@ class SnowField:
 
     # --- the world it lives in ---------------------------------------------------------------
 
-    def set_monitors(self, rects: Sequence[Rect], floors: Sequence[float] | None = None) -> None:
+    def set_monitors(self, rects: Sequence[Rect], floors: Sequence[float] | None = None,
+                     scales: Sequence[float] | None = None) -> None:
         """The monitors, as ``(left, top, right, bottom)``; ``floors`` (default: each bottom) is
-        where falling snow is gone - pass the work area's bottom so it lands on the taskbar."""
+        where falling snow is gone - pass the work area's bottom so it lands on the taskbar;
+        ``scales`` (default: all 1.0) is each monitor's DPI / 96, which sizes the piles
+        :meth:`sync` makes on it."""
         self.monitors = [tuple(int(v) for v in r) for r in rects]
         self.floors = ([float(f) for f in floors] if floors is not None
                        else [float(r[3]) for r in self.monitors])
+        self.scales = ([float(s) for s in scales] if scales is not None
+                       else [1.0] * len(self.monitors))
 
     def set_nib(self, rect: Rect | None) -> None:
         """Nib's rectangle, or ``None`` while he is hidden: snow crossing it lands on him."""
@@ -377,20 +469,29 @@ class SnowField:
                 fill: float = 0.0) -> Cap:
         """A cap for a window (replacing any it had, whose snow vanishes). ``fill`` starts it part
         or fully grown (0..1), which counts as grown snow in the ledger."""
-        if hwnd in self.caps:
+        prev = self.caps.get(hwnd)
+        if prev is not None:
             self.remove_cap(hwnd)
         cap = Cap(hwnd, rect, now_ms, scale, fill)
+        if prev is not None:
+            cap.version = prev.version + 1
         self.caps[cap.hwnd] = cap
         self.ledger["grown"] += cap.mass
+        self._pending.removed.discard(cap.hwnd)
         self._pending.caps.add(cap.hwnd)
+        self._pending.moved.add(cap.hwnd)
         return cap
 
     def remove_cap(self, hwnd: int) -> None:
-        """Forget a cap; its snow simply vanishes (the window went where nothing can fall from)."""
+        """Forget a cap; its snow simply vanishes (the window went where nothing can fall from).
+        Reported in ``Changes.removed`` - and no longer in ``Changes.caps``, which only ever names
+        caps that exist."""
         cap = self.caps.pop(hwnd, None)
         if cap is not None:
             self.ledger["vanished"] += cap.mass
-            self._pending.caps.add(cap.hwnd)
+            self._pending.caps.discard(cap.hwnd)
+            self._pending.moved.discard(cap.hwnd)
+            self._pending.removed.add(cap.hwnd)
 
     def drop_cap(self, hwnd: int, now_ms: float) -> int:
         """The whole pile falls (its window moved, was minimised or closed), and the cap goes.
@@ -472,6 +573,270 @@ class SnowField:
             if left - margin <= x < right + margin and top - margin <= y < bottom + margin:
                 return cap.hwnd
         return None
+
+    # --- the window stack --------------------------------------------------------------------
+
+    def sync(self, stack: Iterable[tuple[int, Rect, bool, bool]] | None, now_ms: float,
+             own: Iterable[int] = ()) -> StackSync:
+        """Follow the desktop. ``stack`` is ``win_integration.list_window_stack()``: every window
+        you can see, front to back, as ``(hwnd, rect, zoomed, topmost)``. Called at 2 Hz on its
+        own timer, never per frame; pure, and silent - falsy, no ``version`` bumped - when the
+        stack is what it was.
+
+        *   A window big enough (``CAP_MIN_*_PX``), not maximised, not covering a whole monitor,
+            with its top edge on a monitor above that monitor's floor (not under the taskbar) and
+            the band above it (``COVER_BAND_PX``) on one too - not a window snapped to the top of
+            the screen, whose pile would be all off it - gets a bare cap at that monitor's scale
+            while there is room. Past ``max_caps`` windows, they are ranked by how much of their
+            top edge shows (by the ``covered`` rule), then by area; a window with a cap keeps it
+            unless its top edge is all covered and a window whose top shows has none.
+        *   **Moved** (its top, both its sides, or its monitor's scale changed): the pile falls
+            where it was, and a bare one starts at the new spot that does not grow for
+            ``RESPAWN_HOLD_MS``. A top-edge resize counts as a move: the line the snow stood on
+            went.
+        *   **Resized** by one side: only the snow past the new edge falls, with that side's
+            icicles and whatever stands above the new rounded end; the rest keeps its heights
+            and the other side keeps its icicles. A new bottom alone changes nothing.
+        *   **Closed, minimised, hidden, maximised**, grown too small or onto no monitor: the whole
+            pile falls.
+        *   A pile goes *quietly* instead (no chunks) when it holds less than ``QUIET_FRACTION``
+            of a full one - so a window dragged across several passes throws its snow once, not
+            every pass - when every bit of it was behind other windows, when its monitor is
+            fullscreen (the view is hiding that monitor's snow), when it is one of many going at
+            once (``MASS_EXIT_CAPS``), or when it only lost its place to ``max_caps`` (it was all
+            covered). A resize's cut-off span goes quietly when the pile is hidden or its monitor
+            fullscreen too.
+        *   Every cap's ``covered`` and ``occluders`` are recomputed from the windows in front.
+        *   ``fullscreen`` names each monitor that some unmaximised window covers whole:
+            ``win_integration.is_fullscreen_on_monitor`` asks only about the foreground window.
+
+        ``stack`` ``None`` (the pass failed) changes nothing. ``own`` are handles never to treat
+        as windows (the stack helper already leaves out this process's). Chunks made here fly from
+        the next :meth:`step`; every cap change pending - this pass's and any before it - is in
+        the return value, not the next ``step``'s, because at rest nothing calls ``step``.
+        """
+        out = StackSync()
+        if stack is None:
+            out.fullscreen = set(self.fullscreen)
+            return out
+        skip = {int(h) for h in own}
+        entries: list[tuple[int, Rect, bool]] = []
+        for hwnd, rect, zoomed, _topmost in stack:
+            h = int(hwnd)
+            r = tuple(int(v) for v in rect)
+            if h not in skip and r[2] > r[0] and r[3] > r[1]:
+                entries.append((h, r, bool(zoomed)))
+        self.fullscreen = {idx for idx, mon in enumerate(self.monitors)
+                           if any(not z and _covers(r, mon) for _h, r, z in entries)}
+        out.fullscreen = set(self.fullscreen)
+
+        # Who gets a pile.
+        eligible: dict[int, tuple[Rect, float]] = {}
+        for h, r, z in entries:
+            if z or any(_covers(r, mon) for mon in self.monitors):
+                continue
+            idx = self._monitor_of_edge(r)
+            if idx < 0:
+                continue
+            s = self.scales[idx] if idx < len(self.scales) else 1.0
+            if r[2] - r[0] < CAP_MIN_W_PX * s or r[3] - r[1] < CAP_MIN_H_PX * s:
+                continue
+            if idx < len(self.floors) and r[1] >= self.floors[idx]:
+                continue   # its top edge is under the taskbar
+            if not self._on_screen(r[0], r[2], r[1] - COVER_BAND_PX * s):
+                continue   # snapped to the top of the screen: its pile would be all off it
+            eligible[h] = (r, s)
+
+        order = {h: k for k, (h, _r, _z) in enumerate(entries)}
+        if len(eligible) <= self.max_caps:
+            # Room for all (the usual case): nothing to rank, so no per-window occlusion pass.
+            keep = [h for h in eligible if h in self.caps]
+            fresh = [h for h in eligible if h not in self.caps]
+        else:
+            shows = {h: _shown_width(r, COVER_BAND_PX * s, entries[:order[h]])
+                     for h, (r, s) in eligible.items()}
+
+            def rank(h: int) -> tuple[float, int, int]:
+                r = eligible[h][0]
+                return (-shows[h], -(r[2] - r[0]) * (r[3] - r[1]), h)
+
+            keep = sorted((h for h in eligible if h in self.caps), key=rank)[:self.max_caps]
+            new = sorted((h for h in eligible if h not in self.caps), key=rank)
+            room = self.max_caps - len(keep)
+            fresh, waiting = new[:room], [h for h in new[room:] if shows[h] > 0.0]
+            # A pile whose top edge is all covered gives its place up to a window whose top shows
+            # (smallest first); it goes quietly below, being still eligible. Only an all-covered
+            # one: evicting by rank would swap two similar windows back and forth every pass.
+            hidden = [h for h in reversed(keep) if shows[h] <= 0.0][:len(waiting)]
+            keep = [h for h in keep if h not in hidden]
+            fresh += waiting[:len(hidden)]
+
+        # Piles whose window went.
+        present = {h for h, _r, _z in entries}
+        kept = set(keep)
+        gone = [h for h in self.caps if h not in kept]
+        vanished = [h for h in gone if h not in present]
+        mass_exit = len(vanished) >= MASS_EXIT_CAPS and 2 * len(vanished) > len(self.caps)
+        for h in gone:
+            quiet = h in eligible or (mass_exit and h not in present)
+            out.chunks += self._let_go(self.caps[h], now_ms, quiet)
+
+        # Piles whose window moved or changed size.
+        for h in keep:
+            r, s = eligible[h]
+            cap = self.caps[h]
+            if r == cap.rect and s == cap.scale:
+                continue
+            (l0, t0, r0, _b0), (l1, t1, r1, _b1) = cap.rect, r
+            if s != cap.scale or t1 != t0 or (l1 != l0 and r1 != r0):
+                out.chunks += self._move(cap, r, s, now_ms)
+            elif l1 == l0 and r1 == r0:
+                cap.rect = r   # only the bottom: nothing the pile stands on changed
+            else:
+                out.chunks += self._resize(cap, r, now_ms)
+        for h in fresh:
+            r, s = eligible[h]
+            self.add_cap(h, r, now_ms, scale=s)
+            out.added.add(h)
+
+        # What hides what. EnumWindows is front to back: everything before a window is over it.
+        for h, cap in self.caps.items():
+            ext = cap.extent()
+            band = cap.top - COVER_BAND_PX * cap.scale
+            occluders: list[Rect] = []
+            spans: list[tuple[float, float]] = []
+            for _h, r, _z in entries[:order[h]]:
+                cut = _intersect(r, ext)
+                if cut is None:
+                    continue
+                occluders.append(cut)
+                if r[1] < cap.top and r[3] > band:
+                    spans.append((max(float(r[0]), cap.x0), min(float(r[2]), cap.x1)))
+            covered = _merge_spans(spans)
+            if occluders != cap.occluders or covered != cap.covered:
+                cap.occluders, cap.covered = occluders, covered
+                out.clipped.add(h)
+
+        pending = self._pending
+        out.caps = pending.caps & self.caps.keys()
+        out.moved = pending.moved & self.caps.keys()
+        out.removed = pending.removed - self.caps.keys()
+        pending.caps, pending.moved, pending.removed = set(), set(), set()
+        return out
+
+    def _monitor_of_edge(self, rect: Rect) -> int:
+        """The monitor a window's top edge is on (the one holding most of it), or -1."""
+        left, top, right, _bottom = rect
+        best, best_w = -1, 0
+        for idx, (m_left, m_top, m_right, m_bottom) in enumerate(self.monitors):
+            if m_top <= top < m_bottom:
+                width = min(right, m_right) - max(left, m_left)
+                if width > best_w:
+                    best, best_w = idx, width
+        return best
+
+    def _on_screen(self, left: float, right: float, y: float) -> bool:
+        """Is any of the row ``y`` between ``left`` and ``right`` on a monitor?"""
+        return any(m_top <= y < m_bottom and min(right, m_right) > max(left, m_left)
+                   for m_left, m_top, m_right, m_bottom in self.monitors)
+
+    def _quiet(self, cap: Cap) -> bool:
+        """Should this pile just go rather than fall? (See :meth:`sync`.)"""
+        return (cap.mass < QUIET_FRACTION * cap.full_mass or cap.hidden()
+                or self._monitor_of_edge(cap.rect) in self.fullscreen)
+
+    def _let_go(self, cap: Cap, now_ms: float, quiet: bool) -> int:
+        if quiet or self._quiet(cap):
+            self.remove_cap(cap.hwnd)
+            return 0
+        return self.drop_cap(cap.hwnd, now_ms)
+
+    def _move(self, cap: Cap, rect: Rect, scale: float, now_ms: float) -> int:
+        made = self._let_go(cap, now_ms, False)
+        new = self.add_cap(cap.hwnd, rect, now_ms, scale=scale)
+        new.version = cap.version + 1
+        # ``grow`` steps a quarter-period early; the hold is meant in full.
+        new.next_grow_ms = now_ms + RESPAWN_HOLD_MS + GROWTH_STEP_MS / 4
+        return made
+
+    def _resize(self, cap: Cap, rect: Rect, now_ms: float) -> int:
+        """One side of the window moved: cut the pile to the new width and carry the rest over.
+
+        The new :class:`Cap` (same handle, so the same seeded overhangs and icicle spots) is made
+        bare and filled from the old one by absolute x. What lies past the new cap's ends falls,
+        as does anything above the new rounded end's profile (scaled up to ``CAP_MAX_PX``, so
+        snow piled on by throws survives in the middle). When the left edge moved the column grid
+        shifts by a fraction of a column, so the carry is overlap-weighted: mass is conserved,
+        and the sliver of a column that straddled the cut goes to ``vanished``."""
+        side = "left" if rect[0] != cap.rect[0] else "right"
+        s = cap.scale
+        new = Cap(cap.hwnd, rect, now_ms, s)
+        moved_edge = float(rect[0] if side == "left" else rect[2])
+        middle = (rect[0] + rect[2]) / 2.0
+        near: dict[int, float] = {}
+        far: dict[int, float] = {}
+        for i, h in enumerate(cap.heights):
+            if h <= _EPS:
+                continue
+            cx = cap.column_center(i)
+            j = new.column_at(cx)
+            if j is None or not new.x0 <= cx < new.x1:
+                limit = 0.0
+            else:
+                limit = min(CAP_MAX_PX * s, new.target[j] * CAP_MAX_PX / CAP_PX)
+            if h > limit + _EPS:
+                on_moved_side = (cx < middle) == (moved_edge < middle)
+                (near if on_moved_side else far)[i] = limit
+        if cap.hidden() or self._monitor_of_edge(cap.rect) in self.fullscreen:
+            # ``_let_go``'s rule: chunks would fly unclipped on the flight layer, over the window
+            # hiding the pile or the fullscreen app. The cut-off snow just goes.
+            made, before = 0, cap.mass
+            for i, k in {**near, **far}.items():
+                cap.heights[i] = k
+            for ic in cap.icicles:
+                if ic.side == side or cap.heights[ic.column] < ICICLE_SUPPORT_PX * s:
+                    ic.length = 0.0
+            self.ledger["vanished"] += before - cap.mass
+        else:
+            # Two strokes, so the two ends of a wide window never share one dirty box.
+            stroke = self._new_stroke()
+            made = self._release(cap, near, now_ms, (0.0, 0.0), "drop", False, stroke)
+            made += self._snap_icicles(cap, [ic for ic in cap.icicles if ic.side == side],
+                                       now_ms, (0.0, 0.0), "drop", stroke)
+            made += self._release(cap, far, now_ms, (0.0, 0.0), "drop", False,
+                                  self._new_stroke())
+
+        for i, h in enumerate(cap.heights):
+            if h <= _EPS:
+                continue
+            a = cap.x0 + i * cap.col
+            b = a + cap.col
+            j0 = math.floor((a - new.x0) / new.col)
+            for j in (j0, j0 + 1):
+                if 0 <= j < new.n:
+                    lo, hi = max(a, new.x0 + j * new.col), min(b, new.x0 + (j + 1) * new.col)
+                    if hi > lo:
+                        new.heights[j] += h * (hi - lo) / new.col
+        other = "right" if side == "left" else "left"
+        olds = [ic for ic in cap.icicles if ic.side == other]
+        news = [ic for ic in new.icicles if ic.side == other]
+        if len(olds) == len(news):
+            for old_ic, new_ic in zip(olds, news):
+                if abs(old_ic.x - new_ic.x) < 0.5:
+                    new_ic.length = min(new_ic.max_len, old_ic.length)
+        lost = cap.mass - new.mass
+        if lost >= 0.0:
+            self.ledger["vanished"] += lost
+        else:   # float rounding only
+            self.ledger["grown"] -= lost
+
+        new.version = cap.version + 1
+        new.next_grow_ms, new.next_icicle_ms = cap.next_grow_ms, cap.next_icicle_ms
+        new.covered, new.occluders = cap.covered, cap.occluders
+        self.caps[cap.hwnd] = new
+        self._pending.caps.add(cap.hwnd)
+        self._pending.moved.add(cap.hwnd)
+        return made
 
     # --- the pointer -------------------------------------------------------------------------
 
@@ -708,6 +1073,8 @@ class SnowField:
         if pointer is not None:
             self.pointer(pointer[0], pointer[1], now_ms)
         out, self._pending = self._pending, Changes()
+        out.caps.intersection_update(self.caps)   # belt and braces: remove_cap sees to it
+        out.moved.intersection_update(self.caps)
         if not self.chunks:
             self._last_step = now_ms
             return out
@@ -925,6 +1292,63 @@ def _union(a: Rect, b: Rect) -> Rect:
 
 def _area(r: Rect) -> int:
     return max(0, r[2] - r[0]) * max(0, r[3] - r[1])
+
+
+def _intersect(a: Rect, b: Rect) -> Rect | None:
+    r = (max(a[0], b[0]), max(a[1], b[1]), min(a[2], b[2]), min(a[3], b[3]))
+    return r if r[0] < r[2] and r[1] < r[3] else None
+
+
+def _covers(r: Rect, monitor: Rect) -> bool:
+    """Does a window cover a whole monitor? With ``is_fullscreen_on_monitor``'s 1 px of slack."""
+    slack = 1
+    return (r[0] <= monitor[0] + slack and r[1] <= monitor[1] + slack
+            and r[2] >= monitor[2] - slack and r[3] >= monitor[3] - slack)
+
+
+def _merge_spans(spans: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    out: list[tuple[float, float]] = []
+    for a, b in sorted(s for s in spans if s[1] > s[0]):
+        if out and a <= out[-1][1]:
+            out[-1] = (out[-1][0], max(out[-1][1], b))
+        else:
+            out.append((a, b))
+    return out
+
+
+def _shown_width(rect: Rect, band: float, front: Iterable[tuple[int, Rect, bool]]) -> float:
+    """How much of a window's top edge the windows ``front`` of it leave showing, by the rule
+    ``Cap.covered`` goes by: one covers the columns it spans if it reaches into the ``band`` px
+    above the edge. What the pool ranks windows by - it is where the pile would be."""
+    left, top, right, _bottom = rect
+    spans = [(float(max(r[0], left)), float(min(r[2], right))) for _h, r, _z in front
+             if r[1] < top and r[3] > top - band]
+    return (right - left) - sum(b - a for a, b in _merge_spans(spans))
+
+
+def clip(rect: Rect, occluders: Iterable[Rect]) -> list[Rect]:
+    """What of ``rect`` the ``occluders`` leave showing, as rectangles that do not overlap: the
+    view's clip for a cap strip (``rect`` its :meth:`Cap.extent`, ``occluders`` its
+    :attr:`Cap.occluders`), as a ``QRegion`` or a mask. Empty when it is all hidden. Pure, and
+    small: a strip has a few windows in front of it at most."""
+    pieces = [tuple(rect)] if _area(rect) > 0 else []
+    for o in occluders:
+        out: list[Rect] = []
+        for p in pieces:
+            if _intersect(p, o) is None:
+                out.append(p)
+                continue
+            if p[1] < o[1]:
+                out.append((p[0], p[1], p[2], o[1]))     # the band above it
+            if o[3] < p[3]:
+                out.append((p[0], o[3], p[2], p[3]))     # the band below it
+            top, bottom = max(p[1], o[1]), min(p[3], o[3])
+            if p[0] < o[0]:
+                out.append((p[0], top, o[0], bottom))    # beside it, left
+            if o[2] < p[2]:
+                out.append((o[2], top, p[2], bottom))    # beside it, right
+        pieces = out
+    return pieces
 
 
 def _merge_boxes(boxes: list[Rect]) -> list[Rect]:

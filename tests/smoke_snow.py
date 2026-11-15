@@ -432,6 +432,9 @@ f.add_cap(101, W, 0.0, fill=1.0)
 f.remove_cap(101)
 ok, lhs, grown = ledger_ok(f)
 check("removing a cap outright is in the ledger as vanished", ok and f.ledger["vanished"] > 0)
+ch = f.step(0.0)
+check("...and step() reports it removed, never as a cap to re-render",
+      ch.removed == {101} and not ch.caps and not ch.moved, f"{ch.caps} {ch.removed}")
 
 print("\n--- the budget: at most 100 per monitor, the oldest fade first ---")
 f = field(seed=3)

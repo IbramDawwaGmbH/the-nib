@@ -91,6 +91,12 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   your windows' top edges — growth, overhangs, icicles, snow knocked off by a fast swipe or flicked
   into the air, where it falls and lands — with a fixed budget of airborne chunks. Nothing shows
   yet; the windows that draw it come next.
+- The snow follows your windows (still nothing shown): a new window gets a pile, a moved,
+  minimised, maximised or closed one drops its pile (only the cut-off end, when you resize one
+  side), a window dragged across the screen drops it once rather than at every step, and windows,
+  menus and tooltips in front hide what is behind them. The desktop is read as rectangles and
+  window class names, as for perching — no titles, no contents — in one pass of about 0.5 ms on a
+  quiet desktop (2.2 ms measured on a busy one).
 
 ### Changed
 

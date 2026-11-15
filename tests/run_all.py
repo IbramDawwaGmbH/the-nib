@@ -53,6 +53,7 @@ SUITES = [
     ("smoke_guard_fx", "the guard's background: bots, dust, scan line, glow, frame rate, cost"),
     ("smoke_guard_wiring", "the guard's plumbing: held keys, Hello prompt state, the way back in"),
     ("smoke_snow", "the snow model: caps grow and stop, brush and flick, landing, the budget"),
+    ("smoke_snow_stack", "the snow and the window stack: piles moved, cut, dropped, clipped"),
     ("smoke_update", "update and restart: git fast-forward, release zip, the helper, the wait"),
     ("shadow_mask", "the contact shadow's real input region, read back from GetWindowRgn"),
 ]

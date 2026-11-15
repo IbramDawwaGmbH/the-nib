@@ -37,6 +37,7 @@ MONITORINFOF_PRIMARY = 0x00000001
 MDT_EFFECTIVE_DPI = 0
 DEFAULT_DPI = 96
 
+DWMWA_EXTENDED_FRAME_BOUNDS = 9
 DWMWA_CLOAKED = 14
 
 _DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = -4
@@ -613,6 +614,89 @@ def track_window(hwnd: int) -> tuple[int, int, int, int] | None:
     except Exception:
         return None
     return _window_rect(hwnd)
+
+
+_WS_EX_TOPMOST = 0x00000008
+
+
+def _frame_bounds(hwnd: int) -> tuple[int, int, int, int] | None:
+    """The window's *visible* frame, without the invisible resize borders Windows 10/11 add to
+    ``GetWindowRect`` (left, right and bottom; the top has none). Physical px when the process is
+    DPI aware, as ``main`` makes it. ``None`` if DWM will not say."""
+    try:
+        rect = _RECT()
+        hresult = ctypes.windll.dwmapi.DwmGetWindowAttribute(
+            wintypes.HWND(hwnd), DWMWA_EXTENDED_FRAME_BOUNDS, ctypes.byref(rect),
+            ctypes.sizeof(rect))
+        return rect.as_tuple() if hresult == 0 else None
+    except Exception:
+        return None
+
+
+def _is_topmost(hwnd: int) -> bool:
+    try:
+        getter = getattr(_user32, "GetWindowLongPtrW", _user32.GetWindowLongW)
+        getter.argtypes = [wintypes.HWND, ctypes.c_int]
+        getter.restype = ctypes.c_ssize_t
+        return bool(getter(wintypes.HWND(hwnd), _GWL_EXSTYLE) & _WS_EX_TOPMOST)
+    except Exception:
+        return False
+
+
+def list_window_stack() -> list[tuple[int, tuple[int, int, int, int], bool, bool]] | None:
+    """Every window that can be seen, front to back: ``(hwnd, rect, zoomed, topmost)``.
+
+    The snow's one view of the desktop (``snow.SnowField.sync``): which windows carry a pile, and
+    which windows in front of them hide part of it. One ``EnumWindows`` pass - it walks in Z-order,
+    front to back - with ``find_window_at``'s filters (visible, not minimised, not cloaked, not the
+    shell's own, not ours) but **no minimum size**: a menu or a tooltip is small, and it still
+    hides the snow behind it.
+
+    ``rect`` is ``(left, top, right, bottom)`` in physical px. Its top is ``GetWindowRect``'s,
+    which is what a perch stands on, so his feet and the snow line agree; left, right and bottom
+    are ``DWMWA_EXTENDED_FRAME_BOUNDS``, the frame you see, so neither the pile nor the clip
+    reaches into the invisible resize border (``GetWindowRect`` throughout if DWM will not say).
+    Empty rectangles are left out. ``zoomed`` is maximised; ``topmost`` is always-on-top.
+
+    **Read-only, and only rectangles**, as ``find_window_at``: no title, no content, nothing kept.
+    The handle is the key a pile is filed under, nothing more. Returns ``None`` when the pass
+    itself failed, which is not an empty desktop: the caller must keep what it had.
+    """
+    stack: list[tuple[int, tuple[int, int, int, int], bool, bool]] = []
+    own = os.getpid()
+
+    def _callback(hwnd, _param):  # pragma: no cover - Win32 callback
+        try:
+            handle = int(hwnd)
+            if not _user32.IsWindowVisible(wintypes.HWND(handle)):
+                return True
+            if _user32.IsIconic(wintypes.HWND(handle)):
+                return True
+            if _class_name(handle) in _SHELL_CLASSES or _is_cloaked(handle):
+                return True
+            if _pid_of_window(handle) == own:
+                return True  # his own windows, and the snow's
+            outer = _window_rect(handle)
+            if outer is None:
+                return True
+            frame = _frame_bounds(handle) or outer
+            rect = (frame[0], outer[1], frame[2], frame[3])
+            if rect[2] <= rect[0] or rect[3] <= rect[1]:
+                return True
+            stack.append((handle, rect, bool(_user32.IsZoomed(wintypes.HWND(handle))),
+                          _is_topmost(handle)))
+        except Exception:
+            log.debug("window stack probe failed for one window", exc_info=True)
+        return True
+
+    try:
+        proc = _ENUMWINDOWSPROC(_callback)  # must outlive the call
+        if not _user32.EnumWindows(proc, 0):
+            return None
+    except Exception:
+        log.debug("EnumWindows failed", exc_info=True)
+        return None
+    return stack
 
 
 _HWND_TOPMOST = -1
