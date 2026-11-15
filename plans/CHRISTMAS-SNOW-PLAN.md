@@ -1,20 +1,22 @@
-> **Status:** nothing implemented yet. Continue from **WP0**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP0 done (measurements in 1.6; architecture decided: per-cap strip windows plus a
+> flight layer that exists only while snow is airborne; the design now follows the owner's decision:
+> realistic snow, no snowfall). Continue from **WP1**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
-> - [ ] WP0 spike: measure the surface
+> - [x] WP0 spike: measure the surface
 > - [ ] WP1 `snow.py` model
 > - [ ] WP2 window stack and clipping
 > - [ ] WP3 overlay, wiring and the setting
-> - [ ] WP4 flurries, taskbar drift, battery
+> - [ ] WP4 growth, icicles over time, battery
 > - [ ] WP5 Nib's reactions
 > - [ ] WP6 play mode and the snowball
 > - [ ] WP7 docs and polish
 
 # Nib "Christmas snow" — engineering spec for branch `feat/christmas-snow`
 
-Snow piles up on the top edges of your windows, overhangs their corners and grows icicles, in Nib's
-own blocky pixel style. Flurries fall over the desktop and land on the piles. A fast sideways swipe
-of the pointer through a pile knocks it off; an upward flick through a pile throws it into the air,
-and it comes back down. Nib notices snow that lands on him and plays in it. A time-boxed "Play in
+Snow piles up on the top edges of your windows, overhangs their corners and grows icicles. It looks
+realistic: soft, shaded, anti-aliased snow (owner's decision). Nothing falls over the desktop: the
+caps simply grow, slowly, with no visible flakes. A fast sideways swipe of the pointer through a pile
+knocks it off; an upward flick through a pile throws it into the air, and it comes back down. Nib notices snow that lands on him and plays in it. A time-boxed "Play in
 the snow" mode on his tool wheel lets you scoop and throw snowballs, including at him.
 
 Designed with an advisor (Fable) from the real code; the measured numbers below are from this
@@ -30,19 +32,25 @@ persistence only via `main._flush_config`, per-file line endings preserved (new 
 regenerated assets committed, tests as plain scripts registered in `tests/run_all.py` with the
 README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. In addition:
 
-1. **The snow never takes a click it was not asked for.** Outside play mode (WP6) every snow window
-   carries `WS_EX_TRANSPARENT` (`win_integration.set_click_through`) as well as Qt's
-   `WindowTransparentForInput`. A test asserts `WindowFromPoint` over a painted pile never returns a
-   snow window. (The repo disagrees with itself about layered-window hit-testing - `ruler.py:14-20`
-   versus `mascot_window.py:5-6` - so we rely on neither.)
+1. **The snow never takes a click it was not asked for.** Measured in WP0 (1.6): a translucent Qt
+   window is a layered window whose alpha-0 pixels pass clicks through and whose painted pixels
+   (any alpha >= 1) take them, so `ruler.py:14-20` is right and soft, alpha-shaded snow *would*
+   swallow clicks without the flag. Therefore every snow window is **created** with Qt's
+   `WindowTransparentForInput`, which makes Qt set `WS_EX_TRANSPARENT` itself and keep it across
+   hide/show and native re-creation; a bit set only by hand (`win_integration.set_click_through`)
+   is lost when Qt re-creates the HWND or recomputes the style (`setWindowFlags`). Belt and braces:
+   `set_click_through(hwnd, True)` and the capture affinity are re-applied on every show and on
+   `QEvent.WinIdChange`, and `setWindowFlags` is never called on a shown snow window. A test asserts
+   `WindowFromPoint` over a painted pile never returns a snow window.
 2. **Nothing is restacked.** CONTRIBUTING rule 1 and `tests/smoke_play.py:185` (exactly one
    `SetWindowPos` in `win_integration.py`, inside `set_topmost`). Occlusion is done by clipping.
-3. **Idle is zero ticks.** When nothing moves, the animation timer is stopped; only the 2 Hz window
-   stack poll runs, and only while snow is showing.
+3. **Idle is zero ticks.** When nothing is airborne, the animation timer is stopped; only the 2 Hz
+   window stack poll and the slow growth timer run, and only while snow is showing.
 4. **Below Nib.** The snow layer sits under the mascot, his bubble, the focus timer, the tool wheel
    and the toast; it never re-asserts topmost while the wheel or bubble is open.
 5. **Hidden, not empty**, whenever it should not show (section 1.4): a visible full-screen layered
-   window can cost games and video their direct-to-display path.
+   window can cost games and video their direct-to-display path. The only full-monitor window (the
+   flight layer, 1.2) exists only while snow is in the air, and is destroyed after it lands.
 
 ---
 
@@ -55,7 +63,8 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
 | Default | On by default in the Christmas window, with a one-time toast saying how to turn it off |
 | Dates | 1 December - 6 January (St Nicholas to Epiphany, matching the costume calendar) |
 | Southern hemisphere | `"christmas"` mode goes by the date everywhere; `"winter"` mode follows `SEASON_WINTER` and `southern_seasons` |
-| Steady snow vs flurries | Flurries (about 60-90 s every few minutes), so idle really is zero ticks |
+| Look | Realistic (owner): soft, shaded, anti-aliased, alpha gradients, drawn from pre-rendered pixmaps |
+| Falling snow | None (owner): no snowfall or flurries over the desktop; caps grow slowly with no visible flakes. Only brushed or thrown snow is ever in the air |
 | Screen shares / screenshots | Hidden from capture (`WDA_EXCLUDEFROMCAPTURE`, as the guard does) |
 | Night-sky tint | Not in this plan: it recolours the user's work |
 | Accidental brushing | Any deliberate-speed pass knocks snow off (above ~0.8 px/ms sideways); a slow pointer heading for a button never does |
@@ -64,13 +73,28 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
 ### 1.2 Architecture
 
 - `snow.py` (new, Qt-free, clock- and rng-injectable): height-maps per window, growth, cap,
-  overhang, icicles, particles (flakes, chunks, thrown snow), gravity, landing, budgets, the pointer
-  gestures, and a pure clip function. `step(now_ms, pointer, stack) -> dirty groups`, in the style of
-  `guard_fx.BackgroundFx.step` (`guard_fx.py:590`).
-- `snow_overlay.py` (new, Qt): one click-through, translucent, frameless, tool-type, topmost window
-  per monitor, drawing the model procedurally from string-row sprites like
-  `guard_fx._sprite_pixmap` (`guard_fx.py:249`), with grouped dirty-rect repaints after
-  `guard_fx.py:26-41`. WP0 decides full-monitor versus per-cap strips by measurement.
+  overhang, icicles, airborne chunks (brushed and thrown snow), gravity, landing, budgets, the pointer
+  gestures, and a pure clip function. `step(now_ms, pointer, stack) -> changes` (which caps changed
+  shape, which caps moved, the airborne chunks and their bounding boxes), in the style of
+  `guard_fx.BackgroundFx.step` (`guard_fx.py:590`). No flakes.
+- `snow_overlay.py` (new, Qt), decided by the WP0 numbers (1.6), two kinds of window, all
+  click-through, translucent, frameless, tool-type, topmost, `WA_ShowWithoutActivating`,
+  `WindowDoesNotAcceptFocus`, excluded from capture:
+  - **Cap strips**: one small window per visible cap, sized to the cap plus overhang and icicles
+    (about window width + 2 overhangs by ~90 px), from a pool (shown/hidden and re-used, not created
+    per cap). Each paints one pre-rendered cap pixmap, clipped (`setMask` or a paint clip) by the
+    pure clip function where other windows cover it. A strip repaints only when its cap's pixmap
+    changes (a growth step, a brushed span, a new clip), and is moved by `setGeometry` only when the
+    stack poll sees its window move. Idle cost measured at 0.006 % of one core for 15 strips.
+  - **Flight layer**: one full-monitor window per monitor, **created on demand** when chunks leave a
+    cap (brushed or thrown), repainted at 30 FPS with the chunks' grouped bounding box
+    (`guard_fx.py:26-41`), and **destroyed** about 2 s after the last chunk lands (cold
+    create+show measured at ~9-10 ms, first paint ~12-18 ms; it costs ~31 MB working set at 1440p
+    while it exists, 0 once closed). The strips stay as they are underneath; landed snow goes back
+    into a cap's height map.
+  - Rejected: one permanent full-monitor overlay per monitor (47 MB working set for two monitors,
+    4-9 ms per full repaint, and a permanent full-screen layered window, rule 5); growing a strip
+    window to cover the chunks' flight (2-3x the CPU of the flight layer, see 1.6).
 - `win_integration.list_window_stack()` (new): one `EnumWindows` pass, front to back, returning
   `(hwnd, rect, zoomed, topmost)` for every visible, non-iconic, non-cloaked, non-shell window that is
   not ours (the filters of `find_window_at`, `win_integration.py:566-574`, without the minimum size,
@@ -82,20 +106,30 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
 
 ### 1.3 Look and physics
 
-- Piles: one column per block, heights in blocks, capped at about 6 blocks in the middle and tapering
-  to the corners, 2-3 blocks of overhang past each side; growth reaches the cap in about 20 minutes
-  of snowfall, one block step at a time. Lip into the window at most one block, zero over the
-  right-hand caption-button zone.
-- Icicles: 2-4 per overhang, lengths seeded from the hwnd, hanging only outside the window's left and
-  right edges; they grow one block every few minutes and snap off when brushed.
-- Palette: the `snowcap` costume's tones (`tools/gen_sprites.py:2529`); every pixel fully opaque or
-  absent, integer block scale (per monitor, like `guard_fx.block_for`, `guard_fx.py:268`).
-- Particles: flakes ~30 per 1080p (cf. `MOTES_PER_1080P = 34`), chunks up to 60, thrown up to 80;
-  hard budget 200 per monitor, oldest fade first. A flake landing on a visible cap adds to it.
-- Frame rate: 20 FPS while chunks or thrown snow are airborne, 8 FPS during a flurry, timer stopped
+- Realistic, and cheap because nothing is drawn live: every cap is a **pre-rendered pixmap**
+  (anti-aliased mound outline, vertical shading gradient, a soft highlight, a faint blue shadow
+  underneath), re-rendered only when its shape changes (measured 1.5 ms median per 700x90 cap).
+  Alpha gradients and soft edges are allowed: a partly transparent pixel would take a click, but
+  every snow window carries `WS_EX_TRANSPARENT` (rule 1), so nothing does. No per-frame blur or
+  glow (measured unusable, 1.6): softness is baked into the pixmaps. Physical pixels throughout,
+  sizes scaled per monitor DPI.
+- Piles: a height map at a few-px resolution, capped at about 24-30 px (at 96 DPI) in the middle and
+  tapering to rounded corners, with 10-20 px of overhang past each side; growth reaches the cap in
+  about 20 minutes of showing, in small steps (one re-render per step, never animated), with no
+  visible flakes. Lip into the window at most a few px, zero over the right-hand caption-button zone.
+- Icicles: 2-4 per overhang, lengths seeded from the hwnd, translucent tapered gradients hanging only
+  outside the window's left and right edges; they grow a little every few minutes and snap off
+  (into chunks) when brushed.
+- Palette: the `snowcap` costume's tones (`tools/gen_sprites.py:2529`) as the base white and shade.
+- Airborne chunks: soft, pre-rendered round lumps in a few sizes (6-18 px), budget 100 per monitor
+  (measured: 100 chunks at 30 FPS cost ~8 % of one core), oldest fade first.
+- Frame rate: 30 FPS while chunks are airborne (60 FPS measured affordable on the flight layer,
+  ~13 % of one core with 100 chunks, so it is an option for WP3 if 30 looks choppy), timer stopped
   otherwise.
 - Window moved/resized/closed/minimised: the pile at the old position breaks into falling chunks
   and regrows at the new one (resize: only the cut-off span falls). Maximised windows get no cap.
+  (Measured alternative, if the owner prefers snow that rides along: moving one strip at 20 Hz
+  during a drag costs ~3 % of one core, 1.2 ms per `setGeometry`; move-only does not repaint.)
 
 ### 1.4 When it shows
 
@@ -106,19 +140,132 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
   desktop every 3 s, `guard_overlay.py:20`), or a fullscreen app on that monitor. Because
   `is_fullscreen_on_monitor` only tests the foreground window, the stack pass also does its own test:
   any unzoomed window covering a monitor hides that monitor's snow.
-- Static (no new snow, no flurries): a focus session, paused, ghost mode.
-- On battery (`win.on_battery()`, new, `GetSystemPowerStatus`): caps only, no flurries.
+- Static (caps shown, no growth, no brushing): a focus session, paused, ghost mode.
+- On battery (`win.on_battery()`, new, `GetSystemPowerStatus`): caps shown, no growth; brushing
+  and throwing still work, at 20 FPS instead of 30.
 - Tray: "Snow: off for today".
 
 ### 1.5 Nib's part (reuses existing art)
 
-- Snow landing on him: `startle`, then the `snowcap` costume for a minute via the moment-costume
-  path (`behavior._moment(..., costume=...)`).
+- Snow landing on him (brushed or thrown chunks whose path crosses his rect): `startle`, then the
+  `snowcap` costume for a minute via the moment-costume path (`behavior._moment(..., costume=...)`).
 - Perched on a snowy window: the pile dents under his feet; an occasional `shiver`.
-- Playing: a once-per-flurry moment through `_pick_moment` (45 s shared cooldown): `hop` or `dance`
-  with a puff thrown at his feet.
+- Playing: when you brush or throw snow near him, a moment through `_pick_moment` (45 s shared
+  cooldown, at most once per brush/throw burst): `hop` or `dance` with a puff thrown at his feet.
+  There are no flurries to trigger anything.
 - Snowball (play mode): a hit triggers `startle` then `football`, with a white ball drawn by the
   overlay. None of this enters `ANTICS`, so `fidget_rate` and `quirk_rate` must not move.
+
+### 1.6 WP0 measurements
+
+Measured on this machine (i9-13900H, 20 logical CPUs; monitors 2560x1440 at (1920, -249) and
+1920x1080 primary, `QT_ENABLE_HIGHDPI_SCALING=0`), PySide6 6.11.1, Python 3.14, on the live desktop
+with other apps running, so numbers vary run to run (where two runs exist the range is given).
+Scratch script: `%TEMP%\nib-wp0\spike.py` (not committed; modes `full`, `strips`, `hit`, `real`,
+`caps`, `chunks layer|strip`, `cold`). CPU is the process's cycle count (`QueryProcessCycleTime`)
+divided by the nominal 2.995 GHz, as % of one core; `GetProcessTimes` was too coarse (15.6 ms ticks)
+and DWM's own CPU could not be read (access denied), so compositor cost is **not** included.
+"Sync repaint" is a synchronous `repaint()`: paint plus the flush to the layered window.
+
+**Hit-testing** (`WindowFromPoint` from the same thread, another thread and another process, on both
+monitors including the negative origin, at a painted pile pixel / a transparent pixel):
+
+| Window | Pile pixel | Transparent pixel |
+| --- | --- | --- |
+| Translucent, no `WindowTransparentForInput`, no `WS_EX_TRANSPARENT` | **ours** | passes through |
+| Same plus alpha-1 fill everywhere (the ruler's trick, play mode) | ours | ours |
+| `set_click_through(True)` on either of the above | passes through | passes through |
+| Created with `WindowTransparentForInput` (Qt sets `WS_EX_TRANSPARENT`) | passes through | passes through |
+
+- The bit survives `hide()`/`show()`. Toggling the Qt flag with `setWindowFlags` (the HWND did not
+  change) recomputes the style from Qt's flags: a hand-set bit is dropped when the Qt flag is off.
+  `destroy()`+`create()` (new HWND) keeps the bit only when the Qt flag is set.
+- `SetWindowDisplayAffinity(WDA_EXCLUDEFROMCAPTURE)` returns TRUE on every translucent overlay and
+  strip; it is **lost** (reads 0) after native re-creation, so it must be re-applied on
+  `WinIdChange` (as `guard_overlay.py` already does).
+- Play mode on a `WindowTransparentForInput` window: `set_click_through(False)` plus an alpha-1 fill
+  makes `WindowFromPoint` return the overlay everywhere (and stays so across hide/show), and
+  `set_click_through(True)` restores pass-through. That proves OS routing only; whether Qt delivers
+  the presses to a widget still flagged transparent-for-input is for WP6 to verify (or WP6 toggles
+  the Qt flag while hidden).
+
+**The owner's design: realistic caps, no snowfall.** 15 cap strips of 700x90 with a realistic
+pre-rendered cap (AA mound, gradient shading, highlight, translucent icicles):
+
+| Cap strips (15) | Result |
+| --- | --- |
+| Idle, timer stopped, 10 s | 0.006 % of one core |
+| Memory (working set / private) | +11.7 MB / +4.4 MB for 15 (~0.8 MB WS each) |
+| Cap change: re-render the cap pixmap | 1.5 ms median, 2.8 ms p90 |
+| Cap change: sync repaint of one strip | 0.50 ms median, 1.2 ms p90 |
+| Move one strip at 20 Hz (`setGeometry`, no repaint) | 2.9 % of one core; 1.2 ms median, 2.1 ms p90 per call |
+| Move and resize one strip at 20 Hz (repaints) | 5.5 %; 1.4 ms median, 2.9 ms p90 |
+| Move all 15 at 2 Hz | 2.6 %; 1.0 ms median, 2.4 ms p90 per call |
+| Move and resize all 15 at 2 Hz | 4.8 %; 0.8 ms median, 1.9 ms p90 |
+
+Airborne chunks (soft pre-rendered lumps 6-18 px, thrown up to ~650 px/s and falling ~720 px below
+the cap, 6 s windows, on the 2560x1440 monitor):
+
+| Chunks | (a) temporary full-monitor flight layer, dirty bounding box | (b) strip grown to cover the flight every frame |
+| --- | --- | --- |
+| 50 @ 30 FPS | 5.5 %; frame 1.5 ms median, 2.3 ms p90 | 14.3 %; frame 4.8 ms median, 6.1 ms p90 |
+| 50 @ 60 FPS | 10.5 %; 1.6 / 2.2 ms | 32.2 %; 5.2 / 6.9 ms |
+| 100 @ 30 FPS | 7.6 %; 2.1 / 3.4 ms | 16.3 %; 5.1 / 6.6 ms |
+| 100 @ 60 FPS | 13.3 %; 1.9 / 2.6 ms (353 of 360 frames) | 32.1 %; 5.4 / 7.2 ms, 40 ms spikes |
+
+Flight-layer lifecycle (2560x1440 / 1920x1080): cold construct+show+affinity 10.4 / 8.6 ms median
+(14.8 / 9.8 p90), first paint done 17.8 / 11.8 ms; warm re-show 1.9 ms, hide 1.3 ms; close+delete
+7.6 / 6.2 ms. While it exists (even hidden) it holds +31 MB WS / +14 MB private at 1440p; closing it
+gives that back. The grown strip pays a `setGeometry` (1.1 ms median) plus a full repaint of its
+whole (by then ~600 kpx) area every frame, which is why it costs 2-3x more.
+
+**Pixel-style full-monitor overlay versus pixel strips** (the original question; 5 fake piles and
+200 particles per monitor, 2 monitors; 10 strips of 600x40 with 20 particles each):
+
+| Measurement | Full-monitor overlay (2) | Strips (10 of 600x40) |
+| --- | --- | --- |
+| Memory (WS / private) | +47.2 MB / +22.2 MB | +5.3 MB / +1.1 MB |
+| Sync repaint, whole window | 4.1-8.0 ms median, 5.8-16.9 ms p90 | 0.13-0.46 ms median, 0.17-1.0 ms p90 |
+| Sync repaint, one pile +-40 px | 0.19-0.48 ms median, 0.37-0.79 ms p90 | 0.12-0.56 ms median, 0.16-1.4 ms p90 |
+| paintEvent, full / dirty | 0.9-1.6 ms / 0.21-0.26 ms median | 0.11-0.27 ms median |
+| `update()` to paint end, full / dirty | 5.4-7.5 ms / 0.54-0.92 ms median (p90 10.8-12.2 / 1.1-1.6) | 1.2-3.1 ms median (p90 3.2-5.6) |
+| CPU, full repaint at 20 / 8 FPS | 24.9 % / 9.4 % of one core | 9.4 % / 3.8 % (all 10 repainted) |
+| CPU, dirty-rect repaint at 20 / 8 FPS | 3.1 % / 1.1 % | 10.8 % / 4.2 % |
+| CPU idle, shown, timer stopped | 0.005-0.007 % | 0.005-0.008 % |
+
+The full-window repaint of a full-monitor layered window costs 4-9 ms, almost all of it the flush
+(the per-pixel-alpha update of the whole monitor; paintEvent itself is ~1-2 ms). Dirty rects avoid
+it (0.2-0.5 ms). Ten strips all repainting each frame cost more than one overlay's single dirty rect,
+because each window pays its own flush.
+
+**Realistic snow, for comparison** (the abandoned "snow falling over the whole monitor" idea: 300
+flakes per monitor of mixed sizes moving everywhere, so every frame is a full-window repaint of both
+monitors; 10 s windows):
+
+| Variant | CPU (one core) | paintEvent per window, median / p90 | Frame (both monitors, paint+flush), median / p90 | Full vs 400x200 dirty sync repaint |
+| --- | --- | --- | --- | --- |
+| (a) Pixel style, opaque blocks, 3 tones, 8 FPS | 11.4 % | 2.0 / 3.0 ms | 14.8 / 17.2 ms | 9.0 vs 0.7 ms |
+| (a) Pixel style, 20 FPS | 28.4 % | 2.0 / 2.6 ms | 15.0 / 17.4 ms | (same) |
+| (b) Realistic, pre-rendered soft pixmaps, 30 FPS | 44.8 % | 2.1 / 3.1 ms | 15.7 / 18.5 ms | 9.2 vs 1.4 ms |
+| (b) Realistic, pre-rendered, 60 FPS | 70.7 %, only 457 of 600 frames | 2.6 / 4.6 ms | 18.1 / 30.7 ms | (same) |
+| (c) Realistic, blurred every frame (offscreen `QGraphicsBlurEffect`), 30 FPS | 73.9 %, only **54 of 300** frames | 74 / 140 ms | 185 / 263 ms | meaningless: the blur redoes the whole layer whatever the clip |
+
+A `QGraphicsBlurEffect` set on the top-level overlay itself had no measurable effect (same cost as
+(b)): Qt does not apply graphics effects to top-level windows, so (c) blurs explicitly. In (a) and
+(b) the whole-monitor layered-window update dominates: ~11 ms of each ~15 ms frame (two monitors,
+~2 ms of painting each) is the flush, not the painting, so pre-rendered realistic flakes cost about
+the same per frame as pixel blocks, the CPU difference is mostly frame rate, and a full-monitor 60
+FPS animation is not attainable here.
+Per-frame blur is out at any frame rate.
+
+**Decision.** For the owner's design (realistic caps, nothing falling): **per-cap strip windows for
+the resting caps, plus a full-monitor flight layer per monitor that exists only while brushed or
+thrown snow is in the air** (1.2). Reasons: strips are idle-free (0.006 %), small (~0.8 MB each, so
+a pool of 30 is ~25 MB against 47 MB for two permanent overlays), repaint one cap for 0.5 ms, and
+leave no full-screen layered window on the desktop (rule 5); a permanent overlay would pay the 4-9
+ms whole-window flush on every clip change and hold 47 MB for nothing. Airborne snow needs room to
+fly, and the flight layer with dirty bounding boxes does it at 5-13 % of one core (30-60 FPS, 50-100
+chunks) against 14-32 % for growing a strip, and costs ~10 ms to create and nothing once destroyed.
 
 ---
 
@@ -131,11 +278,13 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
 strip and full repaint cost, memory, and whether `WindowFromPoint` ever returns it (with and without
 `WS_EX_TRANSPARENT`); check with `WDA_EXCLUDEFROMCAPTURE` applied.
 **Acceptance.** Numbers recorded in this plan; architecture decided; nothing else committed.
+**Done.** See 1.6: per-cap strips plus an on-demand flight layer; hit-testing settled (rule 1).
 
 ### WP1 — `snow.py` model
 **Files.** `snow.py`, `tests/smoke_snow.py` (registered).
-**Behaviour.** As 1.2/1.3: height-maps, growth, cap, overhang, icicles, particles, gravity, landing,
-budgets, brush and flick gestures from pointer samples, `step()` returning dirty groups.
+**Behaviour.** As 1.2/1.3: height-maps, growth, cap, overhang, icicles, airborne chunks, gravity,
+landing, budgets, brush and flick gestures from pointer samples, `step()` returning changed caps and
+the chunks' grouped bounding boxes. No flakes.
 **Tests.** Growth reaches the cap and stops; a brushed span turns into chunks with mass conserved;
 a slow pointer brushes nothing; thrown snow goes up and comes back; budget never exceeded; `step`
 reports nothing when nothing moves; deterministic under a seed.
@@ -150,30 +299,42 @@ filters cloaked/iconic/own windows (Win32 part may be exercised live as `smoke_p
 ### WP3 — Overlay, wiring and the setting
 **Files.** `snow_overlay.py`, `main.py`, `config.py`, `settings.py`, `docs/SETTINGS.md`, `world.py`
 (`snow_active`), `tray.py`, tests (`tests/smoke_snow_overlay.py`).
-**Behaviour.** Per-monitor overlays, grouped repaints, timer stopped when idle, every hide rule in
-1.4, pointer brush and flick, capture exclusion, the one-time toast, the tray entry.
+**Behaviour.** A pool of cap strips drawing pre-rendered realistic cap pixmaps, moved only on the
+2 Hz stack poll; a per-monitor flight layer created when chunks fly and destroyed ~2 s after they
+land; grouped repaints, timer stopped when idle, every hide rule in 1.4, pointer brush and flick,
+capture exclusion and click-through re-applied on every show and `WinIdChange`, the one-time toast,
+the tray entry.
 **Tests.** Offscreen/real QApplication: timer stopped when idle; hidden under guard, snooze and
 fullscreen; `WindowFromPoint` never returns a snow window; date-window table for `snow_active`;
 `smoke_ui.py` and `check_docs.py` pass.
 **Acceptance.** No click lost on a snowy title bar; idle CPU within noise of today's.
 
-### WP4 — Flurries, taskbar drift, battery
+### WP4 — Growth, icicles over time, battery
 **Files.** `snow.py`, `win_integration.py` (`on_battery`), `snow_overlay.py`, `tests/snow_rate.py`
 (registered in `RATES`).
-**Acceptance.** Measured flurry rate quoted in the docs; zero ticks between flurries; a thin drift on
-the taskbar's top edge (Nib's walk line, `get_walk_strip`) so a maximised-only desktop is not bare.
+**Behaviour.** Caps grow slowly to their full height (about 20 minutes of showing) in small steps,
+each step one cap re-render and one strip repaint, never animated and with no visible flakes;
+icicles lengthen every few minutes; on battery caps stay but do not grow (1.4). No flurries, no
+taskbar drift.
+**Acceptance.** Measured growth and icicle rates quoted in the docs; zero animation ticks while caps
+only grow (the growth timer is slow and repaints only the caps that changed); battery rule tested.
 
 ### WP5 — Nib's reactions
 **Files.** `behavior.py`, `main.py`, tests (`tests/smoke_snow_nib.py` or an existing suite),
 `snow_rate.py`.
-**Acceptance.** As 1.5; `fidget_rate` / `quirk_rate` byte-identical under the seeded comparison with
+**Acceptance.** As 1.5 (reactions triggered by brushed or thrown snow only); `fidget_rate` / `quirk_rate` byte-identical under the seeded comparison with
 snow on and off.
 
 ### WP6 — Play mode and the snowball
 **Files.** `snow_overlay.py`, `tool_wheel.py` (icon), `main.py`, tests.
-**Behaviour.** "Play in the snow" on the wheel: for ~30 s the overlay drops click-through and paints
-an alpha-1 fill (the ruler's trick, `ruler.py:18-21`); press on a pile to scoop a snowball, drag,
-release to throw; it can hit Nib. Right-click or the timeout ends it, always.
+**Behaviour.** "Play in the snow" on the wheel: for ~30 s the flight layer is created on each monitor
+as the input surface, drops click-through (`set_click_through(False)`) and paints an alpha-1 fill (the
+ruler's trick, `ruler.py:18-21`; WP0 measured that `WindowFromPoint` then returns it everywhere);
+press on a pile to scoop a snowball, drag, release to throw; it can hit Nib. Right-click or the
+timeout ends it, always, restoring click-through (a native re-creation fails closed, because the
+window keeps Qt's `WindowTransparentForInput`). Verify first that Qt delivers presses to a window
+still flagged `WindowTransparentForInput` once the bit is cleared; if not, toggle the Qt flag while
+the layer is hidden.
 **Acceptance.** Mode always ends; nothing is captured outside it.
 
 ### WP7 — Docs and polish
@@ -196,11 +357,20 @@ rectangles only, never titles or contents), `docs/HOW-IT-WORKS.md`, README, CHAN
 
 ## 5. Risks
 
-- Transparent full-monitor repaint cost is unmeasured until WP0 (guard_fx's figures are for an
-  opaque window).
-- Topmost fights with Nib's own windows and other topmost apps.
-- Qt may recreate the HWND, dropping `WS_EX_TRANSPARENT`: re-apply on `WinIdChange`, and test it.
+- A full-window repaint of a translucent full-monitor window costs 4-9 ms, mostly the layered
+  flush (1.6): the flight layer must only ever repaint grouped bounding boxes, never the whole window.
+- Topmost fights with Nib's own windows and other topmost apps. New in this design: every `show()` of
+  a strip or of a freshly created flight layer lands at the top of the topmost band, above Nib, his
+  bubble and the wheel, and rule 2 forbids restacking. WP3 must find an order that keeps the snow
+  below him (for example re-asserting Nib's own topmost after a snow window shows, through the
+  existing `set_topmost` path) and test it.
+- Qt re-creating the HWND (measured): `WS_EX_TRANSPARENT` survives only because the window carries
+  `WindowTransparentForInput`; the capture affinity does not survive. Re-apply both on `WinIdChange`.
 - Mixed DPI and a negative monitor origin: physical pixels throughout
-  (`QT_ENABLE_HIGHDPI_SCALING=0`), per-monitor block size.
-- Flakes draw over the Start menu and context menus (topmost); keep them sparse, clip if needed.
-- A visible full-screen layered window can disable direct-to-display for games and video: hide it.
+  (`QT_ENABLE_HIGHDPI_SCALING=0`), per-monitor sizes. Hit-testing measured the same on both monitors.
+- Airborne chunks briefly draw over the Start menu and context menus (topmost); they are few and
+  short-lived, and the clip function can drop chunks over popups.
+- A visible full-screen layered window can disable direct-to-display for games and video: the flight
+  layer exists only while snow is in the air, and is never created while a fullscreen app runs.
+- Pool size: many open windows means many strips (~0.8 MB each); cap the pool (about 30) and give
+  caps to the largest visible windows first.
