@@ -876,6 +876,13 @@ class SnowField:
             self._stroke_hit = False
         return hit
 
+    def lift(self) -> None:
+        """The pointer went somewhere it cannot brush (over a window above the snow, or a
+        monitor whose snow is hidden): the next sample starts a new movement, so no segment
+        joins the samples either side of it across snow nobody can see."""
+        self._samples.clear()
+        self._stroke_hit = False
+
     def _stroke_id(self) -> int:
         """Releases along one continuous swipe share a group, so their dirty box is one."""
         if not self._stroke_hit:

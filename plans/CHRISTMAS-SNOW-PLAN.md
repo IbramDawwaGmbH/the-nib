@@ -1,12 +1,17 @@
-> **Status:** WP0, WP1 and WP2 done (WP0: measurements in 1.6, architecture decided: per-cap strip
-> windows plus a flight layer that exists only while snow is airborne, realistic snow, no snowfall;
-> WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2: `win.list_window_stack()`,
-> `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`). Continue from **WP3**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> **Status:** WP0, WP1 and WP2 done (WP0: measurements in 1.6, architecture decided: per-cap
+> strip windows plus a flight layer that exists only while snow is airborne, realistic snow, no
+> snowfall; WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2:
+> `win.list_window_stack()`, `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`). WP3
+> is built (`snow_overlay.py`, the `snow` setting, the wiring in `main.py`,
+> `tests/smoke_snow_overlay.py`) but **not ticked**: its acceptance "idle CPU within noise of
+> today's" is not met (~0.6 % of one core at rest while snow shows, measured in WP3's Done note),
+> and needs the owner's decision - accept a measured budget instead, or lower the cost and
+> re-measure. Continue from **WP4** once that is settled. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
 > - [x] WP2 window stack and clipping
-> - [ ] WP3 overlay, wiring and the setting
+> - [ ] WP3 overlay, wiring and the setting (built; idle-CPU acceptance awaits a decision)
 > - [ ] WP4 growth, icicles over time, battery
 > - [ ] WP5 Nib's reactions
 > - [ ] WP6 play mode and the snowball
@@ -45,6 +50,8 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
    `WindowFromPoint` over a painted pile never returns a snow window.
 2. **Nothing is restacked.** CONTRIBUTING rule 1 and `tests/smoke_play.py:185` (exactly one
    `SetWindowPos` in `win_integration.py`, inside `set_topmost`). Occlusion is done by clipping.
+   (WP3: the snow's own windows are not topmost, and the overlay lifts them back up with Qt's
+   `raise_()` - its own windows only, no `SetWindowPos`; see WP3's Done note.)
 3. **Idle is zero ticks.** When nothing is airborne, the animation timer is stopped; only the 2 Hz
    window stack poll and the slow growth timer run, and only while snow is showing.
 4. **Below Nib.** The snow layer sits under the mascot, his bubble, the focus timer, the tool wheel
@@ -79,7 +86,8 @@ README / CONTRIBUTING suite count updated, CHANGELOG `## [Unreleased]` bullets. 
   shape, which caps moved, the airborne chunks and their bounding boxes), in the style of
   `guard_fx.BackgroundFx.step` (`guard_fx.py:590`). No flakes.
 - `snow_overlay.py` (new, Qt), decided by the WP0 numbers (1.6), two kinds of window, all
-  click-through, translucent, frameless, tool-type, topmost, `WA_ShowWithoutActivating`,
+  click-through, translucent, frameless, tool-type, topmost (WP3 made them not topmost: see its
+  Done note), `WA_ShowWithoutActivating`,
   `WindowDoesNotAcceptFocus`, excluded from capture:
   - **Cap strips**: one small window per visible cap, sized to the cap plus overhang and icicles
     (about window width + 2 overhangs by ~90 px), from a pool (shown/hidden and re-used, not created
@@ -367,6 +375,40 @@ the tray entry.
 fullscreen; `WindowFromPoint` never returns a snow window; date-window table for `snow_active`;
 `smoke_ui.py` and `check_docs.py` pass.
 **Acceptance.** No click lost on a snowy title bar; idle CPU within noise of today's.
+**Done.** `snow_overlay.py`: `render_cap` / `render_lump` / `render_shard`, `CapStrip`,
+`FlightLayer` and the `SnowOverlay` controller; `world.snow_active`; the `snow` setting (World tab)
+and a hidden latch `snow_hint_seen` for the one-time toast (108 settings, not 107: the toast has to
+be one-time across restarts); **Snow: off for today** in the tray, held in memory only (a restart
+the same day brings the snow back); `main._update_snow` on the 700 ms geometry poll and at once on
+a snooze or a guard. Suite: `tests/smoke_snow_overlay.py`. What differs from the text above:
+- **Not topmost** (1.2 said topmost). Measured with `EnumWindows` and a child process owning two
+  windows it activates in turn: a non-topmost tool window lands, on show and on `raise_()`, at the
+  top of the normal band - above the foreground window, below every topmost window (Nib, his
+  bubble, wheel and focus timer, the taskbar, menus) - so the snow is under Nib by construction and
+  nothing of his is ever re-raised. Activating a window puts it above the strips (`N A B S`), so the
+  2 Hz pass raises every shown strip again (`raise_`, our own windows only) whenever the front-most
+  non-topmost window changes; the clip from the same pass hides whatever is in front of a pile. The
+  flight layer is non-topmost too: chunks pass behind Nib and the taskbar. Nib's own ordinary
+  windows (Settings, dialogs) share that band and `list_window_stack` leaves them out, so the
+  overlay adds them to the front of the stack it hands `sync`, flagged maximised: they hide piles
+  and never carry one. Which window is at the front is still read from the real stack (plus
+  whether our own set changed), so the strips are raised again while Settings stays open.
+- Behind a fullscreen app the piles also stop growing and the pointer is not sampled there; over
+  one of Nib's topmost windows (the mascot, bubble, wheel, toast, focus timer) the pointer is not
+  fed to the model and the movement is broken, so nothing hidden under him is brushed.
+- **Rendering**: a pile is ~9-10 ms median (12 ms p90) for a 740x68 px extent at 96 DPI and
+  ~19-25 ms for the widest (1840-2450 px), against 1.6's 1.5 ms for a much plainer cap - measured
+  while other agents' suites ran, and done once per growth step. While snow flies a pile is
+  re-rendered at most every `RENDER_GAP_MS` = 100 ms however often it changes; brushing a 1700 px
+  pile at 125 % DPI measured 0.99 ms median per frame, 4.1 ms p90, 26 ms max (the render frames).
+- **Idle CPU is not within noise** (acceptance not met): with snow showing at rest, the 2 Hz pass
+  costs 2.5 ms median, 3.8 ms p90 (~3 ms of it `list_window_stack` at ~400 top-level windows), so
+  the overlay alone goes from 0.007 % to ~0.6 % of one core, and a paused, otherwise idle Nib from
+  0.36 % to 0.80 %. With the pointer near a pile (60 Hz sampling) it is ~2.4 %. Halving the poll,
+  or skipping it while nothing in the stack changes, is the lever if WP7 wants it lower.
+- On battery: `main._on_battery` asks `win.on_battery` if it exists (WP4 adds it), else mains.
+- `docs/PRIVACY.md` got one sentence ahead of WP7: the snow reads the same rectangles twice a
+  second while it shows.
 
 ### WP4 — Growth, icicles over time, battery
 **Files.** `snow.py`, `win_integration.py` (`on_battery`), `snow_overlay.py`, `tests/snow_rate.py`
@@ -422,7 +464,8 @@ rectangles only, never titles or contents), `docs/HOW-IT-WORKS.md`, README, CHAN
   a strip or of a freshly created flight layer lands at the top of the topmost band, above Nib, his
   bubble and the wheel, and rule 2 forbids restacking. WP3 must find an order that keeps the snow
   below him (for example re-asserting Nib's own topmost after a snow window shows, through the
-  existing `set_topmost` path) and test it.
+  existing `set_topmost` path) and test it. WP3: settled by making the snow windows not topmost
+  (its Done note), tested with `EnumWindows` in `tests/smoke_snow_overlay.py`.
 - Qt re-creating the HWND (measured): `WS_EX_TRANSPARENT` survives only because the window carries
   `WindowTransparentForInput`; the capture affinity does not survive. Re-apply both on `WinIdChange`.
 - Mixed DPI and a negative monitor origin: physical pixels throughout

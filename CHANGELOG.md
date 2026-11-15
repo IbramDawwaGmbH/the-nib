@@ -97,6 +97,16 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   menus and tooltips in front hide what is behind them. The desktop is read as rectangles and
   window class names, as for perching — no titles, no contents — in one pass of about 0.5 ms on a
   quiet desktop (2.2 ms measured on a busy one).
+- **It snows on your windows**, from 1 December to 6 January: soft, rounded piles grow slowly on
+  the top edges of your windows, curl over the corners and grow icicles, and a fast swipe of the
+  pointer through a pile knocks it off (an upward flick throws it in the air). The snow never
+  takes a click, sits under him, his bubble and his wheel, stays out of screenshots and screen
+  shares, and goes away while he is snoozed, while a guard is up and behind a fullscreen app;
+  focusing, pausing him or ghost mode freeze it. A new setting, `snow` (World tab: `"christmas"`,
+  `"winter"`, `"always"` or `"off"`), and **Snow: off for today** in the tray; the first snow
+  brings a one-time toast saying so (a new hidden latch, `snow_hint_seen`). At rest it is one look
+  at the window stack twice a second, about 2.5 ms each; nothing animates unless snow is in the
+  air.
 
 ### Changed
 

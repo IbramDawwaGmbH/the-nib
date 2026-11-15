@@ -108,6 +108,10 @@ DEFAULTS: dict[str, Any] = {
     #: one on the same date every year - a heart on Valentine's Day, a pi hat on the fourteenth of
     #: March. Off, he falls back to the season's. Part of auto_costumes, so off there is off here.
     "daily_costumes": True,
+    #: Snow piling up on the top edges of your windows - see snow.py and snow_overlay.py.
+    #: "christmas" is 1 December to 6 January wherever you are, "winter" follows the season (and
+    #: southern_seasons), "always" is every day, "off" never. Part of world_enabled.
+    "snow": "christmas",
     #: exe name -> animation state, merged over the built-in personas. Yours wins on a clash.
     "persona_apps": {},
     # Playing with what is around him: ducking behind the taskbar to peek, and heaving at the
@@ -228,6 +232,8 @@ DEFAULTS: dict[str, Any] = {
     "sound_volume": 0.35,
     #: The one-off tour of the things you would otherwise never find. Cleared to replay it.
     "intro_seen": False,
+    #: Set once the snow's one-time toast (how to turn it off) has been shown.
+    "snow_hint_seen": False,
     "hide_on_fullscreen": True,
     "last_x": None,
     "last_monitor": None,
@@ -295,6 +301,8 @@ _VALID_GUARD_AUTH = ("hello", "pin")
 _VALID_GUARD_SCENES = ("both", "eyes", "nib")
 #: See LEVELS in voice.py, which is where the gaps and daily caps live.
 _VALID_CHATTER = ("off", "rare", "normal")
+#: See world.snow_active, which is where the dates live.
+_VALID_SNOW = ("off", "christmas", "winter", "always")
 _NULLABLE = ("last_x", "last_monitor")
 
 #: Free-form text settings, stored verbatim. ``workday_end`` is parsed (and rejected) by
@@ -369,6 +377,9 @@ def _coerce(key: str, value: Any) -> Any:
     if key == "chatter_level":
         text = str(value).lower().strip()
         return text if text in _VALID_CHATTER else default
+    if key == "snow":
+        text = str(value).lower().strip()
+        return text if text in _VALID_SNOW else default
     if key == "guard_pin_hash":
         # Never "None" or a number turned into text: a hash that looks set but is not would leave
         # the PIN path unusable while still counting as "a way back in".

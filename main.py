@@ -83,11 +83,12 @@ import devices  # noqa: E402
 from ruler import RulerOverlay  # noqa: E402
 from tool_wheel import ToolWheel, WheelItem  # noqa: E402
 from settings import SettingsWindow  # noqa: E402
+from snow_overlay import SnowOverlay  # noqa: E402
 from sound import Sounds  # noqa: E402
 from tray import Tray  # noqa: E402
 import updater  # noqa: E402
 from voice import BUILTIN_PHRASES, NIB_PHRASES_FILE, Voice, lines_for  # noqa: E402
-from world import World, cpu_count  # noqa: E402
+from world import World, cpu_count, snow_active  # noqa: E402
 
 log = logging.getLogger("nib")
 
@@ -396,6 +397,18 @@ class NibApp:
             config, sheet_provider=lambda: self.sheet, sounds=self.sounds, ui_scale=self.ui_scale,
         )
         self.guard.start_blocker = self._guard_start_blocker
+        #: The Christmas snow on your windows (snow_overlay.py). Inert - no window, no timer -
+        #: until _update_snow finds a day for snow; the setting and the date decide that.
+        self.snow = SnowOverlay(parent=self.app)
+        #: The day "Snow: off for today" was picked (ISO), or "". Kept in memory only: it is a
+        #: today thing, and the snow coming back after a restart the same day is a smaller
+        #: surprise than a setting written for one day.
+        self._snow_off_day = ""
+        #: The snow showed and its one-time toast is still owed - waiting for a moment when a
+        #: toast may go up (not mid-tour, not over another toast, not while he is away).
+        self._snow_hint_due = False
+        #: Set by _on_quit: nothing may put the snow back up between it and the loop ending.
+        self._quitting = False
 
         self._connect()
         self._refresh_geometry(initial=True)
@@ -571,6 +584,8 @@ class NibApp:
         self.tray.measure_requested.connect(self._on_measure_requested)
         self.tray.mic_toggle_requested.connect(self._on_mic_toggle)
         self.tray.guard_requested.connect(self._on_guard_requested)
+        self.tray.snow_off_requested.connect(self._on_snow_off_today)
+        self.snow.appeared.connect(self._on_snow_appeared)
         self.tray.quit_requested.connect(self._on_quit)
         self.guard.started.connect(lambda: self._set_guarding(True))
         self.guard.ended.connect(lambda: self._set_guarding(False))
@@ -695,6 +710,7 @@ class NibApp:
         if self.config["hide_on_fullscreen"]:
             self._update_fullscreen(monitor)
         self._update_presence()
+        self._update_snow()
 
     def _update_presence(self) -> None:
         """Notice when you step away, come back, or switch app - and what the world is doing."""
@@ -1026,6 +1042,12 @@ class NibApp:
 
         cursor = win.get_cursor_pos()
         self.behavior.update(dt_ms, cursor)
+        if self.snow.showing:
+            # Where he is, for snow falling onto him (what he does about it is WP5's); nothing
+            # while he is out of sight, so snow never lands on a mascot who is not there.
+            x, y, w, h = self.behavior.rect
+            hidden = self._hidden_by_fullscreen or self._snoozed or self._guarding
+            self.snow.set_nib(None if hidden else (x, y, x + w, y + h))
         if self.behavior.take_costume_swap():
             # Before _apply_frame, so the apex paints already dressed.
             self._apply_pending_costume()
@@ -1585,6 +1607,7 @@ class NibApp:
         self.window.fade_to(0.0)
         self._snoozed = True
         self._update_tick_rate()
+        self._update_snow()
         QTimer.singleShot(max(1, seconds) * 1000, self._wake_from_snooze)
 
     def _wake_from_snooze(self) -> None:
@@ -1596,6 +1619,7 @@ class NibApp:
             self.behavior.set_hidden(False, greet=True)
             self.window.fade_to(1.0)
         self._update_tick_rate()
+        self._update_snow()
 
     # --- the lines he says ------------------------------------------------------------
 
@@ -1799,6 +1823,65 @@ class NibApp:
         self._staged = None   # the helper has it now: it swaps it in, then deletes it
         self._on_quit()
 
+    # --- the snow ------------------------------------------------------------------
+
+    def _update_snow(self) -> None:
+        """Whether there is snow on the windows, and in what state (plan 1.4). On the 700 ms
+        geometry poll, which is what notices midnight, a focus session ending or a setting
+        changing, and straight away on the changes that must not wait for it (a snooze, a guard).
+
+        Hidden outright (every window off, every timer stopped) while he is snoozed or a guard
+        is up; per monitor, the overlay hides it behind a fullscreen app itself. Frozen - shown,
+        but not growing and not brushed - while you focus, he is paused or in ghost mode: all
+        three say "keep out of my way", and snow flying off a window is not that.
+        """
+        if self._quitting:
+            return
+        today = datetime.date.today()
+        active = (bool(self.config["world_enabled"])
+                  and self._snow_off_day != today.isoformat()
+                  and snow_active(today, str(self.config["snow"]),
+                                  bool(self.config["southern_seasons"])))
+        frozen = (self.behavior.focus_active or self.behavior.paused
+                  or bool(self.config["ghost_mode"]))
+        battery = self._on_battery()
+        self.snow.set_state(active=active, hidden=self._snoozed or self._guard_busy(),
+                            frozen=frozen, growing=not battery, on_battery=battery)
+        self.tray.set_snow_available(active)
+        if self._snow_hint_due:
+            self._give_snow_hint()
+
+    @staticmethod
+    def _on_battery() -> bool:
+        """On battery the piles stay but stop growing, and thrown snow animates at 20 FPS (plan
+        1.4). ``win.on_battery`` is WP4's; until it is there, this machine is on mains."""
+        probe = getattr(win, "on_battery", None)
+        return bool(probe()) if probe is not None else False
+
+    def _on_snow_off_today(self) -> None:
+        self._snow_off_day = datetime.date.today().isoformat()
+        log.info("snow off for today")
+        self._update_snow()
+
+    def _on_snow_appeared(self) -> None:
+        if not bool(self.config["snow_hint_seen"]):
+            self._snow_hint_due = True
+            self._give_snow_hint()
+
+    def _give_snow_hint(self) -> None:
+        """The one-time toast the first time there is snow: what it is, and how to turn it off.
+        Held over, and tried again on the next poll, whenever he could not say a line either
+        (:meth:`_voice_blocked`: a toast or the tour up, you away or focusing, ghost mode, the
+        bubble or wheel open, ...) and while there is no snow on screen to talk about - it is
+        the one thing the snow ever says, so it must actually be seen."""
+        if self._voice_blocked() or not self.snow.showing:
+            return
+        self._snow_hint_due = False
+        self.config["snow_hint_seen"] = True
+        self._tell("It's snowing on your windows.",
+                   "Swipe a pile to knock it off. Tray: Snow: off for today; "
+                   "Settings -> World for good.", 9000)
+
     # --- the away guard -------------------------------------------------------------
 
     def _on_guard_requested(self) -> None:
@@ -1848,6 +1931,8 @@ class NibApp:
                     self._screen_rect(),
                 )
         self._update_tick_rate()
+        # Straight away rather than on the next poll: nothing of his outlasts the fog going up.
+        self._update_snow()
 
     def _on_files_dropped(self, paths: list[str]) -> None:
         """Dropped files: the intent is clear enough to launch straight away."""
@@ -2075,6 +2160,11 @@ class NibApp:
             # The presence timer would get there within 700ms anyway; this just means the tooltip
             # is already right by the time you look down from the Apply button.
             self._update_presence()
+        if keys & {"snow", "world_enabled"}:
+            # Choosing the snow again in Settings outranks "off for today" picked earlier.
+            self._snow_off_day = ""
+        if keys & {"snow", "world_enabled", "southern_seasons", "ghost_mode"}:
+            self._update_snow()
         self._refresh_tray()
 
     def show_intro(self) -> None:
@@ -2245,6 +2335,10 @@ class NibApp:
 
     def _on_quit(self) -> None:
         self._drop_staged()
+        # Before the snow goes: a timer still due before the event loop ends (the 700 ms
+        # geometry poll) must not bring it back up after it is taken down.
+        self._quitting = True
+        self.snow.shutdown()
         self.bubble.close_silently()
         self.billboard.take_down()
         self.focus_timer.take_down()

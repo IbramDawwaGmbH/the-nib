@@ -37,6 +37,7 @@ class Tray(QObject):
     measure_requested = Signal()
     mic_toggle_requested = Signal()
     guard_requested = Signal()
+    snow_off_requested = Signal()
 
     #: What the tray icon's tooltip says until main._update_presence first runs. From then on it
     #: always has something more specific to say - a focus countdown, a live mic, or simply his
@@ -111,6 +112,14 @@ class Tray(QObject):
         self._ghost.toggled.connect(self.ghost_toggled.emit)
         menu.addAction(self._ghost)
 
+        #: Only there while there is snow to put away - see set_snow_available.
+        self._snow_off = QAction("Snow: off for today", menu)
+        self._snow_off.setToolTip("Clears the snow off your windows until tomorrow (or a "
+                                  "restart). Settings -> World -> snow turns it off for good")
+        self._snow_off.triggered.connect(self.snow_off_requested.emit)
+        self._snow_off.setVisible(False)
+        menu.addAction(self._snow_off)
+
         menu.addSeparator()
 
         self._costume_actions = self._build_grouped_choice_menu(
@@ -176,6 +185,11 @@ class Tray(QObject):
             return
         self._mic.setVisible(True)
         self._mic.setText("Unmute microphone" if muted else "Mute microphone")
+
+    def set_snow_available(self, available: bool) -> None:
+        """Show "Snow: off for today" only while there is snow it could put away."""
+        if self._snow_off.isVisible() != bool(available):
+            self._snow_off.setVisible(bool(available))
 
     def _on_activated(self, reason) -> None:
         """Show the menu on a left click.

@@ -20,7 +20,7 @@ import logging
 import time
 from ctypes import wintypes
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date, datetime
 
 log = logging.getLogger(__name__)
 
@@ -74,6 +74,27 @@ def part_of_day(hour: float) -> str:
 def season_for(month: int, *, southern: bool = False) -> str:
     season = _SEASON_BY_MONTH.get(int(month), SEASON_SPRING)
     return _OPPOSITE_SEASON[season] if southern else season
+
+
+#: The ``snow`` setting's "christmas" window, inclusive: 1 December to Epiphany, 6 January. By the
+#: date everywhere - Christmas is not in winter in Sydney, and nor is the snow anyone pictures.
+SNOW_FROM = (12, 1)
+SNOW_UNTIL = (1, 6)
+
+
+def snow_active(day: date, mode: str, southern: bool = False) -> bool:
+    """Is it a day for snow on the windows, by the ``snow`` setting? ``"christmas"`` is
+    ``SNOW_FROM`` to ``SNOW_UNTIL`` wherever you are; ``"winter"`` is the meteorological winter,
+    flipped by ``southern``; ``"always"`` and ``"off"`` mean what they say, and anything else is
+    off. Pure: the date comes in, and ``world_enabled`` is the caller's to check."""
+    if mode == "always":
+        return True
+    if mode == "christmas":
+        md = (day.month, day.day)
+        return md >= SNOW_FROM or md <= SNOW_UNTIL
+    if mode == "winter":
+        return season_for(day.month, southern=southern) == SEASON_WINTER
+    return False
 
 
 def parse_clock(spec: str) -> float | None:

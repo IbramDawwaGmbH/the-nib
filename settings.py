@@ -61,6 +61,7 @@ CHOICES: dict[str, tuple[str, ...]] = {
     "guard_auth": cfg_module._VALID_GUARD_AUTH,
     "guard_scene": cfg_module._VALID_GUARD_SCENES,
     "chatter_level": cfg_module._VALID_CHATTER,
+    "snow": cfg_module._VALID_SNOW,
     "log_level": ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
 }
 
@@ -80,6 +81,8 @@ HIDDEN = frozenset({
     # A scrypt hash, not something anyone can type - the first guard sets it, clearing it in
     # config.json resets it. A text box holding it would only invite pasting a PIN in plain text.
     "guard_pin_hash",
+    # The snow's one-time toast latch, like intro_seen but with nothing to replay.
+    "snow_hint_seen",
 })
 
 #: Tab -> the keys on it, in order. Anything in DEFAULTS that is neither here nor in HIDDEN turns
@@ -102,7 +105,7 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("World", (
         "world_enabled", "workday_end", "seasonal_enabled", "southern_seasons",
         "cpu_reaction_enabled", "cpu_busy_percent", "persona_costumes", "daily_costumes",
-        "play_with_windows",
+        "snow", "play_with_windows",
     )),
     ("Personality", (
         "name", "personality", "annoyance_threshold", "annoyance_window_s", "annoyance_decay_s",
@@ -139,6 +142,8 @@ HELP: dict[str, str] = {
     "prompt_reactions": "React to the shape of what you asked. Read from your own bubble only.",
     "calculator_enabled": "Answer a plain sum or unit conversion inline, never sent anywhere.",
     "daily_costumes": "A costume for every date of the year, the same one each year. Yours wins.",
+    "snow": "Snow on your windows' top edges. christmas: 1 Dec - 6 Jan. winter follows the "
+            "season. Swipe a pile to knock it off.",
     "away_after_s": "Idle seconds before he sits down to wait. 0 disables the greeting too.",
     "focus_duration_min": "How long a session runs, started from the tray. Read once when you "
                           "start it - changing this mid-session only affects the next one.",

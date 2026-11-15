@@ -83,6 +83,7 @@ is normalised — so a hand-edited file cannot break him.
 | `persona_costumes` | `true` | Let an app persona put temporary headwear on him |
 | `auto_costumes` | `true` | Let him dress himself when there's a reason to — see [Costumes](ART.md#costumes-and-colours) |
 | `daily_costumes` | `true` | A costume for every date of the year — see [The costume of the day](ART.md#the-costume-of-the-day). Off falls back to the season's |
+| `snow` | `"christmas"` | Snow piling up on the top edges of your windows; a fast swipe through a pile knocks it off. `"christmas"` is 1 December to 6 January wherever you are, `"winter"` follows the season (and `southern_seasons`), `"always"` every day, `"off"` never. Off with `world_enabled` too, and the tray's **Snow: off for today** puts it away until midnight or until he restarts, whichever comes first (changing `snow` or `world_enabled` in Settings clears it) |
 | `persona_apps` | `{}` | `{"exe.exe": "animation"}`, merged over the built-in personas |
 | `play_with_windows` | `true` | Peeking over the taskbar, and heaving at a window overhead |
 
@@ -163,6 +164,7 @@ lid or lock settings.
 | `last_x` / `last_monitor` | `null` | Remembered resting position |
 | `paused` | `false` | Remembered pause state |
 | `intro_seen` | `false` | Set once the first-run tour has run. Clear it to see the tips again |
+| `snow_hint_seen` | `false` | Set once the snow's one-time toast (how to turn it off) has been shown |
 | `prompt_history` | `[]` | Your recent prompts, newest first. Local only — see [Privacy](PRIVACY.md#privacy) |
 | `costume_recents` | `[]` | The costumes you put on him last, newest first — the head of the [wardrobe](USING-HIM.md#the-wardrobe). Written, not for you to set |
 | `mood_spirits` | `0.0` | `-1.0`–`+1.0`, how the day has gone. Written, not for you to set |
