@@ -8,6 +8,41 @@
 > and needs the owner's decision - accept a measured budget instead, or lower the cost and
 > re-measure. Continue from **WP4** once that is settled. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
+> ### Where it stands (paused by the owner, 2026-11-15)
+>
+> **Done, reviewed and committed on `feat/christmas-snow`:** the plan, WP0 (measurements), WP1
+> (`snow.py`), WP2 (window stack and clipping) and WP3 (`snow_overlay.py`, the `snow` setting,
+> tray entry, one-time toast). 34/34 suites pass at `d726a15`. The owner live-tested WP3 and saw it
+> work on a restored Notepad window: the strip appears and starts to build.
+>
+> **Saved but unfinished: branch `wip/christmas-snow-wp4-wp5` (`8a48052`).** The combined
+> WP4+WP5 run (growth timing and `tests/snow_rate.py`, `win.on_battery()`, lowering the idle cost,
+> Nib's reactions in `tests/smoke_snow_nib.py`) was stopped mid-implementation. It compiles and
+> its three snow suites pass on their own; the full `run_all`, `check_docs`, the seeded rate
+> comparison and the review were NOT run. Resume by checking it out, finishing and reviewing it,
+> then merging it into `feat/christmas-snow`, or discard it and redo WP4+WP5.
+>
+> **Remaining, in this order:**
+> 1. Finish WP4+WP5 from the saved branch (above), including the idle-cost reduction: snow at
+>    rest raises a paused Nib from 0.36 % to 0.80 % of one core, mostly `list_window_stack` at
+>    2 Hz over ~400 windows; the idea is to back off to 1 Hz or 0.5 Hz after unchanged passes and
+>    snap back on a foreground or pointer change.
+> 2. **Owner-approved fix A - snow on maximised windows.** Today a maximised window gets no cap,
+>    and most people work maximised (the owner's two monitors each had only a maximised Chrome or
+>    Claude window, so no snow showed at all). Draw a thinner pile just inside the top edge of a
+>    maximised window, icicles hanging over its title bar or tab strip, still click-through.
+> 3. **Owner-approved fix B - snow visible from the start.** Caps start bare and grow for ~20 min,
+>    so at first it looks broken. When snow switches on, or a window first gets a cap, start it with
+>    a visible layer, then keep growing.
+> 4. WP6 play mode and the snowball, and WP7 docs and polish (they may run as one batch).
+> 5. Final check (`run_all --rates`, `check_docs`, a live test on the owner's desktop), then a PR
+>    from `feat/christmas-snow` to `main`. Nothing here is merged into `main` yet.
+>
+> **Live testing without touching the real settings:** copy `%APPDATA%\NibMascot` to a test
+> folder, set `"snow": "always"` in its `config.json` (today is outside 1 Dec - 6 Jan), and start
+> Nib from the worktree with `APPDATA` pointing at the test folder's parent. Only one Nib can run at
+> a time (single-instance mutex), so quit the normal one first.
+>
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
 > - [x] WP2 window stack and clipping
