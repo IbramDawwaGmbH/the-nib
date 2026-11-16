@@ -139,13 +139,13 @@ while t <= 90 * 60_000:
     t += 1000.0
     if f.grow(t):
         steps += 1
-    if at10 is None and t >= 10 * 60_000:
+    if at10 is None and t >= 90_000:
         at10 = sum(cap.heights) / sum(cap.target)
     if cap.full and all(ic.length == ic.max_len for ic in cap.icicles):
         break
 full_at = t
-# Eased out (snow.GROWTH_STEPS): quick to show, slow to finish, so past half at ten minutes.
-check("about two-thirds grown at ten minutes (about 20 to full)", 0.55 <= at10 <= 0.8,
+# Eased out (snow.GROWTH_STEPS): quick to show, slow to finish, so past half at half time.
+check("about two-thirds grown at a minute and a half (about 3 to full)", 0.55 <= at10 <= 0.8,
       f"{at10:.2f}")
 
 
@@ -163,12 +163,12 @@ def time_to_full(period, jitter=0.0, bias=0.0):
     return None
 
 
-for label, args in (("every second", (1000.0,)), ("every 10 s", (10_000.0,)),
-                    ("every 30 s, a few ms either side", (30_000.0, 5.0)),
-                    ("every 30 s, always 3 ms early", (30_000.0, 0.0, -3.0))):
+for label, args in (("every second", (1000.0,)), ("every 2 s, the poll at rest", (2_000.0,)),
+                    ("once a step, a few ms either side", (S.GROWTH_STEP_MS, 5.0)),
+                    ("once a step, always 3 ms early", (S.GROWTH_STEP_MS, 0.0, -3.0))):
     mins = time_to_full(*args)
-    check(f"full in about 20 minutes of showing, with the timer {label}",
-          mins is not None and 18 <= mins <= 25, f"{mins or 0:.1f} min")
+    check(f"full in about 3 minutes of showing, with the timer {label}",
+          mins is not None and 2.5 <= mins <= 4, f"{mins or 0:.1f} min")
 check("never above its grown height", all(h <= tgt + 1e-9 for h, tgt in zip(cap.heights,
                                                                         cap.target)))
 check("icicles grow to their full length too",

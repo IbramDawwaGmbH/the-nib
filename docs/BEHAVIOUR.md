@@ -597,20 +597,20 @@ Set `play_with_windows` to `false` to switch both off.
 
 From 1 December to 6 January (by default: the [`snow`](SETTINGS.md) setting), snow piles up on the top
 edges of your windows. Nothing falls: a pile just grows, one small step every 30 seconds of
-showing, fast at first and slower as it fills, so a fresh window looks snowy within a few
-minutes and does not keep changing for long. Measured on an 800 px window (`tests/snow_rate.py`,
+showing, fast at first and slower as it fills, so a fresh window looks snowy within half a
+minute and does not keep changing for long. Measured on an 800 px window (`tests/snow_rate.py`,
 twelve windows' worth of seeds):
 
 | The middle of the pile | after |
 | --- | --- |
-| 3 px | **1.3 minutes** |
-| 6 px | **2.8 minutes** |
-| 10 px | **4.3 minutes** |
-| 20 px | **11 minutes** |
-| full (about 26 px) | **20 minutes** |
+| 3 px | **15 seconds** |
+| 6 px | **30 seconds** |
+| 10 px | **45 seconds** |
+| 20 px | **1.6 minutes** |
+| full (about 26 px) | **3 minutes** |
 
-Icicles start once the corners are well covered: the first is 4 px long after **12 minutes**, and
-the last reaches its full length (8-28 px) after **39-48 minutes**. Only time the snow is on
+Icicles start once the corners are well covered: the first is 4 px long after **1.4 minutes**, and
+the last reaches its full length (8-28 px) after **about 3 minutes**. Only time the snow is on
 screen counts, so a pile hidden behind a fullscreen game, a snooze or a guard does not catch up
 afterwards. While you focus, he is paused or in ghost mode, and on battery, the piles stay but
 stop growing.

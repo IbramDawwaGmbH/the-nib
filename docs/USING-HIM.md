@@ -719,8 +719,8 @@ before the fog re-asserts itself, and turn on Do Not Disturb if notifications ma
 
 From 1 December to 6 January, snow piles up on the top edges of your windows: soft, rounded piles
 that curl over the corners and, after a while, grow icicles. Nothing falls across your screen. A
-pile simply grows, quickly at first and then more slowly: a new window looks snowy within a few
-minutes and its pile is full after about 20 (the measured rates are in
+pile simply grows, quickly at first and then more slowly: a new window looks snowy within half a
+minute and its pile is full after about 3 minutes (the measured rates are in
 [What he does](BEHAVIOUR.md#snow-on-your-windows)). The first time it snows he says so, once, and
 how to turn it off.
 

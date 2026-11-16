@@ -117,19 +117,18 @@ ICICLE_SUPPORT_PX = 2.0
 #: One growth step per cap per this; each step is one pixmap re-render, never animated, no flakes.
 #: Steps ease out: a column's step is ``target / GROWTH_STEPS * 2 * sqrt(1 - fill)`` (twice the
 #: even pace when bare, slowing as it fills, never under ``GROWTH_MIN_PACE`` of it), so a fresh
-#: pile reads as snow within a few minutes and still takes about 20 to fill. Measured by
-#: ``tests/snow_rate.py`` (an 800 px window at 96 DPI, medians of 12 windows): the middle of the
-#: pile at 3 px after 1.3 min, 6 px after 2.8, 10 px after 4.3, 20 px after 11, full after
-#: 19.8-20.0 (19.4-20.5 across windows), whether ``grow`` runs every 0.5 s, 2 s or 30 s. Even
-#: steps of 40 (WP1's placeholder) took 4.5 min to 6 px and 21.5 to full.
-GROWTH_STEP_MS = 30_000
+#: pile reads as snow within half a minute and is full in about 3 (the owner asked for 3, not
+#: the first design's 20). Measured by ``tests/snow_rate.py`` (an 800 px window at 96 DPI,
+#: medians of 12 windows): the middle of the pile at 3 px after 0.2 min, 6 px after 0.5, 10 px
+#: after 0.7, 20 px after 1.6, full after 3.0, whether ``grow`` runs every 0.5 s, 2 s or 4.5 s.
+GROWTH_STEP_MS = 4_500
 GROWTH_STEPS = 42
 GROWTH_MIN_PACE = 0.35
 GROWTH_NOISE = 0.25          # each column's step is +-25 %, so the top fills in unevenly
 #: Icicles lengthen by ``ICICLE_STEP_PX`` per this, once the overhang above them is
-#: ``ICICLE_GROW_FILL`` full: the first is 4 px long 12 minutes in, and the last is at its full
-#: length (8-28 px) after 39-48 (``tests/snow_rate.py``).
-ICICLE_STEP_MS = 180_000
+#: ``ICICLE_GROW_FILL`` full: the first is 4 px long 1.4 minutes in, and the last is at its full
+#: length (8-28 px) after about 3 (``tests/snow_rate.py``).
+ICICLE_STEP_MS = 9_000
 
 # --- gestures ----------------------------------------------------------------------------------
 
@@ -206,7 +205,7 @@ COVER_BAND_PX = CAP_PX / 2.0
 #: moves, closes or is maximised: it simply goes. That is what keeps a window dragged across the
 #: screen from spraying chunks on every 2 Hz pass - the pile it regrows at each new spot is bare
 #: (``RESPAWN_HOLD_MS``), so only the first pass, the one that tears the real pile off, throws
-#: anything. 0.2 is about five growth steps, two and a half minutes of showing (it was 0.1 while
+#: anything. 0.2 is about five growth steps, some twenty seconds of showing (it was 0.1 while
 #: growth went at an even pace; the eased steps reach 0.1 in a minute).
 QUIET_FRACTION = 0.2
 

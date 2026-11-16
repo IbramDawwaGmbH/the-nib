@@ -89,8 +89,8 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 
 - **Christmas snow on your windows**, from 1 December to 6 January. Soft, rounded piles grow on
   the top edges of your windows, curl over the corners and grow icicles; nothing falls across the
-  screen. A new pile shows within a couple of minutes (6 px after about 3) and is full after about
-  20 minutes of showing; its icicles start after about 12 and are done within the hour. A fast
+  screen. A new pile shows within seconds (6 px after about 30) and is full after about
+  3 minutes of showing; its icicles start after about a minute and a half and are done by 3. A fast
   sideways swipe of the pointer through a pile knocks it off, an upward flick throws it in the
   air, and it lands on other piles, the taskbar or him. A window you move, maximise or close drops
   its pile (a resize drops only the cut-off end), and windows, menus and tooltips in front hide

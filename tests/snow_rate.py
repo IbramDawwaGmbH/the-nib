@@ -1,9 +1,9 @@
 """How fast does the snow grow, and how often does Nib do anything about it?
 
-Measured on the model's injected clock, so twenty minutes of growth take a fraction of a second:
+Measured on the model's injected clock, so minutes of growth take a fraction of a second:
 
 *   **Growth**: how long a fresh pile takes to show (3, 6 and 10 px in the middle), to reach 20 px
-    and to fill, and when its icicles appear and finish - with ``grow()`` called every 30 s, every
+    and to fill, and when its icicles appear and finish - with ``grow()`` called once a growth step, every
     2 s (the stack poll backed off at rest) and every 0.5 s (the poll at full rate), because
     growth must count showing time whatever the poll is doing.
 *   **The stack poll**: full ``list_window_stack`` passes per minute with the desktop at rest and
@@ -82,7 +82,7 @@ def grow_once(hwnd, period):
 print("--- growth: a fresh 800 px pile at 96 DPI, 12 windows' seeds ---")
 HWNDS = [0x10000 + 977 * k for k in range(12)]
 results = {}
-for label, period in (("every 30 s", 30_000.0), ("every 2 s (poll at rest)", 2000.0),
+for label, period in (("once a step (4.5 s)", float(S.GROWTH_STEP_MS)), ("every 2 s (poll at rest)", 2000.0),
                       ("every 0.5 s (poll at full rate)", 500.0)):
     runs = [grow_once(h, period) for h in HWNDS]
     row = {}
@@ -100,14 +100,14 @@ for label, period in (("every 30 s", 30_000.0), ("every 2 s (poll at rest)", 200
         print(f"    {what:17s}  {med:5.1f} min  ({lo:.1f}-{hi:.1f})")
 
 for label, row in results.items():
-    check(f"{label}: snowy within a few minutes (6 px by 4 min)", row[6.0][2] <= 4.0,
+    check(f"{label}: snowy within a minute (6 px by 1 min)", row[6.0][2] <= 1.0,
           f"{row[6.0][2]:.1f} min")
-    check(f"{label}: full in about 20 minutes", 17.0 <= row["full"][1] <= 23.0,
+    check(f"{label}: full in about 3 minutes", 2.5 <= row["full"][1] <= 3.5,
           f"{row['full'][1]:.1f} min")
-    check(f"{label}: icicles over the next half hour or so", row["icicles"][2] <= 60.0,
+    check(f"{label}: icicles done by about 4 minutes", row["icicles"][2] <= 4.0,
           f"{row['icicles'][2]:.1f} min")
 fulls = [row["full"][1] for row in results.values()]
-check("the poll's rate does not change how fast it grows", max(fulls) - min(fulls) <= 1.0,
+check("the poll's rate does not change how fast it grows", max(fulls) - min(fulls) <= 0.3,
       f"{min(fulls):.1f}-{max(fulls):.1f} min")
 
 # --- the stack poll ------------------------------------------------------------------------------
