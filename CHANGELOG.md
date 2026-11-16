@@ -87,38 +87,39 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   `memory.json` as `taste`; Forget everything clears it, and with `memory_enabled` off nothing is
   learned or used.
 
-- The groundwork for **Christmas snow**: a new Qt-free `snow.py` that models the snow piling up on
-  your windows' top edges — growth, overhangs, icicles, snow knocked off by a fast swipe or flicked
-  into the air, where it falls and lands — with a fixed budget of airborne chunks. Nothing shows
-  yet; the windows that draw it come next.
-- The snow follows your windows (still nothing shown): a new window gets a pile, a moved,
-  minimised, maximised or closed one drops its pile (only the cut-off end, when you resize one
-  side), a window dragged across the screen drops it once rather than at every step, and windows,
-  menus and tooltips in front hide what is behind them. The desktop is read as rectangles and
-  window class names, as for perching — no titles, no contents — in one pass of about 0.5 ms on a
-  quiet desktop (2.2 ms measured on a busy one).
-- **It snows on your windows**, from 1 December to 6 January: soft, rounded piles grow slowly on
-  the top edges of your windows, curl over the corners and grow icicles, and a fast swipe of the
-  pointer through a pile knocks it off (an upward flick throws it in the air). The snow never
-  takes a click, sits under him, his bubble and his wheel, stays out of screenshots and screen
-  shares, and goes away while he is snoozed, while a guard is up and behind a fullscreen app;
-  focusing, pausing him or ghost mode freeze it. A new setting, `snow` (World tab: `"christmas"`,
-  `"winter"`, `"always"` or `"off"`), and **Snow: off for today** in the tray; the first snow
-  brings a one-time toast saying so (a new hidden latch, `snow_hint_seen`). At rest it is one look
-  at the window stack twice a second, about 2.5 ms each; nothing animates unless snow is in the
-  air.
-- The snow grows the way it should: a fresh pile shows within a couple of minutes (6 px after
-  about 3) and is full after about 20 minutes of showing; its icicles start after about 12 and
-  are done within the hour. On battery the piles stay but stop growing, and knocked-off snow
-  animates at 20 frames a second instead of 30. At rest the snow now walks the window stack every
-  2 s instead of every 0.5 s, with a few-microsecond glance at the front window and the pointer
-  in between that snaps it back the moment anything moves: the snow alone went from 0.43-0.47 %
-  of one core to 0.14 % on a desktop of about 380 windows.
+- **Christmas snow on your windows**, from 1 December to 6 January. Soft, rounded piles grow on
+  the top edges of your windows, curl over the corners and grow icicles; nothing falls across the
+  screen. A new pile shows within a couple of minutes (6 px after about 3) and is full after about
+  20 minutes of showing; its icicles start after about 12 and are done within the hour. A fast
+  sideways swipe of the pointer through a pile knocks it off, an upward flick throws it in the
+  air, and it lands on other piles, the taskbar or him. A window you move, maximise or close drops
+  its pile (a resize drops only the cut-off end), and windows, menus and tooltips in front hide
+  what is behind them. See [Christmas snow](docs/USING-HIM.md#christmas-snow).
+- **Play in the snow**, on his tool wheel while there is snow: for about 30 seconds your clicks go
+  to the snow. Press on a pile to scoop a snowball, drag, and let go to throw it; hit him and he
+  startles, then has a game of football. A right-click, the time running out, or anything that
+  hides or freezes the snow ends it, and the windows that took the clicks are destroyed with it.
 - **He notices the snow.** Snow you knock or throw onto him makes him jump, and he wears the
   snowcap for a minute after (not over a costume you picked); brush snow off a window next to him
   and now and then he hops or dances in it, kicking a puff of snow up; dropped on a snowy window
   he presses a dent into the pile with his feet and shivers now and then. None of it while he is
-  asleep, paused, in your hand, focusing or hidden.
+  asleep, paused, in your hand, focusing or hidden, and no random number is drawn until snow has
+  reached him, so his other rates are unchanged.
+- The snow keeps out of the way: it never takes a click outside play mode, sits under him, his
+  bubble and his wheel, stays out of screenshots and screen shares, and goes away while he is
+  snoozed, while a guard is up and behind a fullscreen app; focusing, pausing him or ghost mode
+  freeze it. On battery the piles stay but stop growing, and knocked-off snow animates at 20
+  frames a second instead of 30.
+- A new setting, `snow` (World tab: `"christmas"`, `"winter"`, `"always"` or `"off"`), and
+  **Snow: off for today** in the tray, which puts it away until midnight or a restart. The first
+  snow brings a one-time toast saying so (a new hidden latch, `snow_hint_seen`).
+- What the snow costs: it reads the desktop as window rectangles and class names, as for
+  perching, never titles or contents. At rest it walks the window stack every 2 s, with a
+  few-microsecond glance at the front window and the pointer in between that snaps it back to
+  twice a second the moment anything moves: 0.14 % of one core on a desktop of about 380
+  windows, against 0.002 % with no snow. Nothing animates unless snow is in the air. New suites:
+  `smoke_snow`, `smoke_snow_stack`, `smoke_snow_overlay`, `smoke_snow_nib` and `smoke_snow_play`,
+  and the rate measurement `snow_rate`.
 
 ### Changed
 

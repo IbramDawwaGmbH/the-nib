@@ -56,6 +56,23 @@ Ticks, all stopped while the snow is not showing:
 *   ``POINTER_POLL_MS`` (~60 Hz), only while the pointer is near a pile and the snow is not
     frozen: the cursor sampled for the brush and flick gestures.
 *   ``1000 / snow.FPS`` while anything is airborne, stopped the moment nothing is.
+
+**Play mode** (WP6, "Play in the snow" on his wheel) is the one time the snow takes clicks, and it
+is time-boxed: :meth:`SnowOverlay.start_play` puts a flight layer on every monitor as the input
+surface, filled with alpha 1 (``ruler.py``'s trick: a layered window takes a click only where it
+has painted), for ``PLAY_MS``. Press on a pile to scoop a snowball, drag, let go to throw. A
+right-click, the time running out, the snow hiding or freezing (a snooze, a guard, focus, pause,
+ghost mode), a fullscreen app, a monitor change or quitting all end it, and ending it *destroys*
+those layers: a window that is gone cannot take a click.
+
+The play layers are the only snow windows created *without* ``WindowTransparentForInput``.
+Measured (WP6, a real ``QApplication``, messages posted straight to the HWND): with the Qt flag
+set, clearing ``WS_EX_TRANSPARENT`` by hand makes ``WindowFromPoint`` find the window, but Qt
+delivers it no mouse event at all - the press is simply lost, on our window, which is the worst
+of both. With the flag off the presses arrive. So a play layer never has it, never has it toggled
+(no ``setWindowFlags`` on any snow window, shown or hidden), and is never anything but a play
+layer: snow still in the air when play ends goes on flying on a fresh, ordinary, click-through
+layer.
 """
 
 from __future__ import annotations
@@ -127,6 +144,15 @@ LANDINGS_KEPT = 64
 #: widest, against a 33 ms frame; the piles' own changes are steps you never see as motion, the
 #: chunks in the air are what move.
 RENDER_GAP_MS = 100
+
+#: How long play mode lasts (plan 1.1: "time-boxed, about 30 s"). The single-shot timer ends it;
+#: the stack poll ends it too once ``PLAY_GRACE_MS`` past that, in case the timer never fired.
+PLAY_MS = 30_000
+PLAY_GRACE_MS = 1000
+
+#: The alpha a play layer fills itself with: invisible, but a painted pixel, so the press lands
+#: on the layer rather than the window under it (``ruler.py``'s ``_HITTEST_ALPHA``).
+PLAY_FILL_ALPHA = 1
 
 # --- the look -------------------------------------------------------------------------------------
 #
@@ -489,6 +515,34 @@ def render_lump(d: int, seed: int = 0) -> QPixmap:
     return QPixmap.fromImage(img)
 
 
+def render_ball(d: int) -> QPixmap:
+    """A packed snowball ``d`` px across: round, where a lump is three blobs, bright on the lit
+    side with a cool shadow round the other, and a little texture so it is not a white disc."""
+    size = d + 2
+    img = QImage(size, size, QImage.Format_ARGB32_Premultiplied)
+    img.fill(Qt.transparent)
+    p = QPainter(img)
+    p.setRenderHint(QPainter.Antialiasing)
+    p.setPen(Qt.NoPen)
+    c, r = size / 2.0, d / 2.0
+    g = QRadialGradient(QPointF(c - 0.35 * r, c - 0.4 * r), r * 1.45)
+    g.setColorAt(0.0, QColor(255, 255, 255, 255))
+    g.setColorAt(0.5, QColor(240, 245, 252, 255))
+    g.setColorAt(0.85, QColor(196, 212, 234, 255))
+    g.setColorAt(1.0, QColor(150, 174, 210, 255))
+    p.setBrush(g)
+    p.drawEllipse(QPointF(c, c), r, r)
+    rng = random.Random(d * 7919)
+    for _ in range(max(3, d // 3)):
+        a, rr = rng.uniform(0.0, math.tau), rng.uniform(0.2, 0.75) * r
+        dot = QColor(SNOW_RELIEF)
+        dot.setAlpha(45)
+        p.setBrush(dot)
+        p.drawEllipse(QPointF(c + rr * math.cos(a), c + rr * math.sin(a)), 0.09 * d, 0.09 * d)
+    p.end()
+    return QPixmap.fromImage(img)
+
+
 def render_shard(d: int) -> QPixmap:
     """A broken-off icicle, ``d`` px long: a translucent sliver of ice."""
     w = max(3, int(d * 0.35))
@@ -522,9 +576,14 @@ class _SnowWindow(QWidget):
 
     FLAGS = (Qt.FramelessWindowHint | Qt.Tool | Qt.WindowDoesNotAcceptFocus
              | Qt.WindowTransparentForInput | Qt.NoDropShadowWindowHint)
+    #: A play layer's (``takes_input``): the same, but for the one flag Qt would drop its presses
+    #: for (see the module docstring).
+    PLAY_FLAGS = (Qt.FramelessWindowHint | Qt.Tool | Qt.WindowDoesNotAcceptFocus
+                  | Qt.NoDropShadowWindowHint)
 
-    def __init__(self) -> None:
-        super().__init__(None, self.FLAGS)
+    def __init__(self, takes_input: bool = False) -> None:
+        self.takes_input = bool(takes_input)
+        super().__init__(None, self.PLAY_FLAGS if self.takes_input else self.FLAGS)
         self.setAttribute(Qt.WA_TranslucentBackground)
         self.setAttribute(Qt.WA_ShowWithoutActivating)
         self.setFocusPolicy(Qt.NoFocus)
@@ -535,13 +594,14 @@ class _SnowWindow(QWidget):
     def protect(self) -> None:
         """Click-through and capture exclusion, belt and braces: the Qt flag already makes the
         window ``WS_EX_TRANSPARENT``, but a bit set only by hand would be lost when Qt re-creates
-        the HWND, and the capture affinity is lost then whatever we do (WP0, plan 1.6)."""
+        the HWND, and the capture affinity is lost then whatever we do (WP0, plan 1.6). A play
+        layer is the exception that takes input, for as long as it exists."""
         # Imported here rather than at the top: guard_overlay is the guard's, and the app only
         # loads it once a guard starts. The snow needs one small function of it, once it shows.
         from guard_overlay import WDA_EXCLUDEFROMCAPTURE, set_display_affinity
 
         hwnd = self.hwnd()
-        win.set_click_through(hwnd, True)
+        win.set_click_through(hwnd, not self.takes_input)
         set_display_affinity(hwnd, WDA_EXCLUDEFROMCAPTURE)
 
     def showEvent(self, event) -> None:  # noqa: N802
@@ -575,21 +635,51 @@ class CapStrip(_SnowWindow):
 
 class FlightLayer(_SnowWindow):
     """One monitor's airborne snow, for as long as there is any. Painted only in the boxes the
-    model reports; after its first paint it never asks for the whole window."""
+    model reports; after its first paint it never asks for the whole window.
+
+    With ``on_input`` it is a play layer instead (play mode, see the module docstring): created
+    without ``WindowTransparentForInput``, every pixel it paints filled with alpha 1 first so
+    every press on its monitor lands on it, and each press, move and release handed to
+    ``on_input(kind, button, x, y)`` in screen px. It lives exactly as long as play mode does."""
 
     def __init__(self, index: int, rect: Rect, chunks: Callable[[], Iterable[snow.Chunk]],
-                 sprite: Callable[[snow.Chunk], QPixmap]) -> None:
-        super().__init__()
+                 sprite: Callable[[snow.Chunk], QPixmap],
+                 on_input: Callable[[str, object, float, float], None] | None = None) -> None:
+        super().__init__(takes_input=on_input is not None)
         self.index = index
         self.origin = (rect[0], rect[1])
         self._chunks = chunks
         self._sprite = sprite
+        self._on_input = on_input
+        if on_input is not None:
+            self.setCursor(Qt.OpenHandCursor)
         self.setGeometry(QRect(rect[0], rect[1], rect[2] - rect[0], rect[3] - rect[1]))
+
+    def _pass(self, kind: str, event) -> None:
+        if self._on_input is not None:
+            # From the layer's own origin rather than globalPosition(): the layer is placed in
+            # physical px from the monitor's rectangle, the same frame the chunks are drawn in.
+            pos = event.position()
+            self._on_input(kind, event.button(), self.origin[0] + pos.x(),
+                           self.origin[1] + pos.y())
+
+    def mousePressEvent(self, event) -> None:  # noqa: N802
+        self._pass("press", event)
+
+    def mouseMoveEvent(self, event) -> None:  # noqa: N802
+        self._pass("move", event)
+
+    def mouseReleaseEvent(self, event) -> None:  # noqa: N802
+        self._pass("release", event)
 
     def paintEvent(self, event) -> None:  # noqa: N802
         area = event.rect()
         ox, oy = self.origin
         p = QPainter(self)
+        if self.takes_input:
+            # Only the repainted area: the first paint fills the whole layer, later ones only
+            # their box, which the translucent background has just cleared to alpha 0.
+            p.fillRect(area, QColor(0, 0, 0, PLAY_FILL_ALPHA))
         for c in self._chunks():
             pm = self._sprite(c)
             x = int(round(c.x - pm.width() / 2.0)) - ox
@@ -644,6 +734,8 @@ class SnowOverlay(QObject):
 
     #: Emitted once, the first time a pile is actually on screen (for the one-time toast).
     appeared = Signal()
+    #: Play mode ended, for whatever reason (a word or two, for the log).
+    play_ended = Signal(str)
 
     def __init__(self, *, stack: Callable[[], list | None] = win.list_window_stack,
                  monitors: Callable[[], list[Monitor]] = desktop_monitors,
@@ -696,7 +788,14 @@ class SnowOverlay(QObject):
         self.frozen = False
         self.growing = True
         self.on_battery = False
+        #: Play mode (WP6): on while the play layers are up, and when it has to be over by.
+        self.playing = False
+        self._play_deadline = 0.0
 
+        self.play_timer = QTimer(self)
+        self.play_timer.setSingleShot(True)
+        self.play_timer.setInterval(PLAY_MS)
+        self.play_timer.timeout.connect(lambda: self.end_play("time's up"))
         self.stack_timer = QTimer(self)
         self.stack_timer.setInterval(STACK_POLL_MS)
         self.stack_timer.timeout.connect(self._on_stack_timer)
@@ -734,6 +833,10 @@ class SnowOverlay(QObject):
         self.active, self.hidden = bool(active), bool(hidden)
         self.frozen, self.on_battery = bool(frozen), bool(on_battery)
         self.growing = bool(growing) and not self.frozen
+        if self.playing and (not self.showing or self.frozen):
+            # A snooze, a guard, "off for today", focus, pause, ghost mode: none of them leave
+            # the screen taking clicks for the rest of the half minute.
+            self.end_play("snow hidden" if not self.showing else "snow frozen")
         frame = snow.SnowField.frame_ms(self.on_battery)
         if self.anim_timer.interval() != frame:
             self.anim_timer.setInterval(frame)
@@ -810,6 +913,7 @@ class SnowOverlay(QObject):
 
     def _teardown(self) -> None:
         """No snow at all: every timer stopped and every window gone, so it costs nothing."""
+        self.end_play("snow off")
         for t in (self.stack_timer, self.anim_timer, self.pointer_timer, self.linger_timer):
             t.stop()
         self._close_flights()
@@ -826,6 +930,7 @@ class SnowOverlay(QObject):
     def _hide_all(self) -> None:
         """Hidden, not empty (plan section 0 rule 5): the piles keep their snow, every window
         is off the screen and every timer is stopped."""
+        self.end_play("snow hidden")
         for t in (self.stack_timer, self.anim_timer, self.pointer_timer, self.linger_timer):
             t.stop()
         self._close_flights()
@@ -842,6 +947,7 @@ class SnowOverlay(QObject):
         if [m.key() for m in mons] != [m.key() for m in self.monitors]:
             self.field.set_monitors([m.rect for m in mons], [m.floor for m in mons],
                                     [m.scale for m in mons])
+            self.end_play("monitors changed")
             self._close_flights()   # a layer is the size of its monitor
         self.monitors = mons
 
@@ -855,6 +961,9 @@ class SnowOverlay(QObject):
         """The poll's tick: a full pass, unless it has backed off (``STACK_SETTLE_PASSES``) and
         neither the glance nor the clock says it is time for one."""
         self.ticks += 1
+        if self.playing and self._now_ms() >= self._play_deadline + PLAY_GRACE_MS:
+            # The single-shot timer should have ended it already; this is in case it never did.
+            self.end_play("time's up")
         if (self._quiet_passes >= STACK_SETTLE_PASSES and self._skipped < STACK_IDLE_EVERY - 1
                 and self.field is not None and self.showing):
             if self._look() == self._last_glance:
@@ -891,6 +1000,9 @@ class SnowOverlay(QObject):
         refit = fullscreen != self.fullscreen or self._refit_all
         self._refit_all = False
         self.fullscreen = fullscreen
+        if self.playing and any(self._is_play_layer(idx) for idx in fullscreen):
+            # A game or a video went fullscreen over a play layer: play is over everywhere.
+            self.end_play("fullscreen")
         for idx in fullscreen:
             self._close_flight(idx)
         if stack is not None:
@@ -1067,7 +1179,8 @@ class SnowOverlay(QObject):
         moved since the last look. A pointer resting near a window's top edge would otherwise be
         sampled at 60 Hz for as long as it rests there, and keep the poll from backing off; one
         that starts moving is picked up on the next tick, as one arriving from afar always was."""
-        if self.frozen or self.field is None or not self.field.caps:
+        if self.frozen or self.playing or self.field is None or not self.field.caps:
+            # In play mode the press, drag and let go are the gesture: no brushing on top.
             return
         x, y = self._cursor()
         moved, self._seen_pointer = (x, y) != self._seen_pointer, (x, y)
@@ -1078,7 +1191,7 @@ class SnowOverlay(QObject):
 
     def _tick_pointer(self) -> None:
         field = self.field
-        if field is None or not self.showing or self.frozen:
+        if field is None or not self.showing or self.frozen or self.playing:
             self.pointer_timer.stop()
             return
         now = self._now_ms()
@@ -1135,7 +1248,9 @@ class SnowOverlay(QObject):
             for hwnd in list(self._stale):     # the last change of the flight, drawn now
                 self._refresh(hwnd, render=True)
             self.anim_timer.stop()
-            if self.flights:
+            if self.flights and not self.playing:
+                # Not in play mode: the play layers are the input surface, and live exactly as
+                # long as it does (end_play closes them).
                 self.linger_timer.start()
 
     def _flight(self, idx: int) -> FlightLayer | None:
@@ -1153,22 +1268,159 @@ class SnowOverlay(QObject):
         return layer
 
     def _chunks_on(self) -> list[snow.Chunk]:
-        return list(self.field.chunks) if self.field is not None else []
+        if self.field is None:
+            return []
+        out = list(self.field.chunks)
+        if self.field.ball is not None:
+            out.append(self.field.ball)     # the snowball in your hand, drawn last: on top
+        return out
 
     def _sprite(self, chunk: snow.Chunk) -> QPixmap:
         d = max(3, int(round(chunk.size)))
         key = (chunk.kind, d)
         pm = self._sprites.get(key)
         if pm is None:
-            pm = render_shard(d) if chunk.kind == "shard" else render_lump(d, seed=d)
+            if chunk.kind == "shard":
+                pm = render_shard(d)
+            elif chunk.kind == "ball":
+                pm = render_ball(d)
+            else:
+                pm = render_lump(d, seed=d)
             self._sprites[key] = pm
         return pm
 
     def _close_flight(self, idx: int) -> None:
         layer = self.flights.pop(idx, None)
         if layer is not None:
+            if layer.takes_input:
+                # Belt and braces: hiding it is what stops it taking clicks, but it goes back
+                # to click-through first, so not even the moment before the hide takes one.
+                win.set_click_through(layer.hwnd(), True)
             layer.hide()
             layer.deleteLater()
+
+    def _is_play_layer(self, idx: int) -> bool:
+        layer = self.flights.get(idx)
+        return layer is not None and layer.takes_input
+
+    # --- play mode (WP6) -------------------------------------------------------------------
+
+    def play_blocker(self) -> str:
+        """Why play mode cannot start right now, or "": ``"off"`` (no snow at all),
+        ``"hidden"`` (snoozed, a guard), ``"frozen"`` (focus, paused, ghost mode), ``"empty"``
+        (no pile on screen to scoop from) or ``"fullscreen"`` (every monitor has a fullscreen
+        app, or the only piles are behind one)."""
+        if not self.active or self.field is None:
+            return "off"
+        if not self.showing:
+            return "hidden"
+        if self.frozen:
+            return "frozen"
+        if not self.monitors or all(idx in self.fullscreen for idx in range(len(self.monitors))):
+            return "fullscreen"
+        if not any(strip.isVisible() for strip in self.strips.values()):
+            covered = any(cap.mass > 0.0 and self.monitor_of(cap) in self.fullscreen
+                          for cap in self.field.caps.values())
+            return "fullscreen" if covered else "empty"
+        if not self.field.can_scoop():
+            return "empty"          # only a dusting so far: nothing a press could scoop
+        return ""
+
+    def start_play(self) -> bool:
+        """Play in the snow for ``PLAY_MS``: a play layer on every monitor without a fullscreen
+        app, taking the presses (see the module docstring). Returns whether it started; already
+        playing counts. Every way out goes through :meth:`end_play`."""
+        if self.playing:
+            return True
+        if self.play_blocker():
+            return False
+        self.pointer_timer.stop()
+        self.field.lift()
+        # Any ordinary flight layer makes way: the play layer draws the same snow, and two
+        # layers on one monitor would draw it twice.
+        self._close_flights()
+        self.playing = True
+        self._play_deadline = self._now_ms() + PLAY_MS
+        for idx, mon in enumerate(self.monitors):
+            if idx in self.fullscreen:
+                continue
+            layer = FlightLayer(idx, mon.rect, self._chunks_on, self._sprite,
+                                on_input=self._play_input)
+            self.flights[idx] = layer
+            layer.show()
+        if not self.flights:
+            self.playing = False
+            return False
+        self.play_timer.start()
+        if self.field.airborne:
+            self._start_anim()
+        return True
+
+    def end_play(self, reason: str = "stopped") -> bool:
+        """Play mode is over: the timer stopped, a snowball still in your hand dropped where it
+        is, and every play layer gone - so nothing of the snow's takes a click any more. Snow
+        still in the air flies on, on a fresh click-through layer. Safe to call at any time;
+        returns whether it was playing."""
+        if not self.playing:
+            return False
+        self.playing = False
+        self.play_timer.stop()
+        for idx in [i for i in self.flights if self._is_play_layer(i)]:
+            self._close_flight(idx)
+        if self.field is not None:
+            self.field.drop_ball(self._now_ms())
+            if self.field.airborne and self.showing:
+                self._start_anim()
+        log.info("play in the snow over: %s", reason)
+        self.play_ended.emit(reason)
+        return True
+
+    def _play_input(self, kind: str, button, x: float, y: float) -> None:
+        """A press, move or release on a play layer, in screen px. Right-click ends play; a
+        left press on a pile scoops a snowball, a drag carries it, letting go throws it."""
+        field = self.field
+        if not self.playing or field is None:
+            return
+        if kind == "press" and button == Qt.RightButton:
+            self.end_play("right-click")
+            return
+        now = self._now_ms()
+        if kind == "press" and button == Qt.LeftButton:
+            if self._blocked_monitor(x, y) or not field.scoop(x, y, now):
+                return
+            hwnd = field.ball.source
+            if hwnd in field.caps:
+                self._refresh(hwnd, render=True)     # the pile is smaller now, at once
+            self._repaint_box(field.ball_rect())
+            if field.airborne:                       # an icicle that lost its hold
+                self._start_anim()
+        elif kind == "move":
+            if field.ball is None:
+                return
+            before = field.ball_rect()
+            field.carry(x, y, now)
+            self._repaint_box(before)
+            self._repaint_box(field.ball_rect())
+        elif kind == "release" and button == Qt.LeftButton:
+            if field.ball is None:
+                return
+            before = field.ball_rect()
+            field.throw(x, y, now)
+            self._repaint_box(before)
+            self._quiet_passes = 0
+            self._start_anim()
+
+    def _repaint_box(self, box: Rect | None) -> None:
+        """Repaint one screen box on every layer it touches (the ball can cross a monitor)."""
+        if box is None:
+            return
+        left, top, right, bottom = box
+        for layer in self.flights.values():
+            ox, oy = layer.origin
+            area = QRect(int(left) - ox - 1, int(top) - oy - 1, int(right - left) + 3,
+                         int(bottom - top) + 3).intersected(layer.rect())
+            if not area.isEmpty():
+                layer.repaint(area)
 
     def _close_flights(self) -> None:
         self.linger_timer.stop()

@@ -650,7 +650,7 @@ print("\n--- the news reaches him (WP5) ---")
 heard = []
 _b = nibapp.behavior
 _real_landed, _real_nearby = _b.snow_landed, _b.snow_nearby
-_b.snow_landed = lambda: heard.append("landed")
+_b.snow_landed = lambda snowball=False: heard.append("landed")
 _b.snow_nearby = lambda x, y: heard.append(("near", x, y))
 sn.landed.append(snow.Landing("floor", 0.0, 0.0, 1.0, "lump", mode="brush"))
 nibapp._tick_snow()

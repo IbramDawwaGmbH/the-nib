@@ -691,6 +691,10 @@ SNOW_HIT_MODES = ("brush", "flick", "throw")
 SNOW_HIT_COSTUME = "snowcap"
 SNOW_HAT_MS = 60000.0
 SNOW_HIT_COOLDOWN_MS = 8000.0
+#: A snowball (play mode, ``snow.Chunk.kind == "ball"``) is a game: after the jump he plays
+#: football for a bit (plan 1.5), the same length as the antic. Not in ANTICS.
+SNOWBALL_ANIM = "football"
+SNOWBALL_MS = (2600.0, 4400.0)
 
 #: Snow brushed or flicked off a pile within SNOW_PLAY_NEAR_PX of his centre (either way: the
 #: box _cursor_is_near uses for the pointer) asks for a moment through _pick_moment: a hop or a
@@ -918,6 +922,7 @@ TOOL_BEATS: dict[str, tuple[str, float]] = {
     "settings": ("typing", 1140.0),
     "tips": ("wave", 1120.0),
     "reset": ("look_around", 1880.0),
+    "snow_play": ("hop", 700.0),
 }
 
 #: Target update interval while he is actually moving. The gait is tick-rate independent (each
@@ -2004,12 +2009,13 @@ class Behavior:
                 or self._falling or self._rolling or self.paused or self.focus_active
                 or self._away or self.pocket_full or self._quick_change is not None)
 
-    def snow_landed(self) -> bool:
+    def snow_landed(self, snowball: bool = False) -> bool:
         """Snow knocked or thrown off a window landed on him (``snow_overlay``'s landings with
         ``where == "nib"``). A jump with the snowcap on, and the hat stays for a minute
         (``SNOW_HAT_MS``, see ``persona_costume``) - unless you picked a costume, which always
         wins. One jump per shower (``SNOW_HIT_COOLDOWN_MS``). Not a poke and not you noticing
-        him: the snow did it. Returns whether he reacted."""
+        him: the snow did it. ``snowball``: it was a snowball from play mode, so after the jump
+        he plays football (``SNOWBALL_ANIM``). Returns whether he reacted."""
         if self._snow_hit_cooldown_ms > 0 or self._snow_unreachable():
             return False
         moment = self._moment(SNOW_HIT_ANIM, STARTLE_MS, STARTLE_MS, costume=SNOW_HIT_COSTUME)
@@ -2017,8 +2023,11 @@ class Behavior:
             return False
         self._snow_hit_cooldown_ms = SNOW_HIT_COOLDOWN_MS
         self._snow_hat_ms = SNOW_HAT_MS if moment[2] else 0.0
-        log.info("snow landed on him")
+        log.info("a snowball hit him" if snowball else "snow landed on him")
         self._begin_antic(*moment)
+        if snowball and self._sheet.has_state(SNOWBALL_ANIM):
+            # After the call, which clears the queue.
+            self._antic_queue = [(SNOWBALL_ANIM, random.uniform(*SNOWBALL_MS))]
         return True
 
     def snow_nearby(self, x: float, y: float) -> None:

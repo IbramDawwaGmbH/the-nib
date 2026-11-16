@@ -32,6 +32,7 @@ The launcher half: asking things, dropping things, and getting him out of the wa
 | **Mute microphone** (tray) | Mutes or unmutes your default mic; bind `mic_toggle_hotkey` to do it from anywhere |
 | **Rest your pointer on him** | He leans into it — see [Petting him](BEHAVIOUR.md#petting-him) |
 | **Scroll the wheel over him** | He spins. No reason at all |
+| **Swipe fast through the snow on a window** | Knocks it off (in December; see [Christmas snow](#christmas-snow)) |
 | **Drag him** | Pick him up; he scowls and squirms, then tumbles back down to the taskbar |
 | **Drop him on a window** | He stands on it and rides along as you move or resize it — grab him again to end it |
 | **Flick him** | He flies, bounces off the ends of the strip, and rolls to a stop |
@@ -241,6 +242,9 @@ The ring, in order:
 | **Tools** | Ask · Send again · Measure · Read text from an image · Focus · Pin the clipboard · Mute microphone · More… |
 | **Him** | Do something · Give him a treat · Surprise costume · Wardrobe… · Hide for 10 minutes · Guard the screen · Wander on/off · Pause/Resume · Ghost mode |
 | **App** | Switch Chat/Cowork · Settings · Show tips · Send him home · Update and restart |
+
+While there is snow on your windows, **Play in the snow** joins the Him group; see
+[Play in the snow](#play-in-the-snow).
 
 It always opens at the start, with every tool from the first group on the arc. That's deliberate:
 the hold-and-flick is muscle memory, and muscle memory needs the same tool in the same direction
@@ -711,6 +715,60 @@ It is a strong deterrent for coworkers, kids and cats, not a vault: Ctrl+Alt+Del
 (it blacks the screens out instead), a touchpad gesture or a toast can show through for a moment
 before the fog re-asserts itself, and turn on Do Not Disturb if notifications matter.
 
+### Christmas snow
+
+From 1 December to 6 January, snow piles up on the top edges of your windows: soft, rounded piles
+that curl over the corners and, after a while, grow icicles. Nothing falls across your screen. A
+pile simply grows, quickly at first and then more slowly: a new window looks snowy within a few
+minutes and its pile is full after about 20 (the measured rates are in
+[What he does](BEHAVIOUR.md#snow-on-your-windows)). The first time it snows he says so, once, and
+how to turn it off.
+
+When it snows is the `snow` setting, on the World tab:
+
+| `snow` | Snow on your windows |
+| --- | --- |
+| `"christmas"` (the default) | 1 December to 6 January, wherever you are |
+| `"winter"` | December to February, or June to August with `southern_seasons` |
+| `"always"` | Every day |
+| `"off"` | Never |
+
+It needs `world_enabled` too, like everything else that follows the calendar.
+
+**Brush it off.** Swipe the pointer fast sideways through a pile and the snow is knocked off and
+falls. Flick upward through one and it is thrown into the air and comes back down, onto another
+pile, the taskbar or him. Moving the pointer over a window at an ordinary speed does nothing, and
+the snow never takes a click: the title bar under a pile works exactly as if it were not there.
+
+**He notices it.** Snow that lands on him makes him jump, and he wears a snowcap for a minute
+after (never over a costume you picked). Brush snow off a window next to him and now and then he
+hops or dances in it and kicks a puff of it up. Drop him on a snowy window and his feet press a
+dent into the pile, and he shivers now and then. None of it while he is asleep, paused, in your
+hand or focusing.
+
+**It keeps out of the way.** The snow sits under him, his bubble and his wheel, and stays out of
+screenshots and screen shares. It goes away while he is snoozed, while the screen guard is up and
+behind a fullscreen app. During a focus session, while he is paused and in ghost mode it stays
+where it is but stops growing and cannot be brushed; on battery it stops growing too. A window
+you move, maximise or close drops its pile, and a window in front hides the piles behind
+it.
+
+**Turning it off.** **Snow: off for today** in the tray menu (there only while it is snowing)
+clears it until midnight or until he restarts, whichever comes first. For good, set `snow` to
+`"off"` in Settings → World.
+
+#### Play in the snow
+
+**Play in the snow** on his tool wheel (there only while there is snow on your windows) gives you
+about 30 seconds of snowball fights. Press on a pile to scoop a snowball out of it, drag, and let
+go to throw it: it flies as fast as you were moving when you let go, and a pointer that had
+stopped just drops it. Throw one at him and he startles, then has a game of football.
+
+For those 30 seconds your clicks go to the snow, not to your windows. A right-click ends it at
+once, and so does **Stop playing in the snow** on his wheel; otherwise it ends by itself, and so does anything that hides or freezes the snow (a snooze,
+the guard, focus, pause, ghost mode, a fullscreen app). When it ends every click goes back to your
+windows straight away.
+
 ### Update and restart
 
 **Update and restart**, last in the wheel's App group, brings him up to date and starts him again.
@@ -848,6 +906,8 @@ copy of it.
 - **Reset position** — send him back to his home spot
 - **Measure** — drag anywhere on screen for a px/in/cm reading; see [The pixel ruler](#the-pixel-ruler)
 - **Guard the screen** — fog over every monitor until you unlock; see [The screen guard](#the-screen-guard)
+- **Snow: off for today** — only there while it is snowing on your windows; clears the snow until
+  midnight or until he restarts. See [Christmas snow](#christmas-snow)
 - **Mute / Unmute microphone** — reflects the live state, and is hidden entirely if you have no
   microphone; see [Your mic and camera](#your-mic-and-camera)
 - **Quit**

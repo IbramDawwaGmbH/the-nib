@@ -1447,6 +1447,14 @@ class NibApp:
         # Next to Hide: the same "go away for a while" thought, for the whole screen rather than
         # just him. Not with the tools - a ninth tool there would push More... off the opening arc.
         items.append(WheelItem("guard", "Guard the screen", "guard", group=him))
+        # Only in the snow's days, like the tray's Snow entry; picked while the snow is hidden
+        # or resting it says why rather than doing nothing.
+        overlay = getattr(self, "snow", None)   # absent on tests/smoke_update.py's holder
+        if overlay is not None and overlay.active:
+            playing = overlay.playing
+            items.append(WheelItem("snow_play", "Stop playing in the snow" if playing
+                                   else "Play in the snow", "snowball",
+                                   "active" if playing else "", group=him))
         wandering = bool(self.config["wander_enabled"])
         items.append(WheelItem("wander", "Stop wandering" if wandering else "Let him wander",
                                "wander", "" if wandering else "active", group=him))
@@ -1557,6 +1565,8 @@ class NibApp:
             self._snooze(600)
         elif key == "guard":
             self._on_guard_requested()
+        elif key == "snow_play":
+            self._on_snow_play()
         # The three toggles below are the tray's own handlers, which assume the tray flipped its
         # checkbox itself before calling them. From here nothing did, so the tray is refreshed
         # afterwards - otherwise its menu would go on saying "Pause" about a paused mascot.
@@ -1864,8 +1874,11 @@ class NibApp:
         gestures = self.snow.take_gestures()
         # Only snow you knocked off or threw: a pile falling off a window that moved or closed
         # above him is not something done to him.
-        if any(landing.where == "nib" and landing.mode in SNOW_HIT_MODES for landing in landed):
-            self.behavior.snow_landed()
+        hits = [landing for landing in landed
+                if landing.where == "nib" and landing.mode in SNOW_HIT_MODES]
+        if hits:
+            # A snowball (play mode) among them: he plays football after the jump.
+            self.behavior.snow_landed(snowball=any(hit.kind == "ball" for hit in hits))
         for gesture in gestures:
             self.behavior.snow_nearby(gesture.x, gesture.y)
         if self.behavior.take_snow_puff():
@@ -1886,6 +1899,28 @@ class NibApp:
         """On battery the piles stay but stop growing, and thrown snow animates at 20 FPS (plan
         1.4). ``GetSystemPowerStatus``, a few us, on the 700 ms poll."""
         return win.on_battery()
+
+    def _on_snow_play(self) -> None:
+        """The wheel's "Play in the snow": half a minute of snowballs (snow_overlay's play mode),
+        or, picked again while it runs, the end of it. When it cannot start, a line on why."""
+        if self.snow.playing:
+            self.snow.end_play("stopped from the wheel")
+            return
+        why = self.snow.play_blocker()
+        if not why and self.snow.start_play():
+            log.info("play in the snow")
+            self._tell("Snowball time!",
+                       "Press on a pile to pick up snow, drag and let go to throw it. "
+                       "Right-click to stop.", duration_ms=5000)
+            return
+        reasons = {
+            "off": "There's no snow right now.",
+            "hidden": "The snow is hidden right now.",
+            "frozen": "The snow is resting while you focus, or while he's paused or a ghost.",
+            "empty": "There's no snow on your windows to pick up yet.",
+            "fullscreen": "A fullscreen app is covering the snow.",
+        }
+        self._tell(reasons.get(why, "The snow can't be played with right now."))
 
     def _on_snow_off_today(self) -> None:
         self._snow_off_day = datetime.date.today().isoformat()

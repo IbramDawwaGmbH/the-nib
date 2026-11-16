@@ -59,6 +59,11 @@ Nib's side (WP5): :meth:`SnowField.set_dent` presses the pile he stands on, :met
 kicks a little snow up from his feet when he plays, and :meth:`SnowField.fullness` says whether
 the window under him is snowy. Painting is :mod:`snow_overlay`'s; the growth and icicle rates are
 measured by ``tests/snow_rate.py``.
+
+Play mode (WP6): :meth:`SnowField.scoop` packs a snowball from the pile under a press,
+:meth:`SnowField.carry` moves it with the pointer and :meth:`SnowField.throw` lets it fly at the
+pointer's velocity, as a chunk of kind ``"ball"``; one that crosses Nib lands on him like any
+other snow. The input itself is the view's: this module never sees a click.
 """
 
 from __future__ import annotations
@@ -228,6 +233,26 @@ PUFF_MASS = TYPICAL_CHUNK_MASS * 0.3
 PUFF_UP_PX_S = (260.0, 420.0)
 PUFF_SIDE_PX_S = 140.0
 
+# --- play mode: the snowball (WP6) ------------------------------------------------------------
+
+#: A press on a pile scoops a snowball: up to ``SNOWBALL_MASS`` of snow from the columns within
+#: ``SCOOP_HALF_W_PX`` of the press, taken evenly from their tops so the pile keeps its shape. A
+#: press may land ``SCOOP_REACH_PX`` above the snow or below the window's edge and still count -
+#: a pile is a thin thing to aim at - but a pile with less than ``SCOOP_MIN`` of a ball under it
+#: gives nothing: a ball of nothing would land with nothing.
+SNOWBALL_MASS = TYPICAL_CHUNK_MASS * 1.5
+SNOWBALL_PX = 16.0           # drawn diameter, whatever it weighs: a snowball is a snowball
+SCOOP_HALF_W_PX = 15.0
+SCOOP_REACH_PX = 10.0
+SCOOP_MIN = 0.25
+
+#: Letting go throws it at the pointer's velocity over the last ``THROW_WINDOW_MS`` of the drag,
+#: clamped to ``SNOWBALL_MAX_PX_S``: far faster than a flick (``MAX_THROW_PX_S``), or it could not
+#: reach him across a screen. A packed ball also slows far less in the air than a loose lump.
+THROW_WINDOW_MS = 80
+SNOWBALL_MAX_PX_S = 1800.0
+SNOWBALL_DRAG = 0.15
+
 _EPS = 1e-9
 
 
@@ -389,12 +414,13 @@ class Chunk:
     born: float              # ms
     source: int              # hwnd it came off (0: none)
     lands_on_source: bool    # thrown snow may come back down on its own cap; brushed snow may not
-    kind: str                # "lump" | "shard" (an icicle)
+    kind: str                # "lump" | "shard" (an icicle) | "ball" (a snowball, play mode)
     group: int               # the stroke that released it: dirty boxes are grouped by it
     monitor: int = -1
     rect: Rect | None = None  # where it was last reported, for the dirty box
     misses_nib: bool = False  # his own puff: thrown up past him, never a hit
     mode: str = ""           # how it left: "brush" | "flick" | "throw" | "drop" | "puff"
+    #                          (a snowball let go of when play mode ends is a "drop")
 
 
 @dataclass
@@ -412,7 +438,7 @@ class Landing:
 
 @dataclass
 class Gesture:
-    kind: str                # "brush" | "flick"
+    kind: str                # "brush" | "flick" | "throw" (a snowball, play mode)
     hwnd: int
     x: float
     y: float
@@ -477,6 +503,11 @@ class SnowField:
         self.scales: list[float] = []
         self.fullscreen: set[int] = set()   # as of the last sync()
         self.nib: Rect | None = None
+        #: The snowball in your hand in play mode (:meth:`scoop`), or ``None``. Not in ``chunks``:
+        #: it goes where the pointer takes it, not where gravity does, until :meth:`throw`. Its
+        #: snow counts as in the air (``mass_in_air``), so the ledger balances while you carry it.
+        self.ball: Chunk | None = None
+        self._ball_samples: list[tuple[float, float, float]] = []
         #: Where all the snow went. ``grown`` is every px^2 that ever appeared (growth, icicles,
         #: ``fill``); the rest are the exits. ``mass_in_caps + mass_in_air + floor + nib + faded
         #: + vanished == grown`` always (up to float rounding).
@@ -701,6 +732,135 @@ class SnowField:
             self.chunks.append(chunk)
             self._enforce_budget(self._pending)
         return PUFF_CHUNKS
+
+    # --- play mode: the snowball (WP6) -------------------------------------------------------
+
+    def can_scoop(self) -> bool:
+        """Whether a press could scoop a snowball anywhere: some visible stretch of a pile, as
+        wide as a scoop, holds the :meth:`scoop` minimum. A freshly snowed window has only a thin
+        dusting, and play mode on that would just be clicks that do nothing."""
+        for cap in self.caps.values():
+            s = cap.scale
+            need = SCOOP_MIN * SNOWBALL_MASS * s * s / cap.col
+            span = max(1, int(round(2 * SCOOP_HALF_W_PX * s / cap.col)))
+            window = 0.0
+            seen = []
+            for j in range(cap.n):
+                h = cap.heights[j] if cap.visible(cap.column_center(j)) else 0.0
+                seen.append(h)
+                window += h
+                if len(seen) > span:
+                    window -= seen[len(seen) - span - 1]
+                if window >= need:
+                    return True
+        return False
+
+    def scoop(self, x: float, y: float, now_ms: float) -> bool:
+        """A press at ``(x, y)`` in play mode: if it is on a pile (``SCOOP_REACH_PX`` of slack),
+        take a snowball's worth of snow from the columns around it into :attr:`ball`. Only snow
+        you can see: a covered column is behind another window. The pile is queued for its
+        re-render like any change; icicles that lose their hold fall. Returns whether a ball was
+        made (one at a time: a press while holding one makes none)."""
+        if self.ball is not None:
+            return False
+        for cap in self.caps.values():
+            i = cap.column_at(x)
+            if i is None or not cap.visible(x):
+                continue
+            s = cap.scale
+            reach = SCOOP_REACH_PX * s
+            if not cap.top - cap.heights[i] - reach <= y <= cap.top + cap.lip(i) + reach:
+                continue
+            half = SCOOP_HALF_W_PX * s
+            cols = [j for j in range(cap.n) if abs(cap.column_center(j) - x) <= half
+                    and cap.visible(cap.column_center(j)) and cap.heights[j] > _EPS]
+            have = sum(cap.heights[j] for j in cols) * cap.col
+            want = SNOWBALL_MASS * s * s
+            if have < SCOOP_MIN * want:
+                continue
+            take = min(want, have)
+            keep = 1.0 - take / have
+            for j in cols:
+                cap.heights[j] *= keep
+            cap.version += 1
+            self._pending.caps.add(cap.hwnd)
+            loose = [ic for ic in cap.icicles if ic.length > _EPS
+                     and cap.heights[ic.column] < ICICLE_SUPPORT_PX * s]
+            self._snap_icicles(cap, loose, now_ms, (0.0, 0.0), "drop", self._new_stroke())
+            self.ball = Chunk(self._next_id, float(x), float(y), 0.0, 0.0, take, SNOWBALL_PX * s,
+                              s, now_ms, cap.hwnd, True, "ball", self._new_stroke(), mode="throw")
+            self._next_id += 1
+            self.ball.monitor = self._monitor_of(x, y)
+            self._ball_samples = [(float(x), float(y), float(now_ms))]
+            return True
+        return False
+
+    def carry(self, x: float, y: float, now_ms: float) -> None:
+        """The pointer moved with the ball in hand: it goes where the pointer is."""
+        ball = self.ball
+        if ball is None:
+            return
+        ball.x, ball.y = float(x), float(y)
+        ball.monitor = self._monitor_of(ball.x, ball.y)
+        samples = self._ball_samples
+        if samples and now_ms <= samples[-1][2]:
+            samples[-1] = (ball.x, ball.y, samples[-1][2])   # same instant: the latest place
+        else:
+            samples.append((ball.x, ball.y, float(now_ms)))
+        while len(samples) > 2 and now_ms - samples[1][2] >= THROW_WINDOW_MS:
+            samples.pop(0)
+
+    def throw(self, x: float, y: float, now_ms: float) -> Chunk | None:
+        """Let go of the ball at ``(x, y)``: it flies at the pointer's velocity over the last
+        ``THROW_WINDOW_MS`` (clamped to ``SNOWBALL_MAX_PX_S``), as a chunk like any other - it
+        lands on a pile, the floor or Nib. A pointer that stopped before letting go just drops
+        it. Reported as a ``"throw"`` gesture, so a throw near him is snow played with near him.
+        Returns the chunk, or ``None`` with no ball in hand."""
+        ball = self.ball
+        if ball is None:
+            return None
+        self.carry(x, y, now_ms)
+        # carry() keeps the samples of the last THROW_WINDOW_MS, and at least the one before
+        # it: a pointer that rested before letting go leaves that one where it rested, so the
+        # velocity comes out as nothing at all.
+        ref = self._ball_samples[0]
+        span = now_ms - ref[2]
+        vx = vy = 0.0
+        if span >= MIN_SPAN_MS:
+            vx, vy = (ball.x - ref[0]) / span * 1000.0, (ball.y - ref[1]) / span * 1000.0
+        top = SNOWBALL_MAX_PX_S * ball.scale
+        speed = math.hypot(vx, vy)
+        if speed > top:
+            vx, vy = vx * top / speed, vy * top / speed
+        self._launch(ball, vx, vy, now_ms)
+        self._pending.gestures.append(Gesture("throw", ball.source, ball.x, ball.y, ball.mass,
+                                              now_ms))
+        return ball
+
+    def drop_ball(self, now_ms: float) -> Chunk | None:
+        """Play mode ended with the ball still in hand: it falls from where it is, a ``"drop"``,
+        which Nib does not take as thrown at him."""
+        ball = self.ball
+        if ball is None:
+            return None
+        ball.mode = "drop"
+        self._launch(ball, 0.0, 0.0, now_ms)
+        return ball
+
+    def _launch(self, ball: Chunk, vx: float, vy: float, now_ms: float) -> None:
+        self.ball = None
+        self._ball_samples = []
+        ball.vx, ball.vy = vx, vy
+        ball.born = now_ms          # MAX_AIR_MS counts from the throw, not the scoop
+        ball.group = self._new_stroke()
+        if self._last_step is None or not self.chunks:
+            self._last_step = now_ms
+        self.chunks.append(ball)
+        self._enforce_budget(self._pending)
+
+    def ball_rect(self) -> Rect | None:
+        """Where the ball in hand is drawn, for the view's dirty box."""
+        return _chunk_rect(self.ball) if self.ball is not None else None
 
     # --- the window stack --------------------------------------------------------------------
 
@@ -1200,7 +1360,8 @@ class SnowField:
 
     @property
     def mass_in_air(self) -> float:
-        return sum(c.mass for c in self.chunks)
+        held = self.ball.mass if self.ball is not None else 0.0
+        return sum(c.mass for c in self.chunks) + held
 
     def step(self, now_ms: float, pointer: tuple[float, float] | None = None) -> Changes:
         """Advance the airborne snow to ``now_ms`` (feeding one pointer sample first, if given);
@@ -1258,7 +1419,7 @@ class SnowField:
         s = c.scale
         x0, y0 = c.x, c.y
         c.vy = min(TERMINAL_PX_S * s, c.vy + GRAVITY_PX_S2 * s * dt)
-        c.vx *= math.exp(-AIR_DRAG * dt)
+        c.vx *= math.exp(-(SNOWBALL_DRAG if c.kind == "ball" else AIR_DRAG) * dt)
         c.x += c.vx * dt
         c.y += c.vy * dt
         c.monitor = self._monitor_of(c.x, c.y)

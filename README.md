@@ -415,6 +415,16 @@ screen guard is up or in the middle of a focus session.
 This is the one network request he ever makes of his own, and only when you pick it. See
 [Using him](docs/USING-HIM.md#update-and-restart).
 
+## Snow on your windows
+
+From 1 December to 6 January, snow piles up on the top edges of your windows, curls over the
+corners and grows icicles. Swipe the pointer fast through a pile to knock it off, or flick up to
+throw it in the air; it lands on other windows, the taskbar or him, and he jumps. Pick **Play in
+the snow** on his wheel for 30 seconds of scooping and throwing snowballs, at him included. The
+snow never takes a click otherwise, stays out of screenshots, and goes away for a fullscreen app.
+**Snow: off for today** in the tray puts it away; the `snow` setting picks Christmas, the whole
+winter, always or never. See [Using him](docs/USING-HIM.md#christmas-snow).
+
 ## Documentation
 
 | | |
@@ -443,7 +453,7 @@ Windows 10 or 11, Python 3.10+, and whichever assistant you point him at. Claude
 python tests/run_all.py
 ```
 
-35 suites, about a minute. They boot a real `QApplication`, build a real sprite sheet, and in
+36 suites, about a minute. They boot a real `QApplication`, build a real sprite sheet, and in
 several cases read geometry back out of Win32 to check what Windows actually believes — because
 several of the bugs worth catching were "Qt thinks one thing and Windows thinks another".
 

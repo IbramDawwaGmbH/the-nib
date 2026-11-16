@@ -56,6 +56,7 @@ SUITES = [
     ("smoke_snow_stack", "the snow and the window stack: piles moved, cut, dropped, clipped"),
     ("smoke_snow_overlay", "the snow on screen: never a click, below Nib, idle timers, hiding"),
     ("smoke_snow_nib", "Nib and the snow: hit by it, playing in it, the dent, the shiver"),
+    ("smoke_snow_play", "play in the snow: the snowball, hitting Nib, every way out of it"),
     ("smoke_update", "update and restart: git fast-forward, release zip, the helper, the wait"),
     ("shadow_mask", "the contact shadow's real input region, read back from GetWindowRgn"),
 ]

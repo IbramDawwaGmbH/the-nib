@@ -32,8 +32,12 @@ Worth being explicit, since he watches a few things in order to feel alive:
   Christmas snow reads the same rectangles of every window you can see, every 2 seconds while it
   shows and nothing changes (twice a second while something does), to put a pile on each and hide
   what other windows cover; in between it looks only at which window is in front and its
-  rectangle, and at the pointer. It also asks Windows whether the machine is on battery. Its
-  windows are excluded from screen capture, and it never takes a click.
+  rectangle, and at the pointer. It also asks Windows whether the machine is on battery. It reads
+  no window titles and no contents, and keeps nothing: like perching, it is rectangles and class
+  names only. Its windows are excluded from screen capture, and they never take a click, except
+  during **Play in the snow**: for those 30 seconds, started from his wheel, your clicks go to the
+  snow instead of your windows, and where you press and let go is used to scoop and throw a
+  snowball and then forgotten.
 - **He never moves your windows, with one named exception.** Not nudged, not resized, no title
   ever read — except that dropping him on a window pins that one window on top, a single
   `SetWindowPos` call scoped to never move it, resize it, or steal its focus, and reverted the

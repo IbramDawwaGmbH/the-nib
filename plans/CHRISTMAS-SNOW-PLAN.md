@@ -8,8 +8,9 @@
 > stack poll's back-off at rest, `tests/snow_rate.py`; WP5: Nib's reactions,
 > `tests/smoke_snow_nib.py`, the rates in `docs/BEHAVIOUR.md`). WP4 and WP5 were saved
 > unreviewed as "wip(snow): WP4+WP5 partial"; the WP3 sign-off audited both against their
-> sections and found them complete (their Done notes). WP8 stays deferred. Continue
-> from **WP6**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
+> sections and found them complete (their Done notes). WP6 (play mode, `tests/smoke_snow_play.py`)
+> is built and awaiting the owner's test run; WP7 (the docs, for the whole feature including play
+> mode) is done. WP8 stays deferred. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
@@ -17,8 +18,9 @@
 > - [x] WP3 overlay, wiring and the setting
 > - [x] WP4 growth, icicles over time, battery
 > - [x] WP5 Nib's reactions
-> - [ ] WP6 play mode and the snowball
-> - [ ] WP7 docs and polish
+> - [ ] WP6 play mode and the snowball - built, awaiting the owner's test run
+> - [x] WP7 docs and polish
+> - [ ] WP8 a throwing animation for Nib - deferred
 
 # Nib "Christmas snow" — engineering spec for branch `feat/christmas-snow`
 
@@ -545,6 +547,17 @@ the layer is hidden.
 ### WP7 — Docs and polish
 **Files.** `docs/BEHAVIOUR.md`, `docs/USING-HIM.md`, `docs/PRIVACY.md` (the stack pass reads window
 rectangles only, never titles or contents), `docs/HOW-IT-WORKS.md`, README, CHANGELOG.
+**Done.** `docs/USING-HIM.md` has a Christmas snow section (when it shows, the four `snow` modes,
+brushing and flicking, his reactions, keeping out of the way, **Snow: off for today**, turning it
+off) with **Play in the snow** under it, plus a quick-table row, a wheel note and a tray entry;
+`docs/BEHAVIOUR.md` a play-mode paragraph after the rates; `docs/PRIVACY.md` says the stack pass
+reads rectangles and class names, never titles or contents, and what play mode does with clicks;
+`docs/HOW-IT-WORKS.md` a section on the strips, the flight layer, the 2 Hz poll and its back-off
+and the accepted 0.14 % idle cost, and both modules in the layout; README a short section and 36
+suites (CONTRIBUTING too, counting `smoke_snow_play`); CHANGELOG one consolidated set of entries
+for the whole feature. Written while WP6 was being built, from its section and the code so far:
+where the wheel puts **Play in the snow** and the football after a hit are to be checked against
+WP6 as built.
 
 ### WP8 (deferred) — a throwing animation for Nib (about 6 frames, `tools/gen_sprites.py`).
 

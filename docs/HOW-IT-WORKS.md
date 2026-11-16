@@ -88,6 +88,38 @@ The global hotkey is registered against the mascot's **own window** rather than 
 routes `WM_HOTKEY` to that one widget. A thread-level registration would need an application-wide
 native event filter: a Python call for every Windows message the app pumps.
 
+### Snow on your windows, without a full-screen window
+
+The obvious way to draw snow on every window is one transparent window over each monitor. It is
+also the expensive way: flushing a full-monitor layered window costs 4-9 ms, and a visible
+full-screen layered window can cost a game its direct path to the display. So the snow is two
+kinds of small window instead (`snow_overlay.py`; the model, `snow.py`, never touches Qt):
+
+- **Strips**: one small window per visible pile, sized to the pile's full extent so a growing
+  pile never resizes it. Each paints one pre-rendered picture of its pile, clipped to what the
+  windows in front leave showing. A strip repaints only when its pile changes shape, and moves
+  only when its window does: at rest it costs nothing at all.
+- **A flight layer** per monitor, created only when snow is knocked into the air there, repainted
+  at 30 FPS in small dirty boxes rather than whole, and destroyed about 2 seconds after the last
+  lump lands. **Play in the snow** borrows one per monitor as its input surface for 30 seconds,
+  painted with an invisible alpha-1 fill (a layered window only takes a click where it has
+  painted, the same trick as the ruler), and destroys it when play ends, so it cannot go on
+  taking clicks.
+
+Every one of them is click-through from the moment it is created, excluded from screen capture,
+and *not* topmost: a non-topmost tool window lands at the top of the ordinary windows, above the
+one you are using and below everything always-on-top, so the snow is under Nib, his bubble and
+the taskbar by construction and nothing of his ever needs re-raising.
+
+What the snow sits on comes from one pass over the window stack (`list_window_stack`: rectangles
+and class names, never titles), **twice a second** while anything is changing. At rest it backs
+off to one full pass every 2 seconds, with a glance of a few microseconds at the front window and
+the pointer in between that snaps it back the moment anything moves. The pointer is only sampled
+at 60 Hz while it is near a pile, and every timer stops while the snow is not showing. Measured on
+a desktop of about 380 windows, the snow at rest costs **0.14 % of one core** with the pointer
+still (0.40 % with it moving), against 0.002 % with no snow: more than nothing, and accepted as
+its budget.
+
 ---
 
 ## Project layout
@@ -97,6 +129,7 @@ the-nib/
   main.py               entry point, timers, wiring, tray/window/bubble glue
   behavior.py           state machine: wander, gait, antics, annoyance, sleep (Qt-free)
   world.py              clock, calendar, season and CPU load (Qt-free, no network or files)
+  snow.py               the Christmas snow: piles, icicles, brushing, snowballs (Qt-free)
   mood.py               how the day went - one number, kept across a restart (Qt-free)
   needs.py              energy, affection and boredom - leans on what he does, two moments (Qt-free)
   memory.py             what he remembers: counts, a 7-day window, tastes, memory.json (Qt-free)
@@ -107,6 +140,7 @@ the-nib/
   bubble.py             the ask bubble, prompt history recall, and the failure toast
   billboard.py          the snippet billboard he holds up when you grab the clipboard
   focus_timer.py        the floating countdown/progress readout shown during a focus session
+  snow_overlay.py       draws the snow: a strip per pile, a flight layer, play mode
   tray.py               tray icon and menu
   settings.py           the settings window, built from the config schema
   sound.py              plays the generated blips; silent about every possible failure

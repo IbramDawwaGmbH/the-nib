@@ -627,6 +627,12 @@ None of it happens while he is asleep, paused, in your hand, focusing, hidden or
 none of it draws a random number until snow has actually reached him, so `tests/fidget_rate.py`
 and `tests/quirk_rate.py` give exactly the same output with the snow as without it.
 
+**Play in the snow**, on his [tool wheel](USING-HIM.md#play-in-the-snow), is the one time the snow
+takes your clicks, and only for about 30 seconds: press on a pile to scoop a snowball, drag it,
+and let go to throw it. Hit him with one and he startles, then has a game of football. A
+right-click, the time running out, or anything that hides or freezes the snow (a snooze, a guard,
+focus, pause, ghost mode, a fullscreen app) ends it, and every click goes back to your windows.
+
 ---
 
 ## How he reacts to you

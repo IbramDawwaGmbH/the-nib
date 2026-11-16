@@ -486,7 +486,20 @@ def _icon_update(p: QPainter) -> None:
     p.drawPath(tip)
 
 
+def _icon_snowball(p: QPainter) -> None:
+    # A snowball in flight: the ball, a packed seam across it, and three lines trailing behind.
+    p.drawEllipse(QRectF(10, 5.5, 11, 11))
+    seam = QPainterPath(QPointF(11.5, 12.5))
+    seam.quadTo(15.5, 9.5, 19.5, 10.5)
+    p.drawPath(seam)
+    p.drawLine(QPointF(3, 8.5), QPointF(7.5, 8.5))
+    p.drawLine(QPointF(2, 12), QPointF(7.5, 12))
+    p.drawLine(QPointF(4, 15.5), QPointF(8.5, 15.5))
+    p.drawLine(QPointF(5, 20.5), QPointF(19, 20.5))   # the pile it came from
+
+
 ICONS = {
+    "snowball": _icon_snowball,
     "guard": _icon_guard,
     "wardrobe": _icon_wardrobe,
     "sparkle": _icon_sparkle,
