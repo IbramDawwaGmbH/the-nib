@@ -1,19 +1,20 @@
-> **Status:** WP0, WP1, WP2, WP4 and WP5 done (WP0: measurements in 1.6, architecture decided:
-> per-cap strip windows plus a flight layer that exists only while snow is airborne, realistic
-> snow, no snowfall; WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2:
-> `win.list_window_stack()`, `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`; WP4:
-> eased growth, `win.on_battery()`, the stack poll's back-off at rest, `tests/snow_rate.py`; WP5:
-> Nib's reactions, `tests/smoke_snow_nib.py`). WP3 is built (`snow_overlay.py`, the `snow`
-> setting, the wiring in `main.py`, `tests/smoke_snow_overlay.py`) but **not ticked**: its
-> acceptance "idle CPU within noise of today's" is still not met to the letter - WP4 brought the
-> snow at rest from 0.43-0.47 % of one core to 0.14 % (WP4's Done note), against 0.002 % with no
-> snow - and needs the owner's decision: accept that measured budget, or ask for less. Continue
+> **Status:** WP0-WP5 done (WP0: measurements in 1.6, architecture decided: per-cap strip
+> windows plus a flight layer that exists only while snow is airborne, realistic snow, no
+> snowfall; WP1: the Qt-free `snow.py` model and `tests/smoke_snow.py`; WP2:
+> `win.list_window_stack()`, `SnowField.sync` and `snow.clip`, `tests/smoke_snow_stack.py`; WP3:
+> `snow_overlay.py`, the `snow` setting, the wiring in `main.py`, `tests/smoke_snow_overlay.py`,
+> its idle cost accepted by the owner as the budget - 0.14 % of one core at rest after WP4,
+> against 0.002 % with no snow (WP3's Done note); WP4: eased growth, `win.on_battery()`, the
+> stack poll's back-off at rest, `tests/snow_rate.py`; WP5: Nib's reactions,
+> `tests/smoke_snow_nib.py`, the rates in `docs/BEHAVIOUR.md`). WP4 and WP5 were saved
+> unreviewed as "wip(snow): WP4+WP5 partial"; the WP3 sign-off audited both against their
+> sections and found them complete (their Done notes). WP8 stays deferred. Continue
 > from **WP6**. Run `py tests/run_all.py` and `py tools/check_docs.py` before each commit, and keep each file's line endings as they are.
 >
 > - [x] WP0 spike: measure the surface
 > - [x] WP1 `snow.py` model
 > - [x] WP2 window stack and clipping
-> - [ ] WP3 overlay, wiring and the setting (built; idle-CPU acceptance awaits a decision)
+> - [x] WP3 overlay, wiring and the setting
 > - [x] WP4 growth, icicles over time, battery
 > - [x] WP5 Nib's reactions
 > - [ ] WP6 play mode and the snowball
@@ -412,6 +413,12 @@ a snooze or a guard. Suite: `tests/smoke_snow_overlay.py`. What differs from the
 - On battery: `main._on_battery` asks `win.on_battery` if it exists (WP4 adds it), else mains.
 - `docs/PRIVACY.md` got one sentence ahead of WP7: the snow reads the same rectangles twice a
   second while it shows.
+- **Signed off on the measured budget** (owner's decision, after WP4). The acceptance "idle CPU
+  within noise of today's" is met by accepting WP4's measured cost as the budget rather than to
+  the letter: the overlay alone at rest is **0.14 %** of one core with the pointer still (3 runs,
+  30 full stack passes a minute) and 0.40 % with it moving (120 a minute), against 0.43-0.47 %
+  before WP4's back-off and 0.002 % with no snow. The other choice, asking for less (a slower
+  poll, or no full pass at all while the glance sees nothing), was not taken.
 
 ### WP4 — Growth, icicles over time, battery
 **Files.** `snow.py`, `win_integration.py` (`on_battery`), `snow_overlay.py`, `tests/snow_rate.py`
@@ -456,6 +463,16 @@ only grow (the growth timer is slow and repaints only the caps that changed); ba
   at rest (`snow_rate`): 30, was 120. A window moved by something other than the pointer and not
   at the front is seen up to 2 s late. Not measured: the whole app paused (WP3's 0.36 % -> 0.80 %
   figure), which would have meant snow on the owner's live desktop.
+- **Audited** in the WP3 sign-off (this was committed unreviewed as "WP4+WP5 partial"): every
+  item above is in the code and tested; the one gap was the acceptance's "rates quoted in the
+  docs" - they were only in the CHANGELOG, `snow.py` and here - so `docs/BEHAVIOUR.md` now has
+  "Snow on your windows" with the growth and icicle table, citing `tests/snow_rate.py`. Re-run
+  at sign-off: middle 3 / 6 / 10 / 20 px after 1.3 / 2.8 / 4.3 / 10.8 min and full after 19.8
+  with `grow` every 0.5 s or 2 s (20.0 every 30 s), first icicle 11.9 min, all full after
+  38.9-48.0; 30 full passes a minute at rest, 120 with the pointer moving. The acceptance's
+  "zero animation ticks while caps only grow" had no test of its own (only "at rest" before any
+  growth): `smoke_snow_overlay` now checks that a growth step on the backed-off poll starts no
+  animation, no pointer sampling and no flight layer.
 
 ### WP5 — Nib's reactions
 **Files.** `behavior.py`, `main.py`, tests (`tests/smoke_snow_nib.py` or an existing suite),
@@ -505,6 +522,13 @@ hands them in as plain calls, and carries the dent and the puff back out.
   the suite by twenty simulated minutes with and without snow about, and by `fidget_rate`,
   `quirk_rate`, `day_rate`, `chatter_rate` and `ledge_rate` run seeded (`random.seed(12345)`,
   `PYTHONHASHSEED=0`) on `git archive HEAD` and on this tree: identical output.
+- **Audited** in the WP3 sign-off against 1.5 and the acceptance: complete (the snowball is
+  WP6's). The seeded comparison was re-run, since the "partial" commit said it had not been:
+  `fidget_rate`, `quirk_rate`, `day_rate`, `chatter_rate` and `ledge_rate` on `git archive` of
+  the WP3 commit (`d625803`, before any of WP5) and on this tree give byte-identical output.
+  `snow_rate` re-run: 9.8 / 10.8 / 10.0 shivers an hour, 21 / 19 / 22 play moments an hour
+  (32 hops, 30 dances). A hit while he is perched ends, like any antic there, in an idle beat
+  and back onto the window (checked; not changed). The rates are now in `docs/BEHAVIOUR.md`.
 
 ### WP6 — Play mode and the snowball
 **Files.** `snow_overlay.py`, `tool_wheel.py` (icon), `main.py`, tests.

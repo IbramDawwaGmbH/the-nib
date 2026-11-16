@@ -593,6 +593,40 @@ two.
 
 Set `play_with_windows` to `false` to switch both off.
 
+### Snow on your windows
+
+From 1 December to 6 January (by default: the [`snow`](SETTINGS.md) setting), snow piles up on the top
+edges of your windows. Nothing falls: a pile just grows, one small step every 30 seconds of
+showing, fast at first and slower as it fills, so a fresh window looks snowy within a few
+minutes and does not keep changing for long. Measured on an 800 px window (`tests/snow_rate.py`,
+twelve windows' worth of seeds):
+
+| The middle of the pile | after |
+| --- | --- |
+| 3 px | **1.3 minutes** |
+| 6 px | **2.8 minutes** |
+| 10 px | **4.3 minutes** |
+| 20 px | **11 minutes** |
+| full (about 26 px) | **20 minutes** |
+
+Icicles start once the corners are well covered: the first is 4 px long after **12 minutes**, and
+the last reaches its full length (8-28 px) after **39-48 minutes**. Only time the snow is on
+screen counts, so a pile hidden behind a fullscreen game, a snooze or a guard does not catch up
+afterwards. While you focus, he is paused or in ghost mode, and on battery, the piles stay but
+stop growing.
+
+Snow knocked off by a fast swipe, or flicked up, can land on him and nearby:
+
+| | How often (`tests/snow_rate.py`) |
+| --- | --- |
+| **Snow lands on him** | He jumps and wears the snowcap for a minute (never over a costume you picked). One jump per shower: lumps within 8 s of the jump are the same shower. A pile simply falling off a window you moved is not something done to him, and he ignores it |
+| **You brush snow off next to him** | Now and then he hops or dances in it and kicks up a puff of snow: **19-22 times an hour** with a swipe beside him every 20 s for an hour (180 swipes), through the shared 45 s moment budget and a 2-minute cooldown of his own |
+| **He stands on a snowy window** | His feet press a dent into the pile, which does not grow back until he leaves, and he shivers now and then: **about 10 times an hour** (9.8-10.8 over three 4-hour runs) |
+
+None of it happens while he is asleep, paused, in your hand, focusing, hidden or you are away, and
+none of it draws a random number until snow has actually reached him, so `tests/fidget_rate.py`
+and `tests/quirk_rate.py` give exactly the same output with the snow as without it.
+
 ---
 
 ## How he reacts to you

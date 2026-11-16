@@ -530,6 +530,11 @@ mass_b = cap_b.mass
 passes = ticks(SO.STACK_IDLE_EVERY)
 check("piles still grow while it is backed off", passes == 1 and cap_b.mass > mass_b,
       f"{passes} passes, {mass_b:.0f} -> {cap_b.mass:.0f}")
+# WP4's acceptance: a growth step is one re-render on the poll, never an animation tick.
+check("...and a growth step starts no animation and no pointer sampling",
+      not bo.anim_timer.isActive() and not bo.pointer_timer.isActive() and not bo.flights
+      and not bo.field.airborne,
+      f"anim={bo.anim_timer.isActive()} pointer={bo.pointer_timer.isActive()}")
 before = len(walks)
 for _ in range(20):
     bo._tick_stack()

@@ -11,7 +11,8 @@ Measured on the model's injected clock, so twenty minutes of growth take a fract
 *   **Nib**: shivers per hour standing on a snowy window, and play moments per hour while you
     keep brushing snow next to him.
 
-The numbers are quoted in ``plans/CHRISTMAS-SNOW-PLAN.md`` (WP4, WP5) and ``snow.py``.
+The numbers are quoted in ``docs/BEHAVIOUR.md`` ("Snow on your windows"),
+``plans/CHRISTMAS-SNOW-PLAN.md`` (WP4, WP5) and ``snow.py``.
 """
 import os
 import random
