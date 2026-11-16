@@ -99,6 +99,12 @@ And in his 53 costumes:
 
 ![Nib changing through a run of costumes](assets/media/gifs/16-costumes.gif)
 
+And a costume for every date of the year — 366 of them, every one animated: a pi hat on Pi Day, a
+ghost on Halloween, a holly crown on Christmas Day. The same date always gets the same costume, and
+yours always wins. See [Art and costumes](docs/ART.md#the-costume-of-the-day).
+
+![A tear-off calendar flipping through the year while Nib wears each day's own costume](assets/media/gifs/18-calendar.gif)
+
 ## What makes him different
 
 He is not a static image with a click handler.
@@ -416,6 +422,8 @@ This is the one network request he ever makes of his own, and only when you pick
 [Using him](docs/USING-HIM.md#update-and-restart).
 
 ## Snow on your windows
+
+![Snow piling up on two windows; a fast swipe knocks a pile off onto Nib, who jumps and gets a snowcap, then a snowball hits him and he plays football](assets/media/gifs/17-snow.gif)
 
 From 1 December to 6 January, snow piles up on the top edges of your windows, curls over the
 corners and grows icicles. Swipe the pointer fast through a pile to knock it off, or flick up to

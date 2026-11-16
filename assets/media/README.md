@@ -4,17 +4,17 @@ The launch film, its README GIFs and the README images. **Where each file is use
 where it is placed; every path there is relative to this folder.
 
 Source: `Desktop\remotion-studio\video\src\nib\`. The film (Rev. 3) is in `v3/`, the README
-images in `stills/`. Art, sounds, the guard's eyes and every number or line on screen come from
-the app's own code via `scripts/nib-export.py`.
+images in `stills/`. Art, sounds, the guard's eyes, the snow piles, the costumes of the day and every number or line on screen
+come from the app's own code via `scripts/nib-export.py`.
 
 ## What's here
 
 | Path | What |
 | --- | --- |
-| `video/nib-film-v3.mp4` | **The film.** 62 s, 1920×1080 at 60 fps, 24 shots on a 120 BPM grid, music and sound. The away guard is the climax. For the Release, social media, and the README (drag it into the GitHub editor so it plays inline) |
+| `video/nib-film-v3.mp4` | **The film.** 70 s, 1920×1080 at 60 fps, 26 shots on a 120 BPM grid, music and sound. Christmas snow, the away guard as the climax, then the costumes of the day. For the Release, social media, and the README (drag it into the GitHub editor so it plays inline) |
 | `video/nib-15s-v3.mp4` | 15 s hook cut from the film, with its sound: meet him, poke him, the prompt types itself, the guard's blackout, the logo |
 | `gifs/00-story.gif` | 8 s opening: meet Nib, he lives on your taskbar, poke him, he sulks. README hero, under the header |
-| `gifs/01…16-*.gif` | One GIF per feature, cut from the film at 960×540, silent, with the film's big type |
+| `gifs/01…18-*.gif` | One GIF per feature, cut from the film at 960×540, silent, with the film's big type |
 | `images/repo/` | `header-dark.png`, `header-light.png` (1600×400), `social-preview.png` (1280×640, for repo **Settings → Social preview**) |
 | `images/features/` | 21 still feature cards, 1600×800, alt text in `images/INDEX.md`. A still alternative to the GIFs, also usable for docs and social posts |
 
@@ -44,6 +44,8 @@ The style frames, the motion test and the older rev. 2 media stay outside the re
 | `gifs/12-perch.gif` | README, *Drop him on a window*, beside `perch.gif` |
 | `gifs/13-guard-fog.gif`, `14-guard-blackout.gif` | README, *The screen guard* |
 | `gifs/16-costumes.gif` | README, under the costume banner |
+| `gifs/17-snow.gif` | README, *Snow on your windows* |
+| `gifs/18-calendar.gif` | README, under the costume run: the costume of the day |
 | `images/features/*.png` | The matching sections of `docs/USING-HIM.md`, `BEHAVIOUR.md`, `PROVIDERS.md`, `ART.md` and `PRIVACY.md` (alt text from `images/INDEX.md`) |
 
 
@@ -69,7 +71,10 @@ The style frames, the motion test and the older rev. 2 media stay outside the re
 - The film is **staged**: Remotion plays Nib's real sprite frames at their real timings, with real
   calculator, ruler and tool-wheel outputs, the guard's real eyes (baked from `guard_scene.EyesPainter`) and his
   real lines (`guard_phrases.json`). It isn't a screen recording of the running app.
-- The one time skip in the film is labelled ("24 min later").
+- The time skips in the film are labelled ("24 min later", and the snow's "3 min, sped up").
+- The snow piles, lumps and snowball are drawn by the app's own `snow_overlay.render_cap`,
+  `render_lump` and `render_ball`, at the film's display scale; the falling lumps' paths are
+  animated for the film, not the app's physics.
 - The OCR beat's extracted text was written to match the screenshot in the scene; it wasn't
   produced by running `ocr.py`.
 - The costume run uses hand-picked cool costumes. Costumes the app puts on for a reason stay
