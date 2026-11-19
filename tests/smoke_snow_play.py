@@ -281,7 +281,9 @@ print("\n--- a snowball can hit Nib ---")
 ov.end_play("next check")
 check("a fresh session for the throw", start() and ov.playing)
 # Nib a little way off the pile; let go above him with the pointer at rest, and it falls on him.
-NIB_RECT = (RECT[2] + int(200 * S), RECT[1] + int(80 * S), RECT[2] + int(300 * S),
+# Left of the window, not right: a build machine's screen can be as small as 1024 px wide, and a
+# release off every play layer throws nothing.
+NIB_RECT = (RECT[0] - int(160 * S), RECT[1] + int(80 * S), RECT[0] - int(60 * S),
             RECT[1] + int(180 * S))
 ov.set_nib(NIB_RECT)
 ov.take_landed()
