@@ -121,6 +121,8 @@ COME_HOTKEY_ID = 0xC1A1
 POCKET_HOTKEY_ID = 0xC1A2
 MIC_HOTKEY_ID = 0xC1A3
 GUARD_HOTKEY_ID = 0xC1A4
+#: The guard's dark look (``guard_dark_hotkey``): always dark, whatever ``guard_look`` says.
+GUARD_DARK_HOTKEY_ID = 0xC1A5
 
 #: How long before he will mention a muted microphone a second time. Being unheard is worth one
 #: nudge; a mascot that says it every few seconds through a meeting you are deliberately muted in
@@ -354,6 +356,7 @@ class NibApp:
         self._pocket_hotkey_hwnd = 0
         self._mic_hotkey_hwnd = 0
         self._guard_hotkey_hwnd = 0
+        self._guard_dark_hotkey_hwnd = 0
         #: Last mic/camera state shown, so the tray icon is only repainted when it actually
         #: changes rather than every 700ms - a QIcon rebuild is four scaled pixmaps.
         self._device_state: tuple[bool | None, bool, bool] | None = None
@@ -589,6 +592,7 @@ class NibApp:
         self.tray.measure_requested.connect(self._on_measure_requested)
         self.tray.mic_toggle_requested.connect(self._on_mic_toggle)
         self.tray.guard_requested.connect(self._on_guard_requested)
+        self.tray.guard_dark_requested.connect(lambda: self._on_guard_requested("dark"))
         self.tray.snow_off_requested.connect(self._on_snow_off_today)
         self.snow.appeared.connect(self._on_snow_appeared)
         self.tray.quit_requested.connect(self._on_quit)
@@ -632,6 +636,7 @@ class NibApp:
             (POCKET_HOTKEY_ID, "pocket_hotkey", "_pocket_hotkey_hwnd"),
             (MIC_HOTKEY_ID, "mic_toggle_hotkey", "_mic_hotkey_hwnd"),
             (GUARD_HOTKEY_ID, "guard_hotkey", "_guard_hotkey_hwnd"),
+            (GUARD_DARK_HOTKEY_ID, "guard_dark_hotkey", "_guard_dark_hotkey_hwnd"),
         ):
             spec = str(self.config[setting]).strip()
             if not spec:
@@ -649,6 +654,9 @@ class NibApp:
     def _on_hotkey_pressed(self, hotkey_id: int) -> None:
         if hotkey_id == GUARD_HOTKEY_ID:
             self._on_guard_requested()
+            return
+        if hotkey_id == GUARD_DARK_HOTKEY_ID:
+            self._on_guard_requested("dark")
             return
         if self._guarding:
             # Nothing of his may open over the guard's fog - the bubble in particular is topmost
@@ -1446,6 +1454,9 @@ class NibApp:
         # Next to Hide: the same "go away for a while" thought, for the whole screen rather than
         # just him. Not with the tools - a ninth tool there would push More... off the opening arc.
         items.append(WheelItem("guard", "Guard the screen", "guard", group=him))
+        # Its dark twin, right beside it: the same guard, but the screens stay plain black until
+        # someone touches the machine. Always dark, whatever guard_look says.
+        items.append(WheelItem("guard_dark", "Dark guard", "guard_dark", group=him))
         # Only in the snow's days, like the tray's Snow entry; picked while the snow is hidden
         # or resting it says why rather than doing nothing.
         overlay = getattr(self, "snow", None)   # absent on tests/smoke_update.py's holder
@@ -1566,6 +1577,8 @@ class NibApp:
             self._snooze(600)
         elif key == "guard":
             self._on_guard_requested()
+        elif key == "guard_dark":
+            self._on_guard_requested("dark")
         elif key == "snow_play":
             self._on_snow_play()
         # The three toggles below are the tray's own handlers, which assume the tray flipped its
@@ -2051,10 +2064,14 @@ class NibApp:
 
     # --- the away guard -------------------------------------------------------------
 
-    def _on_guard_requested(self) -> None:
+    def _on_guard_requested(self, look: str | None = None) -> None:
         """Wheel, tray or hotkey: cover the screen. Everything else is GuardService's business -
-        including what "guard" means mid-Peek (lock now) or while already guarded (nothing)."""
-        log.info("guard requested")
+        including what "guard" means mid-Peek (lock now) or while already guarded (nothing).
+
+        ``look`` "dark" comes from the dark entries (their shortcut, tray and wheel); ``None``
+        leaves it to ``guard_look``. Every rule below that refuses a guard refuses a dark one too.
+        """
+        log.info("guard requested%s", f" ({look})" if look else "")
         self.tool_wheel.close()
         if self._guard_start_blocker() and not self.guard.active:
             # A new guard from this process would be the old GuardService driving a guard core
@@ -2064,7 +2081,10 @@ class NibApp:
                        sub="Quit me from the tray and start me again." if not self._updating
                        else "I'll restart by myself as soon as I can.")
             return
-        self.guard.request_guard()
+        if look is None:
+            self.guard.request_guard()
+        else:
+            self.guard.request_guard(look=look)
 
     def _set_guarding(self, active: bool) -> None:
         """Put him (and everything of his) away for the length of a guard, and bring him back.
@@ -2527,7 +2547,8 @@ class NibApp:
                                   (COME_HOTKEY_ID, "_come_hotkey_hwnd"),
                                   (POCKET_HOTKEY_ID, "_pocket_hotkey_hwnd"),
                                   (MIC_HOTKEY_ID, "_mic_hotkey_hwnd"),
-                                  (GUARD_HOTKEY_ID, "_guard_hotkey_hwnd")):
+                                  (GUARD_HOTKEY_ID, "_guard_hotkey_hwnd"),
+                                  (GUARD_DARK_HOTKEY_ID, "_guard_dark_hotkey_hwnd")):
             hwnd = getattr(self, attribute)
             if hwnd:
                 win.unregister_hotkey(key_id, hwnd)

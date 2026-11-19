@@ -6,6 +6,14 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 
 ### Added
 
+- **The screen guard can look like a switched-off display.** In its new dark look every monitor
+  stays plain black with the pointer hidden (no fog, eyes, Nib, effects or sounds) while your work
+  keeps running underneath. Touch the mouse or keyboard and it turns into the normal guard page
+  with the PIN field showing; after about 30 s untouched with the field empty it goes black again.
+  Everything that keeps the guard safe is unchanged. Start it with **Guard (dark screen)** in the
+  tray, **Dark guard** on the wheel or **Ctrl+Alt+Shift+G** (`guard_dark_hotkey`), or make it the
+  default with `guard_look` on Settings → Guard. See
+  [The screen guard](docs/USING-HIM.md#the-screen-guard).
 - **A costume for every day of the year.** 366 of them, February the 29th included, and every
   one moves: he puts the date's on by himself, ahead of the season's, and wears the same one on
   that date every year. Yours still wins. **Costume → Calendar** in the tray has them all, a

@@ -909,9 +909,10 @@ WHEEL_CANCEL_MS = 600.0
 #: left out on purpose: ask, again, read, focus, pocket, do_something, treat and costume already set
 #: his state (focus's *stop* does not, but a session you just ended earns nothing - see set_focus;
 #: nor does a treat he refuses, and a beat would read as him taking it after all);
-#: hide and guard take him off screen; more opens a menu whose own items have handlers. Mic is
-#: foot_tap and never wave: wave in earmuffs is the muted-mic tell, and this is not that. Settings
-#: is typing rather than a scratch, because the scratch is what a cancel looks like.
+#: hide, guard and guard_dark take him off screen; more opens a menu whose own items have
+#: handlers. Mic is foot_tap and never wave: wave in earmuffs is the muted-mic tell, and this is
+#: not that. Settings is typing rather than a scratch, because the scratch is what a cancel looks
+#: like.
 TOOL_BEATS: dict[str, tuple[str, float]] = {
     "measure": ("look_around", 1880.0),
     "mic": ("foot_tap", 1240.0),

@@ -177,6 +177,13 @@ DEFAULTS: dict[str, Any] = {
     #: The Away Guard: fog over every monitor, giant eyes, and Nib on guard until you prove it is
     #: you - see guard_service.py and docs/USING-HIM.md. Background work keeps running throughout.
     "guard_hotkey": "ctrl+alt+g",  # "" disables it; the wheel and the tray entry always work
+    #: The guard's look while nobody touches the machine. "fog" is the blurred desktop with the
+    #: eyes and Nib; "dark" is plain black with the pointer hidden, like a switched-off display,
+    #: until someone moves the mouse or presses a key - then the normal guard page. Ctrl+Alt+G,
+    #: the wheel's and tray's Guard and the auto-guard use it; the dark entries always go dark.
+    "guard_look": "fog",
+    #: Always starts the dark look, whatever guard_look says. "" disables it.
+    "guard_dark_hotkey": "ctrl+alt+shift+g",
     "guard_peek_minutes": 2,      # how long "Peek" lifts the guard before it comes back by itself
     #: "hello" offers Windows Hello when this PC has it, with the guard PIN as the fallback; "pin"
     #: never offers Hello. Without Hello, the first guard asks you to set a PIN.
@@ -299,6 +306,8 @@ _VALID_PERSONALITIES = ("balanced", "chill", "hyper", "sassy")
 _VALID_GUARD_AUTH = ("hello", "pin")
 #: What stands guard on the fog - see guard_overlay.build_scene.
 _VALID_GUARD_SCENES = ("both", "eyes", "nib")
+#: How the guard looks while nobody touches the machine - see guard_overlay.OverlaySet.
+_VALID_GUARD_LOOKS = ("fog", "dark")
 #: See LEVELS in voice.py, which is where the gaps and daily caps live.
 _VALID_CHATTER = ("off", "rare", "normal")
 #: See world.snow_active, which is where the dates live.
@@ -315,7 +324,7 @@ _TEXT_KEYS = (
     "last_milestone_days", "last_focus_streak_date",
     # guard_pin_hash is verified (and rejected if malformed) by guard_auth.verify_pin; here it only
     # has to stay a string, since a non-string default would otherwise be stored verbatim.
-    "guard_hotkey", "guard_pin_hash",
+    "guard_hotkey", "guard_dark_hotkey", "guard_pin_hash",
     # name is trimmed and capped by its own branch in _coerce, above the generic text one.
     "name",
 )
@@ -374,6 +383,9 @@ def _coerce(key: str, value: Any) -> Any:
     if key == "guard_scene":
         text = str(value).lower().strip()
         return text if text in _VALID_GUARD_SCENES else default
+    if key == "guard_look":
+        text = str(value).lower().strip()
+        return text if text in _VALID_GUARD_LOOKS else default
     if key == "chatter_level":
         text = str(value).lower().strip()
         return text if text in _VALID_CHATTER else default

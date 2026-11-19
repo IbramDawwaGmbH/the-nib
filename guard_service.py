@@ -22,6 +22,12 @@ Why the shape is what it is:
 * **Constructing the service does nothing visible.** No process, no window, no blocking WinRT call -
   ``NibApp`` (and the smoke tests that build one) pay for a guard only when one is started. The
   Hello availability probe runs once on a daemon thread and is cached.
+* **The dark look is the overlays' business, not the controller's.** A guard started "dark" is an
+  ordinary FOG guard whose overlays paint plain black until someone touches the machine (see
+  ``guard_overlay``). This file only decides which look a guard starts with - the setting, or the
+  entry that asked - passes it on, keeps the guard's sounds quiet while black, and takes the
+  keyboard when the black wakes, exactly as for a click on the fog. No rule, timer or core command
+  depends on the look.
 * **A Nib restarted after dying mid-guard resumes in BLACKOUT.** The orphaned core holds a named
   mutex while it covers the screens; seeing it at start-up means the owner never unlocked, so the
   guard comes straight back up, blacked out, and the new core's ``guard`` releases the old one.
@@ -100,6 +106,9 @@ VERIFY_AFTER_MS = 300
 VERIFY_REPLY_MS = 400
 #: Shortest PIN the first-run setup accepts.
 MIN_PIN_LEN = 4
+#: The guard's looks (``guard_look``): the fog page, or plain black until someone touches the
+#: machine. Same values as ``guard_overlay.LOOKS``, not imported - that module loads lazily.
+LOOKS = ("fog", "dark")
 
 #: What the intrusion-log card calls each kind of entry.
 _LOG_LABELS = {
@@ -395,6 +404,10 @@ class GuardService(QObject):
 
         self._last_input = 0.0
         self._choice_since = 0.0
+        #: The look of the current (or last) guard, and the one a dark entry asked for while the
+        #: first-run PIN setup is still open (None = the setting's).
+        self._look = "fog"
+        self._requested_look: str | None = None
         self._auto_armed = True
         #: Why a new guard may not start right now, or "". Set by Nib: a checkout updated on disk
         #: but not yet restarted would start the new guard core from the old GuardService.
@@ -451,13 +464,31 @@ class GuardService(QObject):
     def core_running(self) -> bool:
         return self._core is not None and self._core.state() != QProcess.NotRunning
 
-    def request_guard(self) -> None:
+    @property
+    def look(self) -> str:
+        """The current guard's look ("fog" | "dark"); the last guard's while idle."""
+        return self._look
+
+    def look_setting(self) -> str:
+        """``guard_look``, or "fog" for anything that is not a look."""
+        look = str(self.config.get("guard_look", "fog") or "fog").lower().strip()
+        return look if look in LOOKS else "fog"
+
+    def request_guard(self, look: str | None = None) -> None:
         """The wheel / tray / hotkey entry point. Means "cover the screen now", whatever that takes.
 
         From IDLE it starts a guard (after the first-run PIN setup, if one is needed). During a Peek
         it is "Lock now"; from CHOICE it re-guards; while already guarded it does nothing.
+
+        ``look`` is "dark" from the dark entries (their own shortcut, the tray's and the wheel's),
+        which always mean the dark look without changing the setting; ``None`` means
+        ``guard_look``. A plain request mid-Peek keeps the look the guard already had.
         """
+        if look not in LOOKS:
+            look = None
         mode = self.controller.mode
+        if mode in (Mode.PEEK, Mode.CHOICE) and look is not None:
+            self._set_look(look)
         if mode is Mode.PEEK:
             self.controller.lock_now()
             return
@@ -468,9 +499,10 @@ class GuardService(QObject):
             return
         if self.start_blocker():
             return  # Nib has already said why
+        self._requested_look = look
         if not self._auth_ready(interactive=True):
             return  # the setup dialog will start the guard once the PIN is hashed
-        self._start()
+        self._start(look)
 
     def shutdown(self) -> None:
         """App is quitting. Safe to call when nothing is running, and more than once."""
@@ -551,7 +583,7 @@ class GuardService(QObject):
         self.config.save_if_dirty()
         log.info("guard: PIN set")
         if self._start_after_setup and self.controller.mode is Mode.IDLE:
-            self._start()
+            self._start(self._requested_look)  # the look the entry that asked for it wanted
 
     def _auth_state(self) -> dict:
         return {
@@ -562,7 +594,9 @@ class GuardService(QObject):
 
     # --- starting and ending ------------------------------------------------------------------------
 
-    def _start(self) -> None:
+    def _start(self, look: str | None = None) -> None:
+        self._look = look if look in LOOKS else self.look_setting()
+        self._requested_look = None
         c = self.controller
         c.peek_minutes = max(0.0, self._cfg_float("guard_peek_minutes", 2))
         c.blackout_after = max(1, self._cfg_int("guard_blackout_after_attempts", 3))
@@ -589,8 +623,10 @@ class GuardService(QObject):
         self._auto_armed = False
         self._guard_gen += 1
         self.started.emit()
-        self._overlays = OverlaySet(self.config, sheet=self._sheet_provider(), parent=self)
+        self._overlays = OverlaySet(self.config, sheet=self._sheet_provider(), look=self._look,
+                                    parent=self)
         o = self._overlays
+        o.woke.connect(self._on_owner_click)  # the black woke: take the keyboard as for a click
         o.pin_submitted.connect(self._on_pin_submitted)
         o.hello_requested.connect(self._on_hello_requested)
         o.choice_peek.connect(self.controller.choose_peek)
@@ -706,9 +742,17 @@ class GuardService(QObject):
         if signal is not None:
             signal.connect(self._play)
 
+    def _set_look(self, look: str) -> None:
+        """A dark (or plain) entry picked mid-Peek or in CHOICE: the running guard takes that look."""
+        self._look = look
+        if self._overlays is not None:
+            self._overlays.set_look(look)
+
     def _play(self, name: str) -> None:
         if self._sounds is None or not bool(self.config.get("guard_sounds", True)):
             return
+        if self._overlays is not None and self._overlays.asleep:
+            return  # the dark look is a switched-off display: it makes no noise either
         try:
             self._sounds.play(name)
         except Exception:

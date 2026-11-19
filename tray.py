@@ -37,6 +37,8 @@ class Tray(QObject):
     measure_requested = Signal()
     mic_toggle_requested = Signal()
     guard_requested = Signal()
+    #: "Guard (dark screen)": the guard in its dark look, whatever guard_look says.
+    guard_dark_requested = Signal()
     snow_off_requested = Signal()
 
     #: What the tray icon's tooltip says until main._update_presence first runs. From then on it
@@ -161,6 +163,13 @@ class Tray(QObject):
                          "guard PIN. Background work keeps running.")
         guard.triggered.connect(self.guard_requested.emit)
         menu.addAction(guard)
+
+        guard_dark = QAction("Guard (dark screen)", menu)
+        guard_dark.setToolTip("The same guard, but every monitor stays plain black with no pointer "
+                              "until someone touches the mouse or keyboard. Background work keeps "
+                              "running.")
+        guard_dark.triggered.connect(self.guard_dark_requested.emit)
+        menu.addAction(guard_dark)
 
         #: Relabelled from main._tick_devices to match the live state, and hidden outright on a
         #: machine with no microphone - an entry that cannot do anything is worse than no entry.

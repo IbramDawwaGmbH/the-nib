@@ -684,6 +684,20 @@ follows the pointer, and he stands guard on a little stage underneath with a run
 Nothing is paused: the guard is only windows on top, plus a small helper process that holds the
 keyboard shortcuts and keeps the machine awake.
 
+**The dark screen.** A guard can also look like a switched-off display: every monitor plain black
+and the mouse pointer hidden, with no fog, no eyes, no Nib, none of the effects and none of his
+guard sounds, so nothing on it catches anyone's eye. Your work keeps running underneath exactly as
+under the fog. The moment someone touches the machine (moves the mouse more than a few pixels,
+clicks, turns the wheel or presses any key) it turns into the normal guard page on every monitor,
+fog, eyes and Nib, with the PIN field already showing; the key that wakes it is not typed into the
+field. After about 30 seconds with nobody touching anything, and only while the PIN field is
+empty, it goes back to black. Nothing else changes: the same keys are blocked, wrong PINs and
+Ctrl+Alt+Del still black it out with red eyes, and a Peek comes back in the look it left. Start it
+with **Guard (dark screen)** in the tray menu, **Dark guard** on the wheel (next to Guard), or
+**Ctrl+Alt+Shift+G** (`guard_dark_hotkey`); these always start the dark screen. To make it what
+Ctrl+Alt+G, the plain Guard entries and the idle auto-guard use, set **Guard look** to `dark` in
+Settings → Guard (`guard_look`).
+
 **Getting back in.** Every guard has a PIN. The first time you guard on any PC he asks you to
 choose one (at least four characters, typed twice), even when Windows Hello works; only a scrypt
 hash of it is stored. Hello, if this PC has it, is an extra button next to the field that opens the
@@ -721,7 +735,7 @@ way back in if you forget the PIN or Hello stops working: Ctrl+Alt+Del → Lock 
 keyboard until you unlock Windows; start Nib again and it picks the guard back up, blacked out.
 
 Optional: `guard_auto_after_idle_min` guards by itself after that many idle minutes (off by default,
-and only once a guard PIN is set); `guard_lock_fallback` locks Windows after ten wrong PINs;
+and only once a guard PIN is set), in the look `guard_look` picks; `guard_lock_fallback` locks Windows after ten wrong PINs;
 `guard_scene` picks eyes, Nib or both; `guard_background_fx` switches off the life in the fog (his
 little worker bots, the dust, the camera scan line and **REC** clock, the time-of-day glow). Lines
 he says come from `assets/guard_phrases.json`; a `guard_phrases.json` in the settings folder adds

@@ -20,7 +20,7 @@ setting means. A hand-built form would drift the moment anyone added a key, and 
 
 Everything applies the moment you click Apply, because `Behavior` reads the config live on every
 tick rather than caching it. The exceptions are marked with a `*`: `sprite_scale`, the hotkeys
-(`guard_hotkey` included) and `log_level` take effect next launch. That is more honest — and an order of magnitude less code
+(`guard_hotkey` and `guard_dark_hotkey` included) and `log_level` take effect next launch. That is more honest — and an order of magnitude less code
 — than rebuilding the sprite sheet and re-registering shortcuts underneath a running mascot.
 
 You can still edit the file directly. `%APPDATA%\NibMascot\config.json`, written on first save.
@@ -145,6 +145,8 @@ lid or lock settings.
 | Key | Default | Meaning |
 | --- | --- | --- |
 | `guard_hotkey` | `"ctrl+alt+g"` | Covers every monitor until you unlock. `""` disables it; the wheel and tray entries always work |
+| `guard_dark_hotkey` | `"ctrl+alt+shift+g"` | Starts the guard in its dark look, whatever `guard_look` says. `""` disables it; **Guard (dark screen)** in the tray and **Dark guard** on the wheel always work |
+| `guard_look` | `"fog"` | How the guard looks while nobody touches the machine. `"fog"`: the blurred desktop with the eyes and Nib. `"dark"`: every monitor plain black with the pointer hidden, like a switched-off display, until someone moves the mouse, clicks, scrolls or presses a key; then the normal guard page with the PIN field, and black again after about 30 s untouched with the field empty. Used by Ctrl+Alt+G, the plain Guard entries and the idle auto-guard. Security is the same either way |
 | `guard_peek_minutes` | `2` | How long **Peek** lifts the guard before it comes back by itself. `1`–`180` |
 | `guard_auth` | `"hello"` | `"hello"` offers Windows Hello when this PC has it, with the guard PIN as backup; `"pin"` never offers Hello |
 | `guard_pin_hash` | `""` | scrypt hash of your guard PIN, set by the prompt on the first guard (Hello or not). Never the PIN itself. Clear it to choose a new PIN next time. Not shown in the settings window |

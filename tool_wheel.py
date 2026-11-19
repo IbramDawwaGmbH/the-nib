@@ -446,6 +446,12 @@ def _icon_home(p: QPainter) -> None:
 
 def _icon_guard(p: QPainter) -> None:
     # A shield with a keyhole: "nobody gets in", which is what the guard is for.
+    _icon_guard_shield(p)
+    p.drawEllipse(QRectF(10.3, 8.6, 3.4, 3.4))
+    p.drawLine(QPointF(12, 12), QPointF(12, 15.5))
+
+
+def _icon_guard_shield(p: QPainter) -> None:
     shield = QPainterPath(QPointF(12, 2.8))
     shield.lineTo(19.5, 5.5)
     shield.lineTo(19.5, 11)
@@ -454,8 +460,19 @@ def _icon_guard(p: QPainter) -> None:
     shield.lineTo(4.5, 5.5)
     shield.closeSubpath()
     p.drawPath(shield)
-    p.drawEllipse(QRectF(10.3, 8.6, 3.4, 3.4))
-    p.drawLine(QPointF(12, 12), QPointF(12, 15.5))
+
+
+def _icon_guard_dark(p: QPainter) -> None:
+    # The guard's shield with a crescent moon in it: the same guard, with the lights off.
+    _icon_guard_shield(p)
+    outer = QRectF(8, 7.5, 8, 8)       # the moon's lit edge, open to the right
+    inner = QRectF(12.3, 8.3, 6.4, 6.4)  # the bite out of it, through the outer arc's two tips
+    moon = QPainterPath()
+    moon.arcMoveTo(outer, 50)
+    moon.arcTo(outer, 50, 260)
+    moon.arcTo(inner, 253.1, -146.2)
+    moon.closeSubpath()
+    p.drawPath(moon)
 
 
 def _icon_wardrobe(p: QPainter) -> None:
@@ -501,6 +518,7 @@ def _icon_snowball(p: QPainter) -> None:
 ICONS = {
     "snowball": _icon_snowball,
     "guard": _icon_guard,
+    "guard_dark": _icon_guard_dark,
     "wardrobe": _icon_wardrobe,
     "sparkle": _icon_sparkle,
     "treat": _icon_treat,

@@ -46,6 +46,19 @@ the PIN panel. Each overlay ticks its own ``BackgroundFx`` on a coarse timer tha
 overlay is visible, and repaints only the small rectangles the model reports as changed - see
 guard_fx's docstring for the cost model. ``guard_background_fx`` off means no model and no timer.
 
+The **dark look** (``guard_look`` "dark", or the dark entries) is a second way the same windows
+look while nobody touches the machine: plain black on every monitor, the pointer hidden, and none of
+the fog, the scene, the effects, the status line or the guard's sounds - a switched-off display that
+catches no eye. It is only paint. The guard underneath is the ordinary FOG guard: the same topmost
+windows stay up and keep the keyboard, the core keeps its hook, and every rule in ``guard`` applies
+unchanged. ``OverlaySet`` remembers whether it is black right now (``asleep``), exactly as it
+remembers mode and status, and switches by flipping a flag on each overlay and repainting - never by
+hiding, re-creating or re-flagging a window - so there is no moment in which anything underneath
+could be seen or clicked. Any input (a mouse move past ``DARK_JITTER_PX``, a click, a wheel turn, a
+key) turns it into the normal page with the PIN panel revealed, as a click does on the fog; after
+``DARK_IDLE_S`` without input, with the PIN field empty and nobody typing, it goes back to black.
+While black nothing grabs the desktop: the fog is dropped and only grabbed again on the way out.
+
 This module never swallows keys; the keyboard hook lives in ``guard_core`` (a separate process).
 Alt+F4 that does reach an overlay is ignored by ``closeEvent`` - only ``OverlaySet.close`` can
 close them.
@@ -117,6 +130,21 @@ _NEAR_FIELD_PX = 120
 ACCENT = "#D9552E"  # Nib's body colour (same value as bubble.ACCENT; not imported to keep this lean)
 
 MODES = ("fog", "blackout", "choice")
+
+#: How the guard looks while nobody touches the machine (``guard_look``). See the module docstring.
+LOOKS = ("fog", "dark")
+#: Dark look: how long without input (and with an empty PIN field) before the page goes black again.
+DARK_IDLE_S = 30.0
+#: Dark look: pointer movement up to this far (Qt's logical px, summed across both axes, from
+#: where it rested) is a desk being bumped or an optical sensor drifting, not a person.
+DARK_JITTER_PX = 8
+#: Dark look: right after going black, input does not wake it for this long - the hand that just
+#: picked "Dark guard" or released the shortcut is still on the mouse and keys. The pointer's
+#: resting place is re-taken meanwhile, so where it settles is what later movement is measured from.
+DARK_SETTLE_S = 1.0
+_DARK_POLL_MS = 100
+#: Events that count as someone touching the machine while the dark look is up.
+_TOUCH_EVENTS = (QEvent.MouseButtonPress, QEvent.MouseButtonDblClick, QEvent.Wheel, QEvent.KeyPress)
 
 #: A click on a secondary overlay must not activate it: the keyboard belongs to the primary.
 WM_MOUSEACTIVATE = 0x0021
@@ -553,6 +581,8 @@ class GuardOverlay(QWidget):
         self._pin_enabled = True
         self._scene: QWidget | None = None
         self._revealed = False
+        #: Dark look, nobody touching: paint plain black and show nothing else (``set_dark``).
+        self._dark = False
         #: Secondaries only: where a key typed on this monitor goes (``OverlaySet._forward_key``).
         self._key_sink: Callable[[QKeyEvent], None] | None = None
 
@@ -782,6 +812,10 @@ class GuardOverlay(QWidget):
         if mode not in MODES:
             log.warning("unknown overlay mode %r", mode)
             return
+        if mode != "fog" and self._dark:
+            # The dark look is a look of FOG only: a blackout (the punishment, red eyes and all)
+            # or the CHOICE panel must be seen, never stay hidden behind plain black.
+            self.set_dark(False)
         old, self._mode = self._mode, mode
         if self._fx is not None:
             self._fx.set_mode(mode)
@@ -835,8 +869,8 @@ class GuardOverlay(QWidget):
 
     def refresh_fog(self) -> None:
         """Re-grab this monitor into fog. No-op in blackout, and while visible without the affinity
-        (the grab would be of our own fog)."""
-        if self._mode == "blackout":
+        (the grab would be of our own fog), and while dark (nothing reads the desktop then)."""
+        if self._mode == "blackout" or self._dark:
             return
         if self.isVisible() and not self._affinity_ok:
             return
@@ -845,7 +879,7 @@ class GuardOverlay(QWidget):
 
     def set_fog(self, fog: QPixmap | None) -> None:
         """Install a pre-made fog (``OverlaySet`` grabs every screen before showing any overlay)."""
-        if self._mode == "blackout":
+        if self._mode == "blackout" or self._dark:
             return
         self._fog = fog
         self.update()
@@ -944,6 +978,55 @@ class GuardOverlay(QWidget):
     def revealed(self) -> bool:
         return self._revealed
 
+    @property
+    def dark(self) -> bool:
+        """Painting the dark look's plain black right now."""
+        return self._dark
+
+    @property
+    def pin_idle(self) -> bool:
+        """Nothing in the PIN field and nobody typing - the only time the page may go black again,
+        so a half-typed PIN is never hidden from the person typing it."""
+        return not self.primary or (not self._typing and not self._pin.text())
+
+    def set_dark(self, dark: bool) -> None:
+        """Switch this overlay between the dark look's plain black and its normal page.
+
+        Only what is painted and shown changes: the window, its flags, topmost, focus and the
+        keyboard stay exactly as they are, so the switch has no gap and nothing becomes clickable.
+        Black drops the fog (nothing derived from the desktop is kept), hides the scene or mini
+        eyes, the PIN panel and the status line, stops the effects and hides the pointer. Back
+        on the page, the caller installs fresh fog (``OverlaySet.wake``).
+        """
+        dark = bool(dark)
+        if dark == self._dark:
+            return
+        self._dark = dark
+        if dark:
+            self._fog = None
+            self._fx_timer.stop()
+            self.setCursor(Qt.BlankCursor)
+            if self._scene is not None:
+                self._scene.hide()  # its own hideEvent stops its animation timer
+            if self.primary:
+                self._conceal_timer.stop()
+                self._revealed = False
+                self._auth_panel.hide()
+                self._status.hide()
+        else:
+            self.setCursor(Qt.ArrowCursor)
+            if self._scene is not None:
+                self._scene.show()
+            if self.primary:
+                self._status.show()
+            if self._fx is not None and self.isVisible():
+                # As in showEvent: a fresh clock rather than a leap over the time spent black.
+                now = time.monotonic()
+                self._fx.pause()
+                self._fx.step(now, QPointF(self.mapFromGlobal(QCursor.pos())))
+                self._fx_timer.start(self._fx.frame_ms(now))
+        self.update()
+
     # --- extensions beyond the contract ----------------------------------------------
 
     def set_prompt_open(self, open_: bool, *, untopmost: bool = False) -> None:
@@ -996,7 +1079,7 @@ class GuardOverlay(QWidget):
     def _tick_fx(self) -> None:
         """Advance the background effects and repaint only what they changed."""
         fx = self._fx
-        if fx is None:
+        if fx is None or self._dark:
             self._fx_timer.stop()
             return
         now = time.monotonic()
@@ -1026,7 +1109,8 @@ class GuardOverlay(QWidget):
     # (``owner_click`` -> ``take_keyboard``), on whichever monitor it lands.
 
     def reveal_auth(self) -> None:
-        if not self.primary or self._mode not in ("fog", "blackout"):
+        # While dark, the panel only ever comes back with the rest of the page (OverlaySet.wake).
+        if not self.primary or self._mode not in ("fog", "blackout") or self._dark:
             return
         self._revealed = True
         self._auth_panel.show()
@@ -1114,6 +1198,9 @@ class GuardOverlay(QWidget):
     def paintEvent(self, event) -> None:  # noqa: N802
         p = QPainter(self)
         try:
+            if self._dark:
+                p.fillRect(self.rect(), Qt.black)  # the dark look: nothing else at all
+                return
             fx = self._fx
             fog = None if self._mode == "blackout" else self._fog
             # With effects on, the fx layer paints the fog itself, composed with its glow and tint
@@ -1133,7 +1220,7 @@ class GuardOverlay(QWidget):
     def showEvent(self, event) -> None:  # noqa: N802
         super().showEvent(event)
         self._apply_affinity()
-        if self._fx is not None:
+        if self._fx is not None and not self._dark:
             # Fresh clock after a Peek, not a leap. Only the model is stepped here: the expose
             # that is about to happen paints everything, so no repaint() from inside showEvent.
             now = time.monotonic()
@@ -1219,6 +1306,9 @@ class OverlaySet(QObject):
     hwnds_changed = Signal(list)
     #: A click on any guard window in fog or blackout: the service takes the keyboard back.
     owner_click = Signal()
+    #: The dark look just turned into the normal page because someone touched the machine. The
+    #: service takes the keyboard exactly as for ``owner_click``.
+    woke = Signal()
 
     def __init__(
         self,
@@ -1228,6 +1318,7 @@ class OverlaySet(QObject):
         scene: QWidget | None = None,
         scene_factory: Callable[[], QWidget] | None = None,
         mini_factory: Callable[[], QWidget | None] | None = None,
+        look: str = "fog",
         parent: QObject | None = None,
     ) -> None:
         super().__init__(parent)
@@ -1248,6 +1339,21 @@ class OverlaySet(QObject):
         #: When this guard began (monotonic): the REC clock in every monitor's corner. Survives
         #: Peek (the overlays are only hidden), reset by ``close``.
         self._started: float | None = None
+        #: The look of this guard ("fog" | "dark"). Kept across a Peek: the guard comes back as
+        #: it went away.
+        self._look = look if look in LOOKS else "fog"
+        #: Dark look, black right now (nobody has touched anything). Only ever while mode is fog.
+        self._asleep = False
+        #: monotonic() of the last input seen while the dark look is up; DARK_IDLE_S counts from it.
+        self._last_touch = time.monotonic()
+        #: Input before this (monotonic) does not wake the black - see DARK_SETTLE_S.
+        self._settle_until = 0.0
+        #: Where the pointer rested when last measured; movement is judged against it.
+        self._anchor: QPoint | None = None
+        self._watching = False
+        self._dark_timer = QTimer(self)
+        self._dark_timer.setInterval(_DARK_POLL_MS)
+        self._dark_timer.timeout.connect(self._poll_dark)
 
         self._fog_timer = QTimer(self)
         self._fog_timer.setInterval(FOG_REFRESH_MS)
@@ -1280,8 +1386,33 @@ class OverlaySet(QObject):
     def visible(self) -> bool:
         return self._visible
 
+    @property
+    def look(self) -> str:
+        """"fog" or "dark": how this guard looks while nobody touches the machine."""
+        return self._look
+
+    @property
+    def asleep(self) -> bool:
+        """The dark look is showing plain black right now (no scene, no sounds, no fog)."""
+        return self._asleep
+
+    def set_look(self, look: str) -> None:
+        """Change the look of the running guard (a dark entry picked mid-Peek, say).
+
+        Takes effect the next time the screens are covered; a page already showing goes black only
+        after the usual quiet spell, and a black screen asked for "fog" gets its page back now.
+        """
+        if look not in LOOKS or look == self._look:
+            return
+        self._look = look
+        if look == "fog" and self._asleep:
+            self._set_asleep(False)
+        if self._visible:
+            self._watch(look == "dark")
+
     def show(self, mode: str = "fog", primary_screen: QScreen | None = None) -> None:
-        """Cover every monitor. Fog is grabbed for all screens *before* any overlay appears."""
+        """Cover every monitor. Fog is grabbed for all screens *before* any overlay appears -
+        unless the dark look starts black, in which case nothing is grabbed at all."""
         self._mode = mode
         if self._started is None:
             self._started = time.monotonic()
@@ -1292,7 +1423,11 @@ class OverlaySet(QObject):
         elif primary_screen is not None and primary_screen in self._overlays \
                 and primary_screen is not self._primary_screen:
             self._move_primary(primary_screen)
-        if mode != "blackout":
+        # The dark look starts black, and so does a guard coming back from a Peek in it: black is
+        # what "nobody is here" looks like. Set before the windows show, so not one frame of fog,
+        # scene or pointer appears first.
+        self._set_asleep(self._look == "dark" and mode == "fog", grab=False)
+        if mode != "blackout" and not self._asleep:
             strength = _clamp_strength(_cfg(self._config, "guard_fog_strength", 5))
             fogs = {s: make_fog(s, strength) for s in self._overlays}  # nothing of ours is visible yet
             for s, overlay in self._overlays.items():
@@ -1309,6 +1444,8 @@ class OverlaySet(QObject):
         self._fog_timer.start()
         self._reassert_timer.start()
         self.reassert()
+        self._last_touch = time.monotonic()
+        self._watch(self._look == "dark")
         self.hwnds_changed.emit(self.hwnds())
 
     def hide(self) -> None:
@@ -1316,12 +1453,14 @@ class OverlaySet(QObject):
         self._visible = False
         self._fog_timer.stop()
         self._reassert_timer.stop()
+        self._watch(False)
         for overlay in self._overlays.values():
             overlay.hide()
 
     def close(self) -> None:
         """UNLOCK: destroy every overlay (and the scene with the primary)."""
         self.hide()
+        self._asleep = False
         for overlay in list(self._overlays.values()):
             overlay.allow_close()
             overlay.close()
@@ -1334,9 +1473,16 @@ class OverlaySet(QObject):
     # --- broadcast ---------------------------------------------------------------------
 
     def set_mode(self, mode: str) -> None:
-        self._mode = mode
+        old, self._mode = self._mode, mode
+        if mode != "fog" and self._asleep:
+            # A blackout (or CHOICE) is never hidden behind the dark look's black: each overlay
+            # leaves the dark look itself in set_mode. CHOICE also needs its fog back.
+            self._set_asleep(False, grab=mode != "blackout")
         for overlay in self._overlays.values():
             overlay.set_mode(mode)
+        if mode == "fog" and old == "choice" and self._look == "dark":
+            # Re-guarded from CHOICE (it timed out, or the shortcut): nobody is using the page.
+            self.go_dark()
 
     def set_status(self, text: str) -> None:
         self._status = text
@@ -1379,6 +1525,10 @@ class OverlaySet(QObject):
     def set_prompt_open(self, open_: bool, *, untopmost: bool = False) -> None:
         """Call with True while a Windows Hello prompt is up, False when it is done."""
         self._prompt = (bool(open_), bool(untopmost))
+        # The dark look's quiet spell starts again: the minute spent looking into the camera is
+        # not "nobody here", and a failed prompt must not drop the page to black the instant it
+        # closes, under the person about to type the PIN instead.
+        self._last_touch = time.monotonic()
         for overlay in self._overlays.values():
             overlay.set_prompt_open(open_, untopmost=untopmost)
 
@@ -1387,10 +1537,115 @@ class OverlaySet(QObject):
             overlay.ensure_enabled()
 
     def refresh_fog(self) -> None:
-        if not self._visible:
-            return
+        if not self._visible or self._asleep:
+            return  # black reads nothing of the desktop
         for overlay in self._overlays.values():
             overlay.refresh_fog()
+
+    # --- the dark look -------------------------------------------------------------------
+
+    def touch(self) -> None:
+        """Someone touched the machine (the dark look's input, or the core's key report).
+
+        Restarts the quiet-spell clock, and wakes a black screen into the normal page - except in
+        the first DARK_SETTLE_S after it went black, which belong to the hand that started it.
+        """
+        now = time.monotonic()
+        self._last_touch = now
+        if self._asleep and now >= self._settle_until:
+            self.wake()
+
+    def wake(self) -> None:
+        """Black -> the normal guard page on every monitor, PIN panel revealed as a click would.
+
+        Fresh fog is grabbed now (the overlays are capture-excluded, so the grab sees the desktop,
+        not our black) and ``woke`` tells the service to take the keyboard for the PIN field.
+        """
+        if not self._asleep:
+            return
+        log.info("guard: dark look - someone is here, showing the guard page")
+        self._last_touch = time.monotonic()
+        self._set_asleep(False)
+        primary = self.primary
+        if primary is not None and self._mode in ("fog", "blackout"):
+            primary.reveal_auth()
+        self.woke.emit()
+
+    def go_dark(self) -> bool:
+        """The normal page -> black, if that is allowed right now. Returns whether it went.
+
+        Only in the dark look, only over FOG (never a blackout or the CHOICE panel), never while a
+        Windows Hello prompt is open, and never with anything in the PIN field or someone typing.
+        """
+        if (self._asleep or not self._visible or self._look != "dark" or self._mode != "fog"
+                or self._prompt[0]):
+            return False
+        primary = self.primary
+        if primary is not None and not primary.pin_idle:
+            return False
+        log.info("guard: dark look - nobody here, back to black")
+        self._set_asleep(True)
+        return True
+
+    def _set_asleep(self, asleep: bool, *, grab: bool = True) -> None:
+        """Flip every overlay between black and its page. ``grab``: fetch fresh fog on the way out
+        of black (not when the caller grabs it itself, or a blackout needs none)."""
+        self._asleep = bool(asleep)
+        if self._asleep:
+            # The pointer's resting place is re-taken on every poll of the settle time.
+            self._settle_until = time.monotonic() + DARK_SETTLE_S
+        for overlay in self._overlays.values():
+            overlay.set_dark(self._asleep)
+            if not self._asleep and grab and self._visible:
+                overlay.refresh_fog()
+
+    def _watch(self, on: bool) -> None:
+        """Watch for input (app-wide event filter + pointer poll) while the dark look is up."""
+        app = QApplication.instance()
+        if on:
+            self._anchor = None
+            if app is not None:
+                # Installing again moves it to the front, so it sees a click before the primary's
+                # own filter does and the page is back before that click reveals the panel.
+                app.installEventFilter(self)
+                self._watching = True
+            self._dark_timer.start()
+        else:
+            self._dark_timer.stop()
+            if self._watching and app is not None:
+                app.removeEventFilter(self)
+            self._watching = False
+
+    def _poll_dark(self) -> None:
+        """Pointer movement past the jitter threshold counts as a touch; a long enough quiet spell
+        sends the page back to black."""
+        if not self._visible:
+            return
+        now = time.monotonic()
+        pos = QCursor.pos()
+        if self._anchor is None or (self._asleep and now < self._settle_until):
+            self._anchor = pos
+        elif (pos - self._anchor).manhattanLength() > DARK_JITTER_PX:
+            self._anchor = pos
+            self.touch()
+        if not self._asleep and now - self._last_touch >= DARK_IDLE_S:
+            self.go_dark()
+
+    def eventFilter(self, obj, event) -> bool:  # noqa: N802
+        """App-wide while the dark look is up: a click, a wheel turn or a key on a guard window is
+        a touch. The key that wakes the black is not passed on - it is not typed anywhere, on any
+        monitor - and keys stay unused while black; a click goes on to do what a click does."""
+        if event.type() not in _TOUCH_EVENTS or not isinstance(obj, QWidget):
+            return False
+        if not isinstance(obj.window(), GuardOverlay):
+            return False
+        if event.type() == QEvent.KeyPress:
+            was_asleep = self._asleep
+            if not event.isAutoRepeat():  # a held shortcut repeating is not a new touch
+                self.touch()
+            return was_asleep
+        self.touch()
+        return False
 
     def reassert(self, *, force: bool = False) -> None:
         """Re-raise every overlay. ``force``: see ``GuardOverlay.reassert``."""
@@ -1444,6 +1699,8 @@ class OverlaySet(QObject):
         else:
             overlay.set_key_sink(self._forward_key)
         overlay.set_mode(self._mode)
+        if self._asleep:
+            overlay.set_dark(True)  # a monitor plugged in while black comes up black too
         if self._prompt[0]:
             overlay.set_prompt_open(True, untopmost=self._prompt[1])
         self._overlays[screen] = overlay
@@ -1473,7 +1730,7 @@ class OverlaySet(QObject):
     def _show_one(self, overlay: GuardOverlay) -> None:
         if not self._visible:
             return
-        if self._mode != "blackout":
+        if self._mode != "blackout" and not self._asleep:
             overlay.set_fog(make_fog(overlay.screen_ref, _clamp_strength(
                 _cfg(self._config, "guard_fog_strength", 5))))
         overlay.show()

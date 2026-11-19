@@ -51,7 +51,8 @@ log = logging.getLogger(__name__)
 
 #: Settings that only take effect next launch. Shown with a note rather than silently ignored.
 NEEDS_RESTART = frozenset({"sprite_scale", "hotkey", "come_hotkey", "pocket_hotkey",
-                           "mic_toggle_hotkey", "guard_hotkey", "log_level"})
+                           "mic_toggle_hotkey", "guard_hotkey", "guard_dark_hotkey",
+                           "log_level"})
 
 #: Keys with a fixed set of values -> the values. Anything here becomes a combo box.
 CHOICES: dict[str, tuple[str, ...]] = {
@@ -60,6 +61,7 @@ CHOICES: dict[str, tuple[str, ...]] = {
     "personality": cfg_module._VALID_PERSONALITIES,
     "guard_auth": cfg_module._VALID_GUARD_AUTH,
     "guard_scene": cfg_module._VALID_GUARD_SCENES,
+    "guard_look": cfg_module._VALID_GUARD_LOOKS,
     "chatter_level": cfg_module._VALID_CHATTER,
     "snow": cfg_module._VALID_SNOW,
     "log_level": ("DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"),
@@ -118,7 +120,8 @@ GROUPS: tuple[tuple[str, tuple[str, ...]], ...] = (
         "ghost_mode", "ghost_opacity", "sound_enabled", "sound_volume",
     )),
     ("Guard", (
-        "guard_hotkey", "guard_auth", "guard_peek_minutes", "guard_scene", "guard_fog_strength",
+        "guard_hotkey", "guard_dark_hotkey", "guard_look", "guard_auth", "guard_peek_minutes",
+        "guard_scene", "guard_fog_strength",
         "guard_background_fx", "guard_blackout_after_attempts", "guard_sounds", "guard_auto_after_idle_min",
         "guard_lock_fallback", "windows_unlock_clears_guard",
     )),
@@ -188,6 +191,10 @@ HELP: dict[str, str] = {
     "intro_seen": "Untick to see the first-run tips again next launch.",
     "guard_hotkey": 'Covers every screen until you unlock. "" disables it; the wheel and tray '
                     'still work.',
+    "guard_dark_hotkey": 'Always starts the dark screen, whatever Guard look says. "" disables it.',
+    "guard_look": "fog shows the blurred desktop with the eyes and Nib; dark keeps every screen "
+                  "black with no pointer until someone touches the mouse or keyboard, then the "
+                  "normal guard page.",
     "guard_auth": "hello uses Windows Hello when this PC has it, with your guard PIN as backup.",
     "guard_peek_minutes": "How long Peek lifts the guard before it comes back on its own.",
     "guard_scene": "both, eyes (no Nib on stage) or nib (no giant eyes).",

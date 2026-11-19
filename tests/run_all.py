@@ -53,6 +53,7 @@ SUITES = [
     ("smoke_guard_scene", "the guard's show: eyes, stage director, phrase bags, peek chip"),
     ("smoke_guard_fx", "the guard's background: bots, dust, scan line, glow, frame rate, cost"),
     ("smoke_guard_wiring", "the guard's plumbing: held keys, Hello prompt state, the way back in"),
+    ("smoke_guard_dark", "the guard's dark look: black until touched, the page, back to black"),
     ("smoke_snow", "the snow model: caps grow and stop, brush and flick, landing, the budget"),
     ("smoke_snow_stack", "the snow and the window stack: piles moved, cut, dropped, clipped"),
     ("smoke_snow_overlay", "the snow on screen: never a click, below Nib, idle timers, hiding"),
