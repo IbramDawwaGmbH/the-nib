@@ -576,6 +576,8 @@ def find_window_at(x: int, y: int) -> tuple[int, tuple[int, int, int, int]] | No
                 return True
             if _pid_of_window(handle) == os.getpid():
                 return True  # never his own window
+            if _is_see_through(handle):
+                return True  # nothing there to stand on
             rect = _window_rect(handle)
             if rect is None:
                 return True
@@ -633,6 +635,35 @@ def _frame_bounds(hwnd: int) -> tuple[int, int, int, int] | None:
         return None
 
 
+_WS_EX_LAYERED = 0x00080000
+_LWA_ALPHA = 0x00000002
+
+
+def _is_see_through(hwnd: int) -> bool:
+    """A window you cannot see or touch: click-through (``WS_EX_TRANSPARENT``), or layered with
+    its whole-window alpha at 0. Overlays, HUDs and invisible helper windows of other programs -
+    a transparent click-through strip from some tool sitting above the taskbar, say - report
+    themselves visible, but there is nothing there: no pile of snow belongs on one, and he cannot
+    stand on one. Reads the window's style bits only, like :func:`_is_topmost`."""
+    try:
+        getter = getattr(_user32, "GetWindowLongPtrW", _user32.GetWindowLongW)
+        getter.argtypes = [wintypes.HWND, ctypes.c_int]
+        getter.restype = ctypes.c_ssize_t
+        style = getter(wintypes.HWND(hwnd), _GWL_EXSTYLE)
+        if style & _WS_EX_TRANSPARENT:
+            return True
+        if style & _WS_EX_LAYERED:
+            alpha = ctypes.c_ubyte(255)
+            flags = wintypes.DWORD(0)
+            if (_user32.GetLayeredWindowAttributes(wintypes.HWND(hwnd), None,
+                                                   ctypes.byref(alpha), ctypes.byref(flags))
+                    and flags.value & _LWA_ALPHA and alpha.value == 0):
+                return True
+    except Exception:
+        return False
+    return False
+
+
 def _is_topmost(hwnd: int) -> bool:
     try:
         getter = getattr(_user32, "GetWindowLongPtrW", _user32.GetWindowLongW)
@@ -649,7 +680,7 @@ def list_window_stack() -> list[tuple[int, tuple[int, int, int, int], bool, bool
     The snow's one view of the desktop (``snow.SnowField.sync``): which windows carry a pile, and
     which windows in front of them hide part of it. One ``EnumWindows`` pass - it walks in Z-order,
     front to back - with ``find_window_at``'s filters (visible, not minimised, not cloaked, not the
-    shell's own, not ours) but **no minimum size**: a menu or a tooltip is small, and it still
+    shell's own, not ours, not see-through) but **no minimum size**: a menu or a tooltip is small, and it still
     hides the snow behind it.
 
     ``rect`` is ``(left, top, right, bottom)`` in physical px. Its top is ``GetWindowRect``'s,
@@ -676,6 +707,8 @@ def list_window_stack() -> list[tuple[int, tuple[int, int, int, int], bool, bool
                 return True
             if _pid_of_window(handle) == own:
                 return True  # his own windows, and the snow's
+            if _is_see_through(handle):
+                return True  # an invisible overlay: no pile, and it hides nothing
             outer = _window_rect(handle)
             if outer is None:
                 return True

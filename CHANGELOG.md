@@ -155,6 +155,13 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
 - The guard's phrase bag and phrase-file loader moved from `guard_scene.py` to a new Qt-free
   `phrases.py`, shared with his new lines. Nothing changes for a custom `guard_phrases.json`.
 
+### Fixed
+
+- **No snow on invisible windows.** Some programs keep a transparent, click-through window on
+  screen (an overlay strip above the taskbar, say); Windows calls it visible, so a pile of snow
+  sat on nothing. Click-through and fully transparent windows now carry no snow, and he cannot be
+  dropped onto one either.
+
 ## [1.2.0] - 2026-11-04
 
 His wardrobe, redone.

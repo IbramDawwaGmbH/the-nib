@@ -756,6 +756,21 @@ pump(100)
 nibapp._update_snow()                               # what the geometry poll would do next
 check("quitting takes the snow down, for good", not sn.active and sn.field is None)
 
+print("\n--- invisible windows of other programs carry no snow ---")
+# A click-through overlay (some other tool's transparent strip above the taskbar, say) reports
+# itself visible, but there is nothing there: no pile, and nothing for him to stand on.
+see_through = QWidget(None, Qt.Tool | Qt.FramelessWindowHint | Qt.WindowTransparentForInput)
+see_through.setGeometry(300, 300, 340, 60)
+see_through.show()
+solid = QWidget(None, Qt.Tool | Qt.FramelessWindowHint)
+solid.setGeometry(300, 400, 340, 60)
+solid.show()
+pump(100)
+check("a click-through window counts as see-through", win._is_see_through(int(see_through.winId())))
+check("...an ordinary one does not", not win._is_see_through(int(solid.winId())))
+see_through.close()
+solid.close()
+
 print("\n" + "=" * 60)
 print("FAILURES: " + ", ".join(fails) if fails else "snow overlay OK")
 sys.exit(1 if fails else 0)
