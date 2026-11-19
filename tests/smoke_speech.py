@@ -276,6 +276,9 @@ nib.toast.hide()
 nib.bubble.close_silently()
 nib.voice._launched -= 120.0  # past the launch quiet
 nib.voice._last = None
+# A test machine nobody touches looks like you have left the desk, and he keeps quiet while you
+# are away: say you are here.
+b._away = False
 
 check("the bubble starts hidden", not nib.speech.isVisible())
 check("an ordinary moment does not block a line", not nib._voice_blocked(),

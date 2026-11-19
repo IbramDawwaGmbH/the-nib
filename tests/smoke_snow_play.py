@@ -277,6 +277,9 @@ check("once it has landed, play mode carries on (the layers do not linger out)",
       ov.playing and play_layers())
 
 print("\n--- a snowball can hit Nib ---")
+# A fresh half-minute: on a slow machine the first session can run out before this throw lands.
+ov.end_play("next check")
+check("a fresh session for the throw", start() and ov.playing)
 # Nib a little way off the pile; let go above him with the pointer at rest, and it falls on him.
 NIB_RECT = (RECT[2] + int(200 * S), RECT[1] + int(80 * S), RECT[2] + int(300 * S),
             RECT[1] + int(180 * S))
