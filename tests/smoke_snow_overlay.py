@@ -725,32 +725,32 @@ nibapp.snow = real_snow
 # The toast, with the polls stopped so nothing but these calls moves it on.
 nibapp._geometry_timer.stop()
 nibapp._tick_timer.stop()
-nibapp.toast.hide()
+nibapp.speech.dismiss()
 nibapp.config["snow_hint_seen"] = False
 sn._appeared = False
 nibapp._snow_hint_due = False
 nibapp.behavior._away = True
 sn.appeared.emit()
 pump(50)
-check("you away, the first snow's toast waits", not nibapp.toast.isVisible()
+check("you away, the first snow's message waits", not nibapp.speech.isVisible()
       and not nibapp.config["snow_hint_seen"] and nibapp._snow_hint_due)
 nibapp.behavior._away = False
 nibapp.config["snow"] = "off"
 nibapp._update_snow()
 pump(50)
-check("...and with no snow on screen too", not nibapp.toast.isVisible()
+check("...and with no snow on screen too", not nibapp.speech.isVisible()
       and not nibapp.config["snow_hint_seen"] and nibapp._snow_hint_due)
 nibapp.config["snow"] = "always"
 nibapp._update_snow()
 pump(50)
-check("the first snow brings the one-time toast, once it can be seen",
-      nibapp.toast.isVisible(), str({"away": nibapp.behavior.away,
+check("the first snow brings the one-time message, once it can be seen",
+      nibapp.speech.isVisible(), str({"away": nibapp.behavior.away,
                                      "state": nibapp.behavior.state.name}))
 check("...and latches it", bool(nibapp.config["snow_hint_seen"]))
-nibapp.toast.hide()
+nibapp.speech.dismiss()
 sn.appeared.emit()
 pump(50)
-check("...which never shows twice", not nibapp.toast.isVisible())
+check("...which never shows twice", not nibapp.speech.isVisible())
 nibapp._on_quit()
 pump(100)
 nibapp._update_snow()                               # what the geometry poll would do next

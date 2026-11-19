@@ -126,6 +126,16 @@ Until this, he owned fifty-three costumes and was completely indifferent to ever
 - **He looks at what you drop on him.** A glance down at the pointer before he gets on with it.
   The deep link fires **immediately** — only his animation is sequenced behind the glance, so
   nothing you asked for is ever delayed for a cosmetic beat.
+- **He moves his mouth when he talks.** While one of [his lines](USING-HIM.md#he-says-things-rarely)
+  types out in its bubble he plays `talk` — his idle body with a mouth that goes shut, half, wide on
+  uneven beats, because a mouth on a metronome reads as a machine. He has no mouth at rest; this is
+  the one place one appears just because he is speaking. It only replaces plain standing-about
+  (standing, on a window, holding the ask bubble open): a walk carries on, and an antic, a pet, a
+  nap, a drag or a tantrum is never cut short for a sentence — if one of those ends first, the
+  mouth picks up for what is left of the line. While he stands talking the wander clock waits, so he
+  does not wander off half way through. The mouth shuts on the last letter, and at once if the line
+  is put away; being picked up, hidden, sent to sleep or made cross ends the line rather than
+  pausing it. None of it draws a random number, so every other roll lands where it would have.
 
 ### He stands on things
 
@@ -376,7 +386,7 @@ A few things *read* it, and each adds a beat rather than a new behaviour: the
 greeting when you come back (below). With `memory_enabled` off none of them happen.
 
 **Some of them come with a line.** The greeting, a milestone, a focus streak and a big week can
-each be said out loud in the toast — one short sentence, at most 6 a day and 45 minutes apart
+each be said out loud in his speech bubble — one short sentence, at most 6 a day and 45 minutes apart
 at the default `chatter_level`, and never when it would be in the way. The line rides on the
 moment; it never makes one happen. See
 [He says things, rarely](USING-HIM.md#he-says-things-rarely).

@@ -925,6 +925,17 @@ TOOL_BEATS: dict[str, tuple[str, float]] = {
     "snow_play": ("hop", 700.0),
 }
 
+#: His mouth moving while one of his own lines types out in its bubble. Not a State and not an
+#: antic: it is drawn over whatever he is already doing, and only where that would otherwise be the
+#: plain standing-about "idle" (standing, on a window, holding the bubble open). So it can never
+#: interrupt a nap, a drag, a tantrum, a hide, a quick-change or any moment already playing - those
+#: simply keep their own frames - and it never touches the random stream, so turning it on or off
+#: leaves every fidget, quirk and wander roll exactly where it was.
+TALK_ANIM = "talk"
+#: Longest a single start_talking may run, so a caller passing something silly cannot leave his
+#: mouth going for the rest of the session.
+TALK_MAX_MS = 20000.0
+
 #: Target update interval while he is actually moving. The gait is tick-rate independent (each
 #: animation frame advances him exactly one stride regardless), so this trades only motion
 #: smoothness, and 20fps is finer than the sprite's own pixel grid at normal scale.
@@ -1159,6 +1170,8 @@ class Behavior:
         self._last_click_ms = -1e9
 
         self.paused = False
+        #: What is left of the line he is saying, in ms. See TALK_ANIM.
+        self._talk_ms = 0.0
 
     # --- geometry -----------------------------------------------------------------
 
@@ -1623,6 +1636,58 @@ class Behavior:
             return []
         events, self._sounds = self._sounds, []
         return events
+
+    # --- talking -----------------------------------------------------------------------
+
+    def start_talking(self, duration_ms: float) -> bool:
+        """Move his mouth for ``duration_ms`` while his line types out. Returns whether he can.
+
+        Standing, on a window or holding the bubble open, he plays the talk loop and goes back to
+        idle when it runs out. Anything else he is doing keeps its own frames: a walk carries on
+        (there is no walking-and-talking art, and stopping him dead for every line would turn a
+        stroll into a stutter), and an antic, a quick-change, a pet, a nap, a drag or a tantrum is
+        never cut short for it. If one of those ends before the line does, the mouth picks up for
+        what is left - he finishes his sentence.
+
+        While he is standing and talking, the wander clock waits, so he does not wander off or
+        start a dance half way through a sentence. Nothing here draws a random number.
+        """
+        if not self._sheet.has_state(TALK_ANIM) or self._state in (
+            State.HIDDEN, State.DRAG, State.SLEEP, State.ANGRY
+        ):
+            return False
+        try:
+            duration_ms = float(duration_ms)
+        except (TypeError, ValueError):
+            return False
+        if not duration_ms > 0:  # also refuses NaN
+            return False
+        self._talk_ms = min(duration_ms, TALK_MAX_MS)
+        self._sync_animation()
+        return True
+
+    def stop_talking(self) -> None:
+        """He has finished, or the bubble was closed early: shut his mouth now."""
+        if self._talk_ms <= 0:
+            return
+        self._talk_ms = 0.0
+        self._sync_animation()
+
+    @property
+    def talking(self) -> bool:
+        """True while a line is still running, whether or not his mouth is showing it right now."""
+        return self._talk_ms > 0
+
+    def _talk_showing(self) -> bool:
+        """Whether the talk loop replaces plain idle on this tick. See TALK_ANIM."""
+        return (
+            self._talk_ms > 0
+            and not self.paused
+            and not self._blinking
+            and self._grumble_ms <= 0
+            and not (self._falling or self._rolling)
+            and self._sheet.has_state(TALK_ANIM)
+        )
 
     # --- events worth a line ----------------------------------------------------------
 
@@ -2455,6 +2520,10 @@ class Behavior:
         # it before it moves him on.
         if state != State.ASK:
             self._ask_credit = None
+        # The bubble goes when he hides or is picked up, and a sulk or a tantrum is not a time to
+        # finish a sentence - so the line ends here rather than resuming afterwards.
+        if state in (State.HIDDEN, State.DRAG, State.SLEEP, State.ANGRY):
+            self._talk_ms = 0.0
         if state != State.ANTIC:
             self._persona_costume = ""  # the hat belongs to the antic, not to him
             self._antic_queue = []      # and the rest of a sequence belongs to the sequence
@@ -2497,6 +2566,11 @@ class Behavior:
             return TUMBLE_ANIM
         if self._state == State.ANTIC:
             return self._antic or "idle"
+        if (
+            self._state in (State.IDLE, State.PERCH)
+            or (self._state == State.ASK and self._wheel_look is None)
+        ) and self._talk_showing():
+            return TALK_ANIM
         return {
             State.IDLE: self._blink_state if self._blinking else "idle",
             State.WALK: f"walk_{self._facing}",
@@ -3865,6 +3939,10 @@ class Behavior:
             return
         dt_ms = min(float(dt_ms), 250.0)  # a long stall must not teleport him
         self._clock_ms += dt_ms
+        # Ahead of the HIDDEN and pause returns, so a line said just before he hid or was paused
+        # still runs out on time rather than resuming, mouth open, when he comes back.
+        if self._talk_ms > 0:
+            self._talk_ms = max(0.0, self._talk_ms - dt_ms)
         # Ahead of the HIDDEN/pause returns below on purpose - see _tick_focus's own docstring.
         self._tick_focus(dt_ms)
 
@@ -3887,6 +3965,10 @@ class Behavior:
             self._land_squash_ms = max(0.0, self._land_squash_ms - dt_ms)
 
         if self.paused:
+            # Paused mid-sentence: shut his mouth rather than freeze it open on whatever frame was
+            # up, since nothing below runs to do it.
+            if self.animator.state == TALK_ANIM:
+                self._sync_animation()
             return
 
         self._state_ms += dt_ms
@@ -3992,7 +4074,8 @@ class Behavior:
 
         candidates = [self.animator.remaining_ms]
         if self._state == State.IDLE:
-            candidates.append(self._idle_timer_ms)
+            if self._talk_ms <= 0:  # held while he talks - see start_talking
+                candidates.append(self._idle_timer_ms)
             if not self._blinking:
                 candidates.append(self._blink_timer_ms)
         elif self._state == State.ANTIC:
@@ -4018,6 +4101,8 @@ class Behavior:
             return max(floor_ms, min(MOVE_TICK_MS, self.animator.remaining_ms))
         if self._grumble_ms > 0:
             candidates.append(self._grumble_ms)
+        if self._talk_ms > 0:
+            candidates.append(self._talk_ms)  # the mouth has to shut on time
 
         soonest = min(c for c in candidates if c is not None)
         return max(floor_ms, min(ceiling_ms, soonest))
@@ -4299,6 +4384,9 @@ class Behavior:
             return
 
         if self._falling or self._rolling:
+            return
+        # Holding still for his line - see start_talking. The clock waits; it is not re-rolled.
+        if self._talk_ms > 0:
             return
         self._idle_timer_ms -= dt_ms
         if self._idle_timer_ms <= 0:

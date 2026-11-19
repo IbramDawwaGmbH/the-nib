@@ -341,8 +341,8 @@ check("it calls ocr.recognize rather than reimplementing anything",
 src_finished = inspect.getsource(M.NibApp._on_ocr_finished)
 check("success opens the bubble prefilled, the same destination a text drop uses",
       "_open_bubble_at" in src_finished and "prefill" in src_finished)
-check("failure shows a toast instead of the bubble",
-      "toast.show_message" in src_finished)
+check("failure shows a message instead of the ask bubble",
+      "self._tell(" in src_finished)
 check("extracted text reacts through Behavior.read_image, never prompt_sent",
       "self.behavior.read_image" in src_finished and "prompt_sent" not in src_finished)
 check("the char-length clamp used elsewhere for provider deep-links is reused here too",

@@ -70,6 +70,8 @@ REQUIRED_STATES = {
     "trip": [370, 371, 372],
     "hiccup": [380, 381, 382],
     "task_finished": [390, 391, 392, 393, 394, 395],
+    # His mouth moving while a line types out - the free cells beside idle.
+    "talk": [4, 5, 6],
 }
 
 #: Frames that are legitimately off the ground, so the feet-on-the-baseline rule cannot apply.

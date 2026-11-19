@@ -137,7 +137,7 @@ he eats it; during **Hide for 10 minutes** it brings him back for it.
 
 ### He says things, rarely
 
-Now and then he says one short line in the toast above his head — `Morning. I kept the desk
+Now and then he says one short line in his speech bubble above his head — `Morning. I kept the desk
 warm.` when you come in, `Oh, you're back.` after a break of ten minutes or more, `30 days
 together. That's something.` on a milestone, `Big week. You asked a lot of me.` on a Friday
 after one, a word when he is tired in the evening, feeling fond, or bored, or over a
@@ -145,6 +145,23 @@ after one, a word when he is tired in the evening, feeling fond, or bored, or ov
 his eyes. After a heavy day he may mention it once the next morning, and once he has learned when
 you usually arrive he may notice that you're in early, or late — once a day each, and never as a
 question or a telling-off. Click the line to make it go away; he likes that.
+
+**His lines have a bubble of their own.** It is drawn in his pixel art — hard edges, his dark
+outline, a light fill, blocky corners, at his own size so its pixels match his — with a tail
+pointing down at his head. It pops in over a few quick steps, the words type out letter by letter
+in an ordinary readable font, and his mouth moves while they do. If he walks off mid-sentence the
+bubble goes with him, and near the edge or the top of the screen it slides over or flips its tail
+to stay in view. It stays up for a few seconds, longer for a longer line so there is time to read
+it, then pops away. Pick him up, open the ask bubble or the wheel, or let a toast go up, and the
+line is put away at once; it never takes the focus from what you are typing in.
+
+With [sound](#sound) on, a line comes with a soft, quiet murmur of blips — one every few letters,
+none on spaces or punctuation, each a little higher or lower than the last. They follow the sound
+setting and the volume like every other sound, so with sound off he talks silently.
+
+Everything else he shows you comes out of the same bubble — an update's progress, the
+calculator's answer, the first-run tips, **You're muted** — with a smaller second line when there
+is something to click ("Click to copy", "Click to unmute").
 
 **How often** is `chatter_level` (Settings → Personality):
 
@@ -158,7 +175,7 @@ A greeting when you come back may skip the gap — it's owed when you walk in �
 counts toward the day's total. Nothing is said in the first minute after he starts, and never
 when it would be in the way: not over the screen guard or a fullscreen app, not during a focus
 session, not while the ask bubble or the tool wheel is open, not in ghost mode, not while he is
-asleep, cross, held or hidden, and never on top of a toast that is already up. A line he could
+asleep, cross, held or hidden, and never on top of a toast or another of his lines that is already up. A line he could
 not say then is simply not said. The count lives only in memory, so a restart starts the day's
 count again — after that quiet first minute.
 
@@ -325,7 +342,7 @@ a question, and he answers it himself.
 a small answer line appears under the box in his accent colour, and the hint text switches from
 "Enter to send" to "Enter to calculate" — a live preview, purely visual, and nothing is sent while
 you type. Press **Enter** on it and the bubble closes the way it always does, but nothing launches:
-instead a toast appears next to him with the answer. Click the toast and just the number is copied
+instead his speech bubble shows the answer. Click it and just the number is copied
 to the clipboard. He also plays a short "counting" animation — borrowed as-is from the reaction he
 already has to Calculator itself having focus — so answering a sum cost no new art.
 
@@ -399,10 +416,10 @@ you muted deliberately is one you turn off within the hour. The delay exists bec
 goes live a moment before you actually start speaking, so a tell with no dwell would fire every
 time anything so much as touched it.
 
-The toast goes up whether or not he is in a state to perform the wave — asleep, in your hand, or
+The message goes up whether or not he is in a state to perform the wave — asleep, in your hand, or
 hidden, the message is the point and he is the decoration.
 
-**Mute and unmute** from the tray entry, from the toast, or from `mic_toggle_hotkey`, which is
+**Mute and unmute** from the tray entry, from his speech bubble, or from `mic_toggle_hotkey`, which is
 empty by default so it cannot collide with the push-to-talk or mute key your call app has already
 claimed. It changes nothing else about your audio: not the level, not the device, not which app is
 using it.
@@ -539,7 +556,7 @@ last one ended). An ordinary quit, or ending the perch yourself, always cleans u
 
 ### He reacts to what you asked
 
-If the app doesn't open there's no "on it": he does a double-take and the toast offers the
+If the app doesn't open there's no "on it": he does a double-take and his speech bubble offers the
 download page. When the launch goes through, and once the "on it" animation finishes, he has a
 brief opinion about the *shape* of what you sent:
 
@@ -844,7 +861,8 @@ did. Only being in your hand refuses outright.
 ## Sound
 
 Off by default. Short blips for opening the bubble, sending, a dismissed bubble, losing his
-temper, landing after a drop, being petted, dropping off and waking up, plus the rarer ones below.
+temper, landing after a drop, being petted, dropping off and waking up, his voice while
+[a line types out](#he-says-things-rarely), plus the rarer ones below.
 
 **No audio ships in this repository.** Exactly like the sprites, the WAVs are *synthesised in code*
 from a handful of oscillators and envelopes — `tools/gen_sounds.py`, standard library only, about
@@ -863,8 +881,8 @@ beep; the pixel art is made of hard edges and so is this. The sweep direction do
 work: **send** is two notes up, **poke** is the same two notes down. Deliberately dull — a mascot
 whose noises are interesting is a mascot you mute within the hour.
 
-Fifteen of them. The involuntary four are each **two parts**, which is what makes them read as one
-event happening *to* him rather than a beep: the sneeze is a rising breathy note then a burst of
+Nineteen of them, four of which are his voice (below). The involuntary four are each **two
+parts**, which is what makes them read as one event happening *to* him rather than a beep: the sneeze is a rising breathy note then a burst of
 noise (pitched, it sounds like a bird), the trip is a downward slip then a small thud, the hiccup is
 short and pitched *up* because a hiccup is a catch rather than a note, and the spin is a whirr up
 and back down. Two of them are deliberately celebratory, and deliberately different from each
@@ -874,6 +892,13 @@ soft notes a fifth apart, closer to a meditation timer's bell than a triumph —
 accomplishments never sound like the same event even when they land back to back. **nom**, for a
 [treat](#treats), is two short, soft, low notes, the second lower than the first. Everything else
 here is quieter by design.
+
+His **voice** is four more: **blip** to **blip4**, the shortest and quietest sounds in the set — a
+soft triangle of about 40ms with a small fall at the end, so each ends like a syllable rather than a
+beep. They are a couple of semitones apart and taken in turn, so a sentence has a little tune
+instead of one note on repeat. They have their own, shorter guard (55ms, shared by all four), and a
+blip still ringing is cut off before the next starts, so a fast line is a string of separate blips
+and never a buzz.
 
 The same event will not retrigger inside 140ms, because he can bounce three times in half a second
 and three thuds in half a second is a bug that sounds like a machine gun.

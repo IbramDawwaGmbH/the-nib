@@ -352,20 +352,20 @@ print("\n--- the first-run tour ---")
 check("it is latched off once seen", nib.config["intro_seen"] is True)
 nib.show_intro()
 app.processEvents()
-check("the first tip appears", nib.toast.isVisible())
+check("the first tip appears, in his speech bubble", nib.speech.isVisible())
 screen = nib._screen_rect()
 check("...on the screen he is actually standing on",
-      screen.left() <= nib.toast.x() <= screen.right(),
-      f"toast at {nib.toast.x()}, screen {screen.left()}..{screen.right()}")
-check("...and roughly above him", abs(nib.toast.x() - nib.behavior.x) < 400,
-      f"toast at {nib.toast.x()}, him at {nib.behavior.x}")
-seen = [nib.toast._label.text()]
+      screen.left() <= nib.speech.x() <= screen.right(),
+      f"bubble at {nib.speech.x()}, screen {screen.left()}..{screen.right()}")
+check("...and roughly above him", abs(nib.speech.x() - nib.behavior.x) < 400,
+      f"bubble at {nib.speech.x()}, him at {nib.behavior.x}")
+seen = [nib.speech.text()]
 for _ in range(len(M.INTRO_STEPS) + 1):
     nib._next_intro_step()
     app.processEvents()
     if nib._intro_step < 0:
         break
-    seen.append(nib.toast._label.text())
+    seen.append(nib.speech.text())
 check("it walks through the tips and stops", nib._intro_step == -1, str(nib._intro_step))
 check("...covering the undiscoverable ones", len(seen) >= 3, f"{len(seen)} tips: {seen[:2]}")
 check("...and every tip says something", all(t.strip() for t in seen))
@@ -731,31 +731,35 @@ check("an ordinary moment does not block a line", not nib._voice_blocked(), str(
 nib.bubble.show()
 check("...the open bubble does", nib._voice_blocked())
 check("...so nothing is said over it", nib._say("greeting_short") == ""
-      and not nib.toast.isVisible())
+      and not nib.toast.isVisible() and not nib.speech.isVisible())
 nib.bubble.close_silently()
 nib.bubble.hide()
 nib.behavior._event("greeted", gone_s=60.0, overnight=False, heavy=False)
 nib._tick()
-check("a wave for the kettle comes with no line", not nib.toast.isVisible())
+check("a wave for the kettle comes with no line", not nib.toast.isVisible()
+      and not nib.speech.isVisible())
 nib.behavior._event("greeted", gone_s=900.0, overnight=False, heavy=False)
 nib._tick()
-check("back after fifteen minutes: a greeting in the toast", nib.toast.isVisible()
-      and nib.toast._label.text() in nib.voice._bag._phrases["greeting_short"],
-      nib.toast._label.text())
+# His own lines go in his speech bubble, never the plain toast - see smoke_speech for the bubble.
+check("back after fifteen minutes: a greeting in his speech bubble", nib.speech.isVisible()
+      and nib.speech.text() in nib.voice._bag._phrases["greeting_short"]
+      and not nib.toast.isVisible(), nib.speech.text())
 check("...and the event queue was drained", nib.behavior.take_events() == [])
 check("...and nothing is stacked on top of it", nib._say("greeting_overnight") == "")
 before = nib.mood.spirits
-check("the line can be clicked", nib.toast._on_click is not None)
-# A real press on the toast, so this goes through Toast.mousePressEvent and not just the callback.
+# A real press on the bubble, so this goes through SpeechBubble.mousePressEvent and its signal.
 from PySide6.QtCore import QEvent, QPointF  # noqa: E402
 from PySide6.QtGui import QMouseEvent  # noqa: E402
-QApplication.sendEvent(nib.toast, QMouseEvent(QEvent.MouseButtonPress, QPointF(5, 5),
-                                              QPointF(5, 5), Qt.LeftButton, Qt.LeftButton,
-                                              Qt.NoModifier))
-check("...and clicking it closes it", not nib.toast.isVisible())
-check("...and lifts his mood", nib.mood.spirits > before,
+QApplication.sendEvent(nib.speech, QMouseEvent(QEvent.MouseButtonPress, QPointF(5, 5),
+                                               QPointF(5, 5), Qt.LeftButton, Qt.LeftButton,
+                                               Qt.NoModifier))
+check("the line can be clicked, and that lifts his mood", nib.mood.spirits > before,
       f"{before:.3f} -> {nib.mood.spirits:.3f}")
+# It pops out over a few hard steps rather than vanishing on the press itself.
+pump(400)
+check("...and clicking it closes it", not nib.speech.isVisible())
 nib.toast.hide()
+nib.speech.dismiss()
 
 # Each of the other things that must keep him quiet, one at a time. Plain attributes where the
 # real trigger needs a desktop (a fullscreen app, the snooze timer), so the check is about
@@ -778,25 +782,29 @@ for label, on, off in (
     blocked = nib._voice_blocked()
     said = nib._say("fond")
     off()
-    check(f"...blocked {label}", blocked and said == "" and not nib.toast.isVisible())
+    check(f"...blocked {label}", blocked and said == "" and not nib.toast.isVisible()
+          and not nib.speech.isVisible())
 nib.behavior.take_events()  # the away round trip above greeted him; that is not under test here
 nib.toast.hide()
+nib.speech.dismiss()
 
 # The whole way round, not an injected event: you leave, you come back fifteen minutes later,
 # Behavior's greeting raises the event, and the next tick turns it into a line.
 nib.voice._last = None
 nib.behavior.set_away(True)
 nib._tick()
-check("nothing is said as you leave", not nib.toast.isVisible())
+check("nothing is said as you leave", not nib.toast.isVisible()
+      and not nib.speech.isVisible())
 nib.behavior.set_away(False, gone_s=900.0)
 nib._tick()
-check("coming back after fifteen minutes is greeted with a line", nib.toast.isVisible()
-      and nib.toast._label.text() in nib.voice._bag._phrases["greeting_short"],
-      nib.toast._label.text())
+check("coming back after fifteen minutes is greeted with a line", nib.speech.isVisible()
+      and nib.speech.text() in nib.voice._bag._phrases["greeting_short"],
+      nib.speech.text())
 nib.toast.hide()
+nib.speech.dismiss()
 nib.config["chatter_level"] = "off"
 check("with chatter_level off, nothing at all", nib._say("greeting_short") == ""
-      and not nib.toast.isVisible())
+      and not nib.toast.isVisible() and not nib.speech.isVisible())
 nib.config["chatter_level"] = "rare"
 
 nib._on_quit()

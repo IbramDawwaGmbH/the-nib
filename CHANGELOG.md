@@ -32,7 +32,7 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   good-morning ends with a coffee, and once he knows you well the greeting hop is followed by
   heart eyes. Two new hidden latches in `config.json`: `last_milestone_days` and
   `last_focus_streak_date`.
-- **He says things, rarely.** One short line in the toast now and then — a greeting when you
+- **He says things, rarely.** One short line in his speech bubble (below) now and then — a greeting when you
   come back after ten minutes or more, a word on a milestone, a focus streak or a big week, a
   remark once a day on a heavy yesterday or an early or late start. At most 6 a day, 45 minutes
   apart, by default; never in the first minute, and never over the bubble, the wheel, a focus
@@ -120,8 +120,27 @@ Every release, newest first. Versions follow [semantic versioning](CONTRIBUTING.
   windows, against 0.002 % with no snow. Nothing animates unless snow is in the air. New suites:
   `smoke_snow`, `smoke_snow_stack`, `smoke_snow_overlay`, `smoke_snow_nib` and `smoke_snow_play`,
   and the rate measurement `snow_rate`.
+- **His lines have a speech bubble of their own.** Drawn in his pixel art — hard edges, his dark
+  outline, a light fill, stepped corners, at his own scale — with a tail pointing at his head. It
+  pops in, the words type out letter by letter in a readable font, and it follows him as he walks,
+  sliding over or flipping its tail to stay on screen. It stays up longer for a longer line, so
+  there is time to read it. Clicking it still counts as noticing him; it never takes the focus,
+  and it goes away for the guard, a fullscreen app, a snooze, ghost mode, a drag, and when he
+  hides. See [He says things, rarely](docs/USING-HIM.md#he-says-things-rarely).
+- **His mouth moves while he talks**: a new `talk` animation (45 states, 181 frames), played over
+  plain standing-about only, so it never cuts a walk, a nap, a pet or a tantrum short.
+- **A soft voice.** With sound on, a quiet blip every few letters while a line types — not on
+  spaces or punctuation, and a little higher or lower each time. Four new sounds, `blip` to
+  `blip4`, made by `tools/gen_sounds.py`; re-run it to hear them. They follow the sound setting
+  and the volume, so with sound off he talks silently. New suite: `smoke_speech`.
 
 ### Changed
+
+- **Every message he shows is in his speech bubble now**, not a plain box: update progress,
+  the calculator's answer, the tips, **You're muted** and the rest, with a smaller second line
+  for what a click does. A message replaces a line of his that is still up; his lines are put
+  away when the ask bubble or the wheel comes up over the same spot, and no new line starts while
+  one is still up.
 
 - The tray tooltip's focus, microphone and pinned-window lines start with his name instead of a
   fixed "Nib", and so does the focus-complete notification.

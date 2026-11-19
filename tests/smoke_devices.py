@@ -224,8 +224,8 @@ try:
           "talking_while_muted_after_s" in src_muted)
     check("...and then holds its tongue for a cooldown",
           "_muted_nag_until" in src_muted and "MUTED_NAG_COOLDOWN_S" in src_muted)
-    check("the toast goes up even when he cannot perform the animation",
-          src_muted.index("toast.show_message") > src_muted.index("talking_while_muted()"))
+    check("the message goes up even when he cannot perform the animation",
+          src_muted.index("self._tell(") > src_muted.index("talking_while_muted()"))
 
     src_quit = inspect.getsource(M.NibApp._on_quit)
     check("quitting stops the watcher threads and lets go of the COM pointers",

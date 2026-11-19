@@ -180,6 +180,15 @@ SOUNDS: dict[str, Sample] = {
         silence(40),
         tone(294, 262, 70, "triangle", attack=0.08, decay=0.6, gain=0.3),
     ),
+    # His voice while a line types out: one tiny syllable every few letters. It plays dozens of
+    # times a line, so it is the shortest and quietest thing here - a soft triangle, barely 40ms,
+    # with an attack long enough not to click and a fall of a few hertz so each one ends like a
+    # spoken syllable rather than a beep. Four pitches a couple of semitones apart, taken in turn
+    # (sound.BLIP_VARIANTS), so a sentence has a little melody instead of one note on repeat.
+    "blip": tone(587, 560, 40, "triangle", attack=0.12, decay=0.6, gain=0.2),
+    "blip2": tone(659, 628, 36, "triangle", attack=0.12, decay=0.6, gain=0.2),
+    "blip3": tone(523, 500, 42, "triangle", attack=0.12, decay=0.6, gain=0.2),
+    "blip4": tone(622, 594, 38, "triangle", attack=0.12, decay=0.6, gain=0.2),
 }
 
 

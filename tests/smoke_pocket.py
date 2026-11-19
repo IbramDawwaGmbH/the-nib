@@ -154,7 +154,7 @@ check("reads the real clipboard", "QApplication.clipboard()" in src_pocket)
 check("goes through behavior.pocket_grab", "self.behavior.pocket_grab" in src_pocket)
 check("puts the text up on the billboard", "self.billboard.show_text" in src_pocket)
 check("an empty clipboard gets his look round", "pocket_empty()" in src_pocket)
-check("...and a toast saying why nothing went up", "toast.show_message" in src_pocket)
+check("...and a message saying why nothing went up", "self._tell(" in src_pocket)
 
 src_bubble = inspect.getsource(M.NibApp._open_bubble_at)
 check("an explicit prefill is never overridden by the pocket",

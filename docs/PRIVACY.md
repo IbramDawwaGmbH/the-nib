@@ -80,7 +80,7 @@ Worth being explicit, since he watches a few things in order to feel alive:
   physical-constant ratio, safe to bundle forever, while an exchange rate is either a live lookup or
   a table that goes stale, and Nib makes no network requests of its own (bar fetching its own
   update when you ask, below). The answer only reaches the
-  clipboard if you click the toast to put it there, and nothing about a calculation — the expression
+  clipboard if you click his answer to put it there, and nothing about a calculation — the expression
   or the answer — is logged, at any level, including `DEBUG`, the same rule as above.
 - **The pixel ruler never looks at what's on screen.** It reads cursor position and monitor
   geometry/DPI — the same rectangles-only APIs used elsewhere for finding a window to stand on —
@@ -121,7 +121,7 @@ Worth being explicit, since he watches a few things in order to feel alive:
   of them live right now?" and are then discarded, never stored and never logged — the same
   treatment the foreground-app reaction already gets. Muting your microphone is the only thing this
   feature ever *changes*, and it happens only when you ask for it — the tray entry, the shortcut,
-  or the toast — never on a timer and never as a side effect of anything he does on his own.
+  or his speech bubble — never on a timer and never as a side effect of anything he does on his own.
 - **Everything he remembers stays on your machine.** Settings, position, costume, your prompts,
   how the day has gone and how rested, fond and bored he is (three numbers and when they were
   written) live in `%APPDATA%\NibMascot\config.json`. What he remembers *about you

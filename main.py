@@ -86,6 +86,7 @@ from ruler import RulerOverlay  # noqa: E402
 from tool_wheel import ToolWheel, WheelItem  # noqa: E402
 from settings import SettingsWindow  # noqa: E402
 from snow_overlay import SnowOverlay  # noqa: E402
+from speech_bubble import SpeechBubble  # noqa: E402
 from sound import Sounds  # noqa: E402
 from tray import Tray  # noqa: E402
 import updater  # noqa: E402
@@ -98,6 +99,7 @@ TICK_MS = 16              # floor: the clock never runs faster than this
 IDLE_TICK_MS = 250        # ceiling: when nothing is going to change, sleep this long
                           # Between the two, behavior.next_tick_ms picks the interval from what is
                           # actually about to happen - see _update_tick_rate.
+SPEECH_TICK_MS = 40       # ceiling while a line types out - see _update_tick_rate
 GEOMETRY_POLL_MS = 700    # taskbar, monitor, and fullscreen checks
 TOPMOST_POLL_MS = 3000    # other apps steal the top-most slot; take it back
 CONFIG_FLUSH_MS = 10000   # write last_x et al. at most this often
@@ -307,6 +309,7 @@ class NibApp:
         self.window = MascotWindow(self.sheet.sprite_w, self.sheet.sprite_h)
         self.bubble = AskBubble(self.ui_scale)
         self.toast = Toast(self.ui_scale)
+        self._make_speech()
         self.billboard = Billboard(self.ui_scale)
         self.focus_timer = FocusTimer(self.ui_scale)
         self._make_tool_wheel()
@@ -553,7 +556,7 @@ class NibApp:
 
     def _connect(self) -> None:
         self.window.clicked.connect(self._on_click)
-        self.window.drag_started.connect(self.behavior.drag_start)
+        self.window.drag_started.connect(self._on_drag_started)
         self.window.dragged.connect(self._on_dragged)
         self.window.drag_finished.connect(self._on_drag_finished)
         self.window.files_dropped.connect(self._on_files_dropped)
@@ -848,6 +851,7 @@ class NibApp:
             self.behavior.set_hidden(True)
             # Silently: we are closing it, not the user, so it must not count as a poke.
             self.bubble.close_silently()
+            self._hide_speech()
             self.window.fade_to(0.0)
             self._update_tick_rate()
         elif not fullscreen and self._hidden_by_fullscreen:
@@ -897,6 +901,11 @@ class NibApp:
         self.bubble.deleteLater()
         self.toast.hide()
         self.toast.deleteLater()
+        # His speech bubble is sized from his sprite scale and the UI scale, both of which just
+        # changed: put it away and build a new one, rather than leave a wrong-sized line up.
+        self._hide_speech()
+        self.speech.deleteLater()
+        self._make_speech()
         billboard_text = self.behavior.pocket_text
         self.billboard.take_down()
         self.billboard.deleteLater()
@@ -948,6 +957,11 @@ class NibApp:
             wanted = IDLE_TICK_MS
         else:
             wanted = int(self.behavior.next_tick_ms(TICK_MS, IDLE_TICK_MS))
+        if self.speech.typing:
+            # His voice blips are spaced on the sound clock, which only moves on this tick: at a
+            # slow idle tick most of them would be dropped as "too soon". A second or two of
+            # SPEECH_TICK_MS while a line types out keeps the voice even.
+            wanted = min(wanted, SPEECH_TICK_MS)
         # Hysteresis: nudging the interval every tick would restart the countdown constantly.
         if abs(self._tick_timer.interval() - wanted) > 4:
             self._tick_timer.setInterval(wanted)
@@ -999,14 +1013,7 @@ class NibApp:
         self.behavior.talking_while_muted()
         # The toast goes up whether or not he was in a state to perform the animation - asleep or
         # in your hand, the message is the point and he is the decoration.
-        x, y, w, _h = self.behavior.rect
-        self.toast.show_message(
-            "You're muted",
-            QRect(x, y, w, self.behavior.sprite_h),
-            self._screen_rect(),
-            sub="Click to unmute",
-            on_click=self._on_mic_toggle,
-        )
+        self._tell("You're muted", sub="Click to unmute", on_click=self._on_mic_toggle)
 
     def _on_mic_toggle(self) -> None:
         """Flip the microphone, from the tray, the shortcut, or the muted-talk toast."""
@@ -1092,6 +1099,7 @@ class NibApp:
 
         self._sync_persona_costume()
         self._apply_frame()
+        self._sync_speech()
         self.sounds.tick(dt_ms)
         for event in self.behavior.take_sounds():
             self.sounds.play(event)
@@ -1179,6 +1187,11 @@ class NibApp:
         x, y, w, _h = self.behavior.rect
         self._open_bubble_at(QRect(x, y, w, self.behavior.sprite_h))
 
+    def _on_drag_started(self) -> None:
+        # Picked up mid-sentence: the line belongs to the moment before, not along for the ride.
+        self._hide_speech()
+        self.behavior.drag_start()
+
     def _on_dragged(self, top_left) -> None:
         self.behavior.drag_to(top_left.x(), top_left.y())
         self._apply_frame(force=True)
@@ -1220,14 +1233,8 @@ class NibApp:
         offers the one thing a calculator answer is actually for - see docs/USING-HIM.md.
         """
         self.behavior.calculated(ok)
-        x, y, w, _h = self.behavior.rect
-        self.toast.show_message(
-            result,
-            QRect(x, y, w, self.behavior.sprite_h),
-            self._screen_rect(),
-            sub="Click to copy" if ok else "",
-            on_click=(lambda r=result: self._copy_calculation(r)) if ok else None,
-        )
+        self._tell(result, sub="Click to copy" if ok else "",
+                   on_click=(lambda r=result: self._copy_calculation(r)) if ok else None)
 
     def _copy_calculation(self, result: str) -> None:
         value = result[2:] if result.startswith("= ") else result
@@ -1259,14 +1266,8 @@ class NibApp:
             return
 
         log.warning("launch failed: %s", reason)
-        x, y, w, _h = self.behavior.rect
-        self.toast.show_message(
-            reason or FAILURE_MESSAGE,
-            QRect(x, y, w, self.behavior.sprite_h),
-            self._screen_rect(),
-            sub="Click here to open the download page.",
-            on_click=lambda p=provider: open_download_page(p),
-        )
+        self._tell(reason or FAILURE_MESSAGE, sub="Click here to open the download page.",
+                   on_click=lambda p=provider: open_download_page(p))
 
     def _open_bubble_at(self, anchor: QRect, prefill: str = "") -> None:
         # Deliberately NOT blocked by ghost mode. Ghost mode is about him being out of the way of
@@ -1279,6 +1280,8 @@ class NibApp:
         if not prefill and self.behavior.pocket_full:
             prefill = self.behavior.pocket_take()
             self.billboard.take_down()
+        # The prompt opens right where his speech bubble sits; you talking outranks him talking.
+        self._hide_speech()
         provider = str(self.config["provider"])
         # A mode the current provider does not have - because you switched from Claude to ChatGPT
         # while "cowork" was remembered - would leave the picker with nothing selected.
@@ -1327,12 +1330,8 @@ class NibApp:
             self.behavior.pocket_empty()
             # Not over the fog, and not for a mascot nobody can currently see.
             if not (self._guarding or self._hidden_by_fullscreen or self._snoozed):
-                x, y, w, _h = self.behavior.rect
-                self.toast.show_message(
-                    "Nothing to pin - the clipboard has no text.",
-                    QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
-                    sub="Copy some text, then pin it again.",
-                )
+                self._tell("Nothing to pin - the clipboard has no text.",
+                           sub="Copy some text, then pin it again.")
 
     def _on_double_clicked(self) -> None:
         """Double-click fires your quick prompt, or repeats the last one."""
@@ -1481,6 +1480,7 @@ class NibApp:
 
     def _open_tool_wheel(self, position: QPoint) -> None:
         self.bubble.close_silently()
+        self._hide_speech()
         self._wheel_position = QPoint(position)
         # The items first: their labels describe what he is doing now, before he is held still.
         items = self._wheel_items()
@@ -1503,6 +1503,7 @@ class NibApp:
         """
         items = _wardrobe_ring(self.sheet, str(self.config["costume"]),
                                list(self.config["costume_recents"]))
+        self._hide_speech()
         self.behavior.wheel_opened()
         x, y, w, _h = self.behavior.rect
         h = self.behavior.sprite_h
@@ -1617,6 +1618,7 @@ class NibApp:
         log.info("snoozing for %ds", seconds)
         self.behavior.set_hidden(True)
         self.bubble.close_silently()
+        self._hide_speech()
         self.window.fade_to(0.0)
         self._snoozed = True
         self._update_tick_rate()
@@ -1644,7 +1646,8 @@ class NibApp:
         a fullscreen app, nothing while you are focusing or typing in the bubble or aiming the
         wheel, nothing while he is asleep, cross, held or hidden - and never over a toast that is
         already up, which may be the intro, an update's progress or the calculator's answer. The
-        intro also counts between its tips, when the toast is briefly down.
+        intro also counts between its tips, when the toast is briefly down. Nor while his own
+        speech bubble is still up: he is already talking, and a new line would cut off the last.
         """
         return (
             self._guard_busy()
@@ -1659,11 +1662,13 @@ class NibApp:
             or self.behavior.state in (State.SLEEP, State.WAKE, State.ANGRY, State.DRAG,
                                        State.HIDDEN)
             or self.toast.isVisible()
+            or self.speech.isVisible()
             or self._intro_step >= 0
         )
 
     def _say(self, category: str, **fmt) -> str:
-        """Say one line from ``category`` in the toast, if now is a good moment and voice.py agrees.
+        """Say one line from ``category`` in his speech bubble, if now is a good moment and
+        voice.py agrees.
 
         Returns the line said, or ``""``. ``{name}``, ``{days}`` and ``{pets}`` are always on hand
         for a line to use; an event can add its own. Clicking the line counts as noticing him -
@@ -1679,8 +1684,105 @@ class NibApp:
             # The category only, never the words: the line can carry his name, and the log is
             # no place to start keeping a record of what he said.
             log.info("said a %s line", category)
-            self._tell(line, duration_ms=SAY_MS, on_click=self._on_line_clicked)
+            self._speak(line)
         return line
+
+    # --- his speech bubble -----------------------------------------------------------
+
+    def _make_speech(self) -> None:
+        """His speech bubble: his own lines and every message he shows you (an answer, an update,
+        a tip) - whatever has words over his head comes out of his mouth."""
+        self.speech = SpeechBubble(self.ui_scale)
+        self.speech.clicked.connect(self._on_speech_clicked)
+        #: What a click on the bubble does: notice him for one of his own lines, or the message's
+        #: own action (copy the answer, unmute, open a download page), or nothing.
+        self._speech_on_click = None
+        #: Whether the bubble holds one of his own lines (True) or a message you asked for (an
+        #: answer, an update, a tip). Only his own lines go away when he sleeps, sulks or is held.
+        self._speech_is_line = False
+        self.speech.blip.connect(self._on_speech_blip)
+        self.speech.typed.connect(self._stop_talking)
+        self.speech.finished.connect(self._stop_talking)
+        #: His rect the bubble was last placed against, so the tick only moves it when he moved.
+        self._speech_anchor: tuple | None = None
+
+    def _speech_anchor_rect(self) -> QRect:
+        """His whole sprite frame - the full height even mid-peek, which is where his head is."""
+        x, y, w, _h = self.behavior.rect
+        return QRect(x, y, w, self.behavior.sprite_h)
+
+    def _speak(self, line: str, *, sub: str = "", minimum_ms: int = SAY_MS, on_click=None,
+               own_line: bool = True) -> None:
+        """Put one of his lines up in his speech bubble, and move his mouth while it types.
+
+        Not during a guard, for the same reason as ``_tell``. Shown for SAY_MS, or longer when the
+        line needs it to be read - see speech_bubble.hold_ms.
+        """
+        if self._guarding or self.guard.active:
+            return
+        self._speech_anchor = self.behavior.rect
+        self._speech_is_line = own_line
+        self._speech_on_click = self._on_line_clicked if own_line else on_click
+        self.speech.setCursor(Qt.PointingHandCursor if self._speech_on_click else Qt.ArrowCursor)
+        typing_ms = self.speech.say(line, self._speech_anchor_rect(), self._screen_rect(),
+                                    pixel=self.sheet.scale, minimum_ms=minimum_ms, sub=sub)
+        # With room to spare: the typewriter's timers can only ever fire late, so a mouth timed to
+        # the nominal typing time would shut before the last word. The bubble's own ``typed``
+        # signal is what actually closes it, on the last letter; this is only the backstop.
+        self.behavior.start_talking(typing_ms * 1.5 + 500.0)
+        # A line can arrive from outside the tick, with the clock still at the idle rate: pick the
+        # talking rate up now rather than up to a quarter of a second into the line.
+        self._update_tick_rate()
+
+    def _on_speech_clicked(self) -> None:
+        callback = self._speech_on_click
+        if callback is None:
+            return
+        try:
+            callback()
+        except Exception:
+            log.exception("speech bubble click handler failed")
+
+    def _on_speech_blip(self) -> None:
+        # The sound setting and volume live in Sounds; with sound off this is a silent no-op.
+        self.sounds.play("blip")
+
+    def _stop_talking(self) -> None:
+        self.behavior.stop_talking()
+
+    def _hide_speech(self) -> None:
+        """Take his speech bubble down at once - the app is putting him away, not you clicking."""
+        if self.speech.isVisible():
+            self.speech.dismiss()
+            self._stop_talking()
+
+    def _sync_speech(self) -> None:
+        """Each tick: keep the bubble over his head, or take it down if he should not be talking.
+
+        Most of the ways he goes away take it down themselves at once (a guard, a fullscreen app,
+        a snooze, ghost mode, being picked up); this catches the rest - he hid, fell asleep, a
+        toast went up over the same spot from somewhere that does not go through _tell - within a
+        tick. A tantrum ends the line too: behavior shuts his mouth on ANGRY, and a bubble still
+        typing over a closed mouth would not read as him. Moves the bubble only when his rect
+        actually changed, so standing still costs one tuple comparison and no repaint.
+        """
+        if not self.speech.isVisible():
+            return
+        # A message you asked for (an answer, an update, a tip) stays while he sleeps, sulks or is
+        # carried - it follows him - and goes only when he is put away; his own lines also end
+        # when he is no longer in a state to be saying them.
+        if (self._guard_busy() or self._snoozed or self._hidden_by_fullscreen
+                or bool(self.config["ghost_mode"]) or self.toast.isVisible()
+                or self.bubble.isVisible() or self.tool_wheel.isVisible()
+                or self.behavior.state == State.HIDDEN
+                or (self._speech_is_line
+                    and self.behavior.state in (State.DRAG, State.SLEEP, State.ANGRY))):
+            self._hide_speech()
+            return
+        rect = self.behavior.rect
+        if rect != self._speech_anchor:
+            self._speech_anchor = rect
+            self.speech.follow(self._speech_anchor_rect(), self._screen_rect())
 
     def _on_line_clicked(self) -> None:
         self.behavior.noticed()
@@ -1691,7 +1793,7 @@ class NibApp:
     def _on_creature_event(self, kind: str, data: dict) -> None:
         """Something happened that he might say a line about - see voice.lines_for.
 
-        The first category that gets a line wins, so at most one toast per event.
+        The first category that gets a line wins, so at most one line per event.
         """
         state = self.world.state
         for category in lines_for(kind, data, hour=state.hour,
@@ -1703,17 +1805,18 @@ class NibApp:
     # --- update and restart --------------------------------------------------------
 
     def _tell(self, text: str, sub: str = "", duration_ms: int = 6000, on_click=None) -> None:
-        """Say something in the toast above him - how every tool without a window of its own talks.
+        """Say something in his speech bubble - how every tool without a window of its own talks.
 
         Not while a guard is up: the fog is there to hide everything of his, toasts included.
-        ``on_click`` runs if the toast is clicked (it closes either way).
+        ``on_click`` runs if the bubble is clicked (it closes either way).
         """
         if self._guarding or self.guard.active:
             log.info("not shown during a guard: %s", text)
             return
-        x, y, w, _h = self.behavior.rect
-        self.toast.show_message(text, QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
-                                sub=sub, duration_ms=duration_ms, on_click=on_click)
+        # In his speech bubble, like his own lines: everything he shows you comes from him. It
+        # replaces a line of his that is still up - the message you asked for wins.
+        self._hide_speech()
+        self._speak(text, sub=sub, minimum_ms=duration_ms, on_click=on_click, own_line=False)
 
     def _guard_busy(self) -> bool:
         """A guard is up, or about to be: its PIN setup is open."""
@@ -1977,6 +2080,7 @@ class NibApp:
             self.bubble.close_silently()
             self.tool_wheel.close()
             self.toast.hide()
+            self._hide_speech()
             self.billboard.take_down()
             self.focus_timer.take_down()
             if self._ruler is not None:
@@ -2056,11 +2160,7 @@ class NibApp:
         self.behavior.read_image(ok=bool(text))
         x, y, w, _h = self.behavior.rect
         if not text:
-            self.toast.show_message(
-                error or "couldn't read that image",
-                QRect(x, y, w, self.behavior.sprite_h),
-                self._screen_rect(),
-            )
+            self._tell(error or "couldn't read that image")
             return
         clamped = text.strip()[: max_chars_for(str(self.config["provider"]))]
         self._open_bubble_at(QRect(x, y, w, self.behavior.sprite_h), prefill=clamped)
@@ -2085,6 +2185,8 @@ class NibApp:
             log.warning("could not change the click-through style; ghost mode may not work")
         if ghost:
             self.bubble.close_silently()
+            # Click-through and faded: a bubble you could not click, over a him you barely see.
+            self._hide_speech()
         # Not fade_to(0): hiding the window entirely would take the mascot away, and the point is
         # that he is still there.
         target = float(self.config["ghost_opacity"]) if ghost else 1.0
@@ -2254,11 +2356,7 @@ class NibApp:
                 self._next_intro_step()
                 return
             text = text % spec.replace("+", " + ").title()
-        x, y, w, _h = self.behavior.rect
-        self.toast.show_message(
-            text, QRect(x, y, w, self.behavior.sprite_h), self._screen_rect(),
-            sub=sub, duration_ms=hold,
-        )
+        self._tell(text, sub=sub, duration_ms=hold)
         QTimer.singleShot(hold + INTRO_GAP_MS, self._next_intro_step)
 
     # --- tray -----------------------------------------------------------------------
@@ -2404,6 +2502,7 @@ class NibApp:
         self._quitting = True
         self.snow.shutdown()
         self.bubble.close_silently()
+        self._hide_speech()
         self.billboard.take_down()
         self.focus_timer.take_down()
         if self._ruler is not None:

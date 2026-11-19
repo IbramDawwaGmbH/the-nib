@@ -312,8 +312,8 @@ check("the calculator setting is read live and handed to the bubble each time it
 src_calculated = inspect.getsource(M.NibApp._on_calculated)
 check("a calculation reacts through Behavior.calculated, never behavior.prompt_sent",
       "self.behavior.calculated" in src_calculated and "prompt_sent" not in src_calculated)
-check("the result is shown on the toast, not the billboard sign (that means the pocket)",
-      "self.toast.show_message" in src_calculated)
+check("the result is shown in his speech bubble, not the billboard sign (that means the pocket)",
+      "self._tell(" in src_calculated)
 check("copying the answer is only offered for a clean result",
       'if ok else None' in src_calculated or "if ok else" in src_calculated)
 

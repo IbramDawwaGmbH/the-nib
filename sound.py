@@ -34,11 +34,24 @@ EVENTS = frozenset({
     "focus_done",
     # eating a treat
     "nom",
+    # his voice while a line types out in the speech bubble - ask for "blip", see BLIP_VARIANTS
+    "blip", "blip2", "blip3", "blip4",
 })
+
+#: The pitch variants behind "blip". The same note forty times in a row reads as a machine
+#: chirping; four slightly different ones taken in turn read as someone talking. Taken in turn by a
+#: counter, not at random: the random module's sequence is shared with the rest of the app, and a
+#: blip drawing from it would shift every other roll.
+BLIP_VARIANTS = ("blip", "blip2", "blip3", "blip4")
 
 #: Shortest gap between two plays of the *same* event. He can bounce three times in half a second,
 #: and three thuds in half a second is a bug that sounds like a machine gun.
 _REPEAT_GUARD_MS = 140.0
+
+#: The blips get their own, much shorter guard, shared by all four variants: they are meant to come
+#: every few letters while a line types, which is faster than the general guard allows. Shorter
+#: than this and two blips overlap into a buzz.
+_BLIP_GUARD_MS = 55.0
 
 
 class Sounds:
@@ -50,6 +63,8 @@ class Sounds:
         self._effects: dict[str, object] = {}
         self._last_played: dict[str, float] = {}
         self._clock_ms = 0.0
+        self._blip_turn = 0
+        self._last_blip = None
         self._available = False
         self._effect_class = None
 
@@ -129,6 +144,8 @@ class Sounds:
         """
         if not self.enabled or event not in EVENTS:
             return False
+        if event in BLIP_VARIANTS:
+            return self._play_blip(event)
         last = self._last_played.get(event)
         if last is not None and self._clock_ms - last < _REPEAT_GUARD_MS:
             return False
@@ -142,6 +159,34 @@ class Sounds:
             log.debug("could not play %s", event, exc_info=True)
             return False
         self._last_played[event] = self._clock_ms
+        return True
+
+    def _play_blip(self, event: str) -> bool:
+        """One syllable of his voice. Asking for plain "blip" takes the next variant in turn.
+
+        Rapid repeats never stack: the guard is shared by every variant, and a blip still ringing
+        is cut off before the next one starts, so a fast line is a string of separate blips and
+        never a pile-up of them.
+        """
+        if self._clock_ms - self._last_played.get("blip", -_BLIP_GUARD_MS) < _BLIP_GUARD_MS:
+            return False
+        if event == "blip":
+            event = BLIP_VARIANTS[self._blip_turn % len(BLIP_VARIANTS)]
+            self._blip_turn += 1
+        effect = self._effect(event)
+        if not effect:
+            return False
+        try:
+            previous = self._last_blip
+            if previous and previous.isPlaying():
+                previous.stop()
+            effect.setVolume(self._volume())
+            effect.play()
+        except Exception:
+            log.debug("could not play %s", event, exc_info=True)
+            return False
+        self._last_blip = effect
+        self._last_played["blip"] = self._clock_ms
         return True
 
     def stop_all(self) -> None:

@@ -475,6 +475,11 @@ MOUTHS: dict[str, list[str]] = {
     "flat":   ["OOOOOO"],
     "smile":  ["O....O", ".OOOO."],
     "wavy":   ["OO..OO", "..OO.."],                 # seasick
+    # Talking. A dark rim with the feet tone inside, so an open mouth reads as a mouth on every
+    # skin rather than as a black hole punched through him - the remap leaves the rim alone.
+    "talk_shut": [".OOOO."],
+    "talk_half": [".OOOO.", ".OFFO.", "..OO.."],
+    "talk_wide": [".OOOO.", "OFFFFO", "OFFFFO", ".OOOO."],
 }
 MOUTH_Y = EYE_Y + EYE_H + 2          # on his lower face, clear of the eyes and of the body edge
 
@@ -1627,6 +1632,30 @@ HICCUP_KEYS = (
 )
 
 
+#: (grow, mouth) for the talking frames. The idle body with a mouth that flaps: shut, half, wide.
+#: The breath moves a pixel with the open mouth, which is what stops it reading as a mouth painted
+#: onto a still sprite. His face stays where idle has it, so a bubble can point at the same spot
+#: whichever frame is up, and costumes sit exactly as they do on idle.
+TALK_KEYS = (
+    (0, "talk_shut"),
+    (0, "talk_half"),
+    (1, "talk_wide"),
+)
+
+
+def frame_talk(index: int) -> tuple[Grid, Anchors]:
+    """He has no mouth at rest; this is the one place one appears just because he is speaking."""
+    grow, mouth = TALK_KEYS[index]
+    grid = blank()
+    draw_body(grid, grow=grow)
+    draw_legs(grid, BODY_BOTTOM)
+    draw_eyes(grid, mode="open")
+    draw_mouth(grid, mouth)
+    draw_arm(grid, BODY_BOTTOM, 0)
+    outline(grid)
+    return grid, measure_anchors(grid)
+
+
 def frame_hiccup(index: int) -> tuple[Grid, Anchors]:
     grow, squash, eyes, burst = HICCUP_KEYS[index]
     grid = blank()
@@ -1735,6 +1764,9 @@ def build_frames() -> dict[int, tuple[Grid, Anchors]]:
     frames[1] = frame_idle(1)
     frames[2] = frame_idle(2)
     frames[3] = frame_idle(0, eyes="closed")
+    # talking - the free cells beside idle, which is the body it is built from
+    for i in range(len(TALK_KEYS)):
+        frames[4 + i] = frame_talk(i)
     for i in range(6):
         frames[10 + i] = frame_walk(i)
     for i in range(4):
@@ -3482,6 +3514,10 @@ MANIFEST_STATES = {
     # --- the Away Guard. Held for as long as someone is typing the PIN, so it loops, and slowly:
     # a nervous little bob, not a dance. Appended last so no existing state's indices move.
     "cover_eyes": {"loop": True, "frames": [[396, 320], [397, 260], [398, 320], [399, 240]]},
+    # --- talking, while one of his own lines types out in its bubble. Loops for as long as the
+    # line takes; the uneven beats are deliberate, because a mouth on a metronome reads as a
+    # machine. Appended last, like the guard's, so no existing state's indices move.
+    "talk": {"loop": True, "frames": [[5, 110], [6, 140], [4, 90], [6, 120], [5, 100], [4, 130]]},
 }
 
 

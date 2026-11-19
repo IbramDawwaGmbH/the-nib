@@ -19,7 +19,7 @@ of it, and he lands and gives his opinion. The choice is saved the moment you ma
 visible change waits for the hop, so it always applies — asleep, in your hand or hidden, it just
 goes straight on.
 
-They cost nothing at runtime. Costumes are **not** baked per-frame — that would mean 178 frames per
+They cost nothing at runtime. Costumes are **not** baked per-frame — that would mean 181 frames per
 hat. Instead every frame records **four anchor points**, and the costume is composited at the
 matching one the first time that frame is built and cached. So a hat sits correctly on a hop, a nap
 or a squat automatically, and flips with him when he walks left.
@@ -218,7 +218,7 @@ python tools/gen_demo_gif.py
 
 **The art contract**, enforced by `validate_sheet.py`:
 
-- 10×40 grid of 48×48 frames — 44 animation states, 178 distinct frames
+- 10×40 grid of 48×48 frames — 45 animation states, 181 distinct frames
 - Exactly seven body colours, and **alpha strictly 0 or 255** — no anti-aliasing anywhere
 - Every frame's soles rest on the same baseline row, so he does not jitter vertically between
   states. The mid-air hop frames are the only exemption, and they are checked to be *above* it
